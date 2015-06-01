@@ -11,9 +11,16 @@
     </div>
 	</div>
 	<div class="adventure-highlight-hierarchy-content" style="padding-left: {{getLeftPadding}}px;">
-		<h4>Text</h4>
-		<div>{{text}}</div>
-		<h4>HTML</h4>
-		<div>{{html}}</div>
+        <h4>Selectors</h4>
+        {{#each selectors}}
+          <div>
+            {{this}}
+            <span class="label label-success">Matched a single element</span>
+          </div>
+        {{/each}}
+        <h4>Text</h4>
+        <div>{{text}}</div>
+        <h4>HTML</h4>
+        <div>{{html}}</div>
 	</div>
 </template>

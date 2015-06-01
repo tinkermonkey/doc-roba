@@ -12,6 +12,7 @@ Template.AdventureScreen.helpers({
     this.highlightElements  = instance.highlightElements.get();
     this.controlledElement  = instance.controlledElement.get();
     this.selectorElements   = instance.selectorElements; // need read/write access in the toolbar
+    this.checkResult        = instance.checkResult; // track the results of selector check
     this.lastClickLocation  = instance.lastClickLocation; // track the mouse clicks
 
     return this;
@@ -106,6 +107,12 @@ Template.AdventureScreen.helpers({
 
       return el;
     }
+  },
+  /**
+   * Get the results of a selector check
+   */
+  getCheckResult: function () {
+    return this.checkResult.get();
   }
 });
 
@@ -140,6 +147,12 @@ Template.AdventureScreen.events({
 
     // clear the last click location
     this.lastClickLocation.set({x: coords.x, y: coords.y});
+
+    // clear the current highlights
+    this.selectorElements.set({});
+    this.checkResult.set();
+    $(".adventure-highlight-detail").find(".selected").removeClass("selected");
+
 
     // send the command to get information about the "clicked" element
     AdventureCommands.insert({
@@ -187,8 +200,9 @@ Template.AdventureScreen.events({
       return;
     }
 
-    // clear the last click location
+    // clear the last click location and check result
     this.lastClickLocation.set();
+    this.checkResult.set();
 
     // send the command to clear all of the highlighted elements
     AdventureCommands.insert({
@@ -315,6 +329,7 @@ Template.AdventureScreen.created = function () {
   instance.highlightElements  = new ReactiveVar();
   instance.selectorElements   = new ReactiveVar({});
   instance.controlledElement  = new ReactiveVar();
+  instance.checkResult        = new ReactiveVar();
   instance.lastClickLocation  = new ReactiveVar();
 
   instance.updateViewport = function () {

@@ -56,6 +56,7 @@ Template.AdventureToolbar.helpers({
 Template.AdventureToolbar.events({
   "click .btn-clear": function (e, instance) {
     this.selectorElements.set({});
+    this.checkResult.set();
     $(".adventure-highlight-detail").find(".selected").removeClass("selected");
   },
   "click .btn-refine": function (e, instance) {
@@ -81,6 +82,7 @@ Template.AdventureToolbar.events({
               if(newDoc.status == AdventureStepStatus.complete){
                 console.log("Command Complete: ", newDoc.result);
                 cursor.stop();
+                instance.data.checkResult.set(newDoc.result);
               } else if (newDoc.status == AdventureStepStatus.error) {
                 console.log("Command Failed: ", newDoc.result);
                 cursor.stop();

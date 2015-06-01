@@ -6,14 +6,13 @@
   {{/contentFor}}
 
   {{#with getFullContext}}
-	<div class="fluid-container full-page adventure">
-		<div class="row">
+  <div class="fluid-container full-page adventure">
+    <div class="row">
       <div class="col-xs-8 adventure-main-view">
-				{{> AdventureScreen }}
+        {{> AdventureScreen }}
       </div>
-			<div class="col-xs-4 adventure-sidebar">
+      <div class="col-xs-4 adventure-sidebar">
         {{> AdventureMap }}
-
         <div style="margin-top: 5px; margin-bottom: 5px;">
           <h4 class="inline-block">
             Status:
@@ -58,8 +57,8 @@
         <div class="{{#unless showSearch}}hide{{/unless}}">
           {{> AdventureNodeParentSearch}}
         </div>
-			</div>
-		</div>
-	</div>
+      </div>
+    </div>
+  </div>
   {{/with}}
 </template>

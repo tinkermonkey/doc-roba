@@ -337,7 +337,8 @@ FutureDriver.prototype.injectHelpers = function () {
           var info = {
             tag: el.tagName,
             attributes: [],
-            bounds: el.getBoundingClientRect()
+            bounds: el.getBoundingClientRect(),
+            selectors: roba_driver.getSelectors(el)
           };
 
           // grab the attributes
@@ -388,6 +389,68 @@ FutureDriver.prototype.injectHelpers = function () {
           return { message: "roba_driver.getElementsByXPath failed", error: e }
         }
         return elements;
+      };
+
+      // validate an xpath selector
+      roba_driver.checkXpathSelector = function (selector, el) {
+        var matchList = roba_driver.getElementsByXPath(selector, document);
+
+        if(matchList.length == 1){
+          return selector;
+        } else if(matchList.length > 1) {
+          var index = matchList.indexOf(el);
+          if(index >= 0){
+            selector = "(" + selector + ")[" + (index + 1) + "]";
+            matchList = roba_driver.getElementsByXPath(selector, document);
+            if(matchList.length == 1){
+              return selector;
+            }
+          }
+        }
+      };
+
+      // get a list of validated selectors for an element
+      roba_driver.getSelectors = function (el) {
+        if(el){
+          var selectors = [], testSelector;
+
+          // get the alternate selectors, starting with the id selector
+          var id = el.getAttribute("id");
+          if(id){
+            testSelector = "//" + el.tagName + "[@id=" + id + "]";
+            var result = roba_driver.checkXpathSelector(testSelector, el);
+            if(result){
+              selectors.push(result);
+            }
+          }
+
+          // Check by class
+          var cssClass = el.getAttribute("class");
+          if(cssClass){
+            var classList = cssClass.split(/\s/),
+              classSelector = classList.map(function (className) {
+                return "contains(@class, \"" + className.trim() + "\")"
+              }).join(" and ");
+
+            testSelector = "//" + el.tagName + "[" + classSelector + "]";
+            var result = roba_driver.checkXpathSelector(testSelector, el);
+            if(result){
+              selectors.push(result);
+            }
+          }
+
+          // Check by text
+          var wordCount = el.textContent.split(/\s/).length;
+          if(el.textContent.length && wordCount < 10){
+            testSelector = "//" + el.tagName + "[text()=\"" + el.textContent + "\"]";
+            var result = roba_driver.checkXpathSelector(testSelector, el);
+            if(result){
+              selectors.push(result);
+            }
+          }
+
+          return selectors;
+        }
       };
 
       return "roba_driver initialized";
@@ -467,106 +530,25 @@ FutureDriver.prototype.refineSelector = function (x, y, selector) {
     var el = document.elementFromPoint(x, y);
     if(el){
       // test the given selector
-      var elements = [], matchList = [], selectors = [],
-        testSelector, index;
+      var elements = [];
 
-      // route xPaths special
-      console.log("Checking selector: ", selector);
-      if(selector.match(/^\/\//)){
-        elements = roba_driver.getElementsByXPath(selector, document);
-      } else {
-        elements = document.querySelectorAll(selector);
-      }
-      console.log("Selector matched", elements ? elements.length : 0, "elements");
-
-      // get the alternate selectors, starting with the id selector
-      var id = el.getAttribute("id");
-      if(id){
-        testSelector = "//" + el.tagName + "[@id=" + id + "]";
-        matchList = roba_driver.getElementsByXPath(testSelector, document);
-        if(matchList.length == 1){
-          selectors.push(testSelector);
-        } else if(matchList.length > 1) {
-          index = matchList.indexOf(el);
-          if(index >= 0){
-            testSelector = "(" + testSelector + ")[" + (index + 1) + "]";
-            matchList = roba_driver.getElementsByXPath(testSelector, document);
-            if(matchList.length == 1){
-              selectors.push(testSelector);
-            }
-          }
+      // check the selector if one was provided
+      if(selector){
+        // route xPaths special
+        console.log("Checking selector: ", selector);
+        if(selector.match(/^\/\//)){
+          elements = roba_driver.getElementsByXPath(selector, document);
+        } else {
+          elements = document.querySelectorAll(selector);
         }
+        console.log("Selector matched", elements ? elements.length : 0, "elements");
       }
-
-      // Check by class
-      var cssClass = el.getAttribute("class");
-      if(cssClass){
-        var classList = cssClass.split(/\s/),
-          classSelector = classList.map(function (className) {
-            return "contains(@class, \"" + className.trim() + "\")"
-          }).join(" and ");
-
-        testSelector = "//" + el.tagName + "[" + classSelector + "]";
-        matchList = roba_driver.getElementsByXPath(testSelector, document);
-
-        if(matchList.length == 1){
-          selectors.push(testSelector);
-        } else if(matchList.length > 1) {
-          index = matchList.indexOf(el);
-          if(index >= 0){
-            testSelector = "(" + testSelector + ")[" + (index + 1) + "]";
-            matchList = roba_driver.getElementsByXPath(testSelector, document);
-            if(matchList.length == 1){
-              selectors.push(testSelector);
-            } else {
-              console.error("Matched Elements failed final check: " + testSelector);
-              console.error("Matched Elements failed final check: " + matchList.length);
-            }
-          }
-        }
-      }
-
-      // Check by text
-      var wordCount = el.textContent.split(/\s/).length;
-      if(el.textContent.length && wordCount < 10){
-        testSelector = "//" + el.tagName + "[text()=\"" + el.textContent + "\"]";
-        matchList = roba_driver.getElementsByXPath(testSelector, document);
-
-        if(matchList.length == 1){
-          selectors.push(testSelector);
-        } else if(matchList.length > 1) {
-          index = matchList.indexOf(el);
-          if(index >= 0){
-            testSelector = "(" + testSelector + ")[" + (index + 1) + "]";
-            matchList = roba_driver.getElementsByXPath(testSelector, document);
-            if(matchList.length == 1){
-              selectors.push(testSelector);
-            } else {
-              console.error("Matched Elements failed final check: " + testSelector);
-              console.error("Matched Elements failed final check: " + matchList.length);
-            }
-          }
-        }
-      } else {
-        console.log("Element had no text");
-      }
-
-
-      var attributes = [];
-      for(var i = 0; i < el.attributes.length; i++){
-        attributes.push({name: el.attributes[i].name, value: el.attributes[i].value});
-      }
-      // put together the list of selectors
 
       return {
         match: elements.length == 1,
+        matchCount: elements.length,
         selector: selector,
-        selectors: selectors,
-        wordCount: el.textContent.split(/\s/).length,
-        attributes: attributes,
-        id: el.getAttribute("id"),
-        css: el.getAttribute("class"),
-        text: el.textContent
+        selectors: roba_driver.getSelectors(el)
       }
     }
   }, x, y, selector);
