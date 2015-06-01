@@ -1,0 +1,9 @@
+<template name="node_snippet">
+  <g class="node-group" visibility="visible" opacity="1">
+    <rect class="node {{#if isPage}}node-page{{/if}}{{#if isView}}node-view{{/if}}" x="0" y="0" width="{{nodeConfig 'width'}}" height="{{nodeConfig 'height'}}" rx="{{nodeConfig 'cornerRadius'}}" ry="{{nodeConfig 'cornerRadius'}}"></rect>
+    <g class="node-content" clip-path="url(#node-clip-path)">
+      <rect class="title-backround" x="0" y="0" width="{{nodeConfig 'width'}}" height="{{nodeConfig 'headerHeight'}}"></rect>
+      <text class="node-title no-select" x="4" y="{{titleY}}">{{title}}</text>
+    </g>
+  </g>
+</template>

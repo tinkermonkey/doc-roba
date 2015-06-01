@@ -1,0 +1,96 @@
+<template name="AdventureAddNodeForm">
+  <div class="add-node-form full-width">
+    <h4>Define a new node:</h4>
+
+    <table>
+      <tr>
+        <td class="field-label">Parent Node</td>
+        <td>
+          <div class="btn-select-parent">
+          {{#with record}}
+            {{#if parentId}}
+              {{> standalone_node_snippet staticId=parentId projectVersionId=../adventure.projectVersionId}}
+            {{else}}
+              <i>click to select a parent node</i>
+            {{/if}}
+          {{/with}}
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="field-label">Type</td>
+        <td>
+          {{#with record}}
+            {{> EditableNodeType pageView=true emptyText="Select a node type" dataKey="type" value=type }}
+          {{/with}}
+        </td>
+      </tr>
+      <tr>
+        <td class="field-label">Name</td>
+        <td>
+          {{#with record}}
+            {{> EditableStringField emptyText="Enter a name for this node" dataKey="title" value=title }}
+          {{/with}}
+        </td>
+      </tr>
+      <tr>
+        <td class="field-label">Page Title</td>
+        <td>
+          <div>
+            <span class="dark-orange">Current:</span>
+            {{#each splitTitle}}<span class="title-part clickable inline-block" data-type="title" data-value="{{value}}">{{value}}</span> {{/each}}
+          </div>
+          <div>
+            <span class="dark-orange">Selected:</span>
+            {{#with record}}
+              {{> EditableStringField cssClass="inline-block" emptyText="Select the node title parts which identify this node" dataKey="pageTitle" value=pageTitle }}
+            {{/with}}
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="field-label">URL</td>
+        <td>
+          <div>
+            <span class="dark-orange">Current:</span>
+            {{#each splitUrl}}<div class="inline-block">/<span class="url-part clickable" data-type="url" data-value="{{value}}">{{value}}</span></div>{{/each}}
+          </div>
+          <div>
+            <span class="dark-orange">Selected:</span>
+            {{#with record}}
+              {{> EditableStringField cssClass="inline-block" emptyText="Select the node url segments which identify this node" dataKey="url" value=url }}
+            {{/with}}
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="field-label">URL Parameters</td>
+        <td>
+          <div>
+            <span class="dark-orange">Current:</span>
+            <div class="inline-block align-top">
+              {{#each splitParams}}
+                <div class="param-part">
+                  <span class="param-name clickable" data-value="{{value.param}}">{{value.param}}</span>
+                  {{#if value.value}}
+                    = <span class="param-value clickable" data-value="{{value.value}}">{{value.value}}</span>
+                  {{/if}}
+                </div>
+              {{/each}}
+            </div>
+          </div>
+          <div>
+            <span class="dark-orange">Selected:</span>
+            <button class="btn btn-warning btn-small-round btn-add-url-parameter" data-pk="{{_id}}">+</button>
+            <div style="padding-left: 20px; width: 80%;">{{> edit_node_url_parameters }}</div>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <div class="add-node-btn-bar">
+      <button class="btn btn-warning btn-cancel-node">Cancel</button>
+      <button class="btn btn-success btn-create-node">Create Node</button>
+    </div>
+  </div>
+</template>

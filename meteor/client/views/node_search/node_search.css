@@ -1,0 +1,24 @@
+
+.node-search-result {
+  cursor: pointer;
+}
+
+.node-search-match {
+
+}
+
+.node-search-noMatch {
+  color: #f00;
+}
+
+.node-search-missing {
+  color: #bbbbbb;
+}
+
+.node-search-extra {
+  color: #50d7ff;
+}
+
+.search-highlight {
+  background-color: #ffff00;
+}

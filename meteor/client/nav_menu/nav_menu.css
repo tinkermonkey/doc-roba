@@ -1,0 +1,112 @@
+/**
+* Navigation menu placement
+*/
+.main-nav-placement {
+  position: fixed;
+  z-index: 100;
+  top: 0px;
+  right: -205px;
+  width: 1px;
+  height: 120px;
+  -webkit-transition: height 0.25s, right 0.25s;
+  transition: height 0.25s, right 0.25s;
+}
+
+.main-nav-menu {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  width: 400px;
+  pointer-events: none;
+}
+
+/**
+* Navigation menu
+*/
+.nav-body {
+  width: 100%;
+  padding: 30px;
+}
+
+.nav-body-show {
+  background-color: rgba(255, 255, 255, 0.90);
+  box-shadow: 0 0 15px #888888;
+  pointer-events: all;
+}
+
+.nav-bottom-row {
+  margin-top: 50px;
+  margin-bottom: 100px;
+  padding-left: 100px;
+  text-align: right;
+}
+
+.nav-name {
+
+}
+
+.nav-logout {
+  padding-top: 10px;
+  float: right;
+}
+
+.nav-body-left {
+  width: 50%;
+  border-right: 1px solid #A5A5A5;
+}
+
+.nav-body-right {
+  width: 50%;
+}
+
+/**
+* The logo section
+*/
+
+.nav-logo-container {
+  position: absolute;
+  z-index: 100;
+  bottom: 0px;
+  left: 0px;
+  width: 300px;
+  height: 200px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.nav-logo-placement {
+  -webkit-transform: rotate(35deg) scale(0.5);
+  transform: rotate(35deg) scale(0.5);
+  -webkit-transform-origin: 0 0;
+  transform-origin: 0 0;
+
+}
+
+.nav-logo-bar {
+  pointer-events: all;
+  width: 700px;
+  height: 103px;
+  background-color: #0A7BFF;
+}
+
+.nav-logo {
+  margin-left: 275px;
+  height: 100%;
+}
+
+/**
+* Navigation menu header
+*/
+.nav-title {
+  pointer-events: all;
+  color: #333;
+  background-color: rgba(255, 255, 255, 0.90);
+  width: 700px;
+  padding: 0px;
+  padding-left: 150px;
+  font-size: 32px;
+}
+
+.nav-title a {
+  color: #333;
+}

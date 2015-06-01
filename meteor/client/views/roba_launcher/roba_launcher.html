@@ -1,0 +1,32 @@
+<template name="roba_launcher">
+  <div class="roba-launcher-container">
+    <div class="roba-launcher-content">
+      <h3>Launch drone to <span class="dark-blue">{{getRoute.destination.node.title}}</span></h3>
+      {{#if getRoute.feasible}}
+        <div><span class="dark-blue">User Type: </span>{{getRoute.userType.title}}</div>
+        <div>
+          <span class="dark-blue">User Account: </span>
+          {{> EditableUserAccount value=getAccount projectVersionId=projectVersionId userType=getRoute.userType dataKey="account" }}
+        </div>
+        <div><span class="dark-blue">Platform: </span>{{getRoute.platform.title}}</div>
+        <div>
+          <span class="dark-blue">Server: </span>
+          {{> EditableServerSelector value=getServer projectVersionId=projectVersionId dataKey="server" }}
+        </div>
+        <div>
+          <span class="dark-blue">Test System: </span>
+          {{> EditableTestSystemSelector value=getTestSystem testAgent=getTestAgent projectVersionId=projectVersionId dataKey="testSystem" }}
+        </div>
+        <div>
+          <span class="dark-blue">Agent: </span>
+          {{> EditableTestAgentSelector value=getTestAgent projectVersionId=projectVersionId dataKey="testAgent" }}
+        </div>
+        <div class="text-right" style="margin-top:20px;">
+          <button class="btn btn-warning btn-launch-drone">Launch Drone</button>
+        </div>
+      {{else}}
+        <div><span class="dark-orange">Error: </span>This destination doesn't look reachable at this point.</div>
+      {{/if}}
+    </div>
+  </div>
+</template>

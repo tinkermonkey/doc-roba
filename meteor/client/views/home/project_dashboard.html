@@ -1,0 +1,19 @@
+<template name="project_dashboard">
+  <div class="header">{{project.title}}</div>
+
+  <ul class="nav nav-pills">
+    <li role="presentation" class="active"><a data-tab-name="activity">Activity</a></li>
+    <li role="presentation"><a data-tab-name="versions">Versions</a></li>
+    {{#if hasRole 'admin' project._id}}
+      <li role="presentation"><a data-tab-name="team">Team</a></li>
+    {{/if}}
+  </ul>
+
+  <div class="tab-container">
+    <div class="tab" data-tab-name="activity">{{> project_activity }}</div>
+    <div class="tab" data-tab-name="versions">{{> project_versions }}</div>
+    {{#if hasRole 'admin' project._id}}
+    <div class="tab" data-tab-name="team">{{> project_team }}</div>
+    {{/if}}
+  </div>
+</template>

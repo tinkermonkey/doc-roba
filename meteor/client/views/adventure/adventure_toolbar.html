@@ -1,0 +1,32 @@
+<template name="AdventureToolbar">
+  <div class="input-group">
+    <!--
+    <div class="input-group-btn">
+      <button type="button" class="btn btn-primary btn-left-click">
+        <img class="toolbar-icon" src="/toolbar/white/left_click.svg" />
+      </button>
+      <button type="button" class="btn btn-primary btn-right-click">
+        <img class="toolbar-icon" src="/toolbar/white/right_click.svg" />
+      </button>
+      <button type="button" class="btn btn-primary btn-type">
+        <img class="toolbar-icon" src="/toolbar/white/enter_text.svg" />
+      </button>
+      <button type="button" class="btn btn-primary btn-hover">
+        <img class="toolbar-icon" src="/toolbar/white/hover.svg" />
+      </button>
+    </div>
+    -->
+    <input type="text" class="form-control selector-value" aria-label="..." value="{{getXPath}}">
+    <div class="input-group-btn">
+      <button type="button" class="btn btn-primary btn-clear">
+        <span class="glyphicon glyphicon-remove"></span>
+      </button>
+      <button type="button" class="btn btn-primary btn-refine">
+        <span class="glyphicon glyphicon-magnet"></span>
+      </button>
+      <button type="button" class="btn btn-primary btn-highlight">
+        <span class="glyphicon glyphicon-search"></span>
+      </button>
+    </div>
+  </div>
+</template>

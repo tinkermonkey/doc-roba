@@ -1,0 +1,1 @@
+FocusNodes = new Meteor.Collection(null);

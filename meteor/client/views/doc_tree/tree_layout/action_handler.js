@@ -1,0 +1,716 @@
+/**
+ * Handle all of the accounting for the Action data structures
+ *
+ * @param treeLayout
+ * @param config
+ * @constructor
+ */
+TreeActionHandler = function (treeLayout, config) {
+  var self = this;
+
+  // Make sure there's a tree layout
+  if (!treeLayout) {
+    console.error("TreeActionHandler constructor failed: no TreeLayout passed");
+    return;
+  }
+  self.treeLayout = treeLayout;
+
+  // condense the config
+  self.config = config || {};
+  _.defaults(self.config, DocTreeConfig.actions);
+
+  // Get a handle to the Link & Label layers
+  self.linkLayer        = self.treeLayout.layoutRoot.select(".action-link-layer");
+  self.hoverLayerFront  = self.treeLayout.layoutRoot.select(".action-hover-layer-front");
+  self.hoverLayerBack   = self.treeLayout.layoutRoot.select(".action-hover-layer-back");
+
+  // setup a custom action label layout controller
+  self.actionLabelList = [];
+
+  // create a dummy label for measuring text width
+  self.dummyActionLabel = self.treeLayout.layoutRoot.select("g").append("text")
+    .attr("id", "dummy-action-label")
+    .attr("class", "action-label-text")
+    .attr("x", -10000)
+    .attr("y", -10000);
+
+  // create a flag to use to lock the hover state of an action
+  self.locked = false;
+  self.hoverActions = [];
+};
+
+/**
+ * Set the master list of actions
+ * @param actionList The full flat list of actions from the DB
+ */
+TreeActionHandler.prototype.setActions = function (actionList) {
+  var self = this;
+
+  self.dbActionList = actionList;
+};
+
+/**
+ * Get the full list of actions
+ * @returns {*}
+ */
+TreeActionHandler.prototype.getActions = function () {
+  return this.dbActionList;
+};
+
+/**
+ * Add an action connecting two nodes
+ */
+TreeActionHandler.prototype.addAction = function (sourceNode, destinationNode) {
+  Meteor.log.debug("addAction: ", sourceNode, destinationNode);
+
+  var actionConfig = {
+      projectId: sourceNode.projectId,
+      projectVersionId: sourceNode.projectVersionId,
+      nodeId: sourceNode.staticId,
+      routes: [{
+        order: 0,
+        nodeId: destinationNode.staticId
+      }],
+      title: 'New Action'
+    };
+
+  Actions.insert(actionConfig, function (error, response) {
+    if(error){
+      console.error("Failed to create Action: ", error);
+    } else {
+      console.log("Action created: ", response);
+    }
+  });
+};
+
+/**
+ * Add a route to an action
+ */
+TreeActionHandler.prototype.addRoute = function (action, destinationNode) {
+  Meteor.log.debug("addRoute: ", action, destinationNode);
+
+  Actions.update({_id: action._id }, {
+    $push: { routes: {
+      order: action.routes.length,
+      nodeId: destinationNode.staticId,
+      routeCode: ""
+    } }
+  }, function (error, response) {
+    if(error){
+      console.error("Failed to add route to Action: ", error);
+    } else {
+      console.log("Route added: ", response);
+    }
+  });
+};
+
+/**
+ * Prepare the action data structures
+ */
+TreeActionHandler.prototype.prepActions = function () {
+  var self = this,
+    tree = self.treeLayout,
+    sourceIds = [];
+
+  // map all of the actions, keeping in mind that the DB data may be broken and point to nodes which don't exist
+  self.actionRoutes = [];
+  _.each(self.dbActionList, function(action, i){
+    var sourceNode = tree.nodeHandler.getByStaticId(action.nodeId);
+    if(sourceNode){
+      var destinationNode,
+        routes = [];
+
+      // Add the source id to the tracking list if it doesn't exist
+      if(sourceIds.indexOf(sourceNode.staticId) < 0){
+        sourceIds.push(sourceNode.staticId);
+      }
+
+      // Vet each of the route destinations
+      _.each(action.routes, function (route, i) {
+        destinationNode = tree.nodeHandler.getByStaticId(route.nodeId);
+        if(destinationNode){
+          routes.push({
+            _id: action._id,
+            action: action,
+            source: sourceNode,
+            destination: destinationNode,
+            routeIndex: i,
+            routeOrder: route.order
+          });
+        } else {
+          console.error("Broken route: ", route, action);
+        }
+      });
+
+      // sort the routes by destination location
+      routes = _.sortBy(routes, function (r) { return r.destination.x });
+
+      // store the sort index for fast access
+      _.each(routes, function (r, i) { r.routeSortIndex = i });
+
+      // merge these into the master list
+      self.actionRoutes = self.actionRoutes.concat(routes);
+    } else {
+      console.error("Orphaned action: ", action);
+    }
+  });
+
+  // Group the routes by source node and order them by destination location
+  var baseRoutes = [],
+    nodeRoutes = [],
+    baseRouteLookup, rightRoutes, leftRoutes;
+  _.each(sourceIds, function (id) {
+    rightRoutes = [];
+    leftRoutes = [];
+    baseRouteLookup = {};
+
+    // Get all of the routes for this node
+    nodeRoutes = _.filter(self.actionRoutes, function (r) { return r.source.staticId == id });
+
+    // get the left-most routes for each action for this node
+    baseRoutes = _.filter(nodeRoutes, function (r) { return r.routeSortIndex == 0 });
+
+    _.each(_.sortBy(baseRoutes, function (r) { return r.destination.x }), function (r, i) {
+      r.actionSortIndex = i;
+      baseRouteLookup[r._id] = r;
+      r.dir = r.destination.x >= r.source.x ? 1 : -1;
+
+      // keep track of which x direction the destination is
+      if(r.dir > 0){
+        rightRoutes.push(r._id);
+        r.index = rightRoutes.length - 1;
+      } else {
+        leftRoutes.push(r._id);
+        r.index = leftRoutes.length - 1;
+      }
+    });
+
+    // Make another pass to get all of the directional ordering in line
+    _.each(nodeRoutes, function (r) {
+      if(r.routeIndex > 0 && baseRouteLookup[r._id]){
+        r.actionSortIndex = baseRouteLookup[r._id].actionSortIndex;
+        r.dir = r.destination.x >= r.source.x ? 1 : -1;
+
+        // If the lesser route direction is different from the base route direction
+        if(r.dir !== baseRouteLookup[r._id].dir){
+          if(r.dir > 0){
+            if(!_.contains(rightRoutes, r._id)){
+              rightRoutes.push(r._id);
+              r.index = rightRoutes.length - 1;
+            } else {
+              r.index = rightRoutes.indexOf(r._id);
+            }
+          } else {
+            if(!_.contains(leftRoutes, r._id)){
+              leftRoutes.push(r._id);
+              r.index = leftRoutes.length - 1;
+            } else {
+              r.index = leftRoutes.indexOf(r._id);
+            }
+          }
+        } else {
+          r.index = baseRouteLookup[r._id].index;
+        }
+      } else if(!baseRouteLookup[r._id]) {
+        console.error("Base Route Lookup failed: ", r);
+      }
+    });
+
+    // Make a final pass to store the count info
+    _.each(nodeRoutes, function (r) {
+      r.baseRoute = baseRouteLookup[r._id];
+      r.actionCount = baseRoutes.length;
+      r.count = r.dir > 0 ? rightRoutes.length : leftRoutes.length;
+    });
+
+  });
+};
+
+/**
+ * Clear the list of visible actions
+ */
+TreeActionHandler.prototype.clearVisibleActions = function () {
+  var self = this;
+
+  self.visibleActionList = [];
+  self.updateActionDisplay();
+};
+
+/**
+ * Update the display of all of the actions currently visible
+ * @param duration
+ */
+TreeActionHandler.prototype.update = function (duration) {
+  var self = this,
+    actions;
+
+  // gather the existing action links and set the data
+  actions = self.linkLayer.selectAll(".action")
+    .data(self.actionRoutes, function(d){ return d._id + "_" + d.routeIndex; });
+
+  // Update the action links
+  self.createAndUpdateLinks(actions, duration);
+
+  // Update the action labels
+  self.updateActionDisplay();
+
+  // Update the hover actions
+  if(self.hoverActions.length){
+    var hoverActionRoutes = _.filter(self.actionRoutes, function (d) { return _.contains(self.hoverActions, d.action.staticId) });
+    if(hoverActionRoutes.length && self.treeLayout.actionControls){
+      self.treeLayout.actionControls.action = hoverActionRoutes[0];
+      hoverActionRoutes[0].x = self.treeLayout.actionControls.action.x = self.hoverRoute.x;
+      hoverActionRoutes[0].y = self.treeLayout.actionControls.action.y = self.hoverRoute.y;
+      self.treeLayout.actionControls.update(0);
+      self.updateHover(hoverActionRoutes[0]);
+    }
+  }
+};
+
+/**
+ * Show the correct set of actions
+ */
+TreeActionHandler.prototype.updateActionDisplay = function () {
+  var self = this,
+    tree = self.treeLayout,
+    startPoint;
+
+  // clear out what is displayed
+  self.linkLayer.selectAll('.action-vis').classed("action-vis", false);
+
+  // clear the select state if there is nothing to display
+  self.linkLayer.selectAll(".action-link-select").classed('action-link-select', false);
+
+  // show all of the actions requested
+  _.each(self.visibleActionList, function(d){
+    self.linkLayer.selectAll('.action-' + d).classed("action-vis", true);
+  });
+
+  // compile the list of actions by filtering for visibility
+  self.actionLabelList = _.filter(tree.layoutRoot.selectAll(".action-vis").data(), function(d){
+    return d.source.parent.visExpanded;
+  });
+
+  // go through each action and calculate where the foci should be
+  _.each(self.actionLabelList, function(d){
+    // set a default title
+    d.action.title = d.action.title || "untitled";
+
+    // measure the title width of the label
+    self.dummyActionLabel.text(d.action.title);
+    d.labelWidth = self.dummyActionLabel.node().getBBox().width;
+    d.labelHeight = self.dummyActionLabel.node().getBBox().height;
+
+    startPoint = tree.layoutRoot.select(".action-" + d._id).node().getPointAtLength(0);
+
+    d.x = startPoint.x;
+    d.y = startPoint.y;
+  });
+};
+
+/**
+ * Create and update the links representing actions
+ * @param selection
+ * @param duration
+ */
+TreeActionHandler.prototype.createAndUpdateLinks = function (selection, duration) {
+  var self = this,
+    tree = self.treeLayout;
+
+  // Enter any new links at the parent's previous position
+  selection.enter()
+    .append("path")
+    .attr("class", function(d){
+      return "action action-" + d.source._id + " action-" + d._id;
+    })
+    .classed("action-blunt", function (d) { return !d.destination.parent.visExpanded })
+    .attr("d", function(d, i){ return self.generateActionPath(d); } )
+    .on("click", tree.actionClickHandler.bind(tree) )
+    .on("mouseenter", tree.actionMouseEnterHandler.bind(tree) )
+    .on("mouseleave", tree.actionMouseLeaveHandler.bind(tree) );
+
+  // Transition links to their new position
+  selection
+    .classed("action-blunt", function (d) { return !d.destination.parent.visExpanded })
+    .transition()
+    .duration(duration)
+    .attr("d", function(d, i){ return self.generateActionPath(d); } );
+
+  // Transition exiting nodes to the parent's new position
+  selection.exit()
+    .transition()
+    .duration(duration)
+    .remove();
+};
+
+/**
+ *
+ * @param selection
+ * @param duration
+ */
+TreeActionHandler.prototype.createAndUpdateLabels = function (selection) {
+  var self = this,
+    tree = self.treeLayout,
+    labelGroup;
+
+  // create new labels
+  labelGroup = selection.enter().append("g")
+    .attr("class", function (d) { return "action-label action-label-" + d._id; })
+    .on("click", tree.actionClickHandler.bind(tree))
+    .on("mouseenter", tree.actionMouseEnterHandler.bind(tree))
+    .on("mouseleave", tree.actionMouseLeaveHandler.bind(tree));
+
+  labelGroup.append("rect")
+    .attr("class", "action-label-back")
+    .attr("rx", self.config.cornerRadius)
+    .attr("ry", self.config.cornerRadius);
+
+  labelGroup.append("text")
+    .attr("class", "action-label-text no-select");
+
+  // update existing labels
+  selection
+    .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+  selection.select(".action-label-back")
+    .attr("x", function (d) { return d.labelWidth / -2 - self.config.textXMargin / 2; })
+    .attr("y", function (d) { return d.labelHeight / -2 - self.config.textYMargin / 2; })
+    .attr("width", function (d) { return d.labelWidth + self.config.textXMargin; })
+    .attr("height", function (d) { return d.labelHeight + self.config.textYMargin; });
+  selection.select(".action-label-text")
+    .text(function (d) { return d.action.title; })
+    .attr("x", 0)
+    .attr("y", function (d) { return d.labelHeight / 2 - 2; });
+
+  // remove non-existing labels
+  selection.exit().remove();
+};
+
+/**
+ * Generate the path of a node action
+ * @param r The node
+ * @returns {string} The SVG path for the action
+ */
+TreeActionHandler.prototype.generateActionPath = function(r){
+  //console.log("GenerateActionPath: ", r);
+  var self = this,
+    config = self.treeLayout.nodeHandler.config,
+    source, destination, path;
+
+  if(r.source.parent.visExpanded){
+  //if(r.source.parent.visExpanded && r.destination.parent.visExpanded){
+    // provide centering based on the number of siblings
+    source = {
+      x: r.source.x + -1 * ((r.actionCount -1) * 10 / 2) + r.actionSortIndex * 10,
+      y: r.source.y + r.source.icon.bottom
+    };
+
+    destination = {
+      x: r.destination.x,
+      y: r.destination.y + r.destination.icon.top
+    };
+
+    /*
+     Points are laid out from source to destination
+     Two configurations, one with a middle vertical segment
+
+             D----C                           [source]
+          [Dest]  |   [source]          D--------A
+                  B------A           [Dest]
+
+    */
+    var delta = r.dir > 0 ? -1 * ((r.count - 1) * 6 / 2) + r.index * 6 : -1 * ((r.count - 1) * 6 / 2) + (r.count - r.index -1) * 6,
+      pointA = {
+        x: source.x,
+        y: source.y + config.yMargin / 2 - delta,
+        radius: (config.yMargin / 2 - delta) / 2
+      },
+      pointB = {
+        x: r.source.x + (r.dir > 0 ? r.source.icon.right : r.source.icon.left) + (r.dir * config.xMargin / 2) - r.dir * delta,
+        y: pointA.y,
+        radius: pointA.radius
+      },
+      pointC = {
+        x: pointB.x,
+        y: destination.y - config.yMargin / 2 - delta,
+        radius: (config.yMargin / 2 + delta) / 2
+      },
+      pointD = {
+        x: destination.x,
+        y: pointC.y,
+        radius: (destination.y - pointC.y) / 2
+      },
+      dirAB = r.dir,
+      dirCD = pointD.x < pointC.x ? -1 : 1;
+
+    // Path that routes "up"
+    if (destination.y < source.y) {
+
+      path = PathBuilder.start()
+        .M(source.x, source.y);
+
+      if(r.action.routes.length == 1){
+        path.L(pointA.x, pointA.y - pointA.radius)
+          .q(0, pointA.radius, dirAB * pointA.radius, pointA.radius);
+      } else {
+        path.L(pointA.x, pointA.y);
+      }
+
+      path = path.L(pointB.x - dirAB * pointB.radius, pointB.y)
+        .q(dirAB * pointB.radius, 0, dirAB * pointB.radius, -1 * pointB.radius)
+        .L(pointC.x, pointC.y + pointC.radius)
+        .q(0, -1 * pointC.radius, dirCD * pointC.radius, -1 * pointC.radius)
+        .L(pointD.x - dirCD * pointD.radius, pointD.y)
+        .q(dirCD * pointD.radius, 0, dirCD * pointD.radius, pointD.radius)
+        .L(destination.x, destination.y)
+        .compile();
+      /*
+      path = PathBuilder.start()
+        .M(source.x, source.y)
+        .L(pointA.x, pointA.y)
+        .L(pointB.x, pointB.y)
+        .L(pointC.x, pointC.y)
+        .L(pointD.x, pointD.y)
+        .L(destination.x, destination.y)
+        .compile();
+        */
+    } else {
+      // path that routes "down"
+      pointA.radius = Math.min(pointA.radius, Math.abs(pointD.x - pointA.x) / 2);
+      pointD.radius = Math.min(pointD.radius, Math.abs(pointD.x - pointA.x) / 2);
+      path = PathBuilder.start()
+        .M(source.x, source.y);
+
+      if(r.action.routes.length == 1){
+        path.L(pointA.x, pointA.y - pointA.radius)
+          .q(0, pointA.radius, dirAB * pointA.radius, pointA.radius);
+      } else {
+        path.L(pointA.x, pointA.y);
+      }
+
+      path = path.L(pointD.x - dirAB * pointD.radius, pointD.y)
+        .q(dirAB * pointD.radius, 0, dirAB * pointD.radius, pointD.radius)
+        .L(destination.x, destination.y)
+        .compile();
+    }
+  } else {
+    // stub the path with the starting position so transitions are smooth
+    path = 'M' + r.source.x + ',' + r.source.y;
+  }
+
+  return path;
+};
+
+/**
+ * Show the hover state for an action
+ * @param d
+ */
+TreeActionHandler.prototype.hover = function (d, event) {
+  //console.log("hover: ", d, event);
+  var self = this,
+    tree = self.treeLayout;
+
+  // make sure it's not locked
+  if(self.locked){
+    return;
+  }
+
+  // get all of the routes for this action
+  var routes = self.linkLayer.selectAll(".action-" + d._id).data();
+
+  // Store the id for updates
+  if(d.action && d.action.staticId){
+    self.hoverActions = [d.action.staticId];
+  } else {
+    Meteor.error("Action Hover Failed: invalid data point passed");
+    return;
+  }
+
+  // set the label coordinates if there is an event to pull location from
+  var coords = tree.screenToLocalCoordinates({x: event.clientX, y: event.clientY});
+  d.x = coords.x;
+  d.y = coords.y - d.labelHeight - self.config.textYMargin;
+  self.hoverRoute = { x: d.x, y: d.y };
+
+  var actions = self.hoverLayerBack.selectAll(".action")
+    .data(routes, function (d) { return d._id + "_" + d.routeIndex});
+
+  var labels = self.hoverLayerFront.selectAll(".action-label")
+    .data([d], function (d) { return d._id});
+
+  // Update the action links
+  self.createAndUpdateLinks(actions);
+  self.createAndUpdateLabels(labels);
+
+  // highlight the action
+  self.hoverLayerBack.selectAll(".action")
+    .classed("action-vis", true)
+    .classed("action-link-hover", true);
+  self.hoverLayerBack.selectAll(".action-blunt")
+    .classed("action-link-blunt-hover", true);
+  self.hoverLayerFront.selectAll(".action-label")
+    .classed("action-label-hover", true);
+
+  // Add some event listeners
+  tree.layoutRoot.selectAll(".action-link-hover, .action-label-hover")
+    .on('mouseenter', function () {
+      self.cancelHiding();
+      if(self.treeLayout.actionControls){
+        self.treeLayout.actionControls.cancelHiding();
+      }
+    })
+    .on('mouseleave', function () {
+      self.considerHiding();
+      if(self.treeLayout.actionControls) {
+        self.treeLayout.actionControls.considerHiding();
+      }
+    });
+};
+
+/**
+ * Update the hover state for an action
+ * @param d
+ */
+TreeActionHandler.prototype.updateHover = function (d) {
+  //console.log("updateHover: ", d);
+  var self = this,
+    tree = self.treeLayout;
+
+  // get all of the routes for this action
+  var routes = self.linkLayer.selectAll(".action-" + d._id).data();
+
+  var actions = self.hoverLayerBack.selectAll(".action")
+    .data(routes, function (d) { return d._id + "_" + d.routeIndex});
+
+  var labels = self.hoverLayerFront.selectAll(".action-label")
+    .data([d], function (d) { return d._id});
+
+  // Update the action links
+  self.createAndUpdateLinks(actions);
+  self.createAndUpdateLabels(labels);
+
+  // highlight the action
+  self.hoverLayerBack.selectAll(".action")
+    .classed("action-vis", true)
+    .classed("action-link-hover", true);
+  self.hoverLayerFront.selectAll(".action-label")
+    .classed("action-label-hover", true);
+
+  // Add event listeners for any new routes
+  /*
+  actions.enter()
+    .on('mouseenter', function () {
+      self.cancelHiding();
+      self.treeLayout.actionControls.cancelHiding();
+    })
+    .on('mouseleave', function () {
+      self.considerHiding();
+      self.treeLayout.actionControls.considerHiding();
+    });
+    */
+};
+
+/**
+ * Consider hiding the hovered action
+ */
+TreeActionHandler.prototype.considerHiding = function () {
+  //Meteor.log.debug("TreeActionHandler.considerHiding()");
+  var self = this;
+
+  // make sure it's not locked
+  if(self.locked){
+    return;
+  }
+
+  self.hideTimeout = setTimeout( function () {
+    self.hideHover();
+  }, self.config.hideTimer);
+};
+
+/**
+ * Cancel hiding the hovered node
+ */
+TreeActionHandler.prototype.cancelHiding = function () {
+  //Meteor.log.debug("TreeActionHandler.cancelHiding()");
+  var self = this;
+
+  if(self.hideTimeout){
+    clearTimeout(self.hideTimeout);
+  }
+};
+
+/**
+ * Hide the hovered node
+ */
+TreeActionHandler.prototype.hideHover = function () {
+  var self = this;
+
+  // make sure it's not locked
+  if(self.locked){
+    return;
+  }
+
+  self.hoverActions = [];
+  self.hoverLayerBack.selectAll(".action").remove();
+  self.hoverLayerFront.selectAll(".action-label").remove();
+};
+
+
+/**
+ * Lock the current hover state
+ */
+TreeActionHandler.prototype.lock = function () {
+  //Meteor.log.debug("ActionHandler: lock");
+  this.locked = true;
+};
+
+/**
+ * Unlock the hover state
+ */
+TreeActionHandler.prototype.unlock = function () {
+  //Meteor.log.debug("ActionHandler: unlock");
+  this.locked = false;
+};
+
+/**
+ * Edit an action
+ * @param d The action data node to edit
+ */
+TreeActionHandler.prototype.editAction = function (d) {
+  var self = this,
+    tree = self.treeLayout;
+
+  // Clear the selected nodes
+  tree.layoutRoot.selectAll('.node-selected').classed("node-selected", false);
+
+  // select the source and destination nodes
+  tree.layoutRoot.select("#node_" + d.source._id + " .node").classed("node-selected", true);
+  tree.layoutRoot.select("#node_" + d.destination._id + " .node").classed("node-selected", true);
+
+  // Show the drawer with the edit action template
+  tree.zoomAndCenterNodes([d.source, d.destination], {bottom: tree.config.bottomDrawerHeight});
+
+  // lock the action hover state and the node controls
+  self.hoverLayerFront.select(".action-label-" + d._id).classed("action-label-edit", true);
+  self.lock();
+  if(tree.actionControls){
+    tree.actionControls.show(d);
+    tree.actionControls.lock();
+  }
+
+  // Show the drawer with the edit action template
+  BottomDrawer.show({
+    height: tree.config.bottomDrawerHeight,
+    contentTemplate: 'edit_action',
+    contentData: { _id: d._id },
+    callback: function () {
+      this.hoverLayerFront.select(".action-label-edit").classed("action-label-edit", false);
+      this.unlock();
+      this.hideHover();
+      if(this.treeLayout.actionControls) {
+        this.treeLayout.actionControls.unlock();
+        this.treeLayout.actionControls.hide();
+      }
+      this.treeLayout.restoreCachedView(this.treeLayout.config.stepDuration);
+    }.bind(self)
+  });
+};

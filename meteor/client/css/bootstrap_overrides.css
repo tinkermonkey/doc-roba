@@ -1,0 +1,20 @@
+/**
+ * TODO: do this right and just customize the bootstrap I'm using
+ */
+.label-primary {
+  background-color: #298cff;
+}
+
+.btn-primary {
+  background-color: #298cff;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary.focus,
+.btn-primary:active,
+.btn-primary.active,
+.open > .dropdown-toggle.btn-primary {
+  color: #fff;
+  background-color: #2372cc;
+}

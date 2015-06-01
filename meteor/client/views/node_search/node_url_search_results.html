@@ -1,0 +1,62 @@
+<template name="NodeUrlSearchResults">
+  {{#each this}}
+    <div class="clearfix">
+      <div class="pull-left node-search-icon"
+         data-node-id="{{node._id}}"
+         data-node-staticId="{{node.staticId}}"
+         data-toggle="popover"
+         data-trigger="focus"
+         data-content="Score: {{score.total}} / {{score.max}}<br>Click to designate this as the current node"
+        >
+        {{> standalone_node_snippet staticId=node.staticId projectVersionId=node.projectVersionId}}
+      </div>
+      <div style="padding-top: 10px;">
+        {{#if title.pieces.length}}
+        <div>
+          <span class="dark-blue">title: </span>
+          {{#each title.pieces}}
+            <span
+            class="inline-block node-search-result node-search-{{renderNodeSearchStatus status}}"
+            data-toggle="popover"
+            data-trigger="focus"
+            data-content="{{renderNodeSearchStatus status}}: {{value}}"
+            >{{value}}</span>
+          {{/each}}
+        </div>
+        {{/if}}
+        {{#if url.pieces.length}}
+        <div>
+          <span class="dark-blue">url: </span>
+          <span>
+            {{#each url.pieces}}
+              <div class="inline-block">
+              /<span
+                class="node-search-result node-search-{{renderNodeSearchStatus status}}"
+                data-toggle="popover"
+                data-trigger="focus"
+                data-content="{{renderNodeSearchStatus status}}: {{value}}"
+                >{{value}}</span>
+              </div>
+            {{/each}}
+          </span>
+        </div>
+        {{/if}}
+        {{#if params.pieces.length}}
+        <div>
+          <span class="dark-blue align-top">parameters: </span>
+          <div class="inline-block">
+          {{#each params.pieces}}
+            <div
+            class="node-search-result node-search-{{renderNodeSearchStatus status}}"
+            data-toggle="popover"
+            data-trigger="focus"
+            data-content="{{renderNodeSearchStatus status}}: {{value.param}}{{#if value.value}}={{value.value}}{{/if}}"
+            >{{value.param}}{{#if value.value}}={{value.value}}{{/if}}</div>
+          {{/each}}
+          </div>
+        </div>
+        {{/if}}
+      </div>
+    </div>
+  {{/each}}
+</template>

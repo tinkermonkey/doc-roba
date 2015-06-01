@@ -1,0 +1,26 @@
+<template name="NodeTermSearchResults">
+  {{#each this}}
+    <div class="clearfix">
+      <div class="pull-left node-search-icon"
+         data-node-id="{{node._id}}"
+         data-node-staticId="{{node.staticId}}"
+        >
+        {{> standalone_node_snippet staticId=node.staticId projectVersionId=node.projectVersionId}}
+      </div>
+      <div style="padding-top: 10px;">
+        <div>
+          <div class="dark-blue inline-block">Name: </div>
+          <div class="inline-block">{{{highlightTerm node.title searchTerm}}}</div>
+        </div>
+        <div>
+          <div class="dark-blue inline-block">Page Title: </div>
+          <div class="inline-block">{{{highlightTerm node.pageTitle searchTerm}}}</div>
+        </div>
+        <div>
+          <div class="dark-blue inline-block">URL: </div>
+          <div class="inline-block">{{{highlightTerm node.url searchTerm}}}</div>
+        </div>
+      </div>
+    </div>
+  {{/each}}
+</template>

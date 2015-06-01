@@ -1,0 +1,9 @@
+<template name="version_activity">
+  <h4>Version Activity</h4>
+
+  {{#if hasChanges}}
+    {{> change_list versionChanges }}
+  {{else}}
+    <div style="font-style: italic;">No recent changes</div>
+  {{/if}}
+</template>

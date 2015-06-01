@@ -1,0 +1,6 @@
+<template name="EditableNodeType">
+  <div class="{{cssClass}} editable-node-type"  data-key="{{dataKey}}">
+    <span class="{{#unless value}}hide{{/unless}}">{{renderNodeType value}}</span>
+    <span class="{{#if value}}hide{{/if}}"><i>{{emptyText}}</i></span>
+  </div>
+</template>

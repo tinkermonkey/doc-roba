@@ -1,0 +1,40 @@
+<template name="TestAgentList">
+  <button class="btn btn-warning btn-add-test-agent" data-pk="{{version._id}}">Add Test Agent Configuration</button>
+  <table class="sortable-table">
+    <tr class="sortable-table-header">
+      <td></td>
+      <td>Type</td>
+      <td>OS</td>
+      <td>OS Version</td>
+      <td>Name</td>
+      <td>Version</td>
+      <td>Identifier</td>
+      <td>Configuration</td>
+      <td></td>
+    </tr>
+    <tr class="sortable-table-divider">
+      <td colspan="9"><div class="divider"></div></td>
+    </tr>
+    {{#unless sortedTestAgents.length}}
+      <tr>
+        <td colspan="9"><i>Click Add Test Agent Configuration to add a test agent configuration</i></td>
+      </tr>
+    {{/unless}}
+    {{#each sortedTestAgents}}
+      <tr class="sortable-table-row" data-pk="{{_id}}" data-sort-order="{{order}}">
+        <td class="drag-handle"><span class="glyphicon glyphicon-record"></span></td>
+        <td>{{> EditableTestAgentType value=type       dataKey="type" noGrid=true}}</td>
+        <td>{{> EditableTestAgentOS   value=os         dataKey="os"}}</td>
+        <td>{{> EditableStringField  value=osVersion  dataKey="osVersion" emptyText="Any"}}</td>
+        <td>{{> EditableStringField  value=title      dataKey="title"}}</td>
+        <td>{{> EditableStringField  value=version    dataKey="version" emptyText="Any"}}</td>
+        <td>{{> EditableStringField  value=identifier dataKey="identifier" emptyText="browserName"}}</td>
+        <td>{{> EditableStringField  value=config     dataKey="config" emptyText="-"}}</td>
+        <td class="btn-delete"><span class="glyphicon glyphicon-remove"></span></td>
+      </tr>
+    {{/each}}
+    <tr class="sortable-table-divider">
+      <td colspan="9"><div class="divider"></div></td>
+    </tr>
+  </table>
+</template>

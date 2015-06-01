@@ -1,0 +1,15 @@
+<template name="ActionRouteSnippet">
+  <svg width="{{width}}" height="{{height}}">
+    <g transform="translate({{xMargin}}, {{yMargin}}) scale({{scale}})">
+      <g class="source" transform="translate(0, {{sourceNodeY}})">
+        {{> node_snippet getNode nodeId projectVersionId}}
+      </g>
+      {{#each sortedRoutes}}
+      <g class="route-destination" transform="translate({{routeNodeX}}, {{routeNodeY}})">
+        {{> node_snippet getNode nodeId ../projectVersionId}}
+      </g>
+      <path class="action" d="{{path ..}}" style="visibility: visible;"></path>
+      {{/each}}
+    </g>
+  </svg>
+</template>

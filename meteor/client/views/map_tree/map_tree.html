@@ -1,0 +1,51 @@
+<template name="MapTree">
+  {{#contentFor "svgDefs"}}
+    {{> svg_def "outer-glow" }}
+    {{> svg_def "shadow" }}
+    {{> svg_def "crisp-shadow" }}
+    {{> svg_def "node-clip-path" }}
+    {{> svg_def "root-clip-path" }}
+    {{> svg_def "node-hover" }}
+    {{> svg_def "node-control-back" }}
+    {{> svg_def "node-control-back-roba" }}
+    {{> svg_def "root-node-back" }}
+    {{> svg_def "node-back" }}
+    {{> svg_def "page-back" }}
+    {{> svg_def "node-controls-back-gradient" }}
+    {{> svg_def "action-arrow" }}
+    {{> svg_def "action-arrow-blunt" }}
+    {{> svg_def "action-arrow-hover" }}
+    {{> svg_def "action-arrow-blunt-hover" }}
+  {{/contentFor}}
+  <svg id="{{getElementId}}" class="map-tree-base">
+    <defs class="base-defs">
+      <clipPath id="map-clip-path">
+        <circle cx="50%" cy="50%" r="99"></circle>
+      </clipPath>
+    </defs>
+
+    <g class="inset-layer">
+      <g class="inset-clip">
+        <g class="global-layer">
+          <g class="link-layer"></g>
+          <g class="action-link-layer"></g>
+          <g class="node-controls-layer-back"></g>
+          <g class="node-controls-layer"></g>
+          <g class="centered-node-highlight">
+            <circle class="node-controls-back" r="0" cx="0" cy="0"></circle>
+          </g>
+          <g class="node-highlight-layer"></g>
+          <g class="node-layer" style="display: inherit;"></g>
+          <g class="node-controls-layer-front"></g>
+          <g class="action-hover-layer-back"></g>
+          <g class="action-controls-layer-back"></g>
+          <g class="action-hover-layer-front"></g>
+          <g class="action-controls-layer-front"></g>
+        </g>
+        <g class="location-unknown" transform="translate(0, 65)">
+          <text x="50%" y="50%">?</text>
+        </g>
+      </g>
+    </g>
+  </svg>
+</template>

@@ -1,0 +1,6 @@
+<template name="EditableTestAgentSelector">
+  <div class="{{cssClass}} editable-test-agent-selector inline" data-key="{{dataKey}}">
+    <span class="{{#unless value}}hide{{/unless}}">{{renderTestAgentNameFromStaticId value projectVersionId}}</span>
+    <span class="{{#if value}}hide{{/if}}">(<i>Select Test Agent</i>)</span>
+  </div>
+</template>

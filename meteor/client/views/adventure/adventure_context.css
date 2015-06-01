@@ -1,0 +1,51 @@
+.sub-heading {
+  padding: 5px;
+}
+
+/**
+ * Edit node form
+ */
+.field-label {
+  text-align: right;
+  color: #298cff;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+/**
+ * Create node form
+ */
+.add-node-form {
+  padding-bottom: 10px;
+}
+
+
+.add-node-form .clickable {
+  padding-left: 2px;
+  padding-right: 2px;
+  margin-left: 1px;
+  margin-right: 1px;
+  border-radius: 2px;
+}
+
+.add-node-form .clickable:hover {
+  cursor: pointer;
+  background: #dddddd;
+}
+
+.add-node-form .clickable.selected {
+  cursor: pointer;
+  background: #50d7ff;
+}
+
+.add-node-btn-bar {
+  padding: 10px 0px 10px 0px;
+  width: 100%;
+  text-align: center;
+}
+
+.btn-edit-action, .btn-execute-action {
+  margin-bottom: 5px;
+  width: 100%;
+  text-align: center;
+}

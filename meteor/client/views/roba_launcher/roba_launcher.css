@@ -1,0 +1,16 @@
+
+.roba-launcher-container {
+  width: 100%;
+}
+
+.roba-launcher-loading {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 110px;
+  height: 110px;
+}
+
+.roba-launcher-content {
+  padding: 10px;
+}

@@ -1,0 +1,10 @@
+<template name="EditableTestAgentList">
+  <div class="{{cssClass}} editable-test-agent-list inline" data-value="{{valueList}}"  data-key="{{dataKey}}">
+    <span class="{{#unless value}}hide{{/unless}}">
+      {{#each value}}
+        {{renderTestAgentNameFromStaticId this ../projectVersionId}}<br>
+      {{/each}}
+    </span>
+    <span class="{{#if value}}hide{{/if}}">(<i>Select Test Agents</i>)</span>
+  </div>
+</template>

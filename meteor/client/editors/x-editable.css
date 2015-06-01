@@ -1,0 +1,10 @@
+.editable-click, a.editable-click, a.editable-click:hover {
+  border: none;
+  color: #666;
+}
+
+.editable-unsaved {
+  background: inherit !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+}

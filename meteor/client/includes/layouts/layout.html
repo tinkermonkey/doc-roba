@@ -1,0 +1,11 @@
+<template name="layout">
+  {{> nav_menu }}
+  <svg id="global-defs-svg">
+    <defs>
+      {{> yield "svgDefs"}}
+    </defs>
+  </svg>
+  <div id="page">
+    {{> yield }}
+  </div>
+</template>

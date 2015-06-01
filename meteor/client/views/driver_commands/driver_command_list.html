@@ -1,0 +1,34 @@
+<template name="driver_command_list">
+	<div class="row">
+		<div class="container">
+			<div class="col-sm-12">
+				<table class="table">
+					<thead>
+					<tr>
+						<th>Type</th>
+						<th>Name</th>
+						<th>Params</th>
+						<th>Description</th>
+					</tr>
+					</thead>
+					<tbody>
+						{{#each this}}
+						<tr>
+							<td>{{type}}</td>
+							<td>{{name}}</td>
+							<td>
+							{{#each params}}
+								{{this.name}}
+							{{/each}}
+							</td>
+							<td>
+								<pre>{{description}}</pre>
+							</td>
+						</tr>
+						{{/each}}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</template>

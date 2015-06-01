@@ -1,0 +1,13 @@
+<template name="def_shadow">
+  <filter id="shadow" color-interpolation-filters="sRGB" x="-30%" y="-30%" width="160%" height="160%">
+    <feOffset result="offOut" in="SourceAlpha" dx="1" dy="1" />
+    <feGaussianBlur result="blurOut" in="offOut" stdDeviation="8" />
+    <feComponentTransfer>
+      <feFuncA type="linear" slope="0.3"/>
+    </feComponentTransfer>
+    <feMerge>
+      <feMergeNode/>
+      <feMergeNode in="SourceGraphic"/>
+    </feMerge>
+  </filter>
+</template>

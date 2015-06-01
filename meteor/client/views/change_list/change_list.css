@@ -1,0 +1,23 @@
+
+.change-list-type {
+  font-style: italic;
+  font-weight: 600;
+  color: #298cff;
+}
+
+.change-list-field {
+  font-style: italic;
+  color: #298cff;
+}
+
+.change-list-value {
+  font-style: italic;
+}
+
+.change-list-value.old {
+  color: #8cc2ff;
+}
+
+.change-list-value.new {
+  color: #298cff;
+}

@@ -1,0 +1,23 @@
+# Meteor packages used by this project, one per line.
+#
+# 'meteor add' and 'meteor remove' will edit this file for you,
+# but you can also edit it by hand.
+
+meteor-platform
+d3
+sacha:spin
+mizzao:bootstrap-3
+mizzao:jquery-ui
+iron:router
+dcsan:reactive-ace
+momentjs:moment
+mrt:trail
+accounts-base
+accounts-password
+williamledoux:static-server
+aldeed:collection2
+matb33:collection-hooks
+natestrauser:x-editable-bootstrap
+aldeed:autoform
+reactive-var
+awatson1978:browser-detection

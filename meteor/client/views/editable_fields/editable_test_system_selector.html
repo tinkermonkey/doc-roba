@@ -1,0 +1,6 @@
+<template name="EditableTestSystemSelector">
+  <div class="{{cssClass}} editable-test-system-selector inline" data-key="{{dataKey}}">
+    <span class="{{#unless value}}hide{{/unless}}">{{renderTestSystemNameFromStaticId value projectVersionId}}</span>
+    <span class="{{#if value}}hide{{/if}}">(<i>Select Test System</i>)</span>
+  </div>
+</template>

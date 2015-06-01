@@ -1,0 +1,40 @@
+<template name="TestSystemList">
+  <button class="btn btn-warning btn-add-test-system">Add Test System</button>
+  <table class="sortable-table">
+    <tr class="sortable-table-header">
+      <td></td>
+      <td>Name</td>
+      <td>Type</td>
+      <td>Hostname</td>
+      <td>Port</td>
+      <td>Agents</td>
+      <td>Config</td>
+      <td>Active</td>
+      <td></td>
+    </tr>
+    <tr class="sortable-table-divider">
+      <td colspan="9"><div class="divider"></div></td>
+    </tr>
+    {{#unless sortedTestSystems.length}}
+      <tr>
+        <td colspan="9"><i>Click Add Test System to add a test system or grid</i></td>
+      </tr>
+    {{/unless}}
+    {{#each sortedTestSystems}}
+      <tr class="sortable-table-row" data-pk="{{_id}}" data-sort-order="{{order}}">
+        <td class="drag-handle"><span class="glyphicon glyphicon-record"></span></td>
+        <td>{{> EditableStringField value=title      dataKey="title"}}</td>
+        <td>{{> EditableTestAgentType value=type       dataKey="type"}}</td>
+        <td>{{> EditableStringField value=hostname   dataKey="hostname"}}</td>
+        <td>{{> EditableStringField value=port       dataKey="port" emptyText="default"}}</td>
+        <td>{{> EditableTestAgentList value=testAgents dataKey="testAgents" type=type projectVersionId=../version._id}}</td>
+        <td>{{> EditableStringField value=config     dataKey="config" emptyText="-"}}</td>
+        <td>{{> EditableFieldYesNo value=active     dataKey="active"}}</td>
+        <td class="btn-delete"><span class="glyphicon glyphicon-remove"></span></td>
+      </tr>
+    {{/each}}
+    <tr class="sortable-table-divider">
+      <td colspan="9"><div class="divider"></div></td>
+    </tr>
+  </table>
+</template>

@@ -1,0 +1,6 @@
+<template name="EditableServerSelector">
+  <div class="{{cssClass}} editable-server-selector inline" data-key="{{dataKey}}">
+    <span class="{{#unless value}}hide{{/unless}}">{{renderServerNameFromStaticId value projectVersionId}}</span>
+    <span class="{{#if value}}hide{{/if}}">(<i>Select Server</i>)</span>
+  </div>
+</template>

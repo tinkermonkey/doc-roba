@@ -1,0 +1,65 @@
+/*
+ALL: "grey",
+TRACE: "blue",
+DEBUG: "cyan",
+INFO: "green",
+WARN: "yellow",
+ERROR: "red",
+FATAL: "magenta",
+OFF: "grey"
+*/
+
+.log-message {
+  font-family: "Helvetic Neue", Helvetica, Arial;
+  font-size: 10pt;
+}
+
+.log-message-level {
+
+}
+
+.log-message-data {
+  font-family: "Menlo", "Consolas", "Courier", monospace;
+}
+
+.log-message-TRACE, .log-message-trace {
+  color: #bfbfbf;
+}
+
+.log-message-DEBUG, .log-message-debug {
+  color: #808080;
+}
+
+.log-message-INFO, .log-message-info {
+  color: #333333;
+}
+
+.log-message-WARN, .log-message-warn {
+  color: #999900;
+}
+
+.log-message-ERROR, .log-message-error {
+  color: red;
+}
+
+.log-message-FATAL, .log-message-fatal {
+  color: #990099;
+}
+
+.log-message-sender {
+  font-family: "Helvetic Neue", Helvetica, Arial;
+  text-transform: capitalize;
+  font-weight: bold;
+}
+
+.log-message-future-driver {
+  color: #0000cc;
+}
+
+.log-message-runner {
+  color: #cc00cc;
+}
+
+.log-message-ddp-link {
+  color: #cc6600;
+}

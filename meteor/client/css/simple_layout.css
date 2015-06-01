@@ -1,0 +1,52 @@
+/**
+ * Like bootstrap but simpler
+ */
+.simple-col {
+  height: 100%;
+  vertical-align: top;
+  display: inline-block;
+  margin: 0;
+  padding: 0 5px 5px 5px;
+}
+.simple-col:first-child {
+  padding-left: 0;
+}
+.simple-divider {
+  border-right: 1px dotted #ddd;
+}
+.simple-col-1 {
+  width:  8.2%;
+}
+.simple-col-2 {
+  width: 16.6%;
+}
+.simple-col-3 {
+  width: 24.7%;
+}
+.simple-col-4 {
+  width: 33.2%;
+}
+.simple-col-5 {
+  width: 41.6%;
+}
+.simple-col-6 {
+  width: 49.7%;
+}
+.simple-col-7 {
+  width: 58.2%;
+}
+.simple-col-8 {
+  width: 66.6%;
+}
+.simple-col-9 {
+  width: 74.7%;
+}
+.simple-col-10 {
+  width: 83.2%;
+}
+.simple-col-11 {
+  width: 91.6%;
+}
+.simple-col-12 {
+  width: 100%;
+}

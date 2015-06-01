@@ -1,0 +1,24 @@
+<template name="nodes_change">
+  {{#with combineData}}
+    <span class="change-list-type">{{renderNodeType record.type}}</span>
+    {{#if isUpdated}}
+      updated:
+      {{#each values}}
+      <span class="change-list-field">{{field}}</span>
+        changed from
+      <span class="change-list-value old">{{old}}</span>
+        to
+      <span class="change-list-value new">{{new}}</span>
+      {{/each}}
+    {{else}}
+      titled
+      <span class="change-list-value new">{{record.title}}</span>
+      {{#if isCreated}}
+        created
+      {{else}}
+        removed
+      {{/if}}
+    {{/if}}
+    by {{renderNameByRole userId}} on {{dateFormat date}}
+  {{/with}}
+</template>

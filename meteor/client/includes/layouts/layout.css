@@ -1,0 +1,14 @@
+#page {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+#global-defs-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: 1px;
+  height: 1px;
+}

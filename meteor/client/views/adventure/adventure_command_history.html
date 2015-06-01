@@ -1,0 +1,29 @@
+<template name="AdventureCommandHistory">
+	<div class="command-history-container">
+		{{#each getCommands}}
+      <div class="panel panel-default">
+        <div class="command-history-toolbar-fix">
+          <div class="btn-group btn-group-xs command-history-toolbar" role="group">
+            {{#if complete}}
+              <button class="btn btn-default btn-copy-command">Insert</button>
+              <button class="btn btn-default btn-full-result">View Full</button>
+            {{/if}}
+          </div>
+        </div>
+
+        <div class="panel-body">
+          <div class="break-word">{{code}}</div>
+        </div>
+        <div class="panel-footer">
+          {{#if complete}}
+            {{#if result}}
+              <div class="dark-blue break-word">{{formatResult}}</div>
+            {{/if}}
+          {{else}}
+            {{> inline_spinner scale="0.3"}}
+          {{/if}}
+        </div>
+      </div>
+		{{/each}}
+  </div>
+</template>

@@ -1,0 +1,7 @@
+<template name="def_outer_glow">
+  <filter id="outer-glow" color-interpolation-filters="sRGB" x="-30%" y="-30%" width="160%" height="160%">
+    <feGaussianBlur stdDeviation="5" result="outerGlowOut1"></feGaussianBlur>
+    <feColorMatrix result = "matrixOut" in = "outerGlowOut1" type = "matrix" values = "0.2 1 0 0 0 0 0.2 0 0 0 0 0 0.2 0 0 0 0 0 1 0"/>
+    <feComposite in="SourceGraphic" in2="outerGlowOut1" operator="over"></feComposite>
+  </filter>
+</template>

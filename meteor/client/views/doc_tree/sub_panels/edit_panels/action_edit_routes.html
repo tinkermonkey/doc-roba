@@ -1,0 +1,41 @@
+<template name="action_edit_routes">
+  <table class="sortable-table">
+    <tr class="sortable-table-header">
+      <td></td>
+      <td>Condition</td>
+      <td width="60%">Code</td>
+      <td>Destination</td>
+      <td></td>
+    </tr>
+    <tr class="sortable-table-divider">
+      <td colspan="6"><div class="divider"></div></td>
+    </tr>
+    {{#each indexedRoutes}}
+      <tr class="sortable-table-row action-route-row" data-pk="{{../_id}}" data-nodeId="{{nodeId}}" data-route-index="{{index}}" data-route-order="{{order}}">
+        <td class="drag-handle"><span class="glyphicon glyphicon-record"></span></td>
+        <td><div style="padding-left: 10px;">{{logic ..}}</div></td>
+        <td class="code-editor-cell">
+          {{> action_edit_route_code }}
+          {{#unless routeCode.length}}
+            <div id="code-message-{{../_id}}-{{index}}">
+              <div class="click-to-edit">
+              {{#if isLast ..}}
+                <span class="label label-primary">Optional</span>
+                If you chose to not add code for this action,
+                it will be the default action when no other actions are selected.
+              {{else}}
+                <span class="label label-warning">Logic Required</span> Click to edit
+              {{/if}}
+              </div>
+            </div>
+          {{/unless}}
+        </td>
+        <td>{{> standalone_node_snippet staticId=nodeId projectVersionId=../projectVersionId scale=0.5 }}</td>
+        <td class="btn-delete"><span class="glyphicon glyphicon-remove"></span></td>
+      </tr>
+    {{/each}}
+    <tr class="sortable-table-divider">
+      <td colspan="6"><div class="divider"></div></td>
+    </tr>
+  </table>
+</template>

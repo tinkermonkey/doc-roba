@@ -1,0 +1,14 @@
+<template name="AdventureLogTable">
+	<table class="table">
+		<tbody>
+		{{#each messages}}
+		<tr class="log-message log-message-{{level}}">
+			<td>{{getTimestamp}}</td>
+			<td><div class="log-message-sender log-message-{{sender}}" style="white-space: nowrap;">{{sender}}</div></td>
+			<td class="log-message-level">{{level}}</td>
+			<td class="log-message-data">{{{getData}}}</td>
+		</tr>
+		{{/each}}
+		</tbody>
+	</table>
+</template>

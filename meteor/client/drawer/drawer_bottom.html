@@ -1,0 +1,18 @@
+<template name="drawer_bottom">
+  <div class="drawer-bottom drawer-container">
+    <div class="drawer-bottom-controls">
+      <div class="drawer-control expander">
+        <div class="glyphicon glyphicon-chevron-up"></div>
+      </div>
+      <div class="drawer-control contractor" style="display: none;">
+        <span class="glyphicon glyphicon-chevron-down"></span>
+      </div>
+      <div class="drawer-control closer">
+        <span class="glyphicon glyphicon-remove"></span>
+      </div>
+    </div>
+    <div class="drawer-bottom-content">
+      {{> Template.dynamic template=contentTemplate data=contentData}}
+    </div>
+  </div>
+</template>

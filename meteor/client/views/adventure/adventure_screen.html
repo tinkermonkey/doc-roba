@@ -1,0 +1,98 @@
+<template name="AdventureScreen">
+	<div>
+		<div class="live-adventure-view">
+			{{#if state.url}}
+				<div class="live-adventure-header">
+          <div class="live-adventure-toolbar">
+            {{> AdventureToolbar fullContext}}
+          </div>
+          <div class="btn-group pull-right">
+            {{#if getHighlightElements ..}}
+              <button type="button" class="btn btn-primary btn-xs btn-clear-highlight">
+                <span class="glyphicon glyphicon-ban-circle"></span>
+                Clear Highlight
+              </button>
+            {{/if}}
+            <button type="button" class="btn btn-primary btn-xs btn-refresh">
+              <span class="glyphicon glyphicon-refresh"></span>
+            </button>
+          </div>
+					{{#with state}}
+						<div>{{title}}</div>
+						<div>{{url}}</div>
+            <div>
+              <small>viewport is {{viewportSize.width}}px x {{viewportSize.height}}px,</small>
+              <small>scrolled to ({{scroll.x}}, {{scroll.y}})</small>
+              <small>Mouse at ({{mouse.x}}, {{mouse.y}})</small>
+            </div>
+					{{/with}}
+				</div>
+			{{/if}}
+
+			{{#if state.screenshot}}
+        {{updateViewport}}
+				<img class="remote-screen" src="data:image/png;base64,{{state.screenshot}}">
+      {{else}}
+        <div class="remote-screen remote-screen-loading">
+          <div class="remote-screen-loading-log">
+            {{> AdventureLogEmbedded }}
+          </div>
+          {{#unless adventureIsStill }}
+            {{> CustomSpinner}}
+          {{/unless}}
+        </div>
+      {{/if}}
+
+      <div class="remote-screen-mask" style="{{#with getScreenMaskPosition}}top: {{top}}px; left: {{left}}px; height: {{height}}px; width: {{width}}px;{{/with}}">
+        {{#with getMousePosition}}
+          <div class="remote-screen-pointer" style="top: {{y}}px; left: {{x}}px;">
+            <span class="glyphicon glyphicon-screenshot"></span>
+          </div>
+        {{/with}}
+        {{> AdventureHoverControls fullContext}}
+        {{#each getHighlightElements}}
+          {{#with processHighlightElement}}
+            {{> AdventureHighlightElement }}
+          {{/with}}
+        {{/each}}
+      </div>
+      {{#each getHighlightElements}}
+        {{#with processHighlightElement}}
+          {{> AdventureHighlightDetail }}
+        {{/with}}
+      {{/each}}
+
+      <div class="adventure-highlight-list" style="top: {{getListTop}}px;">
+        {{#if getHighlightElements ..}}
+          <div class="panel panel-default">
+            <div class="panel-heading">Matched Elements</div>
+            <table class="table table-striped">
+              <tbody>
+              {{#each getHighlightElements}}
+                <tr>
+                  <td>{{index}}</td>
+                  <td>
+                    <span class="glyphicon glyphicon-chevron-down pull-right detail-toggle"></span>
+                    <div class="adventure-highlight-list-row-header">
+                      &lt;<span class="tag">{{tag}}</span>
+                      {{#if id}} <span class="attr">id</span>=<span class="value">"{{id}}"</span>{{/if}}
+                      {{#if name}} <span class="attr">name</span>=<span class="value">"{{name}}"</span>{{/if}}
+                      {{#if class}} <span class="attr">class</span>=<span class="value">"{{class}}"</span>{{/if}}
+                      {{#if href}} <span class="attr">href</span>=<span class="value">"{{href}}"</span>{{/if}}&gt;
+                    </div>
+                    <div class="adventure-highlight-list-row-detail">
+                      Hmmm, I'm going to have to refactor some of this
+                    </div>
+                  </td>
+                </tr>
+              {{/each}}
+              </tbody>
+            </table>
+          </div>
+        {{/if}}
+      </div>
+
+
+		</div>
+	</div>
+</template>

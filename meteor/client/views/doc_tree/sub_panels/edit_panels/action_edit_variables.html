@@ -1,0 +1,35 @@
+<template name="action_edit_variables">
+  <table class="sortable-table">
+    <tr class="sortable-table-header">
+      <td></td>
+      <td>Name</td>
+      <td style="width: 40%;">Type</td>
+      <td style="width: 20%;">Shape</td>
+      <td></td>
+    </tr>
+    <tr class="sortable-table-divider">
+      <td colspan="6"><div class="divider"></div></td>
+    </tr>
+    {{#unless indexedVariables.length}}
+      <tr>
+        <td colspan="5"><i>Click Add Variable to add a variable for use in this action`s code elements</i></td>
+      </tr>
+    {{/unless}}
+    {{#each indexedVariables}}
+      <tr class="sortable-table-row action-variable-row" data-pk="{{../_id}}" data-variable-index="{{index}}" data-variable-order="{{order}}">
+        <td class="drag-handle"><span class="glyphicon glyphicon-record"></span></td>
+        <td>{{> EditableStringField value=name dataKey="name" }}</td>
+        <td>
+          {{> EditableFieldType type=type dataKey="type" }}
+          {{> EditableCustomFieldType type=type customFieldType=customFieldType projectVersionId=../projectVersionId dataKey="customFieldType" }}
+        </td>
+        <td>{{> EditableFieldShape fieldIsArray=varIsArray dataKey="varIsArray"}}</td>
+        <td class="btn-delete"><span class="glyphicon glyphicon-remove"></span></td>
+      </tr>
+    {{/each}}
+    <tr class="sortable-table-divider">
+      <td colspan="6"><div class="divider"></div></td>
+    </tr>
+  </table>
+  <button class="btn btn-warning btn-add-var" data-pk="{{_id}}">Add Variable</button>
+</template>

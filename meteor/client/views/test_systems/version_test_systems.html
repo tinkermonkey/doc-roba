@@ -1,0 +1,15 @@
+<template name="VersionTestSystems">
+  <ul class="nav nav-tabs">
+    <li role="presentation" class="active"><a data-tab-name="test-system-list">Test System List</a></li>
+    <li role="presentation"><a data-tab-name="test-agents">Test Agent Configurations</a></li>
+  </ul>
+
+  <div class="tab-container">
+    <div class="tab" data-tab-name="test-system-list">
+      {{> TestSystemList }}
+    </div>
+    <div class="tab" data-tab-name="test-agents">
+      {{> TestAgentList }}
+    </div>
+  </div>
+</template>

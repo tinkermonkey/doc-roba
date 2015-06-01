@@ -1,0 +1,11 @@
+<template name="single_route_snippet">
+  <svg width="{{width}}" height="{{height}}">
+    <g transform="translate({{xMargin}}, {{yMargin}}) scale({{scale}})">
+        {{> node_snippet getNode sourceId projectVersionId}}
+      <g class="route-destination" transform="translate({{routeNodeX}},0)">
+        {{> node_snippet getNode destinationId projectVersionId}}
+      </g>
+      <path class="action" d="{{path ..}}" style="visibility: visible;"></path>
+    </g>
+  </svg>
+</template>

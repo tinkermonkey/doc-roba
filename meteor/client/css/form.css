@@ -1,0 +1,54 @@
+/* =============================================================================
+  Form
+============================================================================= */
+form.Form {
+  font-size: 13px;
+  width: 100%;
+}
+
+/* =============================================================================
+  Inputs
+============================================================================= */
+.Form .Field {
+  display: block;
+  margin-top: 3px;
+  width: 100%;
+}
+
+.Form label {
+  display: inline-block;
+  width: 45%;
+  text-align: right;
+}
+
+.Form input {
+  display: inline-block;
+  width: 45%;
+  border: 1px solid #999;
+    padding: 3px;
+    border-radius: 2px;
+}
+
+.Form input::-webkit-input-placeholder, .Form input::-moz-placeholder, .Form input:-ms-input-placeholder {
+  color: #999;
+}
+
+/* =============================================================================
+  Simple Forms like sign-in and sign-up
+============================================================================= */
+.Form input.Simple {
+  font-size: 16pt;
+  display: block;
+  width: 100%;
+  border: 1px solid #999;
+  padding: 3px;
+  border-radius: 2px;
+  -moz-box-sizing:    border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing:         border-box;
+  margin-bottom: 10px;
+}
+
+.Form input.Simple:last-child {
+  /*margin-bottom: 0px;*/
+}

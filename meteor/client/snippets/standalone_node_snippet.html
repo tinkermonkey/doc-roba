@@ -1,0 +1,7 @@
+<template name="standalone_node_snippet">
+  <svg class="node-snippet" width="{{width}}" height="{{height}}">
+    <g transform="translate({{xMargin}}, {{yMargin}}) scale({{getScale}})">
+      {{> node_snippet getNode staticId projectVersionId}}
+    </g>
+  </svg>
+</template>

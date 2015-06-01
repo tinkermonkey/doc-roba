@@ -1,0 +1,65 @@
+<template name="AdventureConsole">
+  {{setTitle "Adventure :: " }}
+
+  {{#contentFor "title"}}
+    Adventure Console
+  {{/contentFor}}
+
+  {{#with getFullContext}}
+	<div class="fluid-container full-page adventure">
+		<div class="row">
+      <div class="col-xs-8 adventure-main-view">
+				{{> AdventureScreen }}
+      </div>
+			<div class="col-xs-4 adventure-sidebar">
+        {{> AdventureMap }}
+
+        <div style="margin-top: 5px; margin-bottom: 5px;">
+          <h4 class="inline-block">
+            Status:
+            <small>
+              {{renderAdventureStatus adventure.status}}
+            </small>
+          </h4>
+          {{#unless adventureIsComplete adventure}}
+            {{#if adventureIsPaused adventure}}
+              <button type="button" class="btn btn-xs btn-info btn-unpause-adventure">
+                <span class="glyphicon glyphicon-play"></span>
+              </button>
+            {{else}}
+              <button type="button" class="btn btn-xs btn-info btn-pause-adventure">
+                <span class="glyphicon glyphicon-pause"></span>
+              </button>
+            {{/if}}
+            <button type="button" class="btn btn-xs btn-danger btn-end-adventure">
+              <span class="glyphicon glyphicon-stop"></span>
+            </button>
+          {{/unless}}
+          <button type="button" class="btn btn-xs btn-default btn-view-log">
+            <span class="glyphicon glyphicon-share-alt"></span>
+            View Log
+          </button>
+        </div>
+
+        <ul class="nav nav-pills {{#if showSearch}}hide{{/if}}">
+          <li role="presentation" class="active"><a data-tab-name="context">Context</a></li>
+          <li role="presentation"><a data-tab-name="history">Commands</a></li>
+        </ul>
+
+        <div class="tab-container {{#if showSearch}}hide{{/if}}" style="height: auto !important;">
+          <div class="tab" data-tab-name="context">
+            {{> AdventureContext }}
+          </div>
+          <div class="tab" data-tab-name="history">
+            {{> AdventureCommandEditor }}
+            {{> AdventureCommandHistory }}
+          </div>
+        </div>
+        <div class="{{#unless showSearch}}hide{{/unless}}">
+          {{> AdventureNodeParentSearch}}
+        </div>
+			</div>
+		</div>
+	</div>
+  {{/with}}
+</template>

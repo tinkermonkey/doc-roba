@@ -1,0 +1,54 @@
+
+/**
+  Drawer styling
+**/
+.drawer-container {
+  overflow: hidden;
+}
+
+.drawer-right {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 100%;
+  border-left: 3px solid #50d7ff;
+  background-color: #fff;
+  display: none;
+  box-shadow: 0px 0px 10px #888888;
+}
+
+.drawer-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 0;
+  border-top: 3px solid #50d7ff;
+  background-color: rgba(255, 255, 255, 0.80);
+  display: none;
+  box-shadow: 0px 0px 10px #888888;
+}
+
+.drawer-bottom-content {
+  height: 100%;
+  width: 100%;
+}
+
+.drawer-bottom-controls {
+  float: right;
+  border-bottom-left-radius: 5px;
+  background-color: #50d7ff;
+}
+
+.drawer-bottom-controls > .drawer-control {
+  color: #fff;
+  display: inline-block;
+  padding: 3px 6px 3px 6px;
+  width: 25px;
+  height: 25px;
+}
+
+.drawer-bottom-controls > .drawer-control:hover {
+  color: #ffff00;
+}

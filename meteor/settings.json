@@ -1,0 +1,37 @@
+{
+  "paths": {
+    "automation_logs": "../logs",
+    "automation": "../automation"
+  },
+  "trail": {
+    "transports": [
+      {
+        "type": "console",
+        "options": {
+          "meta": false,
+          "level": "DEBUG"
+        }
+      },
+      {
+        "type": "mongo",
+        "options": {
+          "level": "ERROR",
+          "collection": "error_log"
+        }
+      }
+    ]
+  },
+  "public": {
+    "trail": {
+      "transports": [
+        {
+          "type": "console",
+          "options": {
+            "meta": false,
+            "level": "DEBUG"
+          }
+        }
+      ]
+    }
+  }
+}

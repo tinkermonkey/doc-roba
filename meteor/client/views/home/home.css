@@ -1,0 +1,132 @@
+/**
+ * Main home container
+ */
+.home-container {
+  position: absolute;
+  width: 100%;
+}
+
+.home-container a {
+  color: #0A7BFF;
+}
+
+/**
+ * Main home navigation pane
+ */
+.home-nav {
+  padding: 0;
+  border-right: 2px solid #0A7BFF;
+  position: fixed;
+  width: 350px;
+  z-index: 1;
+  box-shadow: 0 0 15px #888888;
+}
+
+.home-top-nav {
+  padding: 10px;
+  padding-left: 20px;
+}
+
+.home-nav-item.active {
+  color: #fff;
+  background-color: #0A7BFF;
+  background-image: url('/roba_stripe.svg');
+  background-repeat: no-repeat;
+  background-position: 105% 0%;
+  background-size: contain;
+}
+
+.home-nav-item.active a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.home-nav-item.active small {
+  color: #f2f2f2;
+}
+
+.home-sub-nav {
+  padding: 10px;
+  padding-left: 40px;
+}
+
+/**
+ * Main home content pane
+ */
+.home-content {
+  padding-left: 390px;
+  padding-right: 5px;
+  width: 100%;
+  position: absolute;
+}
+
+.home-content .header {
+  padding-top: 25px;
+  font-size: 24px;
+}
+
+.home-content .nav {
+  margin-top: 10px;
+}
+
+/**
+ * Credentials fields
+ */
+.sortable-fields {
+  width: 100%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.user-type-field:hover {
+  background-color: #f5f5f5;
+}
+.user-type-field > td {
+  margin-right: 5px;
+  padding: 3px;
+}
+
+/* Divider Row */
+.sortable-fields .table-divider .divider {
+  margin-top: 5px;
+  border-top: 1px dotted #666;
+  margin-bottom: 5px;
+  width: 100%;
+}
+
+/* Drag handle */
+.user-type-field .field-drag-handle {
+  width: 20px;
+}
+.user-type-field:hover .field-drag-handle {
+  border-radius: 3px 0 0 3px;
+  background: #0A7BFF;
+  cursor: pointer;
+}
+.user-type-field:hover .field-drag-handle:hover {
+  background-color: #0A7BFF;
+}
+
+/* Delete Button */
+.field-btn-delete {
+  border-radius: 0 3px 3px 0;
+  width: 2em;
+  color: #ffffff;
+  cursor: pointer;
+}
+.user-type-field:hover .field-btn-delete {
+  background-color: #f0ad4e;
+}
+.user-type-field:hover .field-btn-delete:hover {
+  background-color: #ec971f;
+}
+.field-btn-delete .glyphicon {
+  margin-left:3px;
+}
+
+/* Fields */
+.field-name-editable {
+  color: #333 !important;
+}
+.field-type-editable {
+  color: #0A7BFF !important;
+}

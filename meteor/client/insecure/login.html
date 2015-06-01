@@ -1,0 +1,55 @@
+<template name="Login">
+  {{setTitle "DocRoba :: Login"}}
+
+  <svg class="login-container login-svg login-intro">
+    <defs>
+      {{> def_inset_shadow_gradient }}
+      {{> def_login_clip }}
+    </defs>
+    <circle class="login-frame" r="45%" cx="50%" cy="50%" fill="url(#inset-shadow-gradient)"></circle>
+  </svg>
+
+  <div class="login-container login-html login-intro" style="clip-path: url('#login-clip'); -webkit-clip-path: url('#login-clip');">
+    <div class="login-slide hide">
+      <div id="login-form-container">
+        <form class="form login-form" role="form">
+          <h1>Login</h1>
+          <div class="form-group">
+            <input type="email" class="form-control" id="loginEmail" placeholder="Enter email">
+          </div>
+          <div class="form-group">
+            <input type="password" class="form-control" id="loginPassword" placeholder="Enter password">
+          </div>
+        </form>
+        <div class="login-btn-container">
+          <button class="pull-left show-signup">Sign Up</button>
+          <button class="pull-right login">Login</button>
+        </div>
+      </div>
+      <div id="signup-form-container">
+        <form class="form signup-form" role="form">
+          <h1>Sign Up</h1>
+          <div class="form-group">
+            <input type="text" class="form-control" id="signupName" placeholder="Enter Name" required>
+          </div>
+          <div class="form-group">
+            <input type="email" class="form-control" id="signupEmail" placeholder="Enter email" required>
+          </div>
+          <div class="form-group">
+            <input type="email" class="form-control" id="signupConfirmEmail" placeholder="Confirm email" required>
+          </div>
+          <div class="form-group">
+            <input type="password" class="form-control" id="signupPassword" placeholder="Enter password" required>
+          </div>
+        </form>
+        <div class="login-btn-container">
+          <button class="pull-left show-login">Login</button>
+          <button class="pull-right signup">Sign Up</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="login-spinner">
+    {{> CustomSpinner white=true}}
+  </div>
+</template>

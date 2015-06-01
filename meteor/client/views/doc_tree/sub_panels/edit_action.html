@@ -1,0 +1,46 @@
+<template name="edit_action">
+  {{#with getActionRecord}}
+  <div class="container-fluid full-height">
+    <div class="row full-height">
+      <div class="col-xs-3 full-height">
+        <h2>
+          {{> EditableStringField cssClass="" value=title dataKey="title" }}
+        </h2>
+        <a class="delete-action-link">Delete Action</a>
+        {{> ActionRouteSnippet }}
+      </div>
+      <div class="col-xs-6 full-height">
+        {{#if isExpanded}}
+          <div style="height: 30%; overflow-y: auto;">
+            {{> action_edit_variables }}
+          </div>
+          <div style="height: 30%; overflow-y: auto;">
+            {{> action_edit_routes }}
+          </div>
+          <div style="height: 40%;">
+            {{> action_edit_code }}
+          </div>
+        {{else}}
+          <ul class="nav nav-pills full-height" style="padding-top: 10px;">
+            <li role="presentation"><a data-tab-name="code">Code</a></li>
+            <li role="presentation"><a data-tab-name="variables">Variables</a></li>
+            {{#if multipleDestinations}}
+              <li role="presentation"><a data-tab-name="routes">Routes</a></li>
+            {{/if}}
+          </ul>
+          <div class="tab-container full-height">
+            <div class="tab" data-tab-name="code">{{> action_edit_code }}</div>
+            <div class="tab" data-tab-name="variables">{{> action_edit_variables }}</div>
+            {{#if multipleDestinations}}
+              <div class="tab" data-tab-name="routes">{{> action_edit_routes }}</div>
+            {{/if}}
+          </div>
+        {{/if}}
+      </div>
+      <div class="col-xs-3 full-height">
+        Command Reference
+      </div>
+    </div>
+  </div>
+  {{/with}}
+</template>

@@ -1,0 +1,12 @@
+<template name="AdventureNodeParentSearch">
+  <div class="input-group">
+    <span class="input-group-btn">
+      <button class="btn btn-warning btn-cancel" type="button">Cancel</button>
+    </span>
+    <input type="text" class="form-control input-search" placeholder="Search nodes...">
+    <span class="input-group-btn">
+      <button class="btn btn-primary btn-search" type="button">Search</button>
+    </span>
+  </div>
+  {{> NodeTermSearchResults searchResults}}
+</template>

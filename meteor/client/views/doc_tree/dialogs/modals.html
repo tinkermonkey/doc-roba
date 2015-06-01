@@ -1,0 +1,25 @@
+<template name="confirm_delete_nodes_modal">
+  <h5>These nodes will be permanently deleted. Are you sure?</h5>
+</template>
+
+<template name="confirm_delete_route_modal">
+  <div style="margin-top: 10px;">
+    Are you sure you want to delete the route from
+    <span class="label label-primary">{{source.title}}</span> to
+    <span class="label label-primary">{{destination.title}}</span>?
+  </div>
+  <div style="width: 100%; text-align: center;">
+    {{> single_route_snippet sourceId=source.staticId projectVersionId=source.projectVersionId destinationId=destination.staticId}}
+  </div>
+</template>
+
+<template name="confirm_delete_action_modal">
+  <div style="margin-top: 10px;">
+    Are you sure you want to the action
+    <span class="label label-primary">{{title}}</span>
+    and all of it`s routes?
+  </div>
+  <div style="width: 100%; text-align: center;">
+    {{> ActionRouteSnippet }}
+  </div>
+</template>

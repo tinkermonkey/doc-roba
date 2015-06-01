@@ -1,0 +1,25 @@
+<template name="AdventureContext">
+  {{#unless adventureIsStill}}
+    <div style="height: 200px; position: absolute; width: 100%;">
+      {{> CustomSpinner }}
+    </div>
+  {{/unless}}
+  {{#if getNode}}
+    {{#with getNode}}
+      {{> AdventureEditNodeForm }}
+    {{/with}}
+  {{else}}
+    <div class="{{#unless adventureIsStill}}hide{{/unless}}">
+      <div class="full-width align-center">
+        <button class="btn btn-primary btn-add-node" data-type="page">Add Node</button>
+      </div>
+      <div class="full-width add-node-form hide">
+        {{> AdventureAddNodeForm }}
+      </div>
+      <div class="node-url-search">
+        <label>Best Matches:</label>
+        {{> NodeUrlSearchResults searchNodes}}
+      </div>
+    </div>
+  {{/if}}
+</template>
