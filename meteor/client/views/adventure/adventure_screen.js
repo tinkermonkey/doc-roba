@@ -113,6 +113,24 @@ Template.AdventureScreen.helpers({
    */
   getCheckResult: function () {
     return this.checkResult.get();
+  },
+
+  /**
+   * Formatting for the highlight elements
+   * @param item
+   * @returns {Array}
+   */
+  splitValues: function (item) {
+    var valueList = [],
+      rawValueList = this.value.split(" ");
+    _.each(rawValueList, function (subValue, i) {
+      var context = _.omit(item, "html", "text");
+      context.value = subValue.trim();
+      context.last = i == rawValueList.length - 1;
+
+      valueList.push(context);
+    });
+    return valueList;
   }
 });
 
@@ -217,6 +235,13 @@ Template.AdventureScreen.events({
       }
     });
   },
+  "mouseenter .adventure-highlight-list-row-header": function (e, instance) {
+    console.log(".adventure-highlight-element.index-" + this.index);
+    instance.$(".adventure-highlight-element.index-" + this.index).addClass("highlight");
+  },
+  "mouseleave .adventure-highlight-list-row-header": function (e, instance) {
+    instance.$(".adventure-highlight-element.index-" + this.index).removeClass("highlight");
+  },
   /**
    * Click event for the highlight element list toggle
    * @param e
@@ -288,6 +313,11 @@ Template.AdventureScreen.events({
   "mouseenter .adventure-highlight-element": function (e, instance) {
     var element = this;
 
+    // make sure the adventure is operating
+    if(instance.data.adventure.status == AdventureStatus.complete){
+      return;
+    }
+
     clearTimeout(instance.hideHoverControlsTimeout);
 
     //console.log("mouseenter: ", element);
@@ -305,7 +335,6 @@ Template.AdventureScreen.events({
    */
   "mouseleave .adventure-highlight-element, mouseleave .hover-controls-container": function (e, instance) {
     var context = this;
-    //console.log("mouseleave: ", context);
     instance.hideHoverControlsTimeout = setTimeout(function () {
       delete instance.hideHoverControlsTimeout;
       instance.$(".hover-controls-container").css("display", "");
@@ -317,6 +346,40 @@ Template.AdventureScreen.events({
    */
   "mouseenter .hover-controls-container": function (e, instance) {
     clearTimeout(instance.hideHoverControlsTimeout);
+  },
+  "mouseenter .adventure-highlight-hierarchy": function (e, instance) {
+    var localBounds = this.localBounds,
+      activeElement = instance.$(".adventure-highlight-detail.active .adventure-highlight-hierarchy:last")[0];
+
+    if(activeElement && activeElement == e.target){
+      console.log("ignoring hover on active element");
+      return;
+    }
+
+    console.log("localBounds: ", localBounds);
+
+    // this needs to be delayed slightly to ensure any mouseleave triggers first
+    if(localBounds){
+      setTimeout(function () {
+        instance.$(".adventure-hover-element-highlight")
+          .css("visibility", "visible")
+          .css("top", localBounds.top + "px")
+          .css("left", localBounds.left + "px")
+          .css("width", localBounds.width + "px")
+          .css("height", localBounds.height + "px");
+      }, 10);
+    } else {
+      Meteor.log.error("mouseenter adventure-highlight-hierarchy without bounds");
+    }
+  },
+  "mouseleave .adventure-highlight-hierarchy": function (e, instance) {
+    //top: -100px; left: -100px; width: 150%; height: 150%;
+    instance.$(".adventure-hover-element-highlight")
+      .css("top", "50%")
+      .css("left", "50%")
+      .css("width", "1px")
+      .css("height", "1px")
+      .css("visibility", "hidden");
   }
 });
 

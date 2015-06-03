@@ -193,5 +193,16 @@ Util = {
       xPath = Util.getHighlightedElementLineageXPath(element.parent, xPath);
     }
     return xPath;
+  },
+
+  /**
+   * Escape double quotes in a string
+   * @param str
+   * @returns {string}
+   */
+  escapeDoubleQuotes: function (str) {
+    var escapedFix = new RegExp("\/\"", "g"),
+      quoteFix = new RegExp("\"", "g");
+    return str.replace(escapedFix, "\\\\\"").replace(quoteFix, "\\\"");
   }
 };

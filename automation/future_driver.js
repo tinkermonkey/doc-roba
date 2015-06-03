@@ -417,7 +417,7 @@ FutureDriver.prototype.injectHelpers = function () {
           // get the alternate selectors, starting with the id selector
           var id = el.getAttribute("id");
           if(id){
-            testSelector = "//" + el.tagName + "[@id=" + id + "]";
+            testSelector = "//" + el.tagName + "[@id=\"" + id + "\"]";
             var result = roba_driver.checkXpathSelector(testSelector, el);
             if(result){
               selectors.push(result);
@@ -433,6 +433,16 @@ FutureDriver.prototype.injectHelpers = function () {
               }).join(" and ");
 
             testSelector = "//" + el.tagName + "[" + classSelector + "]";
+            var result = roba_driver.checkXpathSelector(testSelector, el);
+            if(result){
+              selectors.push(result);
+            }
+          }
+
+          // Check by href
+          var href = el.getAttribute("href");
+          if(href){
+            testSelector = "//" + el.tagName + "[@href=\"" + href + "\"]";
             var result = roba_driver.checkXpathSelector(testSelector, el);
             if(result){
               selectors.push(result);

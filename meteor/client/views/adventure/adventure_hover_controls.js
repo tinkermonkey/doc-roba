@@ -10,12 +10,18 @@ Template.AdventureHoverControls.events({
   "click .btn-left-click, click .btn-right-click": function (e, instance) {
     var element = instance.data.controlledElement,
       command = $(e.target).closest(".btn").attr("data-command"),
-      selector = Util.getHighlightedElementSelector(element);
+      selector;
 
     // make sure the adventure is operating
     if(instance.data.adventure.status == AdventureStatus.complete){
-      console.log("click ignored: adventure is complete");
       return;
+    }
+
+    // use a validated selector if one exists
+    if(element.selectors && element.selectors.length){
+      selector = Util.escapeDoubleQuotes(element.selectors[0]);
+    } else {
+      selector = Util.getHighlightedElementSelector(element);
     }
 
     // send the command to clear all of the highlighted elements
@@ -32,12 +38,18 @@ Template.AdventureHoverControls.events({
   },
   "click .btn-hover": function (e, instance) {
     var element = instance.data.controlledElement,
-      selector = Util.getHighlightedElementSelector(element);
+      selector;
 
     // make sure the adventure is operating
     if(instance.data.adventure.status == AdventureStatus.complete){
-      console.log("click ignored: adventure is complete");
       return;
+    }
+
+    // use a validated selector if one exists
+    if(element.selectors && element.selectors.length){
+      selector = Util.escapeDoubleQuotes(element.selectors[0]);
+    } else {
+      selector = Util.getHighlightedElementSelector(element);
     }
 
     // send the command to clear all of the highlighted elements

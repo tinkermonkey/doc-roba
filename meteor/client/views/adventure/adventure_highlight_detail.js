@@ -6,11 +6,23 @@ Template.AdventureHighlightDetail.helpers({
    * Get the processed list of parent elements for this element
    */
   getHierarchy: function () {
-    var el = this;
+    var el = this,
+      parent = Template.parentData(2),
+      scroll = parent.state.scroll,
+      ratio  = (parent.viewport.width / parent.state.viewportSize.width);
+    console.log("parentData: ", ratio);
     if(el.parent){
       var elements = getHierarchy(el);
       elements.push(_.omit(el, "parent"));
-      _.each(elements, function (e, i) { e.index = i; });
+      _.each(elements, function (e, i) {
+        e.index = i;
+        e.localBounds = {
+          top: parseInt( (e.bounds.top - scroll.y + e.bounds.scrollY) * ratio ),
+          left: parseInt( (e.bounds.left - scroll.x + e.bounds.scrollX) * ratio ),
+          height: parseInt( e.bounds.height * ratio ),
+          width: parseInt( e.bounds.width * ratio )
+        };
+      });
       return elements;
     }
   },

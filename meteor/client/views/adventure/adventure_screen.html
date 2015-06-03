@@ -3,33 +3,6 @@
     <div class="live-adventure-view">
       {{#if state.url}}
         <div class="live-adventure-header">
-          <div class="live-adventure-toolbar">
-            {{> AdventureToolbar fullContext}}
-          </div>
-            {{#if getCheckResult}}
-                {{#with getCheckResult}}
-                    <div class="well">
-                      <div>
-                          {{selector}}
-                          {{#if match}}
-                            <span class="label label-success">Matched a single element</span>
-                          {{else}}
-                              {{#if matchCount}}
-                                <span class="label label-warning">Matched multiple elements</span>
-                              {{else}}
-                                <span class="label label-default">Matched no elements</span>
-                              {{/if}}
-                          {{/if}}
-                      </div>
-                        {{#each selectors}}
-                          <div>
-                              {{this}}
-                            <span class="label label-success">Matched a single element</span>
-                          </div>
-                        {{/each}}
-                    </div>
-                {{/with}}
-            {{/if}}
           <div class="btn-group pull-right">
             {{#if getHighlightElements ..}}
               <button type="button" class="btn btn-primary btn-xs btn-clear-highlight">
@@ -51,6 +24,33 @@
           </div>
           {{/with}}
         </div>
+        <div class="live-adventure-toolbar">
+            {{> AdventureToolbar fullContext}}
+        </div>
+          {{#if getCheckResult}}
+              {{#with getCheckResult}}
+                <div class="well">
+                  <div>
+                      {{selector}}
+                      {{#if match}}
+                        <span class="label label-success">Matched a single element</span>
+                      {{else}}
+                          {{#if matchCount}}
+                            <span class="label label-warning">Matched multiple elements</span>
+                          {{else}}
+                            <span class="label label-default">Matched no elements</span>
+                          {{/if}}
+                      {{/if}}
+                  </div>
+                    {{#each selectors}}
+                      <div>
+                          {{this}}
+                        <span class="label label-success">Matched a single element</span>
+                      </div>
+                    {{/each}}
+                </div>
+              {{/with}}
+          {{/if}}
       {{/if}}
 
       {{#if state.screenshot}}
@@ -73,6 +73,9 @@
             <span class="glyphicon glyphicon-screenshot"></span>
           </div>
         {{/with}}
+
+          <div class="adventure-hover-element-highlight" style="visibility: hidden;"></div>
+
         {{> AdventureHoverControls fullContext}}
         {{#each getHighlightElements}}
           {{#with processHighlightElement}}
@@ -88,9 +91,9 @@
 
       <div class="adventure-highlight-list" style="top: {{getListTop}}px;">
         {{#if getHighlightElements ..}}
-          <div class="panel panel-default">
-            <div class="panel-heading">Matched Elements</div>
+          <div class="">
             <table class="table table-striped">
+              <caption>Matched Elements</caption>
               <tbody>
               {{#each getHighlightElements}}
                 <tr>
@@ -98,14 +101,26 @@
                   <td>
                     <span class="glyphicon glyphicon-chevron-down pull-right detail-toggle"></span>
                     <div class="adventure-highlight-list-row-header">
-                      &lt;<span class="tag">{{tag}}</span>
-                      {{#if id}} <span class="attr">id</span>=<span class="value">"{{id}}"</span>{{/if}}
-                      {{#if name}} <span class="attr">name</span>=<span class="value">"{{name}}"</span>{{/if}}
-                      {{#if class}} <span class="attr">class</span>=<span class="value">"{{class}}"</span>{{/if}}
-                      {{#if href}} <span class="attr">href</span>=<span class="value">"{{href}}"</span>{{/if}}&gt;
+                      &lt;<span class="clickable tag">{{tag}}</span>
+                        {{#each attributes}}
+                          <span class="attr">{{name}}</span>="{{#each splitValues ..}}<span class="clickable value">{{value}}</span>{{#unless last}} {{/unless}}{{/each}}"
+                        {{/each}}&gt;
                     </div>
+
                     <div class="adventure-highlight-list-row-detail">
-                      Hmmm, I'm going to have to refactor some of this
+                      <div class="">
+                        <h4>Selectors</h4>
+                          {{#each selectors}}
+                            <div>
+                              {{this}}
+                              <span class="label label-success">Matched a single element</span>
+                            </div>
+                          {{/each}}
+                        <h4>Text</h4>
+                        <div>{{text}}</div>
+                        <h4>HTML</h4>
+                        <div>{{html}}</div>
+                      </div>
                     </div>
                   </td>
                 </tr>

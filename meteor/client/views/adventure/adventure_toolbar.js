@@ -33,9 +33,9 @@ Template.AdventureToolbar.helpers({
             }
 
             if(attribute.attribute == "class"){
-              xPath += "contains(@" + attribute.attribute + ",'" + attribute.value + "')";
+              xPath += "contains(@" + attribute.attribute + ",\\\"" + attribute.value + "\\\")";
             } else {
-              xPath += "@" + attribute.attribute + "='" + attribute.value + "'";
+              xPath += "@" + attribute.attribute + "=\\\"" + attribute.value + "\\\"";
             }
           });
           xPath += "]";
