@@ -92,7 +92,7 @@ TreeLinkHandler.prototype.update = function (duration) {
 TreeLinkHandler.prototype.generateLinkPath = function(d){
   var source, target, control, path;
   if(d.source.visExpanded){
-    if(d.target.type === NodeTypes.view){
+    if(d.target.type === NodeTypes.view || d.target.type === NodeTypes.navMenu){
       source = {
         x: d.source.x + d.source.icon.right,
         y: d.source.y

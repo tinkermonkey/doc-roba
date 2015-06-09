@@ -121,6 +121,7 @@ function ExecuteAdventure () {
   // load the adventure
   adventure = ddpLink.liveRecord("adventure", adventureId, "adventures");
   ddpAppender.setContext(adventure._id);
+  logger.info("MILESTONE", {context: {type: "adventure", adventure: adventure}});
   logger.info("Executing Adventure: ", adventure._id);
   logger.info("Log File: ", logFile);
   ddpLink.setAdventureStatus(adventure._id, AdventureStatus.launched);
@@ -140,23 +141,21 @@ function ExecuteAdventure () {
   logger.info("Server Loaded");
   logger.debug("Server: ", server);
 
-  // load the adventure actions
-  logger.info("Loading Actions");
-  var actions = ddpLink.liveList("adventure_actions", [adventure._id]);
-  logger.debug("Actions Loaded: ", _.keys(actions).length);
-
   // load the adventure commands
   logger.info("Loading Commands");
   var commands = ddpLink.liveList("adventure_commands", [adventure._id]);
   logger.debug("Commands Loaded: ", _.keys(commands).length);
 
   // work out the config
-  var config = _.defaults({
+  var config = adventure.config || {};
+  _.defaults(config, {
     host: testSystem.hostname,
     port: testSystem.port,
     desiredCapabilities: {
-      browserName: testAgent.identifier
+      browserName: testAgent.identifier,
+      loggingPrefs: { browser: "ALL", driver: "WARNING", client: "WARNING", server: "WARNING" }
     },
+    logLevel: "silent",
     end: function (event){
       logger.debug("End event received from driver");
       driverEnded = true;
@@ -168,7 +167,8 @@ function ExecuteAdventure () {
         Exit(1);
       }
     }.bind(adventure)
-  }, adventure.config);
+  });
+  console.log("Config: ", config);
 
   // Setup the driver
   logger.debug("Adventure Test Agent: ", config.desiredCapabilities.browserName);
@@ -176,29 +176,13 @@ function ExecuteAdventure () {
   logger.trace("Creating FutureDriver: ", config);
   driver = new FutureDriver(config);
 
-  // get the route
-  logger.debug("Adventure Route: ", adventure.route);
-  var startingStep = adventure.route.steps[0],
-    startingUrl = driver.buildUrl(server.url, startingStep.node.url);
-  logger.debug("Adventure Starting Point URL: ", startingUrl);
-
-  // Navigate to the starting point
-  ddpAppender.setContext(adventure._id, startingStep.node._id, startingStep.stepId);
-  logger.trace("Navigating to starting point");
-  driver.url(startingUrl);
-  logger.debug("Reached starting point");
-
-  // inject the roba_driver helpers
-  logger.trace("Injecting browser-side driver helpers");
-  driver.injectHelpers();
-
   // set the implicit wait
   logger.trace("Setting driver timeouts");
   driver.timeouts("implicit", 100);
-  driver.timeouts("script", 500);
-  driver.timeouts("page load", 5000);
+  driver.timeouts("script", 5000);
+  driver.timeouts("page load", 10000); // don't rely on this, and we don't want it getting in the way
   driver.timeoutsImplicitWait(100);
-  driver.timeoutsAsyncScript(500);
+  driver.timeoutsAsyncScript(20000); // don't rely on this, and we don't want it getting in the way
 
   // update the steps status' to queued
   logger.trace("Setting steps to queued status");
@@ -206,18 +190,11 @@ function ExecuteAdventure () {
     ddpLink.setAdventureStepStatus(step.stepId, AdventureStepStatus.queued);
   });
 
-  // Save the initial state
-  logger.trace("Saving initial state");
-  UpdateState();
-
-  // wait for the starting point to load
-  ValidateNode(startingStep.node);
-  CheckForPause();
-
-  // Run through the actions
-  logger.info("Executing Route");
+  // get the route
+  driver.getClientLogs();
+  logger.info("Executing Route: ", adventure.route);
   ddpLink.setAdventureStatus(adventure._id, AdventureStatus.routing);
-  var i = 1, step;
+  var i = 0, step;
   while(i < adventure.route.steps.length && !adventure.abort && !driverEnded){
     // possibly wait for it
     CheckForPause();
@@ -225,30 +202,51 @@ function ExecuteAdventure () {
     // Get the step and update the context
     step = adventure.route.steps[i];
     logger.info("Executing Route Step " + (i) + " of " + adventure.route.steps.length);
-    ddpAppender.setContext(adventure._id, step.node._id, step.stepId);
-    logger.info("Step " + i + ": ", step);
+    logger.info("MILESTONE", {context: {type: "step", step: step}});
+    logger.debug("Step " + i + ": ", step);
     ddpLink.setAdventureStepStatus(step.stepId, AdventureStepStatus.running);
+    //ddpAppender.setContext(adventure._id, step.node._id, step.stepId);
 
-    // take the action
-    logger.trace("Executing Action: ", step.action);
-    try {
-      var result = eval(step.action.code);
-    } catch (e) {
-      logger.error("Action failed: ", e);
-      result = e;
+    // first step needs to be navigated manually
+    if(i == 0){
+      var startingUrl = driver.buildUrl(server.url, step.node.url);
+      logger.trace("Navigating to starting point: ", startingUrl);
+      driver.url(startingUrl);
+      logger.debug("Reached starting point: ", startingUrl);
+
+      // give it a sec
+      driver.wait(1000);
     }
 
-    // store the result
-    logger.trace("Action Result: ", result);
+    // inject the helpers
+    logger.trace("Injecting browser-side driver helpers");
+    driver.injectHelpers();
 
-    // give it a second
-    driver.wait(1000);
+    // update the state
+    UpdateState();
 
-    // Validate the destination node
+    // Validate the current node
     ValidateNode(step.node);
 
     // update the state
     UpdateState();
+
+    // take the action
+    if(step.action){
+      logger.debug("Executing Action: ", step.action);
+      try {
+        var result = eval(step.action.code);
+      } catch (e) {
+        logger.error("Action failed: ", e);
+        result = e;
+      }
+
+      // store the result
+      logger.debug("Action Result: ", result);
+    } else if(i !== adventure.route.steps.length - 1){
+      logger.error("Dead end step: ", step);
+      throw new Error("Dead end step encountered: ", step);
+    }
 
     // done
     ddpLink.setAdventureStepStatus(step.stepId, AdventureStepStatus.complete);
@@ -260,48 +258,13 @@ function ExecuteAdventure () {
   // possibly wait for it
   CheckForPause();
 
-  // Execute any primed commands
+  // Check to see if the command loop is needed
   if(commands || adventure.waitForCommands){
-
-    // update the agent state
-    UpdateState();
-
-    // update the action status' to queued
-    _.each(_.keys(commands), function (commandId) {
-      ddpLink.setCommandStatus(commandId, AdventureStepStatus.queued);
-    });
-
-    // execute all of the commands which exist now
-    logger.info("Executing Preloaded Commands");
+    ddpLink.setAdventureStatus(adventure._id, AdventureStatus.awaitingCommand);
     i = 0;
     var command, lastExecuted = Date.now();
-    while(i < _.keys(commands).length && !adventure.abort && !driverEnded){
-      // possibly wait for it
-      CheckForPause();
-
-      command = commands[_.keys(commands)[i]];
-      ddpAppender.setContext(adventure._id, adventure.lastKnownNode, command._id);
-      logger.trace("Command " + i + ": ", command);
-
-      // execute the command
-      ExecuteCommand(command, adventure);
-
-      // update the lastExecuted timestamp
-      lastExecuted = Date.now();
-      logger.trace("Command Complete");
-
-      i++;
-    }
-
-    // If we're supposed to wait around for commands, do that
-    if(adventure.waitForCommands && !adventure.abort && !driverEnded){
-      logger.info("Entering Command loop");
-      ddpLink.setAdventureStatus(adventure._id, AdventureStatus.awaitingCommand);
-    }
-
-    var now;
     while(adventure.waitForCommands && !adventure.abort && !driverEnded){
-      // Unfortunately we have to do this to pick up the collection if it originally has zero commands
+      // We have to do this to pick up the dynamic collection if it originally had zero commands
       if(!_.keys(commands).length){
         commands = ddpLink.ddp.collections.adventure_commands;
       }
@@ -335,10 +298,7 @@ function ExecuteAdventure () {
           driver.wait(30);
 
           // Check to see if we should send a keep-alive task to the driver
-          now = Date.now();
-
-          //logger.trace("Checking for keepAlive");
-          if(now - lastExecuted > 2000){
+          if(Date.now() - lastExecuted > 2000){
             logger.trace("checking url: ", lastUrl);
             var url = driver.checkUrl();
             if(url && url !== lastUrl){
@@ -354,7 +314,7 @@ function ExecuteAdventure () {
             lastExecuted = Date.now();
           }
         } catch (e) {
-          logger.error("Exception encountered during keepalive: ", e);
+          logger.error("Exception encountered during keep-alive: ", e);
         }
       }
     }
@@ -373,7 +333,7 @@ function ExecuteAdventure () {
  * @param adventure
  */
 function CheckForPause () {
-  logger.debug("CheckForPause: ", adventure.status == AdventureStatus.paused);
+  logger.trace("CheckForPause: ", adventure.status == AdventureStatus.paused);
   while(adventure.status == AdventureStatus.paused){
     driver.wait(250);
   }
@@ -404,7 +364,7 @@ function ExecuteCommand(command) {
   }
 
   // store the result
-  logger.trace("Command result: ", result);
+  logger.info("Command result: ", result);
   ddpLink.setCommandStatus(command._id, AdventureStepStatus.complete, result);
 
   // only update the adventure state if the command says to

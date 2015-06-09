@@ -33,9 +33,9 @@ Template.AdventureToolbar.helpers({
             }
 
             if(attribute.attribute == "class"){
-              xPath += "contains(@" + attribute.attribute + ",\\\"" + attribute.value + "\\\")";
+              xPath += "contains(@" + attribute.attribute + ",\"" + attribute.value + "\")";
             } else {
-              xPath += "@" + attribute.attribute + "=\\\"" + attribute.value + "\\\"";
+              xPath += "@" + attribute.attribute + "=\"" + attribute.value + "\"";
             }
           });
           xPath += "]";
@@ -58,6 +58,7 @@ Template.AdventureToolbar.events({
     this.selectorElements.set({});
     this.checkResult.set();
     $(".adventure-highlight-detail").find(".selected").removeClass("selected");
+    instance.$(".selector-value").val("");
   },
   "click .btn-refine": function (e, instance) {
     var selector = instance.$(".selector-value").val(),
@@ -70,7 +71,7 @@ Template.AdventureToolbar.events({
       var commandId = AdventureCommands.insert({
         projectId: instance.data.adventure.projectId,
         adventureId: instance.data.adventure._id,
-        code: "driver.refineSelector(" + lastLocation.x + ", " + lastLocation.y + ", \"" + selector + "\");"
+        code: "driver.refineSelector(" + lastLocation.x + ", " + lastLocation.y + ", \"" + Util.escapeDoubleQuotes(selector) + "\");"
       }, function (error) {
         if(error){
           Meteor.log.error("Error adding adventure command: " + error.message);
@@ -108,7 +109,74 @@ Template.AdventureToolbar.events({
     AdventureCommands.insert({
       projectId: instance.data.adventure.projectId,
       adventureId: instance.data.adventure._id,
-      code: "driver.testSelector(\"" + selector + "\");"
+      code: "driver.testSelector(\"" + Util.escapeDoubleQuotes(selector) + "\");"
+    }, function (error) {
+      if(error){
+        Meteor.log.error("Error adding adventure command: " + error.message);
+        Dialog.error("Error adding adventure command: " + error.message);
+      }
+    });
+  },
+  "keyup input.selector-value, change input.selector-value": function (e, instance) {
+    var selector = instance.$(".selector-value").val(),
+      lastLocation = this.lastClickLocation.get();
+
+    console.log("key: ", selector.length > 0, lastLocation);
+
+    if(selector.length && lastLocation) {
+      instance.$(".btn-refine").removeAttr("disabled");
+      instance.$(".btn-highlight").removeAttr("disabled");
+    } else if (selector.length){
+      instance.$(".btn-refine").attr("disabled", "disabled");
+      instance.$(".btn-highlight").removeAttr("disabled");
+    } else {
+      instance.$(".btn-refine").attr("disabled", "disabled");
+      instance.$(".btn-highlight").attr("disabled", "disabled");
+    }
+  },
+  /**
+   * Click event for the refresh button
+   * @param e
+   */
+  "click .btn-refresh": function (e, instance) {
+    // make sure the adventure is operating
+    if(instance.data.adventure.status == AdventureStatus.complete){
+      return;
+    }
+
+    // send the command to clear all of the highlighted elements
+    AdventureCommands.insert({
+      projectId: instance.data.adventure.projectId,
+      adventureId: instance.data.adventure._id,
+      updateState: true,
+      code: "true"
+    }, function (error) {
+      if(error){
+        Meteor.log.error("Error adding adventure command: " + error.message);
+        Dialog.error("Error adding adventure command: " + error.message);
+      }
+    });
+  },
+  /**
+   * Click event for the clear-highlight button
+   * @param e
+   */
+  "click .btn-clear-highlight": function (e, instance) {
+    // make sure the adventure is operating
+    if(instance.data.adventure.status == AdventureStatus.complete){
+      return;
+    }
+
+    // clear the last click location and check result
+    this.lastClickLocation.set();
+    this.checkResult.set();
+
+    // send the command to clear all of the highlighted elements
+    AdventureCommands.insert({
+      projectId: instance.data.adventure.projectId,
+      adventureId: instance.data.adventure._id,
+      updateState: false,
+      code: "driver.clearHighlight();"
     }, function (error) {
       if(error){
         Meteor.log.error("Error adding adventure command: " + error.message);

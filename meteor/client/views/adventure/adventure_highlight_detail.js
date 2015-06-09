@@ -10,7 +10,7 @@ Template.AdventureHighlightDetail.helpers({
       parent = Template.parentData(2),
       scroll = parent.state.scroll,
       ratio  = (parent.viewport.width / parent.state.viewportSize.width);
-    console.log("parentData: ", ratio);
+
     if(el.parent){
       var elements = getHierarchy(el);
       elements.push(_.omit(el, "parent"));

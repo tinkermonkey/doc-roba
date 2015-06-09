@@ -22,6 +22,15 @@ OFF: "grey"
   font-family: "Menlo", "Consolas", "Courier", monospace;
 }
 
+.log-message-data pre {
+  width: 900px !important;
+}
+
+.log-message-data b {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
 .log-message-TRACE, .log-message-trace {
   color: #bfbfbf;
 }

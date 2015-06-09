@@ -18,9 +18,13 @@
             <span class="label label-success">Matched a single element</span>
           </div>
         {{/each}}
+        {{#if text}}
         <h4>Text</h4>
         <div>{{text}}</div>
+        {{/if}}
+        {{#if html}}
         <h4>HTML</h4>
         <div>{{html}}</div>
+        {{/if}}
 	</div>
 </template>

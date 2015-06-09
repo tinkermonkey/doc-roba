@@ -1,11 +1,3 @@
-.action-editor {
-  border-top: 5px solid #50d7ff;
-  border-bottom: 5px solid #50d7ff;
-}
-
-.action-route-editor {
-  min-height: 4em;
-}
 
 .click-to-edit {
   cursor: pointer;

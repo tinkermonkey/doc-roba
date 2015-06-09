@@ -17,8 +17,7 @@ Template.drawer_bottom.events({
       instance.$(".expander").css("display", "none");
       instance.$(".contractor").css("display", "");
 
-      // set the expanded flag
-      Session.set("drawerExpanded", true);
+      Session.set("resize", Date.now());
     });
   },
   "click .contractor": function (e) {
@@ -31,8 +30,7 @@ Template.drawer_bottom.events({
       instance.$(".contractor").css("display", "none");
       instance.$(".expander").css("display", "");
 
-      // set the expanded flag
-      Session.set("drawerExpanded", false);
+      Session.set("resize", Date.now());
     });
   },
   "click .closer": function (e) {
@@ -74,7 +72,7 @@ BottomDrawer = {
 
     // Combine the options with the defaults
     _.defaults(options, {
-      height: 250,
+      height: "33.33%",
       slideTime: 125,
       callback: function () {
         console.log("Drawer Closed: ", this);
@@ -89,12 +87,10 @@ BottomDrawer = {
           height: 0
         }, options.slideTime / 2, function(){
           BottomDrawer.hide(function (){
-            Session.set("drawerExpanded", false);
             Blaze.renderWithData(Template.drawer_bottom, options, $("body")[0]);
           });
         });
     } else {
-      Session.set("drawerExpanded", false);
       Blaze.renderWithData(Template.drawer_bottom, options, $("body")[0]);
     }
   },

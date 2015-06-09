@@ -78,7 +78,7 @@ TreeDropNodeHandler.prototype.createDropTargets = function (selection) {
     .attr("rx", tree.nodeHandler.config.cornerRadius)
     .attr("ry", tree.nodeHandler.config.cornerRadius)
     .on("mouseover", function(d){
-      Meteor.log.debug("dropTarget enter: ", "#node_" + d._id);
+      Meteor.log.debug("dropTarget enter: #node_" + d._id);
       // get the real node and add the hover class to it
       tree.layoutRoot.select("#node_" + d._id).classed("node-group-hover", true);
 
@@ -86,7 +86,7 @@ TreeDropNodeHandler.prototype.createDropTargets = function (selection) {
       self.node = d;
     })
     .on("mouseout", function(d){
-      Meteor.log.debug("dropTarget exit: ", "#node_" + d._id);
+      Meteor.log.debug("dropTarget exit: #node_" + d._id);
 
       // remove the hover
       tree.layoutRoot.select("#node_" + d._id).classed("node-group-hover", false);

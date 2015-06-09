@@ -42,7 +42,6 @@ Template.action_edit_code.rendered = function () {
     // resize the editor on expand/collapse
     instance.autorun(function () {
       Session.get("resize");
-      Session.get("drawerExpanded");
       setTimeout( function () {
         instance.editor.resize(true);
       }, 125);

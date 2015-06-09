@@ -29,14 +29,13 @@ NodeSearch = {
    * @param projectVersionId
    */
   byUrl: function (url, title, projectVersionId) {
-    Meteor.log.debug("searchNodes: ", url, title, projectVersionId);
-
+    Meteor.log.debug("searchNodes: " + url+ ", " + title + ", " + projectVersionId);
     var maxScore    = -100000,
       searchResults = [];
 
-
     // go through each node and score it against the current url
     Nodes.find({projectVersionId: projectVersionId, type: {$in: [NodeTypes.page, NodeTypes.view]}}).forEach(function (node) {
+      console.log("Checking node ", node._id, node.url, node.pageTitle);
       // initialize the score
       var result = {
         node: node,

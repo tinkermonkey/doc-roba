@@ -180,7 +180,7 @@ DroneRoute.prototype.route = function () {
 
   // Create the full route with node records and actions
   this.route = [];
-  var i, pointNodeId, nextNodeId;
+  var i, pointNodeId;
   for(i = 0; i < rawRoute.length; i++){
     pointNodeId = rawRoute[i];
     var point = {
@@ -194,21 +194,21 @@ DroneRoute.prototype.route = function () {
       continue;
     }
 
-    // pick an action for each step after the first
-    if(this.route.length){
-      point.sourceId = rawRoute[i - 1];
-      point.source = Nodes.findOne({staticId: point.sourceId, projectVersionId: start.projectVersionId});
+    // pick an action for each step except the last
+    if(i < rawRoute.length - 1){
+      point.destinationId = rawRoute[i + 1];
+      point.destination = Nodes.findOne({staticId: point.destinationId, projectVersionId: start.projectVersionId});
       point.action = Actions.findOne({
-        nodeId: point.sourceId,
+        nodeId: point.nodeId,
         projectVersionId: start.projectVersionId,
         routes: {
-          $elemMatch: {nodeId: point.nodeId}
+          $elemMatch: {nodeId: point.destinationId}
         }
       });
 
       if(!point.action){
-        Meteor.log.error("DroneRoute.route, could not create route: action could not be found between " + point.nodeId + " and " + point.sourceId);
-        throw new Meteor.Error("DroneRoute Failure", "Could not create route: action could not be found between " + point.nodeId + " and " + point.sourceId);
+        Meteor.log.error("DroneRoute.route, could not create route: action could not be found between " + point.nodeId + " and " + point.destinationId);
+        throw new Meteor.Error("DroneRoute Failure", "Could not create route: action could not be found between " + point.nodeId + " and " + point.destinationId);
       }
     }
 

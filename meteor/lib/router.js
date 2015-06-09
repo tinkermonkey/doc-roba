@@ -165,7 +165,7 @@ Router.map(function () {
   });
   this.route("test", {
     path: "/test/",
-    layoutTemplate: "test_layout",
+    //layoutTemplate: "test_layout",
     waitOn: function () { return [
     ]; }
   });

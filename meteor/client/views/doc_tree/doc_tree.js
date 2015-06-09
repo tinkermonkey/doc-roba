@@ -56,6 +56,7 @@ Template.DocTree.rendered = function () {
 
     // respond to resize events
     self.autorun(function () {
+      Meteor.log.debug("Auto-run doc_tree resize");
       var resize = Session.get("resize");
       self.treeLayout.resize();
     });

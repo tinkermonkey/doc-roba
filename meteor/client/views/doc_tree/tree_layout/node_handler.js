@@ -90,8 +90,13 @@ TreeNodeHandler.prototype.addNode = function(parent, dir){
       config.title = "New Platform";
       break;
     case NodeTypes.platform:
-      config.type = NodeTypes.page;
-      config.title = "New Login";
+      if(dir === "right") {
+        config.type = NodeTypes.navMenu;
+        config.title = "New Nav Menu";
+      } else {
+        config.type = NodeTypes.page;
+        config.title = "New Login";
+      }
       break;
     default:
       if(dir === "right"){
@@ -176,7 +181,7 @@ TreeNodeHandler.prototype.mapNode = function(d){
       node.parent = d;
 
       // pages and views are linked separately
-      if(node.type === NodeTypes.view){
+      if(node.type === NodeTypes.view || node.type === NodeTypes.navMenu){
         node.childIndex = d.childViews.length; // the index of this node in the parent's child list
         d.childViews.push(node);
       } else {
@@ -398,11 +403,9 @@ TreeNodeHandler.prototype.calcNodeSize = function(d){
     iconWidth   = this.config.width;
 
   // get a size based on the type of node
-  switch(d.type){
-    case NodeTypes.root:
-      iconHeight = 2 * this.config.rootRadius;
-      iconWidth  = 2 * this.config.rootRadius;
-      break;
+  if(d.type == NodeTypes.root){
+    iconHeight = 2 * this.config.rootRadius;
+    iconWidth  = 2 * this.config.rootRadius;
   }
 
   // construct the bounds of the icon, default to the icon centered
@@ -661,12 +664,18 @@ TreeNodeHandler.prototype.editNode = function (node) {
   var self = this,
     tree = self.treeLayout;
 
+  var drawerHeight = tree.config.bottomDrawerHeight;
+  if(drawerHeight.match(/\%/)){
+    drawerHeight = parseFloat(drawerHeight) / 100 * tree.height;
+    console.log("drawerHeight: ", drawerHeight);
+  }
+
   // Zoom to focus on the node
-  tree.zoomAndCenterNodes([node], { bottom: tree.config.bottomDrawerHeight });
+  tree.zoomAndCenterNodes([node], { bottom: drawerHeight });
 
   // show the bottom drawer
   BottomDrawer.show({
-    height: tree.config.bottomDrawerHeight,
+    height: drawerHeight,
     contentTemplate: 'edit_node',
     contentData: {_id: node._id},
     callback: function () {

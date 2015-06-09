@@ -61,7 +61,7 @@ Template.RobaAce.rendered = function () {
         clearTimeout(instance.updateTimeout);
       }
       instance.updateTimeout = setTimeout(function () {
-        $("#" + instance._elementId).trigger("edited", [editor.getValue()]);
+        $("#" + instance._elementId).trigger("edited", [editor.getValue() || ""]);
       }, 1000);
     });
 
@@ -77,7 +77,7 @@ Template.RobaAce.rendered = function () {
     instance.autorun(function () {
       var data = Template.currentData();
       if(data.value !== instance.editor.getValue()){
-        console.log("Data update");
+        Meteor.log.debug("RobaAce Data update");
         instance.editor.setValue(data.value);
         instance.editor.clearSelection();
       }

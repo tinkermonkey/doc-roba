@@ -3,17 +3,6 @@
     <div class="live-adventure-view">
       {{#if state.url}}
         <div class="live-adventure-header">
-          <div class="btn-group pull-right">
-            {{#if getHighlightElements ..}}
-              <button type="button" class="btn btn-primary btn-xs btn-clear-highlight">
-                <span class="glyphicon glyphicon-ban-circle"></span>
-                Clear Highlight
-              </button>
-            {{/if}}
-            <button type="button" class="btn btn-primary btn-xs btn-refresh">
-              <span class="glyphicon glyphicon-refresh"></span>
-            </button>
-          </div>
           {{#with state}}
           <div>{{title}}</div>
           <div>{{url}}</div>

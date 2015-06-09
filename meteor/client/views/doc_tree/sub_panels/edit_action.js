@@ -5,9 +5,6 @@ Template.edit_action.helpers({
   getActionRecord: function () {
     return Actions.findOne({_id: this._id});
   },
-  isExpanded: function () {
-    return Session.get("drawerExpanded");
-  },
   multipleDestinations: function () {
     return this.routes.length > 1;
   }
@@ -17,6 +14,24 @@ Template.edit_action.helpers({
  * Event Handlers
  */
 Template.edit_action.events({
+  "edited .action-editable": function (e, instance, newValue) {
+    var dataKey = $(e.target).attr("data-key"),
+      update = {$set: {}};
+
+    console.log("update: ", dataKey, instance.data._id);
+    if(dataKey){
+      update["$set"][dataKey] = newValue;
+      Actions.update(instance.data._id, update, function (error) {
+        if(error){
+          Meteor.log.error("Failed to update action value: " + error.message);
+          Dialog.error("Failed to update action value: " + error.message);
+        }
+      });
+    } else {
+      Meteor.log.error("Failed to update action value: data-key not found");
+      Dialog.error("Failed to update action value: data-key not found");
+    }
+  },
   "click .delete-action-link": function () {
     var action = this;
     console.log("Delete Action: ", action);
@@ -49,6 +64,8 @@ Template.edit_action.events({
         }
       }
     });
+  },
+  "edited .editable": function () {
 
   }
 });
@@ -60,47 +77,14 @@ Template.edit_action.rendered = function () {
   var instance = Template.instance();
 
   instance.autorun(function () {
-    var expanded = Session.get("drawerExpanded"),
-      data = Template.currentData();
+    var data = Template.currentData();
 
-    console.log("Edit Action Autorun");
-    if(!expanded){
-      console.log("Updating tabs");
-      setTimeout(function () {
-        Tabs.init(instance);
-        if(!instance.$("ul.nav > li.active").get(0)){
-          console.log("Activating first tab");
-          Tabs.activateFirst(instance);
-        }
-      }, 10);
-    }
-  });
-
-  // Setup the editable content
-  if(!instance.editable){
-    Meteor.log.debug("Setting up x-editable behavior after render");
-    instance.editable = instance.$('.editable').editable({
-      mode: "inline",
-      inputclass: "edit-node-title x-editable-auto",
-      highlight: false,
-      width: '100%',
-      display: function () {},
-      success: function (response, newValue) {
-        var editedElement = this,
-          actionId = $(editedElement).attr("data-pk");
-
-        Actions.update(actionId, {$set: {title: newValue}}, function (error, response) {
-          if(error){
-            console.error("Action update failed: ", error);
-          } else {
-            console.log("Action updated: ", response);
-          }
-        });
-
-        setTimeout(function () {
-          $(editedElement).removeClass('editable-unsaved');
-        }, 10);
+    setTimeout(function () {
+      Tabs.init(instance);
+      if(!instance.$("ul.nav > li.active").get(0)){
+        console.log("Activating first tab");
+        Tabs.activateFirst(instance);
       }
-    });
-  }
+    }, 10);
+  });
 };

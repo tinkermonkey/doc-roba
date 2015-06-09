@@ -33,7 +33,7 @@ Template.AdventureContext.helpers({
           matchCount++;
           match = result;
         }
-        //console.log("searchNodes: ", result.node.title, result.url.match, result.params.match, result.title.match);
+        console.log("searchNodes: ", result.node.title, result.url.match, result.params.match, result.title.match);
       });
 
       if(matchCount == 1 && match){
@@ -47,6 +47,7 @@ Template.AdventureContext.helpers({
         Meteor.log.debug("searchNodes found a single match: " + match.node.staticId);
         this.currentNode.set(match.node.staticId);
       } else {
+        Meteor.log.debug("searchNodes result count: " + results.length);
         return results;
       }
     }

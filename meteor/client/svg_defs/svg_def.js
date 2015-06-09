@@ -12,6 +12,7 @@ Template.svg_def.helpers({
    * @returns {boolean}
    */
   needed: function () {
+    return true;
     // Check to see if the element is already defined
     var name = this || '',
       id = name.replace("def_", "").replace(/_/g, "-");
@@ -20,7 +21,6 @@ Template.svg_def.helpers({
     if(BrowserDetect.browser == "Firefox"){
       return true;
     }
-    return true;
 
     // On include it if it needs to be
     if(id.length){
@@ -31,6 +31,7 @@ Template.svg_def.helpers({
     var name = this || '',
       id = name.replace("def_", "").replace(/_/g, "-"),
       template = "def_" + id.replace(/\-/g, "_");
+    console.log("Template: ", template);
     return template;
   }
 });

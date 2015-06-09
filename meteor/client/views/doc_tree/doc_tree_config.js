@@ -18,7 +18,7 @@ DocTreeConfig = {
     dialogWidth: 360,
     dialogHeight: 100,
     dblClickTimeout: 250,
-    bottomDrawerHeight: 300,
+    bottomDrawerHeight: "33.33%",
     viewTransitionTime: 333
   },
   /**
@@ -62,7 +62,7 @@ DocTreeConfig = {
    * Actions
    */
   actions: {
-    hideTimer: 120, // ms to wait before hiding the controls after a mouse-leave
+    hideTimer: 250, // ms to wait before hiding the controls after a mouse-leave
     textXMargin: 8,
     textYMargin: 8,
     cornerRadius: 3

@@ -10,6 +10,9 @@ var Future        = require("fibers/future"),
   fs              = require("fs"),
   logger          = log4js.getLogger("future-driver"),
   browserLogger   = log4js.getLogger("browser"),
+  clientLogger    = log4js.getLogger("client"),
+  driverLogger    = log4js.getLogger("driver"),
+  serverLogger    = log4js.getLogger("server"),
   commands        = {
     "action": [
       "addValue", "clearElement", "click", "doubleClick", "dragAndDrop", "leftClick", "middleClick", "rightClick",
@@ -60,8 +63,11 @@ var Future        = require("fibers/future"),
   },
   skipLoggingCommands = ["screenshot", "saveScreenshot"];
 
-logger.setLevel("DEBUG");
-
+logger.setLevel("INFO");
+browserLogger.setLevel("TRACE");
+clientLogger.setLevel("TRACE");
+driverLogger.setLevel("TRACE");
+serverLogger.setLevel("TRACE");
 
 /**
  * Constructor
@@ -71,7 +77,7 @@ var FutureDriver = function (config) {
 
   // munge the config and defaults
   this.config = config || {};
-  _.extend(this.config, {
+  _.defaults(this.config, {
     desiredCapabilities: {
       browserName: "chrome"
     }
@@ -274,12 +280,25 @@ FutureDriver.prototype.checkUrl = function () {
  * Circumvent the wrapped function to prevent cross-logging
  */
 FutureDriver.prototype.getClientLogs = function () {
+  this.fetchLogs("browser", browserLogger);
+  //this.fetchLogs("client", clientLogger);
+  this.fetchLogs("driver", driverLogger);
+  this.fetchLogs("server", serverLogger);
+};
+
+/**
+ * Retrieve the client logs via selenium
+ * Log them directly to the appropriate log listeners
+ * Circumvent the wrapped function to prevent cross-logging
+ */
+FutureDriver.prototype.fetchLogs = function (type, fetchLogger) {
   // fetch the browser logs
   var future = new Future();
   try {
-    this.driver.log("browser", function (error, result) {
+    this.driver.log(type, function (error, result) {
+      //fetchLogger.info("Log Messages: ", result);
       if(error){
-        browserLogger.error("Error fetching browser log: ", error);
+        fetchLogger.error("Error fetching " + type + " log: ", error);
       } else if(result && result.value) {
         result.value.forEach(function (message) {
           if(message.message && message.level){
@@ -287,29 +306,29 @@ FutureDriver.prototype.getClientLogs = function () {
             var logMsg = message.message;
             switch (message.level.toLowerCase()) {
               case "severe":
-                browserLogger.error(logMsg, message);
+                fetchLogger.error(logMsg, message);
                 break;
               case "warn":
-                browserLogger.warn(logMsg);
+                fetchLogger.warn(logMsg);
                 break;
               case "debug":
-                browserLogger.debug(logMsg);
+                fetchLogger.debug(logMsg);
                 break;
               default:
-                browserLogger.info(logMsg);
+                fetchLogger.info(logMsg);
                 break;
             }
           } else {
-            browserLogger.info(message);
+            fetchLogger.info(message);
           }
         });
       } else {
-        browserLogger.info(result);
+        fetchLogger.info(result);
       }
       future.return();
     });
   } catch (e) {
-    logger.error("Fetching browser log failed: ", e);
+    fetchLogger.error("Fetching " + type + " log failed: ", e);
   }
   future.wait();
 };
@@ -361,7 +380,7 @@ FutureDriver.prototype.injectHelpers = function () {
 
           // get the parent information
           if(el.parentNode){
-            info.parent = roba_driver.element_info(el.parentNode, true, false);
+            info.parent = roba_driver.element_info(el.parentNode, false, false);
             info.childIndex = Array.prototype.indexOf.call(el.parentNode.children, el);
           }
 

@@ -38,8 +38,16 @@
   fill: #a7ff00;
 }
 
+.node-platform {
+  fill: #ff8400;
+}
+
+.node-navMenu {
+  fill: #ca80ff;
+}
+
 .node-page {
-  /*fill: #50d7ff;*/
+  /**fill: #50d7ff;**/
   fill: url(#page-back);
 }
 
@@ -81,12 +89,21 @@
 /**
   Action Styling
 **/
+.action-group {
+  visibility: hidden;
+}
+
 .action {
   stroke: #50d7ff;
   stroke-width: 3;
   fill: none;
-  visibility: hidden;
   marker-end: url(#action-arrow);
+}
+
+.action-hover-back {
+  stroke: rgba(80, 215, 255, 0.05);
+  stroke-width: 8;
+  fill: none;
 }
 
 .action-blunt {
@@ -195,6 +212,11 @@
   filter: url(#shadow);
 }
 
+.node-controls-shield {
+  stroke: none;
+  fill: rgba(255, 0, 255, 0.01);
+}
+
 .control-button .control-back, .dragger {
   cursor: pointer;
   fill: url(#node-control-back);
@@ -221,6 +243,18 @@
 
 .roba-button:hover .control-back {
   fill: url(#node-control-back-roba);
+}
+
+.add-page-button .control-back{
+  fill: url(#node-control-back-page);
+}
+
+.add-view-button .control-back{
+  fill: url(#node-control-back-view);
+}
+
+.add-navMenu-button .control-back{
+  fill: url(#node-control-back-navMenu);
 }
 
 .inDrag .dragger {

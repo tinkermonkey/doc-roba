@@ -332,6 +332,10 @@ TreeActionControls.prototype.considerHiding = function () {
   var self = this,
     tree = this.treeLayout;
 
+  if(self.hideTimeout){
+    clearTimeout(self.hideTimeout);
+  }
+
   self.hideTimeout = setTimeout( function () {
     if(!tree.state.inDrag){
       self.hide();

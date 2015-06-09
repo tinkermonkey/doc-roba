@@ -82,7 +82,7 @@ NodeTypes = {
   platform: 2,
   page: 3,
   view: 4,
-  variant: 5
+  navMenu: 5
 };
 NodeTypesLookup = _.invert(NodeTypes);
 

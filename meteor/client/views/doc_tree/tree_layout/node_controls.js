@@ -101,6 +101,14 @@ TreeNodeControls.prototype.create = function () {
     .attr("transform", "translate(0,0)")
     .classed("no-mouse", true);
 
+  // provide some hover protection with an invisible shield
+  self.shield = self.controlsBack
+    .append("circle")
+    .attr("class", "node-controls-shield")
+    .attr("r",  0)
+    .attr("cx", 0)
+    .attr("cy", 0);
+
   self.background = self.controlsBack
     .append("circle")
     .attr("class", "node-controls-back")
@@ -111,7 +119,7 @@ TreeNodeControls.prototype.create = function () {
   // Node add child node button
   self.addDownButton = self.controlsMid
     .append("g")
-    .attr("class", "add-down-button control-button")
+    .attr("class", "add-down-button control-button add-page-button")
     .attr("transform", "translate(0, 0)")
     .on('click', function(){
       tree.nodeHandler.addNode(self.node, "down");
@@ -132,7 +140,7 @@ TreeNodeControls.prototype.create = function () {
   // Node add view button
   self.addRightButton = self.controlsMid
     .append("g")
-    .attr("class", "add-right-button control-button")
+    .attr("class", "add-right-button control-button add-view-button")
     .attr("transform", "translate(0, 0)")
     .on('click', function(){
       tree.nodeHandler.addNode(self.node, "right");
@@ -145,6 +153,27 @@ TreeNodeControls.prototype.create = function () {
     .attr("cy", "0");
 
   self.addRightButton.append("text")
+    .attr("x", 0)
+    .attr("y", 6)
+    .attr("class", "no-select")
+    .text("+");
+
+  // Node add navMenu button
+  self.addNavButton = self.controlsMid
+    .append("g")
+    .attr("class", "add-right-button control-button add-navMenu-button")
+    .attr("transform", "translate(0, 0)")
+    .on('click', function(){
+      tree.nodeHandler.addNode(self.node, "nav");
+    });
+
+  self.addNavButton.append("circle")
+    .attr("class", "control-back")
+    .attr("r", "15")
+    .attr("cx", "0")
+    .attr("cy", "0");
+
+  self.addNavButton.append("text")
     .attr("x", 0)
     .attr("y", 6)
     .attr("class", "no-select")
@@ -245,7 +274,11 @@ TreeNodeControls.prototype.create = function () {
 TreeNodeControls.prototype.update = function () {
   //Meteor.log.debug("nodeControls.update()");
   var self = this,
-    tree = self.treeLayout;
+    tree = self.treeLayout,
+    contraction = 0.75,
+    duration = self.config.transitionTimer,
+    _45Deg = Math.cos(Math.PI / 4),
+    x, y;
 
   if(self.node){
     var radius = self.getRadius(self.node),
@@ -266,6 +299,9 @@ TreeNodeControls.prototype.update = function () {
       .attr("opacity", 1);
 
     if(visible && placement && (placement.xInt != self.node.x || placement.yInt != self.node.y)){
+      // quick transition
+      duration = self.config.transitionTimer * 0.66;
+
       // Glide the controls into place if they're visible
       self.controlsBack
         .transition()
@@ -282,61 +318,73 @@ TreeNodeControls.prototype.update = function () {
         .duration(240)
         .attr("transform", "translate(" + self.node.x + ", " + self.node.y + ")");
 
+      // adjust the shield
+      self.shield
+        .attr("r", radius + 20);
+
       // adjust the node control background
       self.background
         .transition()
-        .duration(self.config.transitionTimer * 0.66)
-        .attr("r", radius * 0.75)
+        .duration(duration)
+        .attr("r", radius * contraction)
         .transition()
-        .duration(self.config.transitionTimer * 0.66)
+        .duration(duration)
         .attr("r", radius);
 
       // Adjust the placement of all of the controls to fit this node
       self.addDownButton
         .transition()
-        .duration(self.config.transitionTimer * 0.66)
-        .attr("transform", "translate(0, " + (radius * 0.75) + ")")
+        .duration(duration)
+        .attr("transform", "translate(0, " + (radius * contraction) + ")")
         .transition()
-        .duration(self.config.transitionTimer * 0.66)
+        .duration(duration)
         .attr("transform", "translate(0, " + (radius) + ")");
 
       self.addRightButton
         .transition()
-        .duration(self.config.transitionTimer * 0.66)
-        .attr("transform", "translate(" + (radius * 0.75) + ", 0)")
+        .duration(duration)
+        .attr("transform", "translate(" + (radius * contraction) + ", 0)")
         .transition()
-        .duration(self.config.transitionTimer * 0.66)
+        .duration(duration)
         .attr("transform", "translate(" + (radius) + ", 0)");
+
+      self.addNavButton
+        .transition()
+        .duration(duration)
+        .attr("transform", "translate(" + (radius * contraction * _45Deg) + ", " + (-1 * radius * contraction * _45Deg) + ")")
+        .transition()
+        .duration(duration)
+        .attr("transform", "translate(" + (radius * _45Deg) + ", " + (-1 * radius * _45Deg) + ")");
 
       self.editButton
         .transition()
-        .duration(self.config.transitionTimer * 0.66)
-        .attr("transform", "translate(0, " + (-1 * radius * 0.75) + ")")
+        .duration(duration)
+        .attr("transform", "translate(0, " + (-1 * radius * contraction) + ")")
         .transition()
-        .duration(self.config.transitionTimer * 0.66)
+        .duration(duration)
         .attr("transform", "translate(0, " + (-1 * radius) + ")");
 
       self.robaButton
         .transition()
-        .duration(self.config.transitionTimer * 0.66)
-        .attr("transform", "translate(" + (radius * 0.75 * Math.cos(Math.PI / 4)) + ", " + (-1 * radius * 0.75 * Math.sin(Math.PI / 4)) + ")")
+        .duration(duration)
+        .attr("transform", "translate(" + (-1 * radius * contraction * _45Deg) + ", " + (-1 * radius * contraction * _45Deg) + ")")
         .transition()
-        .duration(self.config.transitionTimer * 0.66)
-        .attr("transform", "translate(" + (radius * Math.cos(Math.PI / 4)) + ", " + (-1 * radius * Math.sin(Math.PI / 4)) + ")");
+        .duration(duration)
+        .attr("transform", "translate(" + (-1 * radius * _45Deg) + ", " + (-1 * radius * _45Deg) + ")");
 
       self.addActionDragHandle
         .transition()
-        .duration(self.config.transitionTimer * 0.66)
-        .attr("transform", "translate(" + (radius * 0.75 * Math.cos(Math.PI / 4)) + ", " + (radius * 0.75 * Math.sin(Math.PI / 4)) + ")")
+        .duration(duration)
+        .attr("transform", "translate(" + (radius * contraction * _45Deg) + ", " + (radius * contraction * _45Deg) + ")")
         .transition()
-        .duration(self.config.transitionTimer * 0.66)
-        .attr("transform", "translate(" + (radius * Math.cos(Math.PI / 4)) + ", " + (radius * Math.sin(Math.PI / 4)) + ")");
+        .duration(duration)
+        .attr("transform", "translate(" + (radius * _45Deg) + ", " + (radius * _45Deg) + ")");
 
       self.addActionDragHandleDummy
         .attr("opacity", 0)
-        .attr("transform", "translate(" + (radius * Math.cos(Math.PI / 4)) + ", " + (radius * Math.sin(Math.PI / 4)) + ")")
+        .attr("transform", "translate(" + (radius * _45Deg) + ", " + (radius * _45Deg) + ")")
         .transition()
-        .duration(self.config.transitionTimer * 0.66 * 2)
+        .duration(duration * 2)
         .transition()
         .attr("opacity", 1);
 
@@ -349,6 +397,10 @@ TreeNodeControls.prototype.update = function () {
       self.controlsFront
         .attr("transform", "translate(" + self.node.x + ", " + self.node.y + ")");
 
+      // adjust the shield
+      self.shield
+        .attr("r", radius + 20);
+
       // adjust the node control background
       self.background
         .transition()
@@ -366,6 +418,11 @@ TreeNodeControls.prototype.update = function () {
         .duration(self.config.transitionTimer)
         .attr("transform", "translate(" + (radius) + ", 0)");
 
+      self.addNavButton
+        .transition()
+        .duration(self.config.transitionTimer)
+        .attr("transform", "translate(" + (radius * _45Deg) + ", " + (-1 * radius * _45Deg) + ")");
+
       self.editButton
         .transition()
         .duration(self.config.transitionTimer)
@@ -374,16 +431,16 @@ TreeNodeControls.prototype.update = function () {
       self.robaButton
         .transition()
         .duration(self.config.transitionTimer)
-        .attr("transform", "translate(" + (radius * Math.cos(Math.PI / 4)) + ", " + (-1 * radius * Math.sin(Math.PI / 4)) + ")");
+        .attr("transform", "translate(" + (-1 * radius * _45Deg) + ", " + (-1 * radius * _45Deg) + ")");
 
       self.addActionDragHandle
         .transition()
         .duration(self.config.transitionTimer)
-        .attr("transform", "translate(" + (radius * Math.cos(Math.PI / 4)) + ", " + radius * Math.sin(Math.PI / 4) + ")");
+        .attr("transform", "translate(" + (radius * _45Deg) + ", " + radius * _45Deg + ")");
 
       self.addActionDragHandleDummy
         .attr("opacity", 0)
-        .attr("transform", "translate(" + (radius * Math.cos(Math.PI / 4)) + ", " + radius * Math.sin(Math.PI / 4) + ")")
+        .attr("transform", "translate(" + (radius * _45Deg) + ", " + radius * _45Deg + ")")
         .transition()
         .duration(self.config.transitionTimer)
         .transition()
@@ -421,14 +478,39 @@ TreeNodeControls.prototype.show = function (d) {
   self.cancelHiding();
 
   // hide pieces base on the type of node
-  if(self.node.type === NodeTypes.page || self.node.type === NodeTypes.view){
-    self.addRightButton.attr("display", "");
-    self.addActionDragHandle.attr("display", "");
-    self.addActionDragHandleDummy.attr("display", "");
-  } else {
-    self.addRightButton.attr("display", "none");
-    self.addActionDragHandle.attr("display", "none");
-    self.addActionDragHandleDummy.attr("display", "none");
+  switch(self.node.type){
+    case NodeTypes.page:
+    case NodeTypes.view:
+      self.addRightButton.attr("display", "");
+      self.addNavButton.attr("display", "");
+      self.addActionDragHandle.attr("display", "");
+      self.addActionDragHandleDummy.attr("display", "");
+      self.robaButton.attr("display", "");
+      self.addDownButton.attr("display", "");
+      break;
+    case NodeTypes.platform:
+      self.addRightButton.attr("display", "");
+      self.addNavButton.attr("display", "");
+      self.addActionDragHandle.attr("display", "none");
+      self.addActionDragHandleDummy.attr("display", "none");
+      self.robaButton.attr("display", "none");
+      self.addDownButton.attr("display", "");
+      break;
+    case NodeTypes.navMenu:
+      self.addRightButton.attr("display", "none");
+      self.addNavButton.attr("display", "none");
+      self.addActionDragHandle.attr("display", "");
+      self.addActionDragHandleDummy.attr("display", "");
+      self.robaButton.attr("display", "none");
+      self.addDownButton.attr("display", "none");
+      break;
+    default:
+      self.addRightButton.attr("display", "none");
+      self.addNavButton.attr("display", "none");
+      self.addActionDragHandle.attr("display", "none");
+      self.addActionDragHandleDummy.attr("display", "none");
+      self.robaButton.attr("display", "none");
+      self.addDownButton.attr("display", "");
   }
 
   // update the controls
@@ -440,7 +522,7 @@ TreeNodeControls.prototype.show = function (d) {
  */
 TreeNodeControls.prototype.hide = function () {
   //Meteor.log.debug("nodeControls.hide()");
-  var self = this
+  var self = this,
     visible = self.background.attr("r") > 0;
 
   // make sure it's not locked
@@ -450,6 +532,10 @@ TreeNodeControls.prototype.hide = function () {
 
   // Clear the node attachment
   delete self.node;
+
+  // shield doesn't need to be animated
+  self.shield
+    .attr("r", 0);
 
   if(visible) {
     self.background
@@ -543,6 +629,10 @@ TreeNodeControls.prototype.considerHiding = function () {
   //Meteor.log.debug("nodeControls.considerHiding()");
   var self = this,
     tree = this.treeLayout;
+
+  if(self.hideTimeout){
+    clearTimeout(self.hideTimeout);
+  }
 
   self.hideTimeout = setTimeout( function () {
     if(!tree.state.inDrag){

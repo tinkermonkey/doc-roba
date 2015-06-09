@@ -34,18 +34,28 @@
         <ul class="nav nav-pills full-height" style="padding-top: 10px;">
           <li role="presentation"><a data-tab-name="ready">Ready</a></li>
           <li role="presentation"><a data-tab-name="validations">Validations</a></li>
+          <li role="presentation"><a data-tab-name="nav-menus">Nav Menus</a></li>
           <li role="presentation"><a data-tab-name="documentation">Documentation</a></li>
           <li role="presentation"><a data-tab-name="recent">Recent Renditions</a></li>
         </ul>
         <div class="tab-container full-height">
           <div class="tab" data-tab-name="ready">
-            <div class="sub-heading">Code to determine if this {{renderNodeType type}} is ready:</div>
-            {{> RobaAce minLines=10 maxLines=30 dataKey="readyCode" value=readyCode}}
+            <div class="simple-col simple-col-9">
+                {{> RobaAce fullHeight=true dataKey="readyCode" value=readyCode}}
+            </div>
+            <div class="simple-col simple-col-3">
+                <div class="sub-heading">Code to determine if this {{renderNodeType type}} is ready:</div>
+            </div>
           </div>
           <div class="tab" data-tab-name="validations">
-            <div class="sub-heading">Code to determine if this {{renderNodeType type}} is valid:</div>
-            {{> RobaAce minLines=10 maxLines=30 dataKey="validationCode" value=validationCode}}
+            <div class="simple-col simple-col-9">
+                {{> RobaAce fullHeight=true dataKey="validationCode" value=validationCode}}
+            </div>
+            <div class="simple-col simple-col-3">
+              <div class="sub-heading">Code to determine if this {{renderNodeType type}} is valid:</div>
+            </div>
           </div>
+          <div class="tab" data-tab-name="nav-menus">Navigation Menus on this page:</div>
           <div class="tab" data-tab-name="documentation">Documentation</div>
           <div class="tab" data-tab-name="recent">Recent Renditions</div>
         </div>

@@ -159,6 +159,7 @@ TreeActionHandler.prototype.prepActions = function () {
   var baseRoutes = [],
     nodeRoutes = [],
     baseRouteLookup, rightRoutes, leftRoutes;
+
   _.each(sourceIds, function (id) {
     rightRoutes = [];
     leftRoutes = [];
@@ -170,10 +171,10 @@ TreeActionHandler.prototype.prepActions = function () {
     // get the left-most routes for each action for this node
     baseRoutes = _.filter(nodeRoutes, function (r) { return r.routeSortIndex == 0 });
 
+    // Go through each of the actions, using route 0 as a starting point
     _.each(_.sortBy(baseRoutes, function (r) { return r.destination.x }), function (r, i) {
-      r.actionSortIndex = i;
       baseRouteLookup[r._id] = r;
-      r.dir = r.destination.x >= r.source.x ? 1 : -1;
+      self.setRouteDirection(r);
 
       // keep track of which x direction the destination is
       if(r.dir > 0){
@@ -185,11 +186,19 @@ TreeActionHandler.prototype.prepActions = function () {
       }
     });
 
-    // Make another pass to get all of the directional ordering in line
+    // We have to sort left to right
+    _.each(_.sortBy(leftRoutes, function (id) { return baseRouteLookup[id].destination.x }), function (id, i) {
+      baseRouteLookup[id].actionSortIndex = i;
+    });
+    _.each(_.sortBy(rightRoutes, function (id) { return baseRouteLookup[id].x }), function (id, i) {
+      baseRouteLookup[id].actionSortIndex = leftRoutes.length + i;
+    });
+
+    // Now go through all routes, and set the parameters
     _.each(nodeRoutes, function (r) {
       if(r.routeIndex > 0 && baseRouteLookup[r._id]){
         r.actionSortIndex = baseRouteLookup[r._id].actionSortIndex;
-        r.dir = r.destination.x >= r.source.x ? 1 : -1;
+        self.setRouteDirection(r);
 
         // If the lesser route direction is different from the base route direction
         if(r.dir !== baseRouteLookup[r._id].dir){
@@ -227,6 +236,19 @@ TreeActionHandler.prototype.prepActions = function () {
 };
 
 /**
+ * Calculate the direction that a route will take (left or right)
+ * @param r
+ */
+TreeActionHandler.prototype.setRouteDirection = function (r) {
+  // direction can get complicated
+  if(r.destination.y > r.source.y){
+    r.dir = r.destination.x >= r.source.x ? 1 : -1;
+  } else {
+    r.dir = r.destination.x >= (r.source.x + r.source.bounds.width / 2 + r.destination.bounds.width / 2) ? 1 : -1;
+  }
+};
+
+/**
  * Clear the list of visible actions
  */
 TreeActionHandler.prototype.clearVisibleActions = function () {
@@ -245,7 +267,7 @@ TreeActionHandler.prototype.update = function (duration) {
     actions;
 
   // gather the existing action links and set the data
-  actions = self.linkLayer.selectAll(".action")
+  actions = self.linkLayer.selectAll(".action-group")
     .data(self.actionRoutes, function(d){ return d._id + "_" + d.routeIndex; });
 
   // Update the action links
@@ -301,10 +323,13 @@ TreeActionHandler.prototype.updateActionDisplay = function () {
     d.labelWidth = self.dummyActionLabel.node().getBBox().width;
     d.labelHeight = self.dummyActionLabel.node().getBBox().height;
 
-    startPoint = tree.layoutRoot.select(".action-" + d._id).node().getPointAtLength(0);
+    var node = tree.layoutRoot.select(".action-" + d._id).select(".action").node();
+    if(node){
+      startPoint = node.getPointAtLength(0);
 
-    d.x = startPoint.x;
-    d.y = startPoint.y;
+      d.x = startPoint.x;
+      d.y = startPoint.y;
+    }
   });
 };
 
@@ -318,19 +343,26 @@ TreeActionHandler.prototype.createAndUpdateLinks = function (selection, duration
     tree = self.treeLayout;
 
   // Enter any new links at the parent's previous position
-  selection.enter()
-    .append("path")
+  var actionGroupEnter = selection.enter()
+    .append("g")
     .attr("class", function(d){
-      return "action action-" + d.source._id + " action-" + d._id;
+      return "action-group action-" + d.source._id + " action-" + d._id;
     })
-    .classed("action-blunt", function (d) { return !d.destination.parent.visExpanded })
-    .attr("d", function(d, i){ return self.generateActionPath(d); } )
     .on("click", tree.actionClickHandler.bind(tree) )
     .on("mouseenter", tree.actionMouseEnterHandler.bind(tree) )
     .on("mouseleave", tree.actionMouseLeaveHandler.bind(tree) );
 
+  actionGroupEnter.append("path")
+    .attr("class", "action")
+    .classed("action-blunt", function (d) { return !d.destination.parent.visExpanded })
+    .attr("d", function(d, i){ return self.generateActionPath(d); } );
+
+  actionGroupEnter.append("path")
+    .attr("class", "action-hover-back")
+    .attr("d", function(d, i){ return self.generateActionPath(d); } );
+
   // Transition links to their new position
-  selection
+  selection.select(".action, .action-hover-back")
     .classed("action-blunt", function (d) { return !d.destination.parent.visExpanded })
     .transition()
     .duration(duration)
@@ -370,7 +402,7 @@ TreeActionHandler.prototype.createAndUpdateLabels = function (selection) {
 
   // update existing labels
   selection
-    .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+    .attr("transform", function(d) { return "translate(" + (d.x - (d.labelWidth / 2)) + "," + (d.y - (d.labelHeight / 2)) + ")"; });
   selection.select(".action-label-back")
     .attr("x", function (d) { return d.labelWidth / -2 - self.config.textXMargin / 2; })
     .attr("y", function (d) { return d.labelHeight / -2 - self.config.textYMargin / 2; })
@@ -431,6 +463,7 @@ TreeActionHandler.prototype.generateActionPath = function(r){
       },
       pointC = {
         x: pointB.x,
+        //y: destination.y - config.yMargin / 2,
         y: destination.y - config.yMargin / 2 - delta,
         radius: (config.yMargin / 2 + delta) / 2
       },
@@ -443,7 +476,8 @@ TreeActionHandler.prototype.generateActionPath = function(r){
       dirCD = pointD.x < pointC.x ? -1 : 1;
 
     // Path that routes "up"
-    if (destination.y < source.y) {
+    //if (destination.y < source.y) {
+    if (pointD.y < pointA.y) {
 
       path = PathBuilder.start()
         .M(source.x, source.y);
@@ -463,16 +497,6 @@ TreeActionHandler.prototype.generateActionPath = function(r){
         .q(dirCD * pointD.radius, 0, dirCD * pointD.radius, pointD.radius)
         .L(destination.x, destination.y)
         .compile();
-      /*
-      path = PathBuilder.start()
-        .M(source.x, source.y)
-        .L(pointA.x, pointA.y)
-        .L(pointB.x, pointB.y)
-        .L(pointC.x, pointC.y)
-        .L(pointD.x, pointD.y)
-        .L(destination.x, destination.y)
-        .compile();
-        */
     } else {
       // path that routes "down"
       pointA.radius = Math.min(pointA.radius, Math.abs(pointD.x - pointA.x) / 2);
@@ -481,7 +505,7 @@ TreeActionHandler.prototype.generateActionPath = function(r){
         .M(source.x, source.y);
 
       if(r.action.routes.length == 1){
-        path.L(pointA.x, pointA.y - pointA.radius)
+        path.L(pointA.x, (Math.max(pointA.y, pointD.y)) - pointA.radius)
           .q(0, pointA.radius, dirAB * pointA.radius, pointA.radius);
       } else {
         path.L(pointA.x, pointA.y);
@@ -505,7 +529,7 @@ TreeActionHandler.prototype.generateActionPath = function(r){
  * @param d
  */
 TreeActionHandler.prototype.hover = function (d, event) {
-  //console.log("hover: ", d, event);
+  //console.log("hover: ", d, event, event.target.__data__);
   var self = this,
     tree = self.treeLayout;
 
@@ -521,21 +545,24 @@ TreeActionHandler.prototype.hover = function (d, event) {
   if(d.action && d.action.staticId){
     self.hoverActions = [d.action.staticId];
   } else {
-    Meteor.error("Action Hover Failed: invalid data point passed");
+    Meteor.log.error("Action Hover Failed: invalid data point passed");
     return;
   }
 
   // set the label coordinates if there is an event to pull location from
-  var coords = tree.screenToLocalCoordinates({x: event.clientX, y: event.clientY});
-  d.x = coords.x;
-  d.y = coords.y - d.labelHeight - self.config.textYMargin;
-  self.hoverRoute = { x: d.x, y: d.y };
+  //var coords = tree.screenToLocalCoordinates({x: event.clientX, y: event.clientY});
+  //d.x = d.x - (d.labelWidth / 2) - self.config.textXMargin;
+  //d.y = coords.y - d.labelHeight - self.config.textYMargin;
+  self.hoverRoute = {
+    x: d.x - (d.labelWidth / 2) - self.config.textXMargin,
+    y: d.y + (d.labelHeight / 2)
+  };
 
   var actions = self.hoverLayerBack.selectAll(".action")
     .data(routes, function (d) { return d._id + "_" + d.routeIndex});
 
   var labels = self.hoverLayerFront.selectAll(".action-label")
-    .data([d], function (d) { return d._id});
+    .data([d], function (d) { return d._id });
 
   // Update the action links
   self.createAndUpdateLinks(actions);
@@ -613,12 +640,16 @@ TreeActionHandler.prototype.updateHover = function (d) {
  * Consider hiding the hovered action
  */
 TreeActionHandler.prototype.considerHiding = function () {
-  //Meteor.log.debug("TreeActionHandler.considerHiding()");
+  Meteor.log.debug("TreeActionHandler.considerHiding()");
   var self = this;
 
   // make sure it's not locked
   if(self.locked){
     return;
+  }
+
+  if(self.hideTimeout){
+    clearTimeout(self.hideTimeout);
   }
 
   self.hideTimeout = setTimeout( function () {
@@ -630,7 +661,7 @@ TreeActionHandler.prototype.considerHiding = function () {
  * Cancel hiding the hovered node
  */
 TreeActionHandler.prototype.cancelHiding = function () {
-  //Meteor.log.debug("TreeActionHandler.cancelHiding()");
+  Meteor.log.debug("TreeActionHandler.cancelHiding()");
   var self = this;
 
   if(self.hideTimeout){
@@ -687,7 +718,12 @@ TreeActionHandler.prototype.editAction = function (d) {
   tree.layoutRoot.select("#node_" + d.destination._id + " .node").classed("node-selected", true);
 
   // Show the drawer with the edit action template
-  tree.zoomAndCenterNodes([d.source, d.destination], {bottom: tree.config.bottomDrawerHeight});
+  var drawerHeight = tree.config.bottomDrawerHeight;
+  if(drawerHeight.match(/\%/)){
+    drawerHeight = parseFloat(drawerHeight) / 100 * tree.height;
+    console.log("drawerHeight: ", drawerHeight);
+  }
+  tree.zoomAndCenterNodes([d.source, d.destination], {bottom: drawerHeight});
 
   // lock the action hover state and the node controls
   self.hoverLayerFront.select(".action-label-" + d._id).classed("action-label-edit", true);
@@ -699,7 +735,7 @@ TreeActionHandler.prototype.editAction = function (d) {
 
   // Show the drawer with the edit action template
   BottomDrawer.show({
-    height: tree.config.bottomDrawerHeight,
+    height: drawerHeight,
     contentTemplate: 'edit_action',
     contentData: { _id: d._id },
     callback: function () {

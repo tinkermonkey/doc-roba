@@ -94,6 +94,11 @@ Schemas.Node = new SimpleSchema({
     type: String,
     optional: true
   },
+  // Links to the staticIds of navigation menu nodes found on this page
+  navNodes: {
+    type: [String],
+    optional: true
+  },
   // Standard tracking fields
   dateCreated: {
     type: Date,

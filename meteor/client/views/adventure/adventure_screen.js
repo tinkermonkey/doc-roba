@@ -150,7 +150,6 @@ Template.AdventureScreen.events({
 
     // filter to make sure that the click event isn't being propagated
     if(!$(e.target).hasClass("remote-screen-mask") && !$(e.target).hasClass("remote-screen")){
-      console.log("Mask Click: ignoring propagated event");
       return;
     }
 
@@ -185,58 +184,7 @@ Template.AdventureScreen.events({
       }
     });
   },
-  /**
-   * Click event for the refresh button
-   * @param e
-   */
-  "click .btn-refresh": function (e, instance) {
-    // make sure the adventure is operating
-    if(instance.data.adventure.status == AdventureStatus.complete){
-      return;
-    }
-
-    // send the command to clear all of the highlighted elements
-    AdventureCommands.insert({
-      projectId: instance.data.adventure.projectId,
-      adventureId: instance.data.adventure._id,
-      updateState: true,
-      code: "true"
-    }, function (error) {
-      if(error){
-        Meteor.log.error("Error adding adventure command: " + error.message);
-        Dialog.error("Error adding adventure command: " + error.message);
-      }
-    });
-  },
-  /**
-   * Click event for the clear-highlight button
-   * @param e
-   */
-  "click .btn-clear-highlight": function (e, instance) {
-    // make sure the adventure is operating
-    if(instance.data.adventure.status == AdventureStatus.complete){
-      return;
-    }
-
-    // clear the last click location and check result
-    this.lastClickLocation.set();
-    this.checkResult.set();
-
-    // send the command to clear all of the highlighted elements
-    AdventureCommands.insert({
-      projectId: instance.data.adventure.projectId,
-      adventureId: instance.data.adventure._id,
-      updateState: false,
-      code: "driver.clearHighlight();"
-    }, function (error) {
-      if(error){
-        Meteor.log.error("Error adding adventure command: " + error.message);
-        Dialog.error("Error adding adventure command: " + error.message);
-      }
-    });
-  },
   "mouseenter .adventure-highlight-list-row-header": function (e, instance) {
-    console.log(".adventure-highlight-element.index-" + this.index);
     instance.$(".adventure-highlight-element.index-" + this.index).addClass("highlight");
   },
   "mouseleave .adventure-highlight-list-row-header": function (e, instance) {
@@ -352,11 +300,8 @@ Template.AdventureScreen.events({
       activeElement = instance.$(".adventure-highlight-detail.active .adventure-highlight-hierarchy:last")[0];
 
     if(activeElement && activeElement == e.target){
-      console.log("ignoring hover on active element");
       return;
     }
-
-    console.log("localBounds: ", localBounds);
 
     // this needs to be delayed slightly to ensure any mouseleave triggers first
     if(localBounds){

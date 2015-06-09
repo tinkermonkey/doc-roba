@@ -19,6 +19,7 @@ TreeLayout = function (elementId, context, config) {
 
   // New state storage structure
   self.state = {
+    initialized: false,
     focusedNodes: [],
     selectedNodes: [],
     edit: {},
@@ -36,6 +37,9 @@ TreeLayout = function (elementId, context, config) {
   // set the width and height to match the window
   self.width = $(window).innerWidth() - parseInt($('body').css('margin-right')) - parseInt($('body').css('margin-left')) * 2;
   self.height = $(window).innerHeight() - parseInt($('body').css('margin-top')) - parseInt($('body').css('margin-bottom')) * 2;
+
+  console.log("self.width: ", self.width);
+  console.log("self.height: ", self.height);
 
   // set the container bounds
   self.layoutRoot = d3.select("#" + elementId);
@@ -130,12 +134,19 @@ TreeLayout.prototype.init = function () {
   self.nodeControls.init();
   self.actionControls.init();
 
+  // make sure there is correct data
+  if(!self.nodeHandler.getRootNodes().length){
+    throw new Error("TreeLayout.init failed: no root nodes");
+  }
+
   // Expand the root nodes
   _.each(self.nodeHandler.getRootNodes(), function (node, i) {
     setTimeout(function () {
       self.startExpand(node, duration);
     }, duration * (i + 1));
   });
+
+  self.state.initialized = true;
 };
 
 /**
@@ -163,10 +174,13 @@ TreeLayout.prototype.prepData = function () {
 TreeLayout.prototype.resize = function () {
   var self = this;
 
-  //Meteor.log.debug("Window resize");
+  Meteor.log.debug("Window resize");
   // Measure the new dimensions
   self.width = $(window).innerWidth() - parseInt($('body').css('margin-right')) - parseInt($('body').css('margin-left'));
   self.height = $(window).innerHeight() - parseInt($('body').css('margin-top')) - parseInt($('body').css('margin-bottom'));
+
+  console.log("resize self.width: ", self.width);
+  console.log("resize self.height: ", self.height);
 
   // Update the root element
   self.layoutRoot.selectAll(".doc-tree-svg")
@@ -179,7 +193,9 @@ TreeLayout.prototype.resize = function () {
     .width(self.width);
 
   // Update the display
-  self.update();
+  if(self.state.initialized){
+    self.update();
+  }
 };
 
 /**
@@ -904,6 +920,9 @@ TreeLayout.prototype.baseClickHandler = function(e){
       BottomDrawer.hide();
     }
 
+    // hide the node controls
+    self.nodeControls.hide();
+
     // clear any focus from nodes
     this.clearFocusedNodes();
   }
@@ -1072,6 +1091,9 @@ TreeLayout.prototype.actionMouseEnterHandler = function (d) {
   var self = this;
 
   if(!self.state.inDrag){
+    // cancel any hide that is going on
+    self.actionHandler.cancelHiding();
+
     // Show the hover state for this action
     self.actionHandler.hover(d, d3.event);
 
@@ -1115,6 +1137,8 @@ TreeLayout.prototype.updateContentBounds = function () {
       left: rootNode.family.left + rootNode.x,
       right: rootNode.family.right + rootNode.x
     };
+  } else {
+    Meteor.log.error("TreeLayout: no root node!");
   }
 };
 
@@ -1147,7 +1171,9 @@ TreeLayout.prototype.update = function(duration){
   //self.updateFocusedNodes(duration);
 
   // update the controls
-  self.nodeControls.update();
+  setTimeout(function () {
+    self.nodeControls.update();
+  }, duration);
 };
 
 /**

@@ -1,7 +1,7 @@
 <template name="RobaAce">
-  <div class="ace-editor-container {{color}}">
+  <div class="ace-editor-container {{color}} {{#if fullHeight}}full-height{{/if}}">
     {{constant}}
-    <div id="{{getElementId}}" class="roba-ace editable {{cssClass}}" data-key="{{dataKey}}"></div>
+    <div id="{{getElementId}}" class="roba-ace editable {{cssClass}} {{#if fullHeight}}full-height{{/if}}" data-key="{{dataKey}}"></div>
     {{constant}}
   </div>
 </template>
