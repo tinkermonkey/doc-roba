@@ -42,6 +42,23 @@ Template.DocTree.rendered = function () {
       self.treeLayout.nodeHandler.setNodes(Nodes.find({projectVersionId: self.data.version._id}).fetch());
       self.treeLayout.actionHandler.setActions(Actions.find({projectVersionId: self.data.version._id}).fetch());
 
+      // get the mesh of navMenu actions
+      self.treeLayout.actionHandler.setNavActions(Nodes.find({
+        type: NodeTypes.navMenu, projectVersionId: self.data.version._id
+      }).map(function (navMenu) {
+        return {
+          menu: navMenu,
+          actions: Actions.find({
+            projectVersionId: self.data.version._id,
+            nodeId: navMenu.staticId
+          }).fetch(),
+          nodes: Nodes.find({
+            projectVersionId: self.data.version._id,
+            navMenus: navMenu.staticId
+          }).map(function (node) { return node.staticId })
+        }
+      }));
+
       // restore the cached node state
       self.treeLayout.restoreCachedNodeState();
 

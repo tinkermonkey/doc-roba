@@ -44,17 +44,32 @@ TreeActionHandler = function (treeLayout, config) {
  * @param actionList The full flat list of actions from the DB
  */
 TreeActionHandler.prototype.setActions = function (actionList) {
-  var self = this;
+  this.dbActionList = actionList;
+};
 
-  self.dbActionList = actionList;
+/**
+ * Set the list of navigation menu actions
+ * @param navActions
+ */
+TreeActionHandler.prototype.setNavActions = function (navActions) {
+  this.dbNavMenus = navActions;
+  console.log("navActions: ", navActions);
 };
 
 /**
  * Get the full list of actions
- * @returns {*}
+ * @returns [actions]
  */
 TreeActionHandler.prototype.getActions = function () {
   return this.dbActionList;
+};
+
+/**
+ * Get the full list of actions
+ * @returns [navActions]
+ */
+TreeActionHandler.prototype.getNavActions = function () {
+  return this.dbNavMenus;
 };
 
 /**
@@ -112,7 +127,7 @@ TreeActionHandler.prototype.prepActions = function () {
     tree = self.treeLayout,
     sourceIds = [];
 
-  // map all of the actions, keeping in mind that the DB data may be broken and point to nodes which don't exist
+  // map all of the standard actions, keeping in mind that the DB data may be broken and point to nodes which don't exist
   self.actionRoutes = [];
   _.each(self.dbActionList, function(action, i){
     var sourceNode = tree.nodeHandler.getByStaticId(action.nodeId);
@@ -134,6 +149,7 @@ TreeActionHandler.prototype.prepActions = function () {
             action: action,
             source: sourceNode,
             destination: destinationNode,
+            nav: false,
             routeIndex: i,
             routeOrder: route.order
           });
@@ -154,6 +170,56 @@ TreeActionHandler.prototype.prepActions = function () {
       console.error("Orphaned action: ", action);
     }
   });
+
+  // map all of the navMenu actions
+  self.actionRoutes = [];
+  _.each(self.dbNavMenus, function(navMenu, i){
+    _.each(navMenu.actions, function (navAction) {
+      _.each(navMenu.nodes, function (sourceNodeId) {
+        var sourceNode = tree.nodeHandler.getByStaticId(sourceNodeId);
+        if(sourceNode){
+          var destinationNode,
+            routes = [];
+
+          // Add the source id to the tracking list if it doesn't exist
+          if(sourceIds.indexOf(sourceNode.staticId) < 0){
+            sourceIds.push(sourceNode.staticId);
+          }
+
+          // Vet each of the route destinations
+          _.each(navAction.routes, function (route, i) {
+            destinationNode = tree.nodeHandler.getByStaticId(route.nodeId);
+            if(destinationNode){
+              routes.push({
+                _id: navAction._id,
+                action: navAction,
+                source: sourceNode,
+                destination: destinationNode,
+                nav: true,
+                routeIndex: i,
+                routeOrder: route.order
+              });
+              console.log("Nav Route added: ", routes[routes.length - 1]);
+            } else {
+              console.error("Broken route: ", route, navAction);
+            }
+          });
+
+          // sort the routes by destination location
+          routes = _.sortBy(routes, function (r) { return r.destination.x });
+
+          // store the sort index for fast access
+          _.each(routes, function (r, i) { r.routeSortIndex = i });
+
+          // merge these into the master list
+          self.actionRoutes = self.actionRoutes.concat(routes);
+        } else {
+          console.error("Orphaned action: ", navAction);
+        }
+      });
+    });
+  });
+  console.log("Routes: ", self.actionRoutes);
 
   // Group the routes by source node and order them by destination location
   var baseRoutes = [],
@@ -190,7 +256,7 @@ TreeActionHandler.prototype.prepActions = function () {
     _.each(_.sortBy(leftRoutes, function (id) { return baseRouteLookup[id].destination.x }), function (id, i) {
       baseRouteLookup[id].actionSortIndex = i;
     });
-    _.each(_.sortBy(rightRoutes, function (id) { return baseRouteLookup[id].x }), function (id, i) {
+    _.each(_.sortBy(rightRoutes, function (id) { return baseRouteLookup[id].destination.x }), function (id, i) {
       baseRouteLookup[id].actionSortIndex = leftRoutes.length + i;
     });
 
@@ -263,12 +329,13 @@ TreeActionHandler.prototype.clearVisibleActions = function () {
  * @param duration
  */
 TreeActionHandler.prototype.update = function (duration) {
+  console.log("TreeActionHandler.update");
   var self = this,
     actions;
 
   // gather the existing action links and set the data
   actions = self.linkLayer.selectAll(".action-group")
-    .data(self.actionRoutes, function(d){ return d._id + "_" + d.routeIndex; });
+    .data(self.actionRoutes, function(d){ return d._id + "_" + d.source._id + "_" + d.destination._id + "_" + d.routeIndex; });
 
   // Update the action links
   self.createAndUpdateLinks(actions, duration);
@@ -281,8 +348,10 @@ TreeActionHandler.prototype.update = function (duration) {
     var hoverActionRoutes = _.filter(self.actionRoutes, function (d) { return _.contains(self.hoverActions, d.action.staticId) });
     if(hoverActionRoutes.length && self.treeLayout.actionControls){
       self.treeLayout.actionControls.action = hoverActionRoutes[0];
-      hoverActionRoutes[0].x = self.treeLayout.actionControls.action.x = self.hoverRoute.x;
-      hoverActionRoutes[0].y = self.treeLayout.actionControls.action.y = self.hoverRoute.y;
+      //hoverActionRoutes[0].x = self.treeLayout.actionControls.action.x = self.hoverRoute.x;
+      //hoverActionRoutes[0].y = self.treeLayout.actionControls.action.y = self.hoverRoute.y;
+      self.treeLayout.actionControls.action.x = hoverActionRoutes[0].x;
+      self.treeLayout.actionControls.action.y = hoverActionRoutes[0].y;
       self.treeLayout.actionControls.update(0);
       self.updateHover(hoverActionRoutes[0]);
     }
@@ -327,8 +396,10 @@ TreeActionHandler.prototype.updateActionDisplay = function () {
     if(node){
       startPoint = node.getPointAtLength(0);
 
-      d.x = startPoint.x;
-      d.y = startPoint.y;
+      //d.x = startPoint.x;
+      //d.y = startPoint.y;
+      d.x = startPoint.x - (d.labelWidth / 2) - self.config.textXMargin;
+      d.y = startPoint.y + (d.labelHeight / 2);
     }
   });
 };
@@ -362,7 +433,13 @@ TreeActionHandler.prototype.createAndUpdateLinks = function (selection, duration
     .attr("d", function(d, i){ return self.generateActionPath(d); } );
 
   // Transition links to their new position
-  selection.select(".action, .action-hover-back")
+  selection.select(".action")
+    .classed("action-blunt", function (d) { return !d.destination.parent.visExpanded })
+    .transition()
+    .duration(duration)
+    .attr("d", function(d, i){ return self.generateActionPath(d); } );
+
+  selection.select(".action-hover-back")
     .classed("action-blunt", function (d) { return !d.destination.parent.visExpanded })
     .transition()
     .duration(duration)
@@ -402,16 +479,16 @@ TreeActionHandler.prototype.createAndUpdateLabels = function (selection) {
 
   // update existing labels
   selection
-    .attr("transform", function(d) { return "translate(" + (d.x - (d.labelWidth / 2)) + "," + (d.y - (d.labelHeight / 2)) + ")"; });
+    .attr("transform", function(d) { return "translate(" + (d.x) + "," + (d.y) + ")" });
   selection.select(".action-label-back")
-    .attr("x", function (d) { return d.labelWidth / -2 - self.config.textXMargin / 2; })
-    .attr("y", function (d) { return d.labelHeight / -2 - self.config.textYMargin / 2; })
-    .attr("width", function (d) { return d.labelWidth + self.config.textXMargin; })
-    .attr("height", function (d) { return d.labelHeight + self.config.textYMargin; });
+    .attr("x", function (d) { return d.labelWidth / -2 - self.config.textXMargin / 2 })
+    .attr("y", function (d) { return d.labelHeight / -2 - self.config.textYMargin / 2 })
+    .attr("width", function (d) { return d.labelWidth + self.config.textXMargin })
+    .attr("height", function (d) { return d.labelHeight + self.config.textYMargin });
   selection.select(".action-label-text")
-    .text(function (d) { return d.action.title; })
+    .text(function (d) { return d.action.title })
     .attr("x", 0)
-    .attr("y", function (d) { return d.labelHeight / 2 - 2; });
+    .attr("y", function (d) { return d.labelHeight / 2 - 2 });
 
   // remove non-existing labels
   selection.exit().remove();
@@ -540,6 +617,7 @@ TreeActionHandler.prototype.hover = function (d, event) {
 
   // get all of the routes for this action
   var routes = self.linkLayer.selectAll(".action-" + d._id).data();
+  console.log("routes: ", routes);
 
   // Store the id for updates
   if(d.action && d.action.staticId){
@@ -553,16 +631,19 @@ TreeActionHandler.prototype.hover = function (d, event) {
   //var coords = tree.screenToLocalCoordinates({x: event.clientX, y: event.clientY});
   //d.x = d.x - (d.labelWidth / 2) - self.config.textXMargin;
   //d.y = coords.y - d.labelHeight - self.config.textYMargin;
+  /*
   self.hoverRoute = {
     x: d.x - (d.labelWidth / 2) - self.config.textXMargin,
     y: d.y + (d.labelHeight / 2)
   };
+  */
 
   var actions = self.hoverLayerBack.selectAll(".action")
-    .data(routes, function (d) { return d._id + "_" + d.routeIndex});
+    .data(self.actionRoutes, function(d){ return d._id + "_" + d.source._id + "_" + d.destination._id + "_" + d.routeIndex; });
 
   var labels = self.hoverLayerFront.selectAll(".action-label")
-    .data([d], function (d) { return d._id });
+    .data([d], function(d){ return d._id + "_" + d.source._id + "_" + d.destination._id + "_" + d.routeIndex; });
+    //.data([d], function (d) { return d._id });
 
   // Update the action links
   self.createAndUpdateLinks(actions);
@@ -595,21 +676,23 @@ TreeActionHandler.prototype.hover = function (d, event) {
 
 /**
  * Update the hover state for an action
- * @param d
+ * @param action
  */
-TreeActionHandler.prototype.updateHover = function (d) {
-  //console.log("updateHover: ", d);
+TreeActionHandler.prototype.updateHover = function (action) {
+  //console.log("updateHover: ", action);
   var self = this,
     tree = self.treeLayout;
 
   // get all of the routes for this action
-  var routes = self.linkLayer.selectAll(".action-" + d._id).data();
+  var routes = self.linkLayer.selectAll(".action-" + action._id).data();
 
   var actions = self.hoverLayerBack.selectAll(".action")
-    .data(routes, function (d) { return d._id + "_" + d.routeIndex});
+    .data(routes, function(d){ return d._id + "_" + d.source._id + "_" + d.destination._id + "_" + d.routeIndex; });
+    //.data(routes, function (d) { return d._id + "_" + d.routeIndex});
 
   var labels = self.hoverLayerFront.selectAll(".action-label")
-    .data([d], function (d) { return d._id});
+    .data([action], function(d){ return d._id + "_" + d.source._id + "_" + d.destination._id + "_" + d.routeIndex; });
+    //.data([action], function (d) { return d._id});
 
   // Update the action links
   self.createAndUpdateLinks(actions);
@@ -640,7 +723,7 @@ TreeActionHandler.prototype.updateHover = function (d) {
  * Consider hiding the hovered action
  */
 TreeActionHandler.prototype.considerHiding = function () {
-  Meteor.log.debug("TreeActionHandler.considerHiding()");
+  //Meteor.log.debug("TreeActionHandler.considerHiding()");
   var self = this;
 
   // make sure it's not locked
@@ -661,7 +744,7 @@ TreeActionHandler.prototype.considerHiding = function () {
  * Cancel hiding the hovered node
  */
 TreeActionHandler.prototype.cancelHiding = function () {
-  Meteor.log.debug("TreeActionHandler.cancelHiding()");
+  //Meteor.log.debug("TreeActionHandler.cancelHiding()");
   var self = this;
 
   if(self.hideTimeout){

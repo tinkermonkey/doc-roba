@@ -31,7 +31,6 @@ Template.svg_def.helpers({
     var name = this || '',
       id = name.replace("def_", "").replace(/_/g, "-"),
       template = "def_" + id.replace(/\-/g, "_");
-    console.log("Template: ", template);
     return template;
   }
 });

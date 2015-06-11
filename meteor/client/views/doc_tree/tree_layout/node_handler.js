@@ -90,18 +90,16 @@ TreeNodeHandler.prototype.addNode = function(parent, dir){
       config.title = "New Platform";
       break;
     case NodeTypes.platform:
-      if(dir === "right") {
-        config.type = NodeTypes.navMenu;
-        config.title = "New Nav Menu";
-      } else {
-        config.type = NodeTypes.page;
-        config.title = "New Login";
-      }
+      config.type = NodeTypes.page;
+      config.title = "New Login";
       break;
     default:
       if(dir === "right"){
         config.type = NodeTypes.view;
         config.title = "New View";
+      }if(dir === "nav"){
+        config.type = NodeTypes.navMenu;
+        config.title = "New Nav Menu";
       } else {
         config.type = NodeTypes.page;
         config.title = "New Page";
@@ -182,10 +180,10 @@ TreeNodeHandler.prototype.mapNode = function(d){
 
       // pages and views are linked separately
       if(node.type === NodeTypes.view || node.type === NodeTypes.navMenu){
-        node.childIndex = d.childViews.length; // the index of this node in the parent's child list
+        //node.childIndex = d.childViews.length; // the index of this node in the parent's child list
         d.childViews.push(node);
       } else {
-        node.childIndex = d.childPages.length; // the index of this node in the parent's child list
+        //node.childIndex = d.childPages.length; // the index of this node in the parent's child list
         d.childPages.push(node);
       }
 
@@ -193,6 +191,38 @@ TreeNodeHandler.prototype.mapNode = function(d){
       tree.linkHandler.addLink( d._id + '_' + node._id, d, node );
     }
   });
+
+  // sort the childViews by type and title
+  //_.each(d.childViews, function (node, i) { console.log("Pre-sort: ", node.type.toString() + node.title) });
+  d.childViews.sort(function (a, b) {
+    if(a.type > b.type){
+      return -1;
+    } else if(a.type < b.type){
+      return 1;
+    } else {
+      if(a.title > b.title){
+        return 1;
+      } else if(b.title > a.title){
+        return -1;
+      }
+    }
+    return 0
+  });
+  //_.each(d.childViews, function (node, i) { console.log("Post-sort: ", node.type.toString() + node.title) });
+
+  // sort the childPages by title
+  d.childPages.sort(function (a, b) {
+    if(a.title > b.title){
+      return 1;
+    } else if(b.title > a.title){
+      return -1;
+    }
+    return 0
+  });
+
+  // set the child indices
+  _.each(d.childViews, function (node, i) { node.childIndex = i });
+  _.each(d.childPages, function (node, i) { node.childIndex = i });
 };
 
 /**

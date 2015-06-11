@@ -95,7 +95,7 @@ Schemas.Node = new SimpleSchema({
     optional: true
   },
   // Links to the staticIds of navigation menu nodes found on this page
-  navNodes: {
+  navMenus: {
     type: [String],
     optional: true
   },

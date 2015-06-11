@@ -1,0 +1,10 @@
+<template name="EditableNavMenuList">
+  <div class="{{cssClass}} editable-nav-menu-list" data-value="{{valueList}}"  data-key="{{dataKey}}">
+    <span class="{{#unless value}}hide{{/unless}}">
+      {{#each value}}
+        {{renderNodeTitle this ../projectVersionId}}<br>
+      {{/each}}
+    </span>
+    <span class="{{#if value}}hide{{/if}}">(<i>Select Nav Menus</i>)</span>
+  </div>
+</template>

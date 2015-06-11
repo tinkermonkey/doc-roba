@@ -553,6 +553,11 @@ TreeNodeControls.prototype.hide = function () {
       .duration(self.config.transitionTimer)
       .attr("transform", "translate(0, 0)");
 
+    self.addNavButton
+      .transition()
+      .duration(self.config.transitionTimer)
+      .attr("transform", "translate(0, 0)");
+
     self.editButton
       .transition()
       .duration(self.config.transitionTimer)

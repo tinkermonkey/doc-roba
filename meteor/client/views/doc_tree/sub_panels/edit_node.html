@@ -55,7 +55,10 @@
               <div class="sub-heading">Code to determine if this {{renderNodeType type}} is valid:</div>
             </div>
           </div>
-          <div class="tab" data-tab-name="nav-menus">Navigation Menus on this page:</div>
+          <div class="tab" data-tab-name="nav-menus">
+            Navigation Menus on this page:
+            {{> EditableNavMenuList projectVersionId=projectVersionId value=navMenus dataKey="navMenus"}}
+          </div>
           <div class="tab" data-tab-name="documentation">Documentation</div>
           <div class="tab" data-tab-name="recent">Recent Renditions</div>
         </div>

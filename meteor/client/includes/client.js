@@ -34,6 +34,16 @@ Template.registerHelper("renderProjectRole", function (role) {
 });
 
 /**
+ * Render a node title
+ */
+Template.registerHelper("renderNodeTitle", function (staticId, projectVersionId) {
+  check(staticId, String);
+  check(projectVersionId, String);
+  var node = Nodes.findOne({staticId: staticId, projectVersionId: projectVersionId});
+  return node ? node.title : "";
+});
+
+/**
  * Render a node type to a string
  */
 Template.registerHelper("renderNodeType", function (type) {

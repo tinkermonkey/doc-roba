@@ -179,9 +179,6 @@ TreeLayout.prototype.resize = function () {
   self.width = $(window).innerWidth() - parseInt($('body').css('margin-right')) - parseInt($('body').css('margin-left'));
   self.height = $(window).innerHeight() - parseInt($('body').css('margin-top')) - parseInt($('body').css('margin-bottom'));
 
-  console.log("resize self.width: ", self.width);
-  console.log("resize self.height: ", self.height);
-
   // Update the root element
   self.layoutRoot.selectAll(".doc-tree-svg")
     .attr("width", self.width)
@@ -1174,6 +1171,10 @@ TreeLayout.prototype.update = function(duration){
   setTimeout(function () {
     self.nodeControls.update();
   }, duration);
+
+  setTimeout(function () {
+    self.actionHandler.update(duration);
+  }), 1000;
 };
 
 /**
