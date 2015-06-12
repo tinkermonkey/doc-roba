@@ -100,6 +100,10 @@
   marker-end: url(#action-arrow);
 }
 
+.action-nav {
+  stroke: #9701ff;
+}
+
 .action-hover-back {
   stroke: rgba(80, 215, 255, 0.05);
   stroke-width: 8;

@@ -53,7 +53,7 @@ TreeActionHandler.prototype.setActions = function (actionList) {
  */
 TreeActionHandler.prototype.setNavActions = function (navActions) {
   this.dbNavMenus = navActions;
-  console.log("navActions: ", navActions);
+  //console.log("navActions: ", navActions);
 };
 
 /**
@@ -172,7 +172,6 @@ TreeActionHandler.prototype.prepActions = function () {
   });
 
   // map all of the navMenu actions
-  self.actionRoutes = [];
   _.each(self.dbNavMenus, function(navMenu, i){
     _.each(navMenu.actions, function (navAction) {
       _.each(navMenu.nodes, function (sourceNodeId) {
@@ -199,7 +198,7 @@ TreeActionHandler.prototype.prepActions = function () {
                 routeIndex: i,
                 routeOrder: route.order
               });
-              console.log("Nav Route added: ", routes[routes.length - 1]);
+              //console.log("Nav Route added: ", routes[routes.length - 1]);
             } else {
               console.error("Broken route: ", route, navAction);
             }
@@ -314,6 +313,10 @@ TreeActionHandler.prototype.setRouteDirection = function (r) {
   }
 };
 
+TreeActionHandler.prototype.getRouteIdentifier = function (d) {
+  return d._id + "_" + d.source._id + "_" + d.routeIndex;
+}
+
 /**
  * Clear the list of visible actions
  */
@@ -335,7 +338,7 @@ TreeActionHandler.prototype.update = function (duration) {
 
   // gather the existing action links and set the data
   actions = self.linkLayer.selectAll(".action-group")
-    .data(self.actionRoutes, function(d){ return d._id + "_" + d.source._id + "_" + d.destination._id + "_" + d.routeIndex; });
+    .data(self.actionRoutes, function(d){ return self.getRouteIdentifier(d) });
 
   // Update the action links
   self.createAndUpdateLinks(actions, duration);
@@ -345,7 +348,9 @@ TreeActionHandler.prototype.update = function (duration) {
 
   // Update the hover actions
   if(self.hoverActions.length){
-    var hoverActionRoutes = _.filter(self.actionRoutes, function (d) { return _.contains(self.hoverActions, d.action.staticId) });
+    var hoverActionRoutes = _.filter(self.actionRoutes, function (d) {
+      return _.contains(self.hoverActions, self.getRouteIdentifier(d))
+    });
     if(hoverActionRoutes.length && self.treeLayout.actionControls){
       self.treeLayout.actionControls.action = hoverActionRoutes[0];
       //hoverActionRoutes[0].x = self.treeLayout.actionControls.action.x = self.hoverRoute.x;
@@ -426,6 +431,7 @@ TreeActionHandler.prototype.createAndUpdateLinks = function (selection, duration
   actionGroupEnter.append("path")
     .attr("class", "action")
     .classed("action-blunt", function (d) { return !d.destination.parent.visExpanded })
+    .classed("action-nav", function (d) { return d.nav })
     .attr("d", function(d, i){ return self.generateActionPath(d); } );
 
   actionGroupEnter.append("path")
@@ -606,7 +612,7 @@ TreeActionHandler.prototype.generateActionPath = function(r){
  * @param d
  */
 TreeActionHandler.prototype.hover = function (d, event) {
-  //console.log("hover: ", d, event, event.target.__data__);
+  //console.log("hover: ", d);
   var self = this,
     tree = self.treeLayout;
 
@@ -616,12 +622,11 @@ TreeActionHandler.prototype.hover = function (d, event) {
   }
 
   // get all of the routes for this action
-  var routes = self.linkLayer.selectAll(".action-" + d._id).data();
-  console.log("routes: ", routes);
+  var routes = self.linkLayer.selectAll(".action-" + d._id + ".action-" + d.source._id).data();
 
   // Store the id for updates
   if(d.action && d.action.staticId){
-    self.hoverActions = [d.action.staticId];
+    self.hoverActions = [self.getRouteIdentifier(d)];
   } else {
     Meteor.log.error("Action Hover Failed: invalid data point passed");
     return;
@@ -639,11 +644,10 @@ TreeActionHandler.prototype.hover = function (d, event) {
   */
 
   var actions = self.hoverLayerBack.selectAll(".action")
-    .data(self.actionRoutes, function(d){ return d._id + "_" + d.source._id + "_" + d.destination._id + "_" + d.routeIndex; });
+    .data(routes, function(d){ return self.getRouteIdentifier(d) });
 
   var labels = self.hoverLayerFront.selectAll(".action-label")
-    .data([d], function(d){ return d._id + "_" + d.source._id + "_" + d.destination._id + "_" + d.routeIndex; });
-    //.data([d], function (d) { return d._id });
+    .data([d], function(d){ return self.getRouteIdentifier(d) });
 
   // Update the action links
   self.createAndUpdateLinks(actions);
@@ -676,23 +680,21 @@ TreeActionHandler.prototype.hover = function (d, event) {
 
 /**
  * Update the hover state for an action
- * @param action
+ * @param route
  */
-TreeActionHandler.prototype.updateHover = function (action) {
+TreeActionHandler.prototype.updateHover = function (route) {
   //console.log("updateHover: ", action);
   var self = this,
     tree = self.treeLayout;
 
   // get all of the routes for this action
-  var routes = self.linkLayer.selectAll(".action-" + action._id).data();
+  var routes = self.linkLayer.selectAll(".action-" + d._id + ".action-" + d.source._id).data();
 
   var actions = self.hoverLayerBack.selectAll(".action")
-    .data(routes, function(d){ return d._id + "_" + d.source._id + "_" + d.destination._id + "_" + d.routeIndex; });
-    //.data(routes, function (d) { return d._id + "_" + d.routeIndex});
+    .data(routes, function(d){ return self.getRouteIdentifier(d) });
 
   var labels = self.hoverLayerFront.selectAll(".action-label")
-    .data([action], function(d){ return d._id + "_" + d.source._id + "_" + d.destination._id + "_" + d.routeIndex; });
-    //.data([action], function (d) { return d._id});
+    .data([route], function(d){ return self.getRouteIdentifier(d) });
 
   // Update the action links
   self.createAndUpdateLinks(actions);
