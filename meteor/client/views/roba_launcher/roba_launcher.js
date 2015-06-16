@@ -85,6 +85,12 @@ Template.roba_launcher.events({
       route = instance.data.route.get();
 
     if(server){
+      // assemble the data context
+      var dataContext = instance.data.dataContext.get();
+      if(dataContext.account){
+        dataContext.account = DataStoreRows.findOne(dataContext.account);
+      }
+
       // Create the adventure
       var adventureId = Adventures.insert({
         projectId: instance.data.projectId,
@@ -93,7 +99,7 @@ Template.roba_launcher.events({
         testAgentId: instance.data.testAgent.get(),
         serverId: instance.data.server.get(),
         route: route,
-        dataContext: instance.data.dataContext.get(),
+        dataContext: dataContext,
         waitForCommands: true,
         status: AdventureStatus.staged
       }, function (error) {

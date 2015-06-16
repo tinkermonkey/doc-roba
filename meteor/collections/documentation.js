@@ -393,6 +393,12 @@ Schemas.ActionVariable = new SimpleSchema({
   varIsArray: {
     type: Boolean,
     defaultValue: false
+  },
+  // Default value
+  defaultValue: {
+    type: String,
+    optional: true,
+    defaultValue: ""
   }
 });
 

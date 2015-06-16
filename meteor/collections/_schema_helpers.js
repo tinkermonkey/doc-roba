@@ -206,3 +206,11 @@ AdventureStepStatus = {
   error: 4
 };
 AdventureStepStatusLookup = _.invert(AdventureStepStatus);
+
+/**
+ * Types of default values for variables
+ */
+DefaultValueStypes = {
+  literal: 0,
+  computed: 1
+};

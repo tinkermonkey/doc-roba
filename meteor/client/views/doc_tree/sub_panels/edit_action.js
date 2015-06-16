@@ -21,9 +21,11 @@ Template.edit_action.events({
     console.log("update: ", dataKey, instance.data._id);
     if(dataKey){
       update["$set"][dataKey] = newValue;
+      console.log("Updating action record: ", dataKey, newValue, update);
       Actions.update(instance.data._id, update, function (error) {
         if(error){
           Meteor.log.error("Failed to update action value: " + error.message);
+          console.log(update);
           Dialog.error("Failed to update action value: " + error.message);
         }
       });
@@ -64,9 +66,6 @@ Template.edit_action.events({
         }
       }
     });
-  },
-  "edited .editable": function () {
-
   }
 });
 

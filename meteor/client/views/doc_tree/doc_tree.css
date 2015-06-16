@@ -35,11 +35,11 @@
 }
 
 .node-userType {
-  fill: #a7ff00;
+  fill: #ff8400;
 }
 
 .node-platform {
-  fill: #ff8400;
+  fill: #a7ff00;
 }
 
 .node-navMenu {
@@ -101,7 +101,7 @@
 }
 
 .action-nav {
-  stroke: #9701ff;
+  stroke: #ca80ff;
 }
 
 .action-hover-back {

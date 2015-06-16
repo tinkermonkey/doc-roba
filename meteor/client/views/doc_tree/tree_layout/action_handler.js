@@ -218,7 +218,6 @@ TreeActionHandler.prototype.prepActions = function () {
       });
     });
   });
-  console.log("Routes: ", self.actionRoutes);
 
   // Group the routes by source node and order them by destination location
   var baseRoutes = [],
@@ -306,8 +305,8 @@ TreeActionHandler.prototype.prepActions = function () {
  */
 TreeActionHandler.prototype.setRouteDirection = function (r) {
   // direction can get complicated
-  if(r.destination.y > r.source.y){
-    r.dir = r.destination.x >= r.source.x ? 1 : -1;
+  if(r.destination.y >= r.source.y){
+    r.dir = r.destination.x > r.source.x ? 1 : -1;
   } else {
     r.dir = r.destination.x >= (r.source.x + r.source.bounds.width / 2 + r.destination.bounds.width / 2) ? 1 : -1;
   }
@@ -332,7 +331,7 @@ TreeActionHandler.prototype.clearVisibleActions = function () {
  * @param duration
  */
 TreeActionHandler.prototype.update = function (duration) {
-  console.log("TreeActionHandler.update");
+  //console.log("TreeActionHandler.update");
   var self = this,
     actions;
 
@@ -397,7 +396,7 @@ TreeActionHandler.prototype.updateActionDisplay = function () {
     d.labelWidth = self.dummyActionLabel.node().getBBox().width;
     d.labelHeight = self.dummyActionLabel.node().getBBox().height;
 
-    var node = tree.layoutRoot.select(".action-" + d._id).select(".action").node();
+    var node = tree.layoutRoot.select(".action-" + d._id + ".action-" + d.source._id).select(".action").node();
     if(node){
       startPoint = node.getPointAtLength(0);
 
@@ -529,7 +528,9 @@ TreeActionHandler.prototype.generateActionPath = function(r){
      Two configurations, one with a middle vertical segment
 
              D----C                           [source]
+             |    |                              |
           [Dest]  |   [source]          D--------A
+                  |      |              |
                   B------A           [Dest]
 
     */
@@ -581,6 +582,7 @@ TreeActionHandler.prototype.generateActionPath = function(r){
         .L(destination.x, destination.y)
         .compile();
     } else {
+      var dirAD = pointD.x < pointA.x ? -1 : 1;
       // path that routes "down"
       pointA.radius = Math.min(pointA.radius, Math.abs(pointD.x - pointA.x) / 2);
       pointD.radius = Math.min(pointD.radius, Math.abs(pointD.x - pointA.x) / 2);
@@ -589,13 +591,13 @@ TreeActionHandler.prototype.generateActionPath = function(r){
 
       if(r.action.routes.length == 1){
         path.L(pointA.x, (Math.max(pointA.y, pointD.y)) - pointA.radius)
-          .q(0, pointA.radius, dirAB * pointA.radius, pointA.radius);
+          .q(0, pointA.radius, dirAD * pointA.radius, pointA.radius);
       } else {
         path.L(pointA.x, pointA.y);
       }
 
-      path = path.L(pointD.x - dirAB * pointD.radius, pointD.y)
-        .q(dirAB * pointD.radius, 0, dirAB * pointD.radius, pointD.radius)
+      path = path.L(pointD.x - dirAD * pointD.radius, pointD.y)
+        .q(dirAD * pointD.radius, 0, dirAD * pointD.radius, pointD.radius)
         .L(destination.x, destination.y)
         .compile();
     }
@@ -688,7 +690,7 @@ TreeActionHandler.prototype.updateHover = function (route) {
     tree = self.treeLayout;
 
   // get all of the routes for this action
-  var routes = self.linkLayer.selectAll(".action-" + d._id + ".action-" + d.source._id).data();
+  var routes = self.linkLayer.selectAll(".action-" + route._id + ".action-" + route.source._id).data();
 
   var actions = self.hoverLayerBack.selectAll(".action")
     .data(routes, function(d){ return self.getRouteIdentifier(d) });

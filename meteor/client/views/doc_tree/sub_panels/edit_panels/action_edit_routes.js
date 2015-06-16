@@ -19,6 +19,12 @@ Template.action_edit_routes.helpers({
   isLast: function (action) {
     //console.log("isLast: ", this.order == action.routes.length - 1, this);
     return this.order == action.routes.length - 1;
+  },
+  editorClass: function () {
+    return "action-route-code" + (this.routeCode.length ? "" : " hide")
+  },
+  routeCodeDataKey: function () {
+    return "routes." + this.index + ".routeCode";
   }
 });
 
@@ -26,18 +32,15 @@ Template.action_edit_routes.helpers({
  * Template Helpers
  */
 Template.action_edit_routes.events({
-  "click .click-to-edit": function (e) {
-    var instance = Template.instance(),
-      row = $(e.target).closest(".action-route-row"),
-      route = this;
+  "click .click-to-edit": function (e, instance) {
+    var row = $(e.target).closest(".action-route-row");
 
     // make the editor visible
-    $("#code-message-" + $(row).attr("data-pk") + "-" + route.index).addClass("hide");
-    $("#action-route-editor-" + $(row).attr("data-pk") + "-" + route.index).removeClass("hide");
+    row.find(".click-to-edit").addClass("hide");
+    row.find(".action-route-code").removeClass("hide");
   },
-  "click .btn-delete": function (e) {
-    var instance = Template.instance(),
-      route = this,
+  "click .btn-delete": function (e, instance) {
+    var route = this,
       source = Nodes.findOne({staticId: instance.data.nodeId, projectVersionId: instance.data.projectVersionId}),
       destination = Nodes.findOne({staticId: route.nodeId, projectVersionId: instance.data.projectVersionId});
 

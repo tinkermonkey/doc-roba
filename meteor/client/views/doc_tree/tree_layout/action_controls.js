@@ -361,7 +361,7 @@ TreeActionControls.prototype.cancelHiding = function () {
  * @param d
  */
 TreeActionControls.prototype.getRadius = function (d) {
-  return Math.sqrt(Math.pow(d.labelWidth, 2) + Math.pow(d.labelHeight, 2)) / 2 + 15;
+  return Math.sqrt(Math.pow(d.labelWidth, 2) + Math.pow(d.labelHeight, 2)) / 2 + 6;
 };
 
 /**

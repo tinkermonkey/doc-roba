@@ -3,8 +3,9 @@
     <tr class="sortable-table-header">
       <td></td>
       <td>Name</td>
-      <td style="width: 40%;">Type</td>
-      <td style="width: 20%;">Shape</td>
+      <td>Type</td>
+      <td>Shape</td>
+      <td>Default</td>
       <td></td>
     </tr>
     <tr class="sortable-table-divider">
@@ -23,7 +24,8 @@
           {{> EditableFieldType type=type dataKey="type" }}
           {{> EditableCustomFieldType type=type customFieldType=customFieldType projectVersionId=../projectVersionId dataKey="customFieldType" }}
         </td>
-        <td>{{> EditableFieldShape fieldIsArray=varIsArray dataKey="varIsArray"}}</td>
+        <td>{{> EditableFieldShape fieldIsArray=varIsArray dataKey="varIsArray" }}</td>
+        <td>{{> EditableStringField value=defaultValue dataKey="defaultValue" emptyText="\"\"" }}</td>
         <td class="btn-delete"><span class="glyphicon glyphicon-remove"></span></td>
       </tr>
     {{/each}}

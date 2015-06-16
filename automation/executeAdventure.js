@@ -19,7 +19,8 @@ var Future      = require("fibers/future"),
   logFile       = logPath + 'adventure.log',
   driverEnded   = false,
   endIntentional= false,
-  ddpLink, driver, adventure, lastUrl;
+  ddpLink, driver, adventure, lastUrl, server,
+  account, dataContext;
 
 /**
  * Status flags for the adventure process
@@ -137,7 +138,7 @@ function ExecuteAdventure () {
   logger.debug("Test Agent: ", testAgent);
 
   // load the server info
-  var server = ddpLink.liveRecord("adventure_server", adventure.serverId, "servers");
+  server = ddpLink.liveRecord("adventure_server", adventure.serverId, "servers");
   logger.info("Server Loaded");
   logger.debug("Server: ", server);
 
@@ -184,6 +185,10 @@ function ExecuteAdventure () {
   driver.timeoutsImplicitWait(100);
   driver.timeoutsAsyncScript(20000); // don't rely on this, and we don't want it getting in the way
 
+  // pull out the data context
+  dataContext = adventure.dataContext;
+  account = dataContext.account;
+
   // update the steps status' to queued
   logger.trace("Setting steps to queued status");
   _.each(adventure.route.steps, function (step) {
@@ -202,51 +207,8 @@ function ExecuteAdventure () {
     // Get the step and update the context
     step = adventure.route.steps[i];
     logger.info("Executing Route Step " + (i) + " of " + adventure.route.steps.length);
-    logger.info("MILESTONE", {context: {type: "step", step: step}});
-    logger.debug("Step " + i + ": ", step);
-    ddpLink.setAdventureStepStatus(step.stepId, AdventureStepStatus.running);
-    //ddpAppender.setContext(adventure._id, step.node._id, step.stepId);
 
-    // first step needs to be navigated manually
-    if(i == 0){
-      var startingUrl = driver.buildUrl(server.url, step.node.url);
-      logger.trace("Navigating to starting point: ", startingUrl);
-      driver.url(startingUrl);
-      logger.debug("Reached starting point: ", startingUrl);
-
-      // give it a sec
-      driver.wait(1000);
-    }
-
-    // inject the helpers
-    logger.trace("Injecting browser-side driver helpers");
-    driver.injectHelpers();
-
-    // update the state
-    UpdateState();
-
-    // Validate the current node
-    ValidateNode(step.node);
-
-    // update the state
-    UpdateState();
-
-    // take the action
-    if(step.action){
-      logger.debug("Executing Action: ", step.action);
-      try {
-        var result = eval(step.action.code);
-      } catch (e) {
-        logger.error("Action failed: ", e);
-        result = e;
-      }
-
-      // store the result
-      logger.debug("Action Result: ", result);
-    } else if(i !== adventure.route.steps.length - 1){
-      logger.error("Dead end step: ", step);
-      throw new Error("Dead end step encountered: ", step);
-    }
+    ExecuteStep(step, i);
 
     // done
     ddpLink.setAdventureStepStatus(step.stepId, AdventureStepStatus.complete);
@@ -336,6 +298,70 @@ function CheckForPause () {
   logger.trace("CheckForPause: ", adventure.status == AdventureStatus.paused);
   while(adventure.status == AdventureStatus.paused){
     driver.wait(250);
+  }
+}
+
+/**
+ * Execute an adventure step
+ * @param step
+ * @constructor
+ */
+function ExecuteStep (step, stepNum) {
+  logger.info("MILESTONE", {context: {type: "step", step: step}});
+  logger.debug("Step " + stepNum + ": ", step);
+  ddpLink.setAdventureStepStatus(step.stepId, AdventureStepStatus.running);
+  //ddpAppender.setContext(adventure._id, step.node._id, step.stepId);
+
+  // first step needs to be navigated manually
+  if(stepNum == 0){
+    var startingUrl = driver.buildUrl(server.url, step.node.url);
+    logger.trace("Navigating to starting point: ", startingUrl);
+    driver.url(startingUrl);
+    logger.debug("Reached starting point: ", startingUrl);
+
+    // give it a sec
+    driver.wait(1000);
+  }
+
+  // inject the helpers
+  logger.trace("Injecting browser-side driver helpers");
+  driver.injectHelpers();
+
+  // update the state
+  UpdateState();
+
+  // Validate the current node
+  ValidateNode(step.node);
+
+  // update the state
+  UpdateState();
+
+  // take the action
+  if(step.action){
+    logger.debug("Executing Action: ", step.action);
+
+    // setup the action variables
+    var variableCode = "";
+    _.each(step.action.variables, function (variable) {
+      if(dataContext["step" + stepNum]){
+        variableCode += "var " + variable.name + " = dataContext.step" + stepNum + "." + variable.name + " || " + variable.defaultValue + "; ";
+      } else {
+        variableCode += "var " + variable.name + " = " + variable.defaultValue + "; ";
+      }
+    });
+    logger.debug("Action Variable Code: ", variableCode);
+    try {
+      var result = eval(variableCode + step.action.code);
+    } catch (e) {
+      logger.error("Action failed: ", e);
+      result = e;
+    }
+
+    // store the result
+    logger.debug("Action Result: ", result);
+  } else if(stepNum !== adventure.route.steps.length - 1){
+    logger.error("Dead end step: ", step);
+    throw new Error("Dead end step encountered: ", step);
   }
 }
 
