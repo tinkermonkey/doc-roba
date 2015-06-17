@@ -210,15 +210,18 @@ TreeNodeControls.prototype.create = function () {
       //console.log("ClickRoba: ", self.node);
       //tree.robaHandler.show(self.node);
       self.lock();
+      tree.lock();
       Popover.show({
+        width: 600,
         contentTemplate: 'roba_launcher',
         contentData: new RobaContext({
           route: DroneRouter.routeFromStart(self.node._id)
         }),
-        sourceElement: $(".roba-button").get(0),
+        sourceElement: $(".node-controls-back").get(0),
         callback: function () {
           console.log("Popover Closed");
           self.unlock();
+          tree.unlock();
         }
       });
 

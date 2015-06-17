@@ -19,6 +19,7 @@ TreeLayout = function (elementId, context, config) {
 
   // New state storage structure
   self.state = {
+    locked: false,
     initialized: false,
     focusedNodes: [],
     selectedNodes: [],
@@ -52,7 +53,9 @@ TreeLayout = function (elementId, context, config) {
   self.zoomer = d3.behavior.zoom(".global-layer")
     .scaleExtent([0.25, 1.5])
     .on("zoom", function () {
-      this.scaleAndTranslate(d3.event.scale, d3.event.translate);
+      if(!this.state.locked){
+        this.scaleAndTranslate(d3.event.scale, d3.event.translate);
+      }
     }.bind(self));
   self.layoutRoot.select("#doc-tree-base")
     .call(self.zoomer);
@@ -211,6 +214,20 @@ TreeLayout.prototype.keyDown = function (e) {
       this.confirmDeleteNodes(nodeList);
     }
   }
+};
+
+/**
+ * Lock the view
+ */
+TreeLayout.prototype.lock = function () {
+  this.state.locked = true
+};
+
+/**
+ * Unlock the view
+ */
+TreeLayout.prototype.unlock = function () {
+  this.state.locked = false
 };
 
 /**

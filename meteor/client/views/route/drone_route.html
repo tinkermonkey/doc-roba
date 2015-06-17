@@ -1,0 +1,19 @@
+<template name="DroneRoute">
+  {{#each steps}}
+    <div>
+      <div class="simple-col simple-col-5 align-center">
+      {{> standalone_node_snippet node }}
+      </div>
+    </div>
+    {{#if action}}
+      <div>
+        <div class="simple-col simple-col-5 align-center">{{action.title}}</div>
+        <div class="simple-col simple-col-6">
+          {{#each action.variables}}
+            <div>{{name}}, {{defaultValue}}</div>
+          {{/each}}
+        </div>
+      </div>
+    {{/if}}
+  {{/each}}
+</template>

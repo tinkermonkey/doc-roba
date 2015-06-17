@@ -120,26 +120,37 @@ DroneRoute.prototype.checkFeasibility = function () {
 DroneRoute.prototype.route = function () {
   // get the list of nodes for this project
   var routeMap = {},
-    shadowMap = {},
     versionId = this.destination.node.projectVersionId,
-    nodeList = Nodes.find({projectVersionId: versionId}, {fields: {staticId: 1, title: 1}}).fetch();
+    nodeList = Nodes.find({projectVersionId: versionId}, {fields: {staticId: 1, navMenus: 1}}).fetch();
 
   // get the actions for each node
   _.each(nodeList, function (node) {
-    Actions.find({nodeId: node.staticId, projectVersionId: versionId}, {fields: {routes: 1, title: 1}}).forEach(function (action) {
+    // load the direct actions
+    Actions.find({nodeId: node.staticId, projectVersionId: versionId}, {fields: {routes: 1}}).forEach(function (action) {
       _.each(action.routes, function (route) {
         if(!routeMap[node.staticId]){
           routeMap[node.staticId] = {};
-          shadowMap[node.title] = {};
         }
 
         routeMap[node.staticId][route.nodeId] = 1; // get the weight eventually
-        shadowMap[node.title][action.title] = 1; // get the weight eventually
+      });
+    });
+
+    // load the nav actions
+    _.each(node.navMenus, function (navMenuId) {
+      Actions.find({nodeId: navMenuId, projectVersionId: versionId}, {fields: {routes: 1}}).forEach(function (action) {
+        _.each(action.routes, function (route) {
+          if(!routeMap[node.staticId]){
+            routeMap[node.staticId] = {};
+          }
+
+          routeMap[node.staticId][route.nodeId] = 1; // get the weight eventually
+        });
       });
     });
   });
 
-  // Chech to see if there is a defined starting point
+  // Check to see if there is a defined starting point
   var start = this.source ? this.source.node.staticId : null;
 
   // Create a synthetic connection between the platform and the direct starting points
@@ -180,7 +191,7 @@ DroneRoute.prototype.route = function () {
 
   // Create the full route with node records and actions
   this.route = [];
-  var i, pointNodeId;
+  var i, j, pointNodeId;
   for(i = 0; i < rawRoute.length; i++){
     pointNodeId = rawRoute[i];
     var point = {
@@ -206,9 +217,24 @@ DroneRoute.prototype.route = function () {
         }
       });
 
+      // if there isn't a native route, check for nav menu links
       if(!point.action){
-        Meteor.log.error("DroneRoute.route, could not create route: action could not be found between " + point.nodeId + " and " + point.destinationId);
-        throw new Meteor.Error("DroneRoute Failure", "Could not create route: action could not be found between " + point.nodeId + " and " + point.destinationId);
+        j = 0;
+        while(!point.action && j < point.node.navMenus.length){
+          point.action = Actions.findOne({
+            nodeId: point.node.navMenus[j],
+            projectVersionId: start.projectVersionId,
+            routes: {
+              $elemMatch: {nodeId: point.destinationId}
+            }
+          });
+
+          j++;
+        }
+        if(!point.action){
+          Meteor.log.error("DroneRoute.route, could not create route: action could not be found between " + point.nodeId + " and " + point.destinationId);
+          throw new Meteor.Error("DroneRoute Failure", "Could not create route: action could not be found between " + point.nodeId + " and " + point.destinationId);
+        }
       }
     }
 
