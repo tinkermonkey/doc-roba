@@ -150,11 +150,11 @@ DroneRoute.prototype.route = function () {
     });
   });
 
-  // Check to see if there is a defined starting point
+  // Check to see if there is a defined starting step
   var start = this.source ? this.source.node.staticId : null;
 
   // Create a synthetic connection between the platform and the direct starting points
-  // if there isn't already a defined starting point
+  // if there isn't already a defined starting step
   if(!start){
     var platform = this.destination.platform;
 
@@ -191,55 +191,57 @@ DroneRoute.prototype.route = function () {
 
   // Create the full route with node records and actions
   this.route = [];
-  var i, j, pointNodeId;
+  var i, j, pointNodeId, stepNum = 0;
   for(i = 0; i < rawRoute.length; i++){
     pointNodeId = rawRoute[i];
-    var point = {
+    var step = {
       nodeId: pointNodeId,
       node: Nodes.findOne({staticId: pointNodeId, projectVersionId: start.projectVersionId})
     };
 
     // skip the platform step
-    if(point.node.type == NodeTypes.platform){
-      Meteor.log.debug("DroneRoute.route, skipping platform node: " + point.node.title);
+    if(step.node.type == NodeTypes.platform){
+      Meteor.log.debug("DroneRoute.route, skipping platform node: " + step.node.title);
       continue;
     }
 
+    step.stepNum = stepNum++;
+
     // pick an action for each step except the last
     if(i < rawRoute.length - 1){
-      point.destinationId = rawRoute[i + 1];
-      point.destination = Nodes.findOne({staticId: point.destinationId, projectVersionId: start.projectVersionId});
-      point.action = Actions.findOne({
-        nodeId: point.nodeId,
+      step.destinationId = rawRoute[i + 1];
+      step.destination = Nodes.findOne({staticId: step.destinationId, projectVersionId: start.projectVersionId});
+      step.action = Actions.findOne({
+        nodeId: step.nodeId,
         projectVersionId: start.projectVersionId,
         routes: {
-          $elemMatch: {nodeId: point.destinationId}
+          $elemMatch: {nodeId: step.destinationId}
         }
       });
 
       // if there isn't a native route, check for nav menu links
-      if(!point.action){
+      if(!step.action){
         j = 0;
-        while(!point.action && j < point.node.navMenus.length){
-          point.action = Actions.findOne({
-            nodeId: point.node.navMenus[j],
+        while(!step.action && j < step.node.navMenus.length){
+          step.action = Actions.findOne({
+            nodeId: step.node.navMenus[j],
             projectVersionId: start.projectVersionId,
             routes: {
-              $elemMatch: {nodeId: point.destinationId}
+              $elemMatch: {nodeId: step.destinationId}
             }
           });
 
           j++;
         }
-        if(!point.action){
-          Meteor.log.error("DroneRoute.route, could not create route: action could not be found between " + point.nodeId + " and " + point.destinationId);
-          throw new Meteor.Error("DroneRoute Failure", "Could not create route: action could not be found between " + point.nodeId + " and " + point.destinationId);
+        if(!step.action){
+          Meteor.log.error("DroneRoute.route, could not create route: action could not be found between " + step.nodeId + " and " + step.destinationId);
+          throw new Meteor.Error("DroneRoute Failure", "Could not create route: action could not be found between " + step.nodeId + " and " + step.destinationId);
         }
       }
     }
 
-    // store the route point
-    this.route.push(point);
+    // store the route step
+    this.route.push(step);
   }
 };
 

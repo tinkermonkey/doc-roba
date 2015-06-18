@@ -341,17 +341,19 @@ function ExecuteStep (step, stepNum) {
     logger.debug("Executing Action: ", step.action);
 
     // setup the action variables
-    var variableCode = "";
+    var variableCode = "",
+      debugCode = "";
     _.each(step.action.variables, function (variable) {
       if(dataContext["step" + stepNum]){
-        variableCode += "var " + variable.name + " = dataContext.step" + stepNum + "." + variable.name + " || " + variable.defaultValue + "; ";
+        variableCode += "var " + variable.name + " = dataContext.step" + stepNum + "." + variable.name + " || " + variable.defaultValue + ";\n";
       } else {
-        variableCode += "var " + variable.name + " = " + variable.defaultValue + "; ";
+        variableCode += "var " + variable.name + " = " + variable.defaultValue + ";\n";
       }
+      debugCode += "logger.debug(\"Variable " + variable.name + ":\", " + variable.name + ");\n"
     });
     logger.debug("Action Variable Code: ", variableCode);
     try {
-      var result = eval(variableCode + step.action.code);
+      var result = eval(variableCode + debugCode + step.action.code);
     } catch (e) {
       logger.error("Action failed: ", e);
       result = e;

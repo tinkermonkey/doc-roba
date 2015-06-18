@@ -74,8 +74,15 @@ Template.roba_launcher.events({
       instance.data[dataKey].set(newValue);
     } else {
       console.log("Set: ", "dataContext." + dataKey, newValue);
-      var dataContext = instance.data.dataContext.get();
-      dataContext[dataKey] = newValue;
+      var dataContext = instance.data.dataContext.get(),
+        keys = dataKey.split(".");
+      if(keys.length == 2 && dataContext[keys[0]]){
+        dataContext[keys[0]][keys[1]] = newValue;
+      } else {
+        dataContext[dataKey] = newValue;
+      }
+
+      console.log("DataContext: ", dataContext);
       instance.data.dataContext.set(dataContext);
     }
   },
@@ -187,10 +194,16 @@ RobaContext = function (config) {
 
   console.log("RobaContext Route: ", route);
 
+  // Initialize the data context
+  var defaultDataContext = {};
+  _.each(route.steps, function (step) {
+    defaultDataContext["step" + step.stepNum] = {};
+  });
+
   this.projectId        = route.projectId;
   this.projectVersionId = route.projectVersionId;
   this.route            = new ReactiveVar(route);
-  this.dataContext      = new ReactiveVar(config.dataContext || {});
+  this.dataContext      = new ReactiveVar(config.dataContext || defaultDataContext);
   this.server           = new ReactiveVar(config.server);
   this.testAgent        = new ReactiveVar(config.testAgent);
   this.testSystem       = new ReactiveVar(config.testSystem);
