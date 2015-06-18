@@ -1,33 +1,35 @@
 <template name="roba_launcher">
   <div class="roba-launcher-container">
     <div class="roba-launcher-content">
-      <h3>Launch drone to <span class="dark-blue">{{getRoute.destination.node.title}}</span></h3>
-      {{#if getRoute.feasible}}
+      <h3>Launch drone to <span class="dark-blue">{{ getRoute.destination.title }}</span></h3>
+      {{#if getRoute.feasible }}
         <div>
-          <div class="simple-col simple-col-5 simple-divider">
-            <div><span class="dark-blue">User Type: </span>{{getRoute.userType.title}}</div>
+          <div class="simple-col simple-col-3 simple-divider">
             <div>
-              <span class="dark-blue">User Account: </span>
-                {{> EditableUserAccount value=getAccount projectVersionId=projectVersionId userType=getRoute.userType dataKey="account" }}
-            </div>
-            <div><span class="dark-blue">Platform: </span>{{getRoute.platform.title}}</div>
-            <div>
-              <span class="dark-blue">Server: </span>
-                {{> EditableServerSelector value=getServer projectVersionId=projectVersionId dataKey="server" }}
+              <span class="dark-blue">User Account: </span><br>
+              {{> EditableUserAccount value=getAccount projectVersionId=projectVersionId userType=getRoute.userType dataKey="account" }}
             </div>
             <div>
-              <span class="dark-blue">Test System: </span>
-                {{> EditableTestSystemSelector value=getTestSystem testAgent=getTestAgent projectVersionId=projectVersionId dataKey="testSystem" }}
+              <span class="dark-blue">Platform: </span><br>
+              {{ getRoute.platform.title }}
             </div>
             <div>
-              <span class="dark-blue">Agent: </span>
-                {{> EditableTestAgentSelector value=getTestAgent projectVersionId=projectVersionId dataKey="testAgent" }}
+              <span class="dark-blue">Server: </span><br>
+              {{> EditableServerSelector value=getServer projectVersionId=projectVersionId dataKey="server" }}
             </div>
-            <div class="text-right" style="margin-top:20px;">
+            <div>
+              <span class="dark-blue">Test System: </span><br>
+              {{> EditableTestSystemSelector value=getTestSystem testAgent=getTestAgent projectVersionId=projectVersionId dataKey="testSystem" }}
+            </div>
+            <div>
+              <span class="dark-blue">Agent: </span><br>
+              {{> EditableTestAgentSelector value=getTestAgent projectVersionId=projectVersionId dataKey="testAgent" }}
+            </div>
+            <div class="text-center" style="margin-top:20px;">
               <button class="btn btn-warning btn-launch-drone">Launch Drone</button>
             </div>
           </div>
-          <div class="simple-col simple-col-7">
+          <div class="simple-col simple-col-9">
             {{> DroneRoute getRoute }}
           </div>
         </div>

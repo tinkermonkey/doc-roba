@@ -1,4 +1,7 @@
 <template name="popover">
+  {{#if modal}}
+    <div class="dialog-screen"></div>
+  {{/if}}
   <div class="dr-popover" style="{{ getPosition }}" >
     <div class="content">{{> Template.dynamic template=contentTemplate data=contentData}}</div>
   </div>

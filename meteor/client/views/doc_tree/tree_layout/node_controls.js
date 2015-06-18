@@ -209,21 +209,33 @@ TreeNodeControls.prototype.create = function () {
     .on('click', function(d){
       //console.log("ClickRoba: ", self.node);
       //tree.robaHandler.show(self.node);
-      self.lock();
-      tree.lock();
-      Popover.show({
-        width: 600,
-        contentTemplate: 'roba_launcher',
-        contentData: new RobaContext({
-          route: DroneRouter.routeFromStart(self.node._id)
-        }),
-        sourceElement: $(".node-controls-back").get(0),
-        callback: function () {
-          console.log("Popover Closed");
-          self.unlock();
-          tree.unlock();
-        }
-      });
+      var bounds = treeUtils.nodeListBounds([self.node], tree.config.highlightSurroundMargin),
+        insetX = tree.insetLayout.config.radius * 2 + tree.insetLayout.config.margin,
+        scale = tree.scale;
+      tree.cacheView();
+      tree.scaleAndTranslate(scale, [
+        insetX - bounds.x * scale,
+        tree.insetLayout.config.margin - bounds.y * scale,
+      ], function () {
+        self.lock();
+        tree.lock();
+        setTimeout(function () {
+          Popover.show({
+            width: window.innerWidth - insetX - tree.config.highlightSurroundMargin - self.shield.attr("r") * 2 * scale,
+            contentTemplate: 'roba_launcher',
+            contentData: new RobaContext({
+              route: DroneRouter.routeFromStart(self.node._id)
+            }),
+            sourceElement: $(".node-controls-back").get(0),
+            callback: function () {
+              console.log("Popover Closed");
+              self.unlock();
+              tree.unlock();
+              tree.restoreCachedView(tree.config.viewTransitionTime);
+            }
+          });
+        }, tree.config.viewTransitionTime / 3);
+      }, tree.config.viewTransitionTime);
 
     });
 

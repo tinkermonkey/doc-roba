@@ -701,7 +701,7 @@ TreeNodeHandler.prototype.editNode = function (node) {
   }
 
   // Zoom to focus on the node
-  tree.zoomAndCenterNodes([node], { bottom: drawerHeight });
+  tree.zoomAndCenterNodes([node], { bottom: drawerHeight + tree.config.yMargin });
 
   // show the bottom drawer
   BottomDrawer.show({
