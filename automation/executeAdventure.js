@@ -331,7 +331,7 @@ function ExecuteStep (step, stepNum) {
   UpdateState();
 
   // Validate the current node
-  ValidateNode(step.node);
+  var validationResult = ValidateNode(step.node);
 
   // update the state
   UpdateState();
@@ -355,8 +355,8 @@ function ExecuteStep (step, stepNum) {
     try {
       var result = eval(variableCode + debugCode + step.action.code);
     } catch (e) {
-      logger.error("Action failed: ", e);
-      result = e;
+      logger.error("Action failed: ", e.toString());
+      result = e.toString();
     }
 
     // store the result
@@ -387,8 +387,8 @@ function ExecuteCommand(command) {
   try {
     var result = eval(command.code);
   } catch (e) {
-    logger.error("Command failed: ", e);
-    result = e;
+    logger.error("Command failed: ", e.toString());
+    result = e.toString();
   }
 
   // store the result
@@ -416,7 +416,10 @@ function ExecuteCommand(command) {
  */
 function ValidateNode(node) {
   logger.debug("Validating Node: ", node.title || node._id);
-  var valid = true;
+  var result = {
+    ready: true,
+    valid: true
+  };
 
   // inject the roba_driver helpers
   logger.trace("Injecting browser-side driver helpers");
@@ -426,12 +429,12 @@ function ValidateNode(node) {
   if(node.readyCode){
     logger.debug("Waiting for node to be ready: ", node.readyCode);
     try {
-      var result = eval(node.readyCode);
-      logger.debug("Ready Code result: ", result);
+      result.readyResult = eval(node.readyCode);
+      logger.debug("Ready Code result: ", result.readyResult);
     } catch (e) {
-      logger.error("Ready code failed: ", e);
-      result = e;
-      valid = false;
+      logger.error("Ready code failed: ", e.toString());
+      result.readyResult = e.toString();
+      result.ready = false;
     }
   } else {
     logger.debug("Node has no ready code");
@@ -441,18 +444,18 @@ function ValidateNode(node) {
   if(node.validationCode){
     logger.debug("Validating node: ", node.validationCode);
     try {
-      var result = eval(node.validationCode);
-      logger.debug("Validation Code result: ", result);
+      result.validResult = eval(node.validationCode);
+      logger.debug("Validation Code result: ", result.validResult);
     } catch (e) {
-      logger.error("Validation code failed: ", e);
-      result = e;
-      valid = false;
+      logger.error("Validation code failed: ", e.toString());
+      result.validResult = e.toString();
+      result.valid = false;
     }
   } else {
     logger.debug("Node had no validation code");
   }
 
-  return valid;
+  return result;
 }
 
 function UpdateState () {

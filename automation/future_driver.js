@@ -104,12 +104,12 @@ var FutureDriver = function (config) {
           var commandArgs = arguments,
             args = _.map(_.keys(commandArgs), function(i){ return commandArgs["" + i];});
           logger.trace("Wrapper: ", command, ":", args);
-          try{
+          //try{
             return this.command(command, args);
-          } catch (e) {
-            logger.error("Exception executing command [" + command + "](", args,"): ", e ? e.toString() : "");
-            logger.error(new Error(e.toString()).stack);
-          }
+          //} catch (e) {
+            //logger.error("Exception executing command [" + command + "](", args,"): ", e ? e.toString() : "");
+            //logger.error(new Error(e.toString()).stack);
+          //}
         }.bind(fDriver);
       } else {
         logger.error("Failed to wrap command: ", command);
@@ -149,7 +149,8 @@ FutureDriver.prototype.command = function (command, args) {
   args.push(function(error, result){
     if(error) {
       logger.error("Error executing command [", command, "]: ", error);
-      future.return();
+      future.return([error]);
+      //throw new Error(error);
     } else {
       // skip logging for some commands (screenshots, etc)
       if(!_.contains(skipLoggingCommands, command)){
@@ -158,11 +159,11 @@ FutureDriver.prototype.command = function (command, args) {
         logger.debug("Command Returned Successfully");
       }
       if(result && result.value){
-        future.return(result.value);
+        future.return([null, result.value]);
       } else if(result && typeof result.value !== "undefined" && result.value !== ""){
-        future.return(result.value);
+        future.return([null, result.value]);
       } else {
-        future.return(result);
+        future.return([null, result]);
       }
     }
   });
@@ -172,12 +173,17 @@ FutureDriver.prototype.command = function (command, args) {
 
   // done
   var result = future.wait();
+
+  // check for errors
+  if(result[0]){
+    throw new Error(result[0]);
+  }
   logger.trace("Command complete");
 
   // wait a few ms between command to improve logging sequentiality
   this.wait(2);
 
-  return result;
+  return result[1];
 };
 
 
