@@ -30,7 +30,12 @@
               </div>
           {{/unless}}
         </td>
-        <td>{{> standalone_node_snippet staticId=nodeId projectVersionId=../projectVersionId scale=0.5 }}</td>
+        <td>
+          {{> EditableNodeSelector mode="popup" dataKey=routeNodeDataKey value=nodeId projectVersionId=../projectVersionId scale=0.5 }}
+          <!--
+          {{> standalone_node_snippet staticId=nodeId projectVersionId=../projectVersionId scale=0.5 }}
+          -->
+        </td>
         <td class="btn-delete"><span class="glyphicon glyphicon-remove"></span></td>
       </tr>
     {{/each}}

@@ -10,7 +10,7 @@ Template.AdventureEditNodeActionRow.helpers({
     var i = 0, context = Template.parentData(i);
     while(i < 10 && context){
       context = Template.parentData(i++);
-      if(context.adventure){
+      if(context.adventure && context.adventure.status){
         return context;
       }
     }
@@ -29,6 +29,39 @@ Template.AdventureEditNodeActionRow.events({
       Blaze.renderWithData(Template.AdventureEditActionForm, action, formRow.find("td").get(0));
       $(e.target).attr("disabled", "disabled");
     }
+  },
+  "click .btn-delete-action": function () {
+    var action = this;
+    console.log("Delete Action: ", action);
+
+    Dialog.show({
+      title: "Delete Action?",
+      contentTemplate: "confirm_delete_action_modal",
+      contentData: action,
+      width: 400,
+      buttons: [
+        {text: "Cancel"},
+        {text: "Delete"}
+      ],
+      callback: function (btn) {
+        //console.log("Dialog button pressed: ", btn);
+        if(btn == "Delete"){
+          Actions.remove(action._id, function (error, result) {
+            if(error) {
+              Meteor.log.error("Failed to delete action: " + error.message);
+              Dialog.hide();
+              Dialog.error("Failed to delete action: " + error.message);
+            } else {
+              Meteor.log.debug("Action deleted: " + result);
+              BottomDrawer.hide();
+            }
+            Dialog.hide();
+          });
+        } else {
+          Dialog.hide();
+        }
+      }
+    });
   }
 });
 

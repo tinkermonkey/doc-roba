@@ -25,6 +25,9 @@ Template.action_edit_routes.helpers({
   },
   routeCodeDataKey: function () {
     return "routes." + this.index + ".routeCode";
+  },
+  routeNodeDataKey: function () {
+    return "routes." + this.index + ".nodeId";
   }
 });
 
