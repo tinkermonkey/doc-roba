@@ -1,0 +1,10 @@
+<template name="no_menu_layout">
+  <svg id="global-defs-svg">
+    <defs>
+      {{> yield "svgDefs"}}
+    </defs>
+  </svg>
+  <div id="page">
+    {{> yield }}
+  </div>
+</template>

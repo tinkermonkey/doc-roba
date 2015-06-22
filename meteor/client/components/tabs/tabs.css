@@ -49,3 +49,19 @@ ul.nav.full-height {
   max-width: 100%;
   padding: 0;
 }
+
+/**
+ * Vertical tabs
+ */
+.vert-nav {
+  width: 55px;
+  float: left;
+}
+
+.vert-tab-container {
+  position: absolute;
+  padding-left: 55px;
+  padding-right: 10px;
+  float: right;
+  width: 100%;
+}

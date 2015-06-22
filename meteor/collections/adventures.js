@@ -34,6 +34,11 @@ Schemas.AdventureStep = new SimpleSchema({
     type: Number,
     allowedValues: _.map(AdventureStepStatus, function (d) { return d; }),
     defaultValue: AdventureStepStatus.staged
+  },
+  result: {
+    type: Object,
+    blackbox: true,
+    optional: true
   }
 });
 AdventureSteps = new Mongo.Collection("adventure_steps");

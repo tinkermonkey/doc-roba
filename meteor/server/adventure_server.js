@@ -91,6 +91,22 @@ Meteor.startup(function () {
     },
 
     /**
+     * Send the adventure status enum to the clients
+     * @returns {AdventureStatus|*}
+     */
+    loadAdventureStatusEnum: function () {
+      return AdventureStatus;
+    },
+
+    /**
+     * Send the adventure status enum to the clients
+     * @returns {AdventureStepStatus|*}
+     */
+    loadAdventureStepStatusEnum: function () {
+      return AdventureStepStatus;
+    },
+
+    /**
      * Set the status of an adventure
      * @param adventureId
      * @param status
@@ -163,6 +179,31 @@ Meteor.startup(function () {
     },
 
     /**
+     * Save a result from an adventure step
+     * @param stepId
+     * @param type
+     * @param result
+     */
+    saveAdventureStepResult: function(stepId, type, result) {
+      Meteor.log.debug("saveAdventureStepResult: " + stepId + ", " + type);
+      check(stepId, String);
+      check(type, String);
+
+      var step = AdventureSteps.findOne({_id: stepId});
+      check(step, Object);
+
+      var stepResult = step.result || {};
+
+      if(!stepResult[type]){
+        stepResult[type] = [];
+      }
+
+      stepResult[type].push(result);
+
+      AdventureSteps.update({_id: step._id}, {$set: {result: stepResult}});
+    },
+
+    /**
      * Set the status of an adventure command
      * @param commandId
      * @param status
@@ -229,7 +270,7 @@ launchAdventure = function (adventureId) {
       err = fs.openSync(logFilePath, "a");
 
     // if the helper is not running, launch locally
-    var proc = spawn("node", [launcherPath + "executeAdventure.js", adventure._id], {
+    var proc = spawn("node", [launcherPath + "roba_adventure.js", adventure._id], {
       stdio: [ 'ignore', out, err ]
     });
 

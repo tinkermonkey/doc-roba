@@ -1,5 +1,5 @@
 /**
- * Basic futurized wrapper for webdriverio
+ * Basic future-ized wrapper for webdriverio
  */
 
 var Future        = require("fibers/future"),
@@ -8,7 +8,7 @@ var Future        = require("fibers/future"),
   assert          = require("assert"),
   webdriver       = require("webdriverio"),
   fs              = require("fs"),
-  logger          = log4js.getLogger("future-driver"),
+  logger          = log4js.getLogger("roba-driver"),
   browserLogger   = log4js.getLogger("browser"),
   clientLogger    = log4js.getLogger("client"),
   driverLogger    = log4js.getLogger("driver"),
@@ -72,8 +72,8 @@ serverLogger.setLevel("TRACE");
 /**
  * Constructor
  */
-var FutureDriver = function (config) {
-  logger.trace("Creating new FutureDriver: ", config);
+var RobaDriver = function (config) {
+  logger.trace("Creating new RobaDriver: ", config);
 
   // munge the config and defaults
   this.config = config || {};
@@ -136,7 +136,7 @@ var FutureDriver = function (config) {
  * @param args
  * @returns {*}
  */
-FutureDriver.prototype.command = function (command, args) {
+RobaDriver.prototype.command = function (command, args) {
   assert(command, "Command called with null command");
 
   args = args || [];
@@ -191,7 +191,7 @@ FutureDriver.prototype.command = function (command, args) {
  * Wait for a specified time
  * @param ms
  */
-FutureDriver.prototype.wait = function (ms) {
+RobaDriver.prototype.wait = function (ms) {
   ms = ms || 1000;
   logger.trace("Waiting for ", ms, " ms");
   var future = new Future();
@@ -206,7 +206,7 @@ FutureDriver.prototype.wait = function (ms) {
 /**
  * End the driver and destroy the browser session
  */
-FutureDriver.prototype.end = function () {
+RobaDriver.prototype.end = function () {
   logger.info("End called");
   var future = new Future();
   this.driver.end(function(){
@@ -219,7 +219,7 @@ FutureDriver.prototype.end = function () {
 /**
  * Capture the current browser state
  */
-FutureDriver.prototype.getState = function (savePath) {
+RobaDriver.prototype.getState = function (savePath) {
   assert(savePath, "getState called with null savePath");
   logger.debug("getState: ", savePath);
   var state = {};
@@ -269,7 +269,7 @@ FutureDriver.prototype.getState = function (savePath) {
 /**
  * Fetch the client url silently
  */
-FutureDriver.prototype.checkUrl = function () {
+RobaDriver.prototype.checkUrl = function () {
   var future = new Future();
   this.driver.url(function (error, result) {
     if(error){
@@ -285,7 +285,7 @@ FutureDriver.prototype.checkUrl = function () {
  * Log them directly to the appropriate log listeners
  * Circumvent the wrapped function to prevent cross-logging
  */
-FutureDriver.prototype.getClientLogs = function () {
+RobaDriver.prototype.getClientLogs = function () {
   this.fetchLogs("browser", browserLogger);
   //this.fetchLogs("client", clientLogger);
   this.fetchLogs("driver", driverLogger);
@@ -297,7 +297,7 @@ FutureDriver.prototype.getClientLogs = function () {
  * Log them directly to the appropriate log listeners
  * Circumvent the wrapped function to prevent cross-logging
  */
-FutureDriver.prototype.fetchLogs = function (type, fetchLogger) {
+RobaDriver.prototype.fetchLogs = function (type, fetchLogger) {
   // fetch the browser logs
   var future = new Future();
   try {
@@ -342,7 +342,7 @@ FutureDriver.prototype.fetchLogs = function (type, fetchLogger) {
 /**
  * Inject some javascript code to help out occasionally
  */
-FutureDriver.prototype.injectHelpers = function () {
+RobaDriver.prototype.injectHelpers = function () {
   logger.trace("injectHelpers");
   this.execute(function () {
     if(typeof(roba_driver) == "undefined"){
@@ -503,7 +503,7 @@ FutureDriver.prototype.injectHelpers = function () {
  * @param exclusive True|False Should current highlighting be cleared first
  * @returns {*}
  */
-FutureDriver.prototype.getElementAtLocation = function (x, y, highlight, exclusive) {
+RobaDriver.prototype.getElementAtLocation = function (x, y, highlight, exclusive) {
   logger.debug("getElementAtLocation: ", x, y, highlight, exclusive);
   var result = this.execute(function (x, y, highlight, exclusive){
     var el = document.elementFromPoint(x, y);
@@ -522,7 +522,7 @@ FutureDriver.prototype.getElementAtLocation = function (x, y, highlight, exclusi
  * Test out a selector by highlighting and returning the matches
  * @param selector The selector to "test" by returning all matched elements
  */
-FutureDriver.prototype.testSelector = function (selector) {
+RobaDriver.prototype.testSelector = function (selector) {
   logger.debug("testSelector: ", selector);
   var result = this.execute(function (selector) {
     var elements = [],
@@ -547,7 +547,7 @@ FutureDriver.prototype.testSelector = function (selector) {
 /**
  * Clear the highlight status from all elements
  */
-FutureDriver.prototype.clearHighlight = function () {
+RobaDriver.prototype.clearHighlight = function () {
   logger.debug("clearHighlight");
   return { highlightElements: [] };
 };
@@ -559,7 +559,7 @@ FutureDriver.prototype.clearHighlight = function () {
  * @param y
  * @param selector
  */
-FutureDriver.prototype.refineSelector = function (x, y, selector) {
+RobaDriver.prototype.refineSelector = function (x, y, selector) {
   logger.debug("refineSelector: ", x, y, selector);
   var result = this.execute(function (x, y, selector){
     var el = document.elementFromPoint(x, y);
@@ -600,7 +600,7 @@ FutureDriver.prototype.refineSelector = function (x, y, selector) {
  * @param x
  * @param y
  */
-FutureDriver.prototype.getSelectors = function (x, y) {
+RobaDriver.prototype.getSelectors = function (x, y) {
 
 };
 
@@ -608,7 +608,7 @@ FutureDriver.prototype.getSelectors = function (x, y) {
  * Turns whatever arguments passed into an assembled url
  * @returns {string} The assembled url built from whatever was passed
  */
-FutureDriver.prototype.buildUrl = function () {
+RobaDriver.prototype.buildUrl = function () {
   var pieces = [], parts;
   _.each(arguments, function (argv) {
     if(_.isArray(argv)){
@@ -635,4 +635,4 @@ FutureDriver.prototype.buildUrl = function () {
  * Export the class
  * @type {Function}
  */
-module.exports = FutureDriver;
+module.exports = RobaDriver;

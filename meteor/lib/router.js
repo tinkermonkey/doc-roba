@@ -23,6 +23,7 @@ if (Meteor.isServer) {
 Router.configure({
   layoutTemplate: "layout",
   loadingTemplate: "loading",
+  notFoundTemplate: "not_found",
   waitOn: function () { return [
     Meteor.subscribe("projects"),
     Meteor.subscribe("project_roles"),
@@ -137,6 +138,7 @@ Router.map(function () {
   });
   this.route("adventure_console", {
     path: "/adventure_console/:projectId/:projectVersionId/:adventureId",
+    layoutTemplate: "no_menu_layout",
     data: function () {
       return {
         adventure: Adventures.findOne(this.params.adventureId),

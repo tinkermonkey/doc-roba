@@ -19,13 +19,13 @@
     {{#each indexedVariables}}
       <tr class="sortable-table-row action-variable-row" data-pk="{{../_id}}" data-variable-index="{{index}}" data-variable-order="{{order}}">
         <td class="drag-handle"><span class="glyphicon glyphicon-record"></span></td>
-        <td>{{> EditableStringField value=name dataKey="name" }}</td>
+        <td>{{> EditableStringField mode="popup" value=name dataKey="name" }}</td>
         <td>
-          {{> EditableFieldType type=type dataKey="type" }}
-          {{> EditableCustomFieldType type=type customFieldType=customFieldType projectVersionId=../projectVersionId dataKey="customFieldType" }}
+          {{> EditableFieldType mode="popup" type=type dataKey="type" }}
+          {{> EditableCustomFieldType mode="popup" type=type customFieldType=customFieldType projectVersionId=../projectVersionId dataKey="customFieldType" }}
         </td>
-        <td>{{> EditableFieldShape fieldIsArray=varIsArray dataKey="varIsArray" }}</td>
-        <td>{{> EditableStringField value=defaultValue dataKey="defaultValue" emptyText="\"\"" }}</td>
+        <td>{{> EditableFieldShape mode="popup" fieldIsArray=varIsArray dataKey="varIsArray" }}</td>
+        <td>{{> EditableStringField mode="popup" value=defaultValue dataKey="defaultValue" emptyText="\"\"" }}</td>
         <td class="btn-delete"><span class="glyphicon glyphicon-remove"></span></td>
       </tr>
     {{/each}}
@@ -33,5 +33,8 @@
       <td colspan="6"><div class="divider"></div></td>
     </tr>
   </table>
-  <button class="btn btn-warning btn-add-var" data-pk="{{_id}}">Add Variable</button>
+  <button class="btn btn-warning btn-xs btn-add-var">
+    <span class="glyphicon glyphicon-plus"></span>
+    Add Variable
+  </button>
 </template>

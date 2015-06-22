@@ -20,9 +20,6 @@ Template.AdventureEditNodeForm.helpers({
       var result = NodeSearch.compareNode(data.state.url, data.state.title, node);
       return result;
     }
-  },
-  getActions: function () {
-    return Actions.find({nodeId: this.staticId, projectVersionId: this.projectVersionId}, {sort: {title: 1}})
   }
 });
 
@@ -31,6 +28,7 @@ Template.AdventureEditNodeForm.helpers({
  */
 Template.AdventureEditNodeForm.events({
   "edited .node-edit-form .editable": function (e, instance, newValue) {
+    e.stopPropagation();
     var target = $(e.target),
       dataKey = target.attr("data-key"),
       update = {$set: {}};
@@ -104,9 +102,6 @@ Template.AdventureEditNodeForm.events({
         }
       }
     });
-  },
-  "click .btn-edit-action": function (e, instance) {
-    console.log("Edit Action: ", this);
   },
   "click .btn-execute-action": function (e, instance) {
     // make sure there's an adventure to work with

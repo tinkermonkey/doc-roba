@@ -13,7 +13,8 @@ Template.action_edit_variables.helpers({
  * Template Helpers
  */
 Template.action_edit_variables.events({
-  "click .btn-add-var": function (event) {
+  "click .btn-add-var": function (e, instance) {
+    e.stopPropagation();
     var instance = Template.instance(),
       action = this,
       order = action.variables ? action.variables.length - 1 : 0;
@@ -39,6 +40,10 @@ Template.action_edit_variables.events({
           }, 100);
         }
       });
+    } else {
+      Meteor.log.error("Add Action Variable failed: no action found");
+      console.log(this);
+      Dialog.error("Add Action Variable failed: no action found");
     }
   },
   "click .btn-delete": function (e, instance) {
@@ -58,8 +63,8 @@ Template.action_edit_variables.events({
           Actions.update(variable.actionId, { $pull: { variables: {order: variable.order} } }, function (error, response) {
             Dialog.hide();
             if(error){
-              Meteor.log.error("Delete failed: " + error.message);
-              Dialog.error("Delete failed: " + error.message);
+              Meteor.log.error("Delete Variable failed: " + error.message);
+              Dialog.error("Delete Variable failed: " + error.message);
             }
           });
         } else {
@@ -69,6 +74,7 @@ Template.action_edit_variables.events({
     });
   },
   "edited .editable": function (e, instance, newValue) {
+    e.stopPropagation();
     var actionId = $(e.target).closest(".sortable-table-row").attr("data-pk"),
       variableIndex = $(e.target).closest(".sortable-table-row").attr("data-variable-index"),
       fieldName = $(e.target).attr("data-key"),
@@ -80,7 +86,6 @@ Template.action_edit_variables.events({
     // a few situations to check for
     if(fieldName == "name"){
       // update the datakey with the title
-      console.log("Getting safe variable name: ", newValue, Util.varName(newValue));
       update["$set"][dataKey] = Util.varName(newValue);
     } else if (fieldName == "type") {
       // null the custom type if the type is not custom
@@ -92,8 +97,8 @@ Template.action_edit_variables.events({
 
     Actions.update(actionId, update, function (error) {
       if(error){
-        Meteor.log.error("Action update failed: " + error.message);
-        Dialog.error("Action update failed: " + error.message);
+        Meteor.log.error("Action Variable update failed: " + error.message);
+        Dialog.error("Action Variable update failed: " + error.message);
       }
     });
   }
@@ -131,8 +136,8 @@ Template.action_edit_variables.rendered = function () {
         //console.log("Update pre-send: ", update);
         Actions.update(actionId, update, function (error) {
           if(error){
-            Meteor.log.error("Action variable order update failed: " + error.message);
-            Dialog.error("Action variable order update failed: " + error.message);
+            Meteor.log.error("Action Variable order update failed: " + error.message);
+            Dialog.error("Action Variable order update failed: " + error.message);
           }
         });
 

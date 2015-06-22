@@ -43,6 +43,10 @@ Tabs = {
       var nav = $(event.target).closest(".nav"),
         tabContainer = nav.nextAll(".tab-container");
 
+      if(!tabContainer.length){
+        tabContainer = nav.closest(".vert-nav").prev(".vert-tab-container").children(".tab-container");
+      }
+
       // update the tab bar
       nav.children("li").removeClass("active");
       $(event.target).closest("li").addClass("active");

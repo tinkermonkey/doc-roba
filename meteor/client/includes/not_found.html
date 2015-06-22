@@ -1,72 +1,21 @@
 <template name="not_found">
-  <svg class="login-container svg">
+  {{setTitle "DocRoba :: 404"}}
+
+  <svg class="login-container login-svg">
     <defs>
-      <radialGradient id="inset-shadow-gradient" cx="52%" cy="52%" r="55%" fx="50%" fy="50%">
-        <stop offset="80%" style="stop-color: #0A7BFF; stop-opacity:0" />
-        <stop offset="85%" style="stop-color: #004599; stop-opacity:0.2" />
-        <stop offset="100%" style="stop-color: #000000; stop-opacity:0.99" />
-      </radialGradient>
-
-      <mask id="login-clip">
-        <rect fill="white" x="0" y="0" width="100%" height="100%"></rect>
-        <circle fill="black" r="45%" cx="50%" cy="50%">
-          <animate id="login-intro-mask-animation" attributeName="r" attributeType="XML"
-                   values="1%;45%;"
-                   keySplines="0 0.1 0.2 1;"
-                   keyTimes="0;1;"
-                   begin="indefinite" dur="0.75s"
-                   fill="freeze" repeatCount="1" calcMode="spline"/>
-          <animate id="login-resize-mask-animation" attributeName="r" attributeType="XML"
-                   values="45%;45%"
-                   keyTimes="0;1;"
-                   begin="indefinite" dur="1s"
-                   fill="freeze" repeatCount="1" calcMode="linear"/>
-          <animate id="login-submit-mask-animation" attributeName="r" attributeType="XML"
-                   values="45%;10%;"
-                   keySplines="0 0.1 0.2 1;"
-                   keyTimes="0;1;"
-                   begin="indefinite" dur="0.15s"
-                   fill="freeze" repeatCount="1" calcMode="spline"/>
-          <animate id="login-failed-mask-animation" attributeName="r" attributeType="XML"
-                   values="10%;45%;"
-                   keySplines="0 0.1 0.2 1;"
-                   keyTimes="0;1;"
-                   begin="indefinite" dur="0.15s"
-                   fill="freeze" repeatCount="1" calcMode="spline"/>
-        </circle>
-      </mask>
+      {{> def_inset_shadow_gradient }}
+      {{> def_logout_clip }}
     </defs>
-
-    <rect x="0" y="0" width="100%" height="100%" fill="#ffffff" mask="url(#login-clip)"></rect>
-    <circle class="background-frame hide" r="45%" cx="50%" cy="50%">
-      <animate id="login-intro-animation" attributeName="r" attributeType="XML"
-               values="1%;45%;"
-               keySplines="0 0.1 0.2 1;"
-               keyTimes="0;1;"
-               begin="indefinite" dur="0.75s"
-               fill="freeze" repeatCount="1" calcMode="spline"/>
-      <animate id="login-submit-animation" attributeName="r" attributeType="XML"
-               values="45%;10%;"
-               keySplines="0 0.1 0.2 1;"
-               keyTimes="0;1;"
-               begin="indefinite" dur="0.15s"
-               fill="freeze" repeatCount="1" calcMode="spline"/>
-      <animate id="login-failed-animation" attributeName="r" attributeType="XML"
-               values="10%;45%;"
-               keySplines="0 0.1 0.2 1;"
-               keyTimes="0;1;"
-               begin="indefinite" dur="0.15s"
-               fill="freeze" repeatCount="1" calcMode="spline"/>
-    </circle>
+    <circle class="login-frame" r="45%" cx="50%" cy="50%" fill="url(#inset-shadow-gradient)"></circle>
   </svg>
 
-  <div class="login-container html hide">
+  <div class="login-container login-html" style="clip-path: url('#logout-clip') !important; -webkit-clip-path: url('#logout-clip') !important;">
     <div class="login-slide">
       <div id="login-form-container">
-        <div style="width: 100%; text-align: center; top: 30%; position: absolute;">
-          <h1>Not Found!</h1>
-          <h5 style="color: #000;">So so sorry! We don't know what you`re looking for.</h5>
-          <a href="{{pathFor 'home'}}" style="color: #fff;">Go home!</a>
+        <div style="width: 100%; color:#fff; text-align: center; top: 25%; position: absolute;">
+          <h1>404<br>Not Found</h1>
+          <h4>Not really sure what you`re looking for.</h4>
+          <a href="{{pathFor 'home'}}" style="color: #fff; text-decoration: underline;">Go home</a>
         </div>
       </div>
     </div>

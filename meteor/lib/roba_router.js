@@ -2,7 +2,7 @@
  * Service for determining routes between nodes
  * @type {{routeToStart: Function}}
  */
-DroneRouter = {
+RobaRouter = {
   /**
    * Get the simplest route to a node as a starting point
    * @param node

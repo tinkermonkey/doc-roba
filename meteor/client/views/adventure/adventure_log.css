@@ -61,7 +61,7 @@ OFF: "grey"
   font-weight: bold;
 }
 
-.log-message-future-driver {
+.log-message-roba-driver {
   color: #0000cc;
 }
 
@@ -71,4 +71,8 @@ OFF: "grey"
 
 .log-message-ddp-link {
   color: #cc6600;
+}
+
+.log-message-browser {
+  color: #02a300;
 }

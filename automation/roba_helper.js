@@ -1,5 +1,5 @@
 /**
- * robaHelper.js
+ * roba_helper.js
  *
  * Simple executor for web automation
  *

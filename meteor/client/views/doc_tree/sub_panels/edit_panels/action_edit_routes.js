@@ -68,6 +68,37 @@ Template.action_edit_routes.events({
         }
       }
     });
+  },
+  "click .btn-add-route": function (e, instance) {
+    e.stopPropagation();
+    var instance = Template.instance(),
+      action = this;
+
+    if(action && action.routes && action.routes.length){
+      Actions.update(action._id, {
+        $push: {
+          routes: {
+            order: action.routes.length,
+            nodeId: action.routes[action.routes.length-1].nodeId,
+            routeCode: ""
+          }
+        }
+      }, function (error, response) {
+        if(error){
+          Meteor.log.error("Route insert failed: " + error.message);
+          Dialog.error("Route insert failed: " + error.message);
+        } else {
+          // trigger editing on the destination node
+          setTimeout(function () {
+            //instance.$(".sortable-table-row[data-route-order='" + order + "'] .editable[data-key='name']").editable("show");
+          }, 100);
+        }
+      });
+    } else {
+      Meteor.log.error("Add Action Route failed: no action found");
+      console.log(this);
+      Dialog.error("Add Action Route failed: no action found");
+    }
   }
 });
 

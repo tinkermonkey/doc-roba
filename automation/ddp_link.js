@@ -169,12 +169,25 @@ DDPLink.prototype.setAdventureLocation = function (adventureId, nodeId) {
 };
 
 /**
- * Return the result of an action
+ * Save the status of a step
  */
 DDPLink.prototype.setAdventureStepStatus = function (stepId, status) {
   assert(stepId, "setAdventureStepStatus: stepId must not be null");
   assert(status !== undefined, "setAdventureStepStatus: status must not be null");
   this.call("setAdventureStepStatus", [stepId, status]);
+};
+
+/**
+ * Save the result of a step validation or readyCheck
+ * @param stepId
+ * @param type
+ * @param result
+ */
+DDPLink.prototype.saveAdventureStepResult = function (stepId, type, result) {
+  assert(stepId, "saveAdventureStepResult: stepId must not be null");
+  assert(type, "saveAdventureStepResult: type must not be null");
+  assert(result, "saveAdventureStepResult: result must not be null");
+  this.call("saveAdventureStepResult", [stepId, type, result]);
 };
 
 /**

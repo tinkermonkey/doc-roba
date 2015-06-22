@@ -224,7 +224,7 @@ TreeNodeControls.prototype.create = function () {
             width: window.innerWidth - insetX - tree.config.highlightSurroundMargin - self.shield.attr("r") * 2 * scale,
             contentTemplate: 'roba_launcher',
             contentData: new RobaContext({
-              route: DroneRouter.routeFromStart(self.node._id)
+              route: RobaRouter.routeFromStart(self.node._id)
             }),
             sourceElement: $(".node-controls-back").get(0),
             callback: function () {

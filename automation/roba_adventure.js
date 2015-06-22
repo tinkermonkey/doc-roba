@@ -11,7 +11,8 @@ var Future      = require("fibers/future"),
   moment        = require("moment"),
   ddpAppender   = require("./ddp_appender"),
   DDPLink       = require("./ddp_link"),
-  FutureDriver  = require("./future_driver"),
+  RobaDriver    = require("./roba_driver"),
+  RobaReady     = require("./roba_ready"),
   adventureId   = process.argv[2],
   timestamp     = moment().format("YYYY-MM-DD_HH-mm-ss"),
   logger        = log4js.getLogger("runner"),
@@ -20,36 +21,8 @@ var Future      = require("fibers/future"),
   driverEnded   = false,
   endIntentional= false,
   ddpLink, driver, adventure, lastUrl, server,
-  account, dataContext;
-
-/**
- * Status flags for the adventure process
- */
-var AdventureStatus = {
-    staged: 0,
-    queued: 1,
-    launched: 2,
-    routing: 3,
-    executingCommand: 4,
-    awaitingCommand: 5,
-    paused: 6,
-    complete: 7,
-    error: 8,
-    failed: 9
-  },
-  AdventureStatusLookup = _.invert(AdventureStatus);
-
-/**
- * Status flags for an adventure or test action
- */
-var AdventureStepStatus = {
-    staged: 0,
-    queued: 1,
-    running: 2,
-    complete: 3,
-    error: 4
-  },
-  AdventureStepStatusLookup = _.invert(AdventureStepStatus);
+  account, dataContext,
+  AdventureStatus, AdventureStepStatus;
 
 // Need an adventure ID to do anything
 if(!adventureId){
@@ -95,7 +68,7 @@ Future.task(function(){
     logger.error("Fatal error during adventure execution: ", e);
     logger.error(new Error(e.toString()).trace);
     if(ddpLink){
-      ddpLink.setAdventureStatus(adventureId, AdventureStatus.failed)
+      ddpLink.setAdventureStatus(adventureId, AdventureStatus ? AdventureStatus.failed : 9)
       Exit(1);
     }
   }
@@ -118,6 +91,10 @@ function ExecuteAdventure () {
   logger.debug("Creating DDP logger");
   var ddpLogger = ddpAppender.createAppender(ddpLink);
   log4js.addAppender(ddpLogger);
+
+  // load the status enums
+  AdventureStatus     = ddpLink.call("loadAdventureStatusEnum");
+  AdventureStepStatus = ddpLink.call("loadAdventureStepStatusEnum");
 
   // load the adventure
   adventure = ddpLink.liveRecord("adventure", adventureId, "adventures");
@@ -174,8 +151,8 @@ function ExecuteAdventure () {
   // Setup the driver
   logger.debug("Adventure Test Agent: ", config.desiredCapabilities.browserName);
   logger.debug("Adventure Host: ", config.host);
-  logger.trace("Creating FutureDriver: ", config);
-  driver = new FutureDriver(config);
+  logger.trace("Creating RobaDriver: ", config);
+  driver = new RobaDriver(config);
 
   // set the implicit wait
   logger.trace("Setting driver timeouts");
@@ -333,6 +310,13 @@ function ExecuteStep (step, stepNum) {
   // Validate the current node
   var validationResult = ValidateNode(step.node);
 
+  // Save the validation results
+  if(validationResult.readyChecker){
+    _.each(validationResult.readyChecker.checks, function (check) {
+      ddpLink.saveAdventureStepResult(step.stepId, "ready", check)
+    });
+  }
+
   // update the state
   UpdateState();
 
@@ -427,15 +411,18 @@ function ValidateNode(node) {
 
   // wait for the node to load
   if(node.readyCode){
+    var ready = new RobaReady(driver);
     logger.debug("Waiting for node to be ready: ", node.readyCode);
     try {
-      result.readyResult = eval(node.readyCode);
+      eval(node.readyCode);
+      result.readyResult = ready.check();
       logger.debug("Ready Code result: ", result.readyResult);
     } catch (e) {
       logger.error("Ready code failed: ", e.toString());
       result.readyResult = e.toString();
       result.ready = false;
     }
+    result.reachChecker = ready;
   } else {
     logger.debug("Node has no ready code");
   }

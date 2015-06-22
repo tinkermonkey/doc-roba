@@ -3,19 +3,21 @@
  */
 Template.ActionRouteSnippet.helpers({
   width: function () {
-    return DocTreeConfig.nodes.width * 3 + DocTreeConfig.nodes.xMargin;
+    var scale = Template.instance().scale.get();
+    return DocTreeConfig.nodes.width * 3 * scale + 10;
   },
   height: function () {
-    return (DocTreeConfig.nodes.height + DocTreeConfig.nodes.yMargin) * this.routes.length * Math.min(2 / this.routes.length, 1);
+    var scale = Template.instance().scale.get();
+    return (DocTreeConfig.nodes.height * this.routes.length + DocTreeConfig.nodes.yMargin / 2 * (this.routes.length - 1)) * scale + 10;
   },
   scale: function () {
-    return Math.min(2 / this.routes.length, 1);
+    return Template.instance().scale.get();
   },
   xMargin: function () {
-    return DocTreeConfig.nodes.xMargin / 2;
+    return 5;
   },
   yMargin: function () {
-    return DocTreeConfig.nodes.yMargin / 2;
+    return 5;
   },
   sourceNodeY: function sourceNodeY() {
     var height = this.routes.length * DocTreeConfig.nodes.height + (this.routes.length - 1) * DocTreeConfig.nodes.yMargin / 2;
@@ -50,10 +52,27 @@ Template.ActionRouteSnippet.helpers({
 Template.ActionRouteSnippet.events({});
 
 /**
+ * Template Created
+ */
+Template.ActionRouteSnippet.created = function () {
+  this.scale = new ReactiveVar(this.data.scale || Math.min(2 / this.data.routes.length, 1));
+};
+
+/**
  * Template Rendered
  */
 Template.ActionRouteSnippet.rendered = function () {
+  var instance = Template.instance();
 
+  // react to a route being added
+  Template.instance().autorun(function () {
+    var data = Template.currentData(),
+      currentScale = instance.scale.get(),
+      scale = data.scale || Math.min(1 / data.routes.length, 0.333);
+    if(scale !== currentScale){
+      instance.scale.set(scale)
+    }
+  });
 };
 
 /**

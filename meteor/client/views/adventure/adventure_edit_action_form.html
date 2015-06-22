@@ -1,0 +1,33 @@
+<template name="AdventureEditActionForm">
+  <div class="panel panel-default action-edit-form">
+    {{#with getActionRecord}}
+    <div class="panel-heading">
+      <span class="field-label">Title:</span>
+      {{> EditableStringField cssClass="action-editable inline" value=title dataKey="title" }}
+      <button class="btn btn-warning btn-xs btn-close-action-edit-form pull-right">X</button>
+    </div>
+    <div class="panel-body">
+      <ul class="nav nav-tabs" style="padding-top: 10px;">
+        <li role="presentation"><a data-tab-name="code">Code</a></li>
+        <li role="presentation"><a data-tab-name="variables">Variables</a></li>
+        <li role="presentation"><a data-tab-name="routes">Routes</a></li>
+      </ul>
+
+      <div class="tab-container">
+        <div class="tab" data-tab-name="code">
+          <h4>Action Code</h4>
+          {{> RobaAce cssClass="action-editable" minLines=6 maxLines=15 dataKey="code" value=code }}
+        </div>
+        <div class="tab" data-tab-name="variables">
+          <h4>Action Variables</h4>
+          {{> action_edit_variables }}
+        </div>
+        <div class="tab" data-tab-name="routes">
+          <h4>Action Routes</h4>
+          {{> action_edit_routes }}
+        </div>
+      </div>
+    </div>
+    {{/with}}
+  </div>
+</template>

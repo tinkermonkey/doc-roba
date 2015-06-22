@@ -5,7 +5,7 @@
          data-trigger="focus"
          data-content="This is not the correct node"
       >X</div>
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-pills">
       <li role="presentation" class="active"><a data-tab-name="node">
         {{renderNodeType type}}
       </a></li>
@@ -92,34 +92,17 @@
           <button class="btn btn-warning btn-small-round btn-add-url-parameter" data-pk="{{_id}}">+</button>
           <div style="padding-left: 20px; width: 80%;">{{> edit_node_url_parameters }}</div>
         </div>
-
       </div>
       <div class="tab" data-tab-name="wait-for">
-        <div class="sub-heading">Code to determine if this {{renderNodeType type}} is ready:</div>
+        <h4>Code to determine if this {{renderNodeType type}} is ready</h4>
         {{> RobaAce minLines=10 maxLines=30 dataKey="readyCode" value=readyCode}}
       </div>
       <div class="tab" data-tab-name="validations">
-        <div class="sub-heading">Code to determine if this {{renderNodeType type}} is valid:</div>
+        <h4>Code to determine if this {{renderNodeType type}} is valid</h4>
         {{> RobaAce minLines=10 maxLines=30 dataKey="validationCode" value=validationCode}}
       </div>
       <div class="tab" data-tab-name="actions">
-        <div class="sub-heading">Actions for this {{renderNodeType type}}:</div>
-        <table>
-          {{#each getActions}}
-            <tr>
-              <td>{{title}}</td>
-              <td>{{> ActionRouteSnippet}}</td>
-              <td>
-                {{#unless adventureIsComplete ../../adventure}}
-                <button type="button" class="btn btn-xs btn-success btn-execute-action">
-                  <span class="glyphicon glyphicon-play"></span>
-                  Execute
-                </button>
-                {{/unless}}
-              </td>
-            </tr>
-          {{/each}}
-        </table>
+        {{> AdventureEditNodeActions }}
       </div>
     </div>
   </div>
