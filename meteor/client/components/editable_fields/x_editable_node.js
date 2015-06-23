@@ -9,26 +9,27 @@
   "use strict";
 
   var NodeSelector = function (options) {
-    this.init('nodeSelector', options, NodeSelector.defaults);
+    this.init("nodeSelector", options, NodeSelector.defaults);
   };
 
   $.fn.editableutils.inherit(NodeSelector, $.fn.editabletypes.abstractinput);
 
   $.extend(NodeSelector.prototype, {
     render: function() {
-      console.log("NodeSelector: Render", this.$input.get(1));
-      Blaze.renderWithData(Template.XEditableNodeSearch, {
-        projectVersionId: this.options.projectVersionId
-      }, this.$input.get(1));
-    },
+      this.$input.parent().append('<div class="x-editable-node-selector"></div>');
+      this.search = this.$input.parent().find(".x-editable-node-selector");
 
-    cancel: function () {
-      console.log("NodeSelector: cancel", Blaze.getView(this.$input.get(1)));
-      Blaze.remove(Blaze.getView(this.$input.get(1)));
+      // render the search form
+      Blaze.renderWithData(Template.XEditableNodeSearch, {
+        projectVersionId: this.options.projectVersionId,
+        xEditable: this
+      }, this.search.get(0));
+
+      // store a link to the search form view
+      this.options.parentInstance.searchView = Blaze.getView( this.search.get(0) )
     },
 
     activate: function() {
-      console.log("NodeSelector: Activate");
       if(this.$input.is(':visible')) {
         this.$input.focus();
         $.fn.editableutils.setCursorPosition(this.$input.get(0), this.$input.val().length);
@@ -41,14 +42,21 @@
      @property tpl
      @default <input type="text">
      **/
-    tpl: '<input type="text" class="x-editable-node-value hide"><div class="x-editable-node-selector"></div>',
+    tpl: '<input type="text" class="x-editable-node-value hide">',
 
     /**
      @property projectVersionId
      @type string
      @default null
      **/
-    projectVersionId: null
+    projectVersionId: null,
+
+    /**
+     @property parentInstance
+     @type object
+     @default null
+     **/
+    parentInstance: null
   });
 
   $.fn.editabletypes.nodeSelector = NodeSelector;

@@ -1,9 +1,9 @@
 <template name="XEditableNodeSearch">
   <div class="input-group">
     <input type="text" class="form-control input-search" placeholder="Search nodes...">
-    <span class="input-group-btn">
-      <button class="btn btn-primary btn-search" type="button">Search</button>
-    </span>
+  </div>
+  <div style="margin: 5px;">
+    Current Node: {{renderNodeTitle getValue projectVersionId}}
   </div>
   <div class="search-results">
     {{> NodeTermSearchResults searchResults}}

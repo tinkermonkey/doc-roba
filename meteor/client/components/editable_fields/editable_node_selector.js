@@ -26,6 +26,7 @@ Template.EditableNodeSelector.rendered = function () {
     mode: instance.data.mode || "popup",
     value: instance.data.value,
     projectVersionId: instance.data.projectVersionId,
+    parentInstance: instance,
     highlight: false,
     display: function () {},
     success: function (response, newValue) {
@@ -35,6 +36,13 @@ Template.EditableNodeSelector.rendered = function () {
       setTimeout(function () {
         $(editedElement).removeClass('editable-unsaved');
       }, 10);
+    }
+  });
+
+  // this event listener needs to be registered directly
+  instance.$(".editable").on("hidden", function(e, reason) {
+    if(instance.searchView){
+      Blaze.remove(instance.searchView);
     }
   });
 
