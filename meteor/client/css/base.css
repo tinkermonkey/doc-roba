@@ -96,6 +96,10 @@ button {
   vertical-align: middle;
 }
 
+.auto-scroll {
+  overflow: auto;
+}
+
 .light {
 	font-weight: normal;
 }

@@ -4,9 +4,6 @@
 Template.edit_action.helpers({
   getActionRecord: function () {
     return Actions.findOne({_id: this._id});
-  },
-  multipleDestinations: function () {
-    return this.routes.length > 1;
   }
 });
 

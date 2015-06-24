@@ -20,7 +20,7 @@ Template.AdventureEditActionForm.events({
 
     if(dataKey){
       update["$set"][dataKey] = newValue;
-      //console.log("Edited: ", dataKey, newValue, node);
+      //console.log("Edited: ", dataKey, newValue, update, instance.data);
       Actions.update(instance.data._id, update, function (error) {
         if(error){
           Meteor.log.error("Failed to update action value: " + error.message);

@@ -19,14 +19,14 @@
       this.$input.parent().append('<div class="x-editable-node-selector"></div>');
       this.search = this.$input.parent().find(".x-editable-node-selector");
 
-      // render the search form
       Blaze.renderWithData(Template.XEditableNodeSearch, {
         projectVersionId: this.options.projectVersionId,
         xEditable: this
       }, this.search.get(0));
 
-      // store a link to the search form view
-      this.options.parentInstance.searchView = Blaze.getView( this.search.get(0) )
+      if(this.options.parentInstance){
+        this.options.parentInstance.searchView = Blaze.getView( this.search.children().get(0) )
+      }
     },
 
     activate: function() {
