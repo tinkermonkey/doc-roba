@@ -15,9 +15,9 @@
         <td class="drag-handle"><span class="glyphicon glyphicon-record"></span></td>
         <td><div style="padding-left: 10px;">{{logic ..}}</div></td>
         <td class="code-editor-cell">
-
-          {{> RobaAce minLines=3 maxLines=10 cssClass=editorClass dataKey=routeCodeDataKey value=routeCode }}
-
+          <div class="{{editorClass}}">
+            {{> RobaAce minLines=3 maxLines=10 cssClass=editorClass dataKey=routeCodeDataKey value=routeCode }}
+          </div>
           {{#unless routeCode.length}}
               <div class="click-to-edit">
               {{#if isLast ..}}

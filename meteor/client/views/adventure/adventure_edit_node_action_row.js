@@ -30,6 +30,30 @@ Template.AdventureEditNodeActionRow.events({
       $(e.target).attr("disabled", "disabled");
     }
   },
+  "click .btn-execute-action": function (e, instance) {
+    // make sure there's an adventure to work with
+    var adventureContext = Template.parentData(1),
+      code = this.code;
+
+    // make sure the adventure is operating
+    if(adventureContext.adventure.status == AdventureStatus.complete){
+      return;
+    }
+
+    console.log("Execute Action: ", code);
+    if(code.length){
+      AdventureCommands.insert({
+        projectId: adventureContext.adventure.projectId,
+        adventureId: adventureContext.adventure._id,
+        code: code
+      }, function (error) {
+        if(error){
+          Meteor.log.error("Error executing action: " + error.message);
+          Dialog.error("Error executing action: " + error.message);
+        }
+      });
+    }
+  },
   "click .btn-delete-action": function () {
     var action = this;
     console.log("Delete Action: ", action);

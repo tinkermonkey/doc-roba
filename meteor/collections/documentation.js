@@ -134,6 +134,7 @@ Nodes.deny({
   fetch: ['projectId']
 });
 trackChanges(Nodes, "nodes");
+autoUpdateOrder(Nodes, ["urlParameters"]);
 
 /**
  * ============================================================================
@@ -361,7 +362,8 @@ Schemas.ActionRoute = new SimpleSchema({
   // The js code which tests this route
   routeCode: {
     type: String,
-    defaultValue: ""
+    defaultValue: "",
+    optional: true
   }
 });
 
@@ -482,3 +484,4 @@ Actions.deny({
   fetch: ['projectId']
 });
 trackChanges(Actions, "actions");
+autoUpdateOrder(Actions, ["variables", "routes"]);

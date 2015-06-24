@@ -83,14 +83,18 @@
             <td>{{> EditableStringField cssClass="inline-block" value=pageTitle dataKey="pageTitle" emptyText="none"}}</td>
           </tr>
           <tr>
+            <td class="field-label">Nav Menus: </td>
+            <td>
+              {{> EditableNavMenuList projectVersionId=projectVersionId value=navMenus dataKey="navMenus" }}
+            </td>
+          </tr>
+          <tr>
             <td class="field-label">Base Url: </td>
             <td>{{> EditableStringField cssClass="inline-block" value=url dataKey="url" emptyText="none"}}</td>
           </tr>
         </table>
         <div>
-          <span class="field-label">Identifying Url Parameters:</span>
-          <button class="btn btn-warning btn-small-round btn-add-url-parameter" data-pk="{{_id}}">+</button>
-          <div style="padding-left: 20px; width: 80%;">{{> edit_node_url_parameters }}</div>
+          {{> edit_node_url_parameters }}
         </div>
       </div>
       <div class="tab" data-tab-name="wait-for">

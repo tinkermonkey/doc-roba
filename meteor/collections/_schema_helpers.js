@@ -50,6 +50,34 @@ autoValueModifiedBy = function () {
   }
 };
 
+// Auto update the order of any ordered lists
+autoUpdateOrder = function (collection, orderedFields) {
+  // Only run on the server
+  if(!Meteor.isServer){
+    return;
+  }
+
+  // After update tracking
+  collection.after.update(function (userId, record, changedFields) {
+    _.each(orderedFields, function (orderedField) {
+      if(_.contains(changedFields, orderedField)){
+        // re-order the values quietly
+        var update = {},
+          sortedValues = record[orderedField].sort(function (value) { return value.order });
+        _.each(sortedValues, function (value, i) {
+          if(value.order !== i){
+            update[orderedField + "." + i + ".order"] = i;
+          }
+        });
+        if(_.keys(update).length){
+          console.log("autoUpdateOrder Update: ", update);
+          collection.direct.update(record._id, {$set: update});
+        }
+      }
+    });
+  });
+};
+
 /**
  * ============================================================================
  * Define global allow/deny functions

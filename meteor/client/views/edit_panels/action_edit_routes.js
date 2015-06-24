@@ -7,10 +7,11 @@ Template.action_edit_routes.helpers({
     return _.sortBy(indexedRoutes, function (r) { return r.order });
   },
   logic: function (action) {
+    console.log("action: ", action);
     var logic = "else if";
     if(this.order == 0){
       logic = "if";
-    } else if(this.order == action.routes.length - 1 && this.routeCode.length == 0) {
+    } else if(this.order == action.routes.length - 1 && (this.routeCode && this.routeCode.length == 0)) {
       logic = "else";
     }
     //console.log("Logic: ", this.order, action.routes.length, this.order == action.routes.length - 1, logic, this);
@@ -21,7 +22,7 @@ Template.action_edit_routes.helpers({
     return this.order == action.routes.length - 1;
   },
   editorClass: function () {
-    return "action-route-code" + (this.routeCode.length ? "" : " hide")
+    return "action-editable" + ((this.routeCode && this.routeCode.length) ? "" : " hide")
   },
   routeCodeDataKey: function () {
     return "routes." + this.index + ".routeCode";
@@ -40,7 +41,7 @@ Template.action_edit_routes.events({
 
     // make the editor visible
     row.find(".click-to-edit").addClass("hide");
-    row.find(".action-route-code").removeClass("hide");
+    row.find(".action-editable").removeClass("hide");
   },
   "click .btn-delete": function (e, instance) {
     var route = this,

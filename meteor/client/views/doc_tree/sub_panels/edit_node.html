@@ -21,9 +21,7 @@
             {{> EditableStringField cssClass="edit-node-url" value=url dataKey="url" emptyText="none"}}
           </div>
           <div>
-            <span class="dark-blue">Identifying Url Parameters:</span>
-            <button class="btn btn-warning btn-small-round btn-add-url-parameter" data-pk="{{_id}}">+</button>
-            <div style="padding-left: 20px; width: 100%;">{{> edit_node_url_parameters }}</div>
+            {{> edit_node_url_parameters }}
           </div>
         {{else}}
           {{renderNodeType type}}
