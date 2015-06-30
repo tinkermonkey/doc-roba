@@ -1,0 +1,30 @@
+<template name="TestCaseDashboard">
+  {{#contentFor "title"}}
+    Test Case Dashboard
+  {{/contentFor}}
+
+  <div class="test-case-container">
+    <div class="test-case-nav">
+      <div class="home-nav-item active">
+        <h4 class="home-top-nav">
+          {{#with project}}
+            <a href="{{pathFor 'home_project'}}">{{title}}</a>
+          {{/with}}
+          {{#with version}}
+            <small><a href="{{pathFor 'home_version'}}">v {{version}}</a></small>
+          {{/with}}
+          {{#with project}}
+            <small>{{renderProjectRole userRole}}</small>
+          {{/with}}
+        </h4>
+      </div>
+
+      <div class="test-case-list-container">
+        {{> TestCaseList }}
+      </div>
+    </div>
+    <div class="test-case-content">
+      {{> TestCase }}
+    </div>
+  </div>
+</template>

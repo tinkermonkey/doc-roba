@@ -1,7 +1,7 @@
 /**
  * Template Helpers
  */
-Template.DroneRoute.helpers({
+Template.AdventureRoute.helpers({
   getVarDataKey: function () {
     var variable = this,
         step = Template.parentData(1);
@@ -20,25 +20,25 @@ Template.DroneRoute.helpers({
 /**
  * Template Event Handlers
  */
-Template.DroneRoute.events({});
+Template.AdventureRoute.events({});
 
 /**
  * Template Created
  */
-Template.DroneRoute.created = function () {
+Template.AdventureRoute.created = function () {
   
 };
 
 /**
  * Template Rendered
  */
-Template.DroneRoute.rendered = function () {
+Template.AdventureRoute.rendered = function () {
   
 };
 
 /**
  * Template Destroyed
  */
-Template.DroneRoute.destroyed = function () {
+Template.AdventureRoute.destroyed = function () {
   
 };

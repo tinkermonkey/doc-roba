@@ -6,31 +6,34 @@
         <div>
           <div class="simple-col simple-col-3 simple-divider">
             <div>
-              <span class="dark-blue">User Account: </span><br>
+              <span class="field-label">User Account: </span>
               {{> EditableUserAccount value=getAccount projectVersionId=projectVersionId userType=getRoute.userType dataKey="account" }}
             </div>
             <div>
-              <span class="dark-blue">Platform: </span><br>
+              <span class="field-label">Platform: </span>
               {{ getRoute.platform.title }}
             </div>
             <div>
-              <span class="dark-blue">Server: </span><br>
+              <span class="field-label">Server: </span>
               {{> EditableServerSelector value=getServer projectVersionId=projectVersionId dataKey="server" }}
             </div>
             <div>
-              <span class="dark-blue">Test System: </span><br>
+              <span class="field-label">Test System: </span>
               {{> EditableTestSystemSelector value=getTestSystem testAgent=getTestAgent projectVersionId=projectVersionId dataKey="testSystem" }}
             </div>
             <div>
-              <span class="dark-blue">Agent: </span><br>
+              <span class="field-label">Agent: </span>
               {{> EditableTestAgentSelector value=getTestAgent projectVersionId=projectVersionId dataKey="testAgent" }}
             </div>
             <div class="text-center" style="margin-top:20px;">
-              <button class="btn btn-warning btn-launch-drone">Launch Drone</button>
+              <button class="btn btn-warning btn-launch-drone">
+                <span class="glyphicon glyphicon-send"></span>
+                Launch Adventure
+              </button>
             </div>
           </div>
           <div class="simple-col simple-col-9">
-            {{> DroneRoute getRoute }}
+            {{> RobaLauncherRoute getRoute }}
           </div>
         </div>
       {{else}}

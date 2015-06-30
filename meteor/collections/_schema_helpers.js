@@ -242,3 +242,12 @@ DefaultValueStypes = {
   literal: 0,
   computed: 1
 };
+
+/**
+ * Test Case step types
+ */
+TestCaseStepTypes = {
+  defined: 0,
+  auto: 1,
+  wait: 2
+};

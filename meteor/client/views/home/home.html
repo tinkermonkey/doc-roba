@@ -1,7 +1,7 @@
 <template name="Home">
   {{#contentFor "title"}}
     {{#with currentUser }}
-      <a href="/">Dashboard</a>
+      {{name}}
     {{/with}}
   {{/contentFor}}
 
@@ -24,7 +24,8 @@
             <h4 class="home-sub-nav">
               <a href="{{pathFor 'home_version'}}">v {{version}}</a>
               <small>{{dateFormat dateCreated}}</small>
-              <a href="{{pathFor 'doc_tree'}}">Edit</a>
+              <a href="{{pathFor 'doc_tree'}}">Tree</a>
+              <a href="{{pathFor 'test_case_dashboard'}}">Tests</a>
             </h4>
           </div>
           {{/each}}

@@ -1,0 +1,47 @@
+<template name="RobaLauncherRoute">
+  <table class="full-width">
+    <tbody>
+    {{#each steps}}
+      <tr>
+        <td class="align-center">
+          {{> standalone_node_snippet node }}
+        </td>
+        <td>
+        </td>
+      </tr>
+      {{#if action}}
+        <tr>
+          <td class="align-center">
+            {{action.title}}
+          </td>
+          <td>
+            {{#if action.variables.length}}
+              <table class="table table-striped">
+                <thead>
+                <tr>
+                  <th>Variable</th>
+                  <th>Default Value</th>
+                  <th>Value</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each action.variables}}
+                  <tr>
+                    <td>{{name}}</td>
+                    <td>{{defaultValue}}</td>
+                    <td>
+                      {{> EditableStringField emptyText="default" dataKey=getVarDataKey value=getVarValue }}
+                    </td>
+                  </tr>
+                {{/each}}
+                </tbody>
+              </table>
+            {{/if}}
+          </td>
+        </tr>
+      {{/if}}
+    {{/each}}
+    </tbody>
+  </table>
+
+</template>

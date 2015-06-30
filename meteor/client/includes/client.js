@@ -102,6 +102,15 @@ Template.registerHelper("userProjects", function () {
 });
 
 /**
+ * Get a list of projects for a user, including their role
+ */
+Template.registerHelper("userRole", function (projectId) {
+  projectId = (this ? this._id : this) || projectId;
+  var role = ProjectRoles.findOne({userId: Meteor.userId(), projectId: projectId});
+  return role ? role.role : null;
+});
+
+/**
  * Get the list of versions for a project
  */
 Template.registerHelper("projectVersions", function () {

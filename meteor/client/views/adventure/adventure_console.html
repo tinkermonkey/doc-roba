@@ -11,12 +11,12 @@
       {{> AdventureScreen }}
     </div>
     <div class="adventure-sidebar">
-      <div>
-        <div class="vert-tab-container">
+        <div class="vert-tab-container full-height">
           <div class="tab-container">
             <div class="tab" data-tab-name="adventure">
               {{> AdventureMap }}
               {{> AdventureStatusBar }}
+              {{> AdventureRoute adventure }}
             </div>
             <div class="tab" data-tab-name="context">
               {{> AdventureContext }}
@@ -37,7 +37,6 @@
             <li role="presentation"><a data-tab-name="history">Commands</a></li>
           </ul>
         </div>
-      </div>
     </div>
   </div>
   {{/with}}

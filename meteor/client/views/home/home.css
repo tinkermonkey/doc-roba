@@ -41,6 +41,10 @@
   text-decoration: none;
 }
 
+.home-nav-item.active a:hover {
+  color: #a7ff00;
+}
+
 .home-nav-item.active small {
   color: #f2f2f2;
 }

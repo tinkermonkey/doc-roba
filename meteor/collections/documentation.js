@@ -23,8 +23,7 @@ Schemas.UrlParameter = new SimpleSchema({
  * ============================================================================
  */
 Schemas.Node = new SimpleSchema({
-  // Create a static ID field that will be constant across versions
-  // of the project node structure
+  // Static ID field that will be constant across versions of the project node structure
   staticId: {
     type: String,
     index: true,
@@ -58,7 +57,7 @@ Schemas.Node = new SimpleSchema({
   title: {
     type: String
   },
-  // local url for this page
+  // Local url for this page
   url: {
     type: String,
     optional: true
@@ -68,7 +67,7 @@ Schemas.Node = new SimpleSchema({
     type: [Schemas.UrlParameter],
     optional: true
   },
-  // page title, from the page itself
+  // Page title, from the page itself
   pageTitle: {
     type: String,
     optional: true
@@ -79,7 +78,7 @@ Schemas.Node = new SimpleSchema({
     blackbox: true,
     defaultValue: {}
   },
-  // Link to the static Type constant
+  // Bind to the static Type constant
   type: {
     type: Number,
     allowedValues: _.map(NodeTypes, function (d) { return d; })

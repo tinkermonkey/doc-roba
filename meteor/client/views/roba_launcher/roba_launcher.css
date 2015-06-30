@@ -14,3 +14,9 @@
 .roba-launcher-content {
   padding: 10px;
 }
+
+.roba-launcher-content span.field-label {
+  text-align: left;
+  display: block;
+  margin-top: 5px;
+}

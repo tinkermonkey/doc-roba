@@ -1,0 +1,14 @@
+<template name="TestCaseListGroup">
+  <div class="test-case-list-selectable test-case-list-group" data-group-id="{{staticId}}">
+    <span class="glyphicon glyphicon-folder-close"></span>
+    {{title}}
+  </div>
+  <div style="margin-left: 10px;">
+    {{#each getGroups}}
+      {{> TestCaseListGroup }}
+    {{/each}}
+    {{#each getTestCases}}
+      {{> TestCaseListItem }}
+    {{/each}}
+  </div>
+</template>

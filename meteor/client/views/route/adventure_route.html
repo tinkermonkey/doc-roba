@@ -1,0 +1,32 @@
+<template name="AdventureRoute">
+  <table>
+    <tbody>
+      {{#each route.steps}}
+        <tr>
+          <td class="align-center">
+            {{> standalone_node_snippet node }}
+          </td>
+          <td>
+            {{debug}}
+          </td>
+        </tr>
+        {{#if action}}
+          <tr>
+            <td class="align-center">
+              {{action.title}}
+            </td>
+            <td>
+              {{#if action.variables.length}}
+                {{#each action.variables}}
+                  <div>
+                    <span class="field-label">{{name}}:</span> {{getVariableValue}}
+                  </div>
+                {{/each}}
+              {{/if}}
+            </td>
+          </tr>
+        {{/if}}
+      {{/each}}
+    </tbody>
+  </table>
+</template>
