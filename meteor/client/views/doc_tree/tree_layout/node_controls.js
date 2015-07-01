@@ -134,7 +134,7 @@ TreeNodeControls.prototype.create = function () {
   self.addDownButton.append("text")
     .attr("x", 0)
     .attr("y", 6)
-    .attr("class", "no-select")
+    .attr("class", "no-select-complete")
     .text("+");
 
   // Node add view button
@@ -155,7 +155,7 @@ TreeNodeControls.prototype.create = function () {
   self.addRightButton.append("text")
     .attr("x", 0)
     .attr("y", 6)
-    .attr("class", "no-select")
+    .attr("class", "no-select-complete")
     .text("+");
 
   // Node add navMenu button
@@ -176,7 +176,7 @@ TreeNodeControls.prototype.create = function () {
   self.addNavButton.append("text")
     .attr("x", 0)
     .attr("y", 6)
-    .attr("class", "no-select")
+    .attr("class", "no-select-complete")
     .text("+");
     //.text("\u276F");
 
@@ -198,7 +198,7 @@ TreeNodeControls.prototype.create = function () {
   self.editButton.append("text")
     .attr("x", 0)
     .attr("y", 8)
-    .attr("class", "no-select")
+    .attr("class", "no-select-complete")
     .text("\u270E");
 
   // Node Roba button

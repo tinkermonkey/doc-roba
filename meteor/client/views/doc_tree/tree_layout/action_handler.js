@@ -480,7 +480,7 @@ TreeActionHandler.prototype.createAndUpdateLabels = function (selection) {
     .attr("ry", self.config.cornerRadius);
 
   labelGroup.append("text")
-    .attr("class", "action-label-text no-select");
+    .attr("class", "action-label-text no-select-complete");
 
   // update existing labels
   selection

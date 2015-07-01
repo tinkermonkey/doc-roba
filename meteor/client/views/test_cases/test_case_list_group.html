@@ -1,9 +1,12 @@
 <template name="TestCaseListGroup">
-  <div class="test-case-list-selectable test-case-list-group" data-group-id="{{staticId}}">
-    <span class="glyphicon glyphicon-folder-close"></span>
-    {{title}}
+  <div class="test-case-list-selectable test-case-list-group no-select"
+       data-group-id="{{staticId}}"
+       data-pk="{{_id}}"
+       data-parent-id="{{parentGroupId}}">
+    <span class="glyphicon {{#if isExpanded}}glyphicon-folder-open{{else}}glyphicon-folder-close{{/if}}"></span>
+    <span class="test-case-list-title">{{title}}</span>
   </div>
-  <div style="margin-left: 10px;">
+  <div class="{{#unless isExpanded}}hide{{/unless}}" style="margin-left: 10px;">
     {{#each getGroups}}
       {{> TestCaseListGroup }}
     {{/each}}

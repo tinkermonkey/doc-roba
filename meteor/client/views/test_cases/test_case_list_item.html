@@ -1,6 +1,6 @@
 <template name="TestCaseListItem">
-  <div class="test-case-list-selectable test-case-list-item">
+  <div class="test-case-list-selectable test-case-list-item" data-pk="{{_id}}" data-parent-id="{{testGroupId}}">
     <span class="glyphicon glyphicon-ok-circle"></span>
-    {{title}}
+    <span class="test-case-list-title">{{title}}</span>
   </div>
 </template>

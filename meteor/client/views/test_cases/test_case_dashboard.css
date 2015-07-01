@@ -24,6 +24,14 @@
   padding: 10px;
 }
 
+.test-case-list-header {
+  padding: 10px;
+}
+
+.test-case-list {
+  padding: 15px 0 15px 15px;
+}
+
 /**
  * Main test case content pane
  */
@@ -45,15 +53,36 @@
   margin: 0;
 }
 
-.test-case-list-selectable:hover {
+.test-case-list-selectable:hover, .test-case-list-selectable.test-case-list-group.selected {
   background-color: #dddddd;
 }
 
-.test-case-list-selectable.selected {
+.test-case-list-drop-hover {
+  background-color: #a7ff00;
+}
+
+.test-case-list-drag {
+  width: auto;
+  padding: 2px;
+}
+
+.test-case-list-selectable.test-case-list-item.selected {
   color: #fff;
   background-color: #0A7BFF;
   background-image: url('/roba_stripe.svg');
   background-repeat: no-repeat;
   background-position: 105% 0%;
   background-size: contain;
+}
+
+.test-case-list-selectable.in-drag {
+  opacity: 0.75;
+  background-color: #ffffff !important;
+  background-image: none !important;
+  width: auto;
+  color: #000;
+}
+
+.test-case-list-title {
+  padding-left: 5px;
 }

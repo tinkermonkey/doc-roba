@@ -643,7 +643,7 @@ TreeNodeHandler.prototype.createContent = function (selection) {
     .attr("height", self.config.headerHeight );
 
   nodeContent.append("text")
-    .attr("class", "node-title no-select")
+    .attr("class", "node-title no-select-complete")
     .attr("x", 4)
     .attr("y", self.config.titleHeight + self.config.borderWidth)
     .text(function(d){ return d.title; });
