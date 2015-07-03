@@ -32,7 +32,7 @@ Template.AdventureEditNodeActions.events({
     Blaze.remove(view);
   },
   "click .btn-add-action": function (e, instance) {
-    e.stopPropagation();
+    e.stopImmediatePropagation();
     var node = this;
 
     if(node && node._id){

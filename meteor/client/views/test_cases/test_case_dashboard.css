@@ -15,8 +15,8 @@
   height: 100%;
   z-index: 1;
   padding: 0;
-  border-right: 2px solid #0A7BFF;
-  box-shadow: 0 0 15px #888888;
+  /*border-right: 2px solid #0A7BFF;
+  box-shadow: 0 0 15px #888888;*/
   overflow-y: auto;
 }
 
@@ -51,6 +51,9 @@
   cursor: pointer;
   padding: 5px;
   margin: 0;
+  border-radius: 10px;
+  transition: background-color 0.1s;
+  -webkit-transition: background-color 0.1s;
 }
 
 .test-case-list-selectable:hover, .test-case-list-selectable.test-case-list-group.selected {
@@ -59,11 +62,6 @@
 
 .test-case-list-drop-hover {
   background-color: #a7ff00;
-}
-
-.test-case-list-drag {
-  width: auto;
-  padding: 2px;
 }
 
 .test-case-list-selectable.test-case-list-item.selected {
@@ -76,13 +74,121 @@
 }
 
 .test-case-list-selectable.in-drag {
+  color: #000 !important;
   opacity: 0.75;
   background-color: #ffffff !important;
   background-image: none !important;
-  width: auto;
-  color: #000;
 }
 
 .test-case-list-title {
   padding-left: 5px;
 }
+
+/**
+ * Test Case form
+ */
+.test-case-form {
+  padding-left: 20px;
+  width: 100%;
+}
+
+.test-case-title {
+  font-size: 36px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  color: #000;
+}
+
+.test-case-role-title {
+  font-size: 30px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  color: #000;
+}
+
+.test-case-role-container {
+  padding: 10px;
+  border-right: 1px dashed #dddddd;
+}
+
+.add-role-container {
+  padding: 10px;
+}
+
+.test-case-step {
+  padding: 2px;
+  min-height: 75px;
+  border-radius: 10px;
+  position: relative;
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+.test-case-step-type-0 {
+  background-color: #0A7BFF;
+}
+
+.test-case-step-type-1 {
+  background-color: #5cb85c;
+}
+
+.test-case-step-type-2 {
+  background-color: #5bc0de;
+}
+
+.test-case-step-type-3 {
+  background-color: #f0ad4e;
+}
+
+.test-case-step-title {
+  color: #fff;
+  transform: rotate(-90deg);
+  transform-origin: left bottom;
+  -webkit-transform: rotate(-90deg);
+  -webkit-transform-origin: left bottom;
+  float: left;
+  position: absolute;
+  height: 15px;
+  width: 68px;
+  bottom: 5px;
+  left: 15px;
+  cursor: pointer;
+}
+
+.test-case-step-body-container {
+  width: 100%;
+  padding-left: 20px;
+}
+
+.test-case-step-body {
+  background-color: #fff;
+  width: 100%;
+  min-height: 71px;
+  border-radius: 8px;
+}
+
+.test-case-step-delete {
+  font-size: 10px;
+  float: right;
+  background-color: inherit;
+  color: #fff;
+  padding: 0 4px 2px 4px;
+  border-top-right-radius: 7px;
+  border-bottom-left-radius: 8px;
+  cursor: pointer;
+}
+
+.test-case-step-delete:hover {
+  color: #ffff00;
+}
+
+.test-case-step-placeholder {
+  border-radius: 10px;
+  border: 2px solid #dddddd;
+  margin-bottom: 5px;
+}
+
+.add-step-container {
+  padding: 10px;
+}
+

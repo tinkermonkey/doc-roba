@@ -5,9 +5,9 @@
       <tr class="sortable-table-row node-url-parameter" data-pk="{{../_id}}" data-index="{{index}}" data-order="{{order}}">
         <td class="drag-handle"><span class="glyphicon glyphicon-record"></span></td>
         <td>
-          {{> EditableStringField cssClass="edit-url-param-name" value=param dataKey=dataKeyParam}}
+          {{> EditableTextField cssClass="edit-url-param-name" value=param dataKey=dataKeyParam}}
           =
-          {{> EditableStringField cssClass="edit-url-param-value" value=value dataKey=dataKeyValue}}
+          {{> EditableTextField cssClass="edit-url-param-value" value=value dataKey=dataKeyValue}}
         </td>
         <td class="btn-delete"><span class="glyphicon glyphicon-remove"></span></td>
       </tr>

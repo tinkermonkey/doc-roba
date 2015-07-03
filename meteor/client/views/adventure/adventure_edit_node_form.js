@@ -28,7 +28,7 @@ Template.AdventureEditNodeForm.helpers({
  */
 Template.AdventureEditNodeForm.events({
   "edited .node-edit-form .editable": function (e, instance, newValue) {
-    e.stopPropagation();
+    e.stopImmediatePropagation();
     var target = $(e.target),
       dataKey = target.attr("data-key"),
       update = {$set: {}};

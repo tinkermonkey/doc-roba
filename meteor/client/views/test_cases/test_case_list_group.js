@@ -20,7 +20,7 @@ Template.TestCaseListGroup.helpers({
  */
 Template.TestCaseListGroup.events({
   "dblclick .test-case-list-group": function (e, instance) {
-    e.stopPropagation();
+    e.stopImmediatePropagation();
     instance.expanded.set(!instance.expanded.get());
   }
 });
@@ -80,7 +80,14 @@ Template.TestCaseListGroup.rendered = function () {
       }
     },
     accept: function (el) {
-      return $(el).attr("data-parent-id") !== $(this).attr("data-group-id");
+      var dragParentId = $(el).attr("data-parent-id"),
+        dragId = $(el).attr("data-group-id"),
+        targetId = $(this).attr("data-group-id"),
+        isChild = false;
+      if(dragId){
+        isChild = $(this).closest("[data-group-id='" + dragId + "']").length > 0;
+      }
+      return dragParentId !== targetId && !isChild;
     }
   });
 };

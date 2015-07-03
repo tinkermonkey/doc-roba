@@ -15,11 +15,11 @@
  */
 .home-nav {
   padding: 0;
-  border-right: 2px solid #0A7BFF;
+  /*border-right: 2px solid #0A7BFF;
+  box-shadow: 0 0 15px #888888;*/
   position: fixed;
   width: 350px;
   z-index: 1;
-  box-shadow: 0 0 15px #888888;
 }
 
 .home-top-nav {
@@ -34,6 +34,8 @@
   background-repeat: no-repeat;
   background-position: 105% 0%;
   background-size: contain;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 
 .home-nav-item.active a {

@@ -123,7 +123,7 @@ Template.AdventureAddNodeForm.events({
     }, 500);
   },
   "edited .editable": function (e, instance, newValue) {
-    e.stopPropagation();
+    e.stopImmediatePropagation();
     var field = $(e.target).attr("data-key");
     console.log("Edited: ", field, newValue);
 

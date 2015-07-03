@@ -3,6 +3,7 @@
     Test Case Dashboard
   {{/contentFor}}
 
+  {{#with getFullContext}}
   <div class="test-case-container">
     <div class="test-case-nav">
       <div class="home-nav-item active">
@@ -22,7 +23,14 @@
       {{> TestCaseList }}
     </div>
     <div class="test-case-content">
-      {{> TestCase }}
+      {{#if hasTestCase}}
+        {{> TestCase getTestCase}}
+      {{else}}
+        <div class="align-center">
+          <h2>Select a Test Case</h2>
+        </div>
+      {{/if}}
     </div>
   </div>
+  {{/with}}
 </template>

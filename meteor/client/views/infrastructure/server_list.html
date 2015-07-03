@@ -19,8 +19,8 @@
     {{#each sortedServers}}
       <tr class="sortable-table-row server-list-row" data-pk="{{_id}}" data-sort-order="{{order}}">
         <td class="drag-handle"><span class="glyphicon glyphicon-record"></span></td>
-        <td>{{> EditableStringField cssClass="server-editable" value=title dataKey="title"}}</td>
-        <td>{{> EditableStringField cssClass="server-editable" value=url dataKey="url" dataType="url"}}</td>
+        <td>{{> EditableTextField cssClass="server-editable" value=title dataKey="title"}}</td>
+        <td>{{> EditableTextField cssClass="server-editable" value=url dataKey="url" dataType="url"}}</td>
         <td>{{> EditableFieldYesNo cssClass="server-editable" value=active dataKey="active"}}</td>
         <td class="btn-delete"><span class="glyphicon glyphicon-remove"></span></td>
       </tr>

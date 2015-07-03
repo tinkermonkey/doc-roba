@@ -33,6 +33,30 @@ Meteor.startup(function () {
     console.log("TestCases publication: returning nothing");
     return [];
   });
+  Meteor.publish('test_case_roles', function (projectId, projectVersionId, testCaseId) {
+    console.log("Publish: test_cases");
+    // check that there is a project role for the current user
+    if(this.userId && projectId && projectVersionId){
+      var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
+      if(role){
+        return TestCaseRoles.find({projectVersionId: projectVersionId, testCaseId: testCaseId});
+      }
+    }
+    console.log("TestCases publication: returning nothing");
+    return [];
+  });
+  Meteor.publish('test_case_steps', function (projectId, projectVersionId, testCaseId) {
+    console.log("Publish: test_cases");
+    // check that there is a project role for the current user
+    if(this.userId && projectId && projectVersionId){
+      var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
+      if(role){
+        return TestCaseSteps.find({projectVersionId: projectVersionId, testCaseId: testCaseId});
+      }
+    }
+    console.log("TestCases publication: returning nothing");
+    return [];
+  });
 
   /**
    * Expose these for the client to call

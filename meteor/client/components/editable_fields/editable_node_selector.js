@@ -48,7 +48,7 @@ Template.EditableNodeSelector.rendered = function () {
 
   instance.autorun(function () {
     var data = Template.currentData();
-    instance.$(".editable-string").editable("setValue", data.value);
+    instance.$(".editable").editable("setValue", data.value);
   });
 };
 

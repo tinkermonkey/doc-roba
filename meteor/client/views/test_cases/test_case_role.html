@@ -1,0 +1,33 @@
+<template name="TestCaseRole">
+  {{> EditableTextField emptyText="title" value=title dataKey="title" cssClass="test-case-role-title" mode="popup" placement="left"}}
+  {{> EditableTextArea emptyText="role description" value=description dataKey="description" }}
+
+  <div class="test-role-steps">
+    {{#each testCaseSteps}}
+      {{> TestCaseStep }}
+    {{/each}}
+  </div>
+
+  <div class="add-step-container">
+    <div class="btn-group" role="group" style="white-space: nowrap;">
+      <button class="btn btn-xs btn-primary btn-add-step" data-type="{{TestCaseStepTypes.node}}">
+        <span class="glyphicon glyphicon-unchecked"></span>
+        Node
+      </button>
+      <button class="btn btn-xs btn-success btn-add-step" data-type="{{TestCaseStepTypes.navigate}}">
+        <span class="glyphicon glyphicon-random"></span>
+        Navigate
+      </button>
+      <button class="btn btn-xs btn-info btn-add-step" data-type="{{TestCaseStepTypes.wait}}">
+        <span class="glyphicon glyphicon-link"></span>
+        wait
+      </button>
+      {{#if hasSteps}}
+      <button class="btn btn-xs btn-warning btn-add-step" data-type="{{TestCaseStepTypes.custom}}">
+        <span class="glyphicon glyphicon-ok-circle"></span>
+        Code
+      </button>
+      {{/if}}
+    </div>
+  </div>
+</template>

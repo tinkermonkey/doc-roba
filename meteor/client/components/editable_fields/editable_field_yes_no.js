@@ -32,7 +32,7 @@ Template.EditableFieldYesNo.rendered = function () {
 
   instance.autorun(function () {
     var data = Template.currentData();
-    instance.$(".editable-string").editable("setValue", data.value ? 1 : 0);
+    instance.$(".editable-is-yes-no").editable("setValue", data.value ? 1 : 0);
   });
 
 };

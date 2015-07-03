@@ -1,3 +1,20 @@
 <template name="TestCase">
-  test_case
+  <div class="test-case-form">
+    {{> EditableTextField emptyText="title" value=title dataKey="title" cssClass="test-case-title" mode="popup" placement="left"}}
+    {{> EditableTextArea emptyText="description" value=description dataKey="description" }}
+
+    <h2>Test Roles</h2>
+    {{#each testCaseRoles}}
+      <div class="inline-block test-case-role-container align-top">
+        {{> TestCaseRole }}
+      </div>
+    {{/each}}
+
+    <div class="inline-block align-top add-role-container">
+      <button class="btn btn-xs btn-primary btn-add-role">
+        <span class="glyphicon glyphicon-user"></span>
+        Add Role
+      </button>
+    </div>
+  </div>
 </template>

@@ -256,6 +256,13 @@ Template.registerHelper("renderNodeSearchStatus", function (statusId) {
 });
 
 /**
+ * Render a test case step type
+ */
+Template.registerHelper("renderTestCaseStepType", function (type) {
+  return TestCaseStepTypesLookup[type];
+});
+
+/**
  * Check if a user has role permissions for a project
  */
 Template.registerHelper("hasRole", function (roleName, projectId) {

@@ -74,7 +74,7 @@ Template.action_edit_routes.events({
     });
   },
   "click .btn-add-route": function (e, instance) {
-    e.stopPropagation();
+    e.stopImmediatePropagation();
     var instance = Template.instance(),
       action = this;
 

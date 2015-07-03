@@ -4,7 +4,7 @@
     <div class="row full-height">
       <div class="col-xs-3 full-height">
         <h2>
-          {{> EditableStringField cssClass="" value=title dataKey="title" }}
+          {{> EditableTextField cssClass="" value=title dataKey="title" }}
         </h2>
         {{#if isVisitable}}
           <div>
@@ -14,11 +14,11 @@
           <hr>
           <div>
             <span class="field-label">Page Title: </span>
-            {{> EditableStringField cssClass="inline-block" value=pageTitle dataKey="pageTitle" emptyText="none"}}
+            {{> EditableTextField cssClass="inline-block" value=pageTitle dataKey="pageTitle" emptyText="none"}}
           </div>
           <div>
             <span class="dark-blue">Base Url:</span>
-            {{> EditableStringField cssClass="edit-node-url" value=url dataKey="url" emptyText="none"}}
+            {{> EditableTextField cssClass="edit-node-url" value=url dataKey="url" emptyText="none"}}
           </div>
           <div>
             {{> edit_node_url_parameters }}

@@ -236,18 +236,12 @@ AdventureStepStatus = {
 AdventureStepStatusLookup = _.invert(AdventureStepStatus);
 
 /**
- * Types of default values for variables
- */
-DefaultValueStypes = {
-  literal: 0,
-  computed: 1
-};
-
-/**
  * Test Case step types
  */
 TestCaseStepTypes = {
-  defined: 0,
-  auto: 1,
-  wait: 2
+  node: 0,
+  navigate: 1,
+  wait: 2,
+  custom: 3
 };
+TestCaseStepTypesLookup = _.invert(TestCaseStepTypes);

@@ -15,7 +15,7 @@ Template.edit_node.helpers({
  */
 Template.edit_node.events({
   "edited .editable": function (e, instance, newValue) {
-    e.stopPropagation();
+    e.stopImmediatePropagation();
     var dataKey = $(e.target).attr("data-key"),
       update = {$set: {}};
 

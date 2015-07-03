@@ -1,32 +1,26 @@
 /**
  * Template Helpers
  */
-Template.EditableStringField.helpers({});
+Template.EditableTextArea.helpers({});
 
 /**
  * Template Helpers
  */
-Template.EditableStringField.events({});
+Template.EditableTextArea.events({});
 
 /**
  * Template Rendered
  */
-Template.EditableStringField.rendered = function () {
+Template.EditableTextArea.rendered = function () {
   var instance = Template.instance();
 
-  instance.$(".editable-string").editable({
+  instance.$(".editable-text-area").editable({
+    type: "textarea",
     mode: instance.data.mode || "inline",
     value: instance.data.value,
     emptyText: instance.data.emptyText || "empty",
     highlight: false,
     display: function () {},
-    validate: function (value) {
-      var dataType = $(this).attr("data-type");
-      if(dataType && this.willValidate !== undefined){
-        console.log("Validate: ", dataType, this.willValidate, value);
-        return this.willValidate ? null : 'Please enter a valid ' + dataType;
-      }
-    },
     success: function (response, newValue) {
       var editedElement = this;
       $(editedElement).trigger("edited", [newValue]);
@@ -38,13 +32,13 @@ Template.EditableStringField.rendered = function () {
 
   instance.autorun(function () {
     var data = Template.currentData();
-    instance.$(".editable-string").editable("setValue", data.value);
+    instance.$(".editable-text-area").editable("setValue", data.value);
   });
 };
 
 /**
  * Template Destroyed
  */
-Template.EditableStringField.destroyed = function () {
+Template.EditableTextArea.destroyed = function () {
 
 };

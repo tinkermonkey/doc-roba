@@ -74,7 +74,7 @@ Template.action_edit_variables.events({
     });
   },
   "edited .editable": function (e, instance, newValue) {
-    e.stopPropagation();
+    e.stopImmediatePropagation();
     var actionId = $(e.target).closest(".sortable-table-row").attr("data-pk"),
       variableIndex = $(e.target).closest(".sortable-table-row").attr("data-variable-index"),
       fieldName = $(e.target).attr("data-key"),

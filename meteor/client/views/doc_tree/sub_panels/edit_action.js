@@ -12,7 +12,7 @@ Template.edit_action.helpers({
  */
 Template.edit_action.events({
   "edited .action-editable": function (e, instance, newValue) {
-    e.stopPropagation();
+    e.stopImmediatePropagation();
     var dataKey = $(e.target).attr("data-key"),
       update = {$set: {}};
 

@@ -168,7 +168,7 @@ Schemas.TestCaseRole = new SimpleSchema({
   // Link to the test case via the staticId
   testCaseId: {
     type: String,
-    optional: true
+    denyUpdate: true
   },
   // Role title
   title: {
@@ -178,6 +178,10 @@ Schemas.TestCaseRole = new SimpleSchema({
   description: {
     type: String,
     optional: true
+  },
+  // Step order
+  order: {
+    type: Number
   },
   // Standard tracking fields
   dateCreated: {
@@ -237,10 +241,15 @@ Schemas.TestCaseStep = new SimpleSchema({
     type: String,
     denyUpdate: true
   },
+  // Link to the test case via the staticId
+  testCaseId: {
+    type: String,
+    denyUpdate: true
+  },
   // Link to the test case role via the staticId
   testCaseRoleId: {
     type: String,
-    optional: true
+    denyUpdate: true
   },
   // Step order
   order: {
