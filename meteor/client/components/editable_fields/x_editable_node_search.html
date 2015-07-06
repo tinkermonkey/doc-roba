@@ -1,9 +1,11 @@
 <template name="XEditableNodeSearch">
-  <div class="input-group">
+  <div class="input-group input-group-sm">
     <input type="text" class="form-control input-search" placeholder="Search nodes...">
   </div>
   <div style="margin: 5px;">
-    Current Node: {{renderNodeTitle getValue projectVersionId}}
+    {{#if getValue}}
+      Current Node: {{renderNodeTitle getValue projectVersionId}}
+    {{/if}}
   </div>
   <div class="search-results">
     {{> NodeTermSearchResults searchResults}}

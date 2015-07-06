@@ -141,7 +141,9 @@ Router.map(function () {
     },
     waitOn: function () { return [
       Meteor.subscribe("test_groups", this.params.projectId, this.params._id),
-      Meteor.subscribe("test_cases", this.params.projectId, this.params._id)
+      Meteor.subscribe("test_cases", this.params.projectId, this.params._id),
+      Meteor.subscribe("nodes", this.params.projectId, this.params._id),
+      Meteor.subscribe("actions", this.params.projectId, this.params._id)
     ]; }
   });
   this.route("driver_command_list", {

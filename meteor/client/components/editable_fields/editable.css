@@ -8,7 +8,3 @@
   font-size: inherit !important;
   font-weight: inherit !important;
 }
-
-.editableform textarea.input-large {
-  min-width: 500px;
-}

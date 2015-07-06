@@ -260,14 +260,10 @@ Schemas.TestCaseStep = new SimpleSchema({
     type: Number,
     allowedValues: _.map(TestCaseStepTypes, function (d) { return d; })
   },
-  // Node Id
-  nodeId: {
-    type: String,
-    optional: true
-  },
-  // Action Id
-  actionId: {
-    type: String,
+  // Step data
+  data: {
+    type: Object,
+    blackbox: true,
     optional: true
   },
   // Standard tracking fields

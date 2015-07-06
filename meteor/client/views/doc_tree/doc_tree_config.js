@@ -7,11 +7,6 @@ DocTreeConfig = {
    * Tree display configuration
    */
   tree: {
-    xMargin: 60,
-    yMargin: 60,
-    xViewMargin: 60,
-    yViewMargin: 60,
-    cornerRadius: 5,
     stepDuration: 180,
     initialDuration: 120,
     highlightSurroundMargin: 30,
@@ -21,6 +16,7 @@ DocTreeConfig = {
     bottomDrawerHeight: "33.33%",
     viewTransitionTime: 333
   },
+
   /**
    * Inset View configuration
    */
@@ -29,6 +25,7 @@ DocTreeConfig = {
     margin: 30,
     scaleFactor: 0.9
   },
+
   /**
    * Node display configuration
    */
@@ -36,15 +33,16 @@ DocTreeConfig = {
     rootRadius: 60,
     width: 80,
     height: 60,
-    borderWidth: 1,
+    borderWidth: 3,
     titleHeight: 13,
     headerHeight: 20,
     xMargin: 50,
     yMargin: 50,
     xViewMargin: 60,
     yViewMargin: 50,
-    cornerRadius: 3
+    cornerRadius: 10
   },
+
   /**
    * Node controls configuration
    */
@@ -52,12 +50,14 @@ DocTreeConfig = {
     hideTimer: 1000, // ms to wait before hiding the controls after a mouse-leave
     transitionTimer: 120
   },
+
   /**
    * Drop Nodes
    */
   dropNodes: {
 
   },
+
   /**
    * Actions
    */

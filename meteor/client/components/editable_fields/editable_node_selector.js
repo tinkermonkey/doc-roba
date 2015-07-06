@@ -24,6 +24,7 @@ Template.EditableNodeSelector.rendered = function () {
   instance.$(".editable").editable({
     type: "nodeSelector",
     mode: instance.data.mode || "popup",
+    placement: instance.data.placement,
     value: instance.data.value,
     projectVersionId: instance.data.projectVersionId,
     parentInstance: instance,

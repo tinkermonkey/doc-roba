@@ -62,5 +62,20 @@ Meteor.startup(function () {
    * Expose these for the client to call
    */
   Meteor.methods({
+    deleteTestCaseRole: function (role) {
+      check(role, Object);
+      check(role.projectId, String);
+      check(role.projectVersionId, String);
+      check(role.testCaseId, String);
+      check(role._id, String);
+
+      Meteor.log.debug("deleteTestCaseRole: " + role._id);
+
+      // Delete the steps for this role
+      TestCaseSteps.remove({ testCaseRoleId: role._id });
+
+      // Delete the role
+      TestCaseRoles.remove({_id: role._id});
+    }
   });
 });

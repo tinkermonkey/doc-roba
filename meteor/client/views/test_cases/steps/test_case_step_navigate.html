@@ -1,0 +1,15 @@
+<template name="TestCaseStepNavigate">
+    {{#if complete}}
+
+    {{else}}
+      {{#unless source}}
+        No source to navigate from
+      {{/unless}}
+      {{#unless destination}}
+        <div>
+          <span class="glyphicon glyphicon-exclamation-sign"></span>
+          No destination
+        </div>
+      {{/unless}}
+    {{/if}}
+</template>

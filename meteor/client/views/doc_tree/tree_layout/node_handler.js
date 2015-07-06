@@ -164,7 +164,7 @@ TreeNodeHandler.prototype.prepNodes = function(){
  * @param nodeList The list of nodes to scan for links
  */
 TreeNodeHandler.prototype.mapNode = function(d){
-  //Meteor.log.debug('mapping node: ' + d._id + " (" + d.title + ")");
+  //Meteor.log.debug("mapping node: " + d._id + " (" + d.title + ")");
   var self = this,
     tree = self.treeLayout;
 
@@ -188,7 +188,7 @@ TreeNodeHandler.prototype.mapNode = function(d){
       }
 
       // create the link
-      tree.linkHandler.addLink( d._id + '_' + node._id, d, node );
+      tree.linkHandler.addLink( d._id + "_" + node._id, d, node );
     }
   });
 
@@ -469,7 +469,7 @@ TreeNodeHandler.prototype.calcNodeSize = function(d){
  * @returns {Array} The list of root nodes found
  */
 TreeNodeHandler.prototype.getRootNodes = function(){
-  return _.filter(this.nodeList, function (node) { return node.type === NodeTypes.root; });
+  return _.filter(this.nodeList, function (node) { return node.type === NodeTypes.root });
 };
 
 /**
@@ -477,7 +477,7 @@ TreeNodeHandler.prototype.getRootNodes = function(){
  * @param id
  */
 TreeNodeHandler.prototype.getNode = function(id){
-  return _.find(this.nodeList, function (node) { return node._id === id; });
+  return _.find(this.nodeList, function (node) { return node._id === id });
 };
 
 /**
@@ -485,7 +485,7 @@ TreeNodeHandler.prototype.getNode = function(id){
  * @param staticId
  */
 TreeNodeHandler.prototype.getByStaticId = function(staticId){
-  return _.find(this.nodeList, function (node) { return node.staticId === staticId; });
+  return _.find(this.nodeList, function (node) { return node.staticId === staticId });
 };
 
 /**
@@ -524,7 +524,7 @@ TreeNodeHandler.prototype.update = function (duration) {
 
   // Get the master node selection
   nodes = self.layer.selectAll(".node-group")
-    .data(self.nodeList, function (d) { return d._id; });
+    .data(self.nodeList, function (d) { return d._id });
 
   // Get the root node selection and append a group anywhere needed
   nodeEnter = self.createGroups(nodes);
@@ -547,7 +547,7 @@ TreeNodeHandler.prototype.update = function (duration) {
   // Transition removed nodes
   nodes.exit().transition()
     .duration(duration)
-    .attr("transform", function(d) { return d.parent ? "translate(" + d.parent.x + "," + d.parent.y + ")" : ''; })
+    .attr("transform", function(d) { return d.parent ? "translate(" + d.parent.x + "," + d.parent.y + ")" : "" })
     .remove();
 };
 
@@ -560,18 +560,18 @@ TreeNodeHandler.prototype.createRootNodes = function (selection) {
     tree = self.treeLayout;
 
   selection
-    .filter(function(d){ return d.type === NodeTypes.root; })
+    .filter(function(d){ return d.type === NodeTypes.root })
     .append("g")
-    .attr("transform", function(d) { return "translate(-" + Math.round(d.bounds.width / 2) + ", -" + Math.round(d.bounds.height / 2) + ")"; })
+    .attr("transform", function(d) { return "translate(-" + Math.round(d.bounds.width / 2) + ", -" + Math.round(d.bounds.height / 2) + ")" })
     .append("circle")
     .attr("class", "node node-root")
-    .attr("cx", function (d) { return Math.round(d.icon.width / 2); })
-    .attr("cy", function (d) { return Math.round(d.icon.width / 2); })
-    .attr("r", function (d) { return d.icon.height / 2; })
-    .on('click', tree.nodeClickFilter.bind(tree))
-    .on('dblclick', tree.nodeClickFilter.bind(tree));
+    .attr("cx", function (d) { return Math.round(d.icon.width / 2) })
+    .attr("cy", function (d) { return Math.round(d.icon.width / 2) })
+    .attr("r", function (d) { return d.icon.height / 2 })
+    .on("click", tree.nodeClickFilter.bind(tree))
+    .on("dblclick", tree.nodeClickFilter.bind(tree));
 
-  selection.filter(function (d) { return d.type === NodeTypes.root; })
+  selection.filter(function (d) { return d.type === NodeTypes.root })
     .select("g")
     .append("g")
     .attr("class", "node-content")
@@ -580,8 +580,8 @@ TreeNodeHandler.prototype.createRootNodes = function (selection) {
    .append("image")
    .attr("x", 0)
    .attr("y", 0)
-   .attr("width", function(d){ return d.icon.width; } )
-   .attr("height", function(d){ return d.icon.height; } )
+   .attr("width", function(d){ return d.icon.width } )
+   .attr("height", function(d){ return d.icon.height } )
    .attr("xlink:href", "http://frakturmedia.net/wp-content/uploads/2013/06/Paths.png");
    */
 };
@@ -595,8 +595,8 @@ TreeNodeHandler.prototype.createGroups = function (selection, prefix) {
   return selection.enter()
     .append("g")
     .attr("class", "node-group")
-    .attr("id", function(d){ return prefix + 'node_' + d._id; })
-    .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+    .attr("id", function(d){ return prefix + "node_" + d._id })
+    .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")" });
 };
 
 /**
@@ -607,15 +607,15 @@ TreeNodeHandler.prototype.createBacks = function (selection) {
   var self = this;
 
   selection
-    .filter(function (d) { return d.type !== NodeTypes.root; })
+    .filter(function (d) { return d.type !== NodeTypes.root })
     .append("g")
-    .attr("transform", function(d) { return "translate(" + d.icon.left + ", " + d.icon.top+ ")"; })
+    .attr("transform", function(d) { return "translate(" + d.icon.left + ", " + d.icon.top+ ")" })
     .append("rect")
-    .attr("class", function(d){ return 'node node-' + NodeTypesLookup[d.type];})
+    .attr("class", function(d){ return "node node-" + NodeTypesLookup[d.type] })
     .attr("x", 0)
     .attr("y", 0)
-    .attr("width", function(d) { return d.icon.width; })
-    .attr("height", function(d) { return d.icon.height; })
+    .attr("width", function(d) { return d.icon.width })
+    .attr("height", function(d) { return d.icon.height })
     .attr("rx", self.config.cornerRadius)
     .attr("ry", self.config.cornerRadius);
 };
@@ -629,7 +629,7 @@ TreeNodeHandler.prototype.createContent = function (selection) {
     nodeContent;
 
   nodeContent = selection
-    .filter(function(d){ return d.type !== NodeTypes.root; })
+    .filter(function(d){ return d.type !== NodeTypes.root })
     .select("g")
     .append("g")
     .attr("class", "node-content")
@@ -639,14 +639,14 @@ TreeNodeHandler.prototype.createContent = function (selection) {
     .attr("class", "title-backround")
     .attr("x", 0)
     .attr("y", 0)
-    .attr("width", function(d){ return d.icon.width; } )
+    .attr("width", function(d){ return d.icon.width } )
     .attr("height", self.config.headerHeight );
 
   nodeContent.append("text")
     .attr("class", "node-title no-select-complete")
     .attr("x", 4)
     .attr("y", self.config.titleHeight + self.config.borderWidth)
-    .text(function(d){ return d.title; });
+    .text(function(d){ return d.title });
 };
 
 /**
@@ -658,17 +658,17 @@ TreeNodeHandler.prototype.transitionUpdates = function (selection, duration) {
   // update the text
   selection
     .select(".node-title")
-    .text(function(d){ return d.title; });
+    .text(function(d){ return d.title });
 
   // update the position
   selection
     .attr("visibility", "visible")
     .transition()
     .duration(duration)
-    .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
-    .attr("opacity", function(d){ return d.parent ? d.parent.visExpanded ? 1 : 0 : 1; })
+    .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")" })
+    .attr("opacity", function(d){ return d.parent ? d.parent.visExpanded ? 1 : 0 : 1 })
     .transition()
-    .attr("visibility", function(d){ return d.parent ? d.parent.visExpanded ? 'visible' : 'hidden' : 'visible';});
+    .attr("visibility", function(d){ return d.parent ? d.parent.visExpanded ? "visible" : "hidden" : "visible" });
 };
 
 /**
@@ -680,10 +680,10 @@ TreeNodeHandler.prototype.addEventListeners = function (selection) {
     tree = self.treeLayout;
 
   selection
-    .on('click', tree.nodeClickFilter.bind(tree) )
-    .on('dblclick', tree.nodeClickFilter.bind(tree) )
-    .on('mouseenter', tree.nodeMouseEnterHandler.bind(tree) )
-    .on('mouseleave', tree.nodeMouseLeaveHandler.bind(tree) );
+    .on("click", tree.nodeClickFilter.bind(tree) )
+    .on("dblclick", tree.nodeClickFilter.bind(tree) )
+    .on("mouseenter", tree.nodeMouseEnterHandler.bind(tree) )
+    .on("mouseleave", tree.nodeMouseLeaveHandler.bind(tree) );
 };
 
 /**
@@ -706,7 +706,7 @@ TreeNodeHandler.prototype.editNode = function (node) {
   // show the bottom drawer
   BottomDrawer.show({
     height: drawerHeight,
-    contentTemplate: 'edit_node',
+    contentTemplate: "edit_node",
     contentData: {_id: node._id},
     callback: function () {
       this.treeLayout.nodeControls.unlock();

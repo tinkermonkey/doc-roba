@@ -1,6 +1,6 @@
 <template name="TestCaseRole">
-  {{> EditableTextField emptyText="title" value=title dataKey="title" cssClass="test-case-role-title" mode="popup" placement="left"}}
-  {{> EditableTextArea emptyText="role description" value=description dataKey="description" }}
+  {{> EditableTextField emptyText="title" value=title dataKey="title" cssClass="test-case-role-title" mode="popup" placement="left" }}
+  {{> EditableTextArea emptyText="role description" value=description dataKey="description" mode="popup" placement="left" }}
 
   <div class="test-role-steps">
     {{#each testCaseSteps}}
@@ -29,5 +29,8 @@
       </button>
       {{/if}}
     </div>
+  </div>
+  <div class="align-center">
+    <a href="#" class="btn-delete-role">Delete Role</a>
   </div>
 </template>

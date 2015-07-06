@@ -428,13 +428,13 @@ TreeActionHandler.prototype.createAndUpdateLinks = function (selection, duration
     .on("mouseleave", tree.actionMouseLeaveHandler.bind(tree) );
 
   actionGroupEnter.append("path")
-    .attr("class", "action")
-    .classed("action-blunt", function (d) { return !d.destination.parent.visExpanded })
-    .classed("action-nav", function (d) { return d.nav })
+    .attr("class", "action-hover-back")
     .attr("d", function(d, i){ return self.generateActionPath(d); } );
 
   actionGroupEnter.append("path")
-    .attr("class", "action-hover-back")
+    .attr("class", "action")
+    .classed("action-blunt", function (d) { return !d.destination.parent.visExpanded })
+    .classed("action-nav", function (d) { return d.nav })
     .attr("d", function(d, i){ return self.generateActionPath(d); } );
 
   // Transition links to their new position
@@ -514,7 +514,8 @@ TreeActionHandler.prototype.generateActionPath = function(r){
   //if(r.source.parent.visExpanded && r.destination.parent.visExpanded){
     // provide centering based on the number of siblings
     source = {
-      x: r.source.x + -1 * ((r.actionCount -1) * 10 / 2) + r.actionSortIndex * 10,
+      //x: r.source.x + -1 * ((r.actionCount -1) * 10 / 2) + r.actionSortIndex * 10,
+      x: r.source.x,
       y: r.source.y + r.source.icon.bottom
     };
 
@@ -527,14 +528,18 @@ TreeActionHandler.prototype.generateActionPath = function(r){
      Points are laid out from source to destination
      Two configurations, one with a middle vertical segment
 
-             D----C                           [source]
-             |    |                              |
-          [Dest]  |   [source]          D--------A
-                  |      |              |
-                  B------A           [Dest]
+             D----C                           [source]       [source]
+             |    |                              |              |
+          [Dest]  |   [source]          B--------A              A---B
+                  |      |              |                           |
+                  B------A              |                       D---C
+                                     [Dest]                     |
+                                                             [Dest]
 
     */
-    var delta = r.dir > 0 ? -1 * ((r.count - 1) * 6 / 2) + r.index * 6 : -1 * ((r.count - 1) * 6 / 2) + (r.count - r.index -1) * 6,
+
+    //var delta = r.dir > 0 ? -1 * ((r.count - 1) * 6 / 2) + r.index * 6 : -1 * ((r.count - 1) * 6 / 2) + (r.count - r.index -1) * 6,
+    var delta = 0,
       pointA = {
         x: source.x,
         y: source.y + config.yMargin / 2 - delta,

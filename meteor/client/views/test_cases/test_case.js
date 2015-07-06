@@ -4,6 +4,9 @@
 Template.TestCase.helpers({
   testCaseRoles: function () {
     return TestCaseRoles.find({testCaseId: this.staticId });
+  },
+  hasRoles: function () {
+    return TestCaseRoles.find({testCaseId: this.staticId }).count() > 0;
   }
 });
 

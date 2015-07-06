@@ -16,6 +16,9 @@ Template.XEditableNodeSearch.helpers({
  * Template Event Handlers
  */
 Template.XEditableNodeSearch.events({
+  "keydown .input-search": function (e, instance) {
+    e.stopImmediatePropagation();
+  },
   "keyup .input-search, change .input-search": function (e, instance) {
     e.stopImmediatePropagation();
     var term = instance.$(".input-search").val().trim();
@@ -46,6 +49,10 @@ Template.XEditableNodeSearch.rendered = function () {
   if(value){
     instance.value.set(value);
   }
+
+  setTimeout(function () {
+    instance.$(".input-search").focus();
+  }, 500);
 };
 
 /**

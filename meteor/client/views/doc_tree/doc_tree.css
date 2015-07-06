@@ -22,16 +22,12 @@
   Node Styling
 **/
 .node {
-  /*fill: #ccc;*/
-  fill: url(#node-back);
-  stroke: rgb(165, 165, 165);
-  stroke-width: 1;
+  stroke: none;
+  fill: rgb(165, 165, 165);
 }
 
 .node-root {
-  /*fill: #298cff;*/
-  fill: url(#root-node-back);
-  stroke: none;
+  fill: #298cff;
 }
 
 .node-userType {
@@ -39,7 +35,7 @@
 }
 
 .node-platform {
-  fill: #a7ff00;
+  fill: #5cb85c;
 }
 
 .node-navMenu {
@@ -47,8 +43,7 @@
 }
 
 .node-page {
-  /**fill: #50d7ff;**/
-  fill: url(#page-back);
+  fill: #5bc0de;
 }
 
 .node-selected {
@@ -64,13 +59,13 @@
  * Node Content Styling
  */
 .node-content text {
-  fill: #333;
+  fill: #fff;
   font-family: "Helvetica Neue Light", "Lucida Grande", "Calibri", "Arial", sans-serif;
   font-size: 10px;
 }
 
 .node-content .title-backround {
-  fill: rgba(255, 255, 255, 0.45);
+  fill: none;
 }
 
 /**
@@ -105,7 +100,7 @@
 }
 
 .action-hover-back {
-  stroke: rgba(80, 215, 255, 0.05);
+  stroke: rgba(255, 255, 255, 1);
   stroke-width: 8;
   fill: none;
 }
@@ -142,12 +137,10 @@
 
 .action-label-select .action-label-back, .action-label-hover .action-label-back {
   stroke: #efff29;
-  filter: url(#crisp-shadow);
 }
 
 .action-link-select, .action-link-hover {
   stroke: #efff29;
-  filter: url(#crisp-shadow);
   marker-end: url(#action-arrow-hover);
 }
 

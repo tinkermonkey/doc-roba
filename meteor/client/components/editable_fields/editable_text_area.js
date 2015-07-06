@@ -17,6 +17,7 @@ Template.EditableTextArea.rendered = function () {
   instance.$(".editable-text-area").editable({
     type: "textarea",
     mode: instance.data.mode || "inline",
+    placement: instance.data.placement,
     value: instance.data.value,
     emptyText: instance.data.emptyText || "empty",
     highlight: false,

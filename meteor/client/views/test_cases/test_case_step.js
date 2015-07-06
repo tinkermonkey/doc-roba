@@ -1,7 +1,20 @@
 /**
  * Template Helpers
  */
-Template.TestCaseStep.helpers({});
+Template.TestCaseStep.helpers({
+  getStepTemplate: function () {
+    switch (this.type) {
+      case TestCaseStepTypes.node:
+        return "TestCaseStepNode";
+      case TestCaseStepTypes.navigate:
+        return "TestCaseStepNavigate";
+      case TestCaseStepTypes.wait:
+        return "TestCaseStepWait";
+      case TestCaseStepTypes.custom:
+        return "TestCaseStepCustom";
+    }
+  }
+});
 
 /**
  * Template Event Handlers
