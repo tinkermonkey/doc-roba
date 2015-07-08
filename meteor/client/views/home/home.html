@@ -6,44 +6,44 @@
   {{/contentFor}}
 
   <div class="home-container full-height">
-      <div class="home-nav full-height">
-        <div class="home-nav-item {{#if isActiveDashboard}}active{{/if}}">
+    <div class="home-nav full-height auto-transition auto-slide-right intro-slide-right">
+      <div class="home-nav-item {{#if isActiveDashboard}}active{{/if}}">
+        <h3 class="home-top-nav">
+          <a href="{{pathFor 'home'}}">Personal Dashboard</a>
+        </h3>
+      </div>
+      {{#each userProjects}}
+        <div class="home-nav-item {{#if isActiveProject}}active{{/if}}">
           <h3 class="home-top-nav">
-            <a href="{{pathFor 'home'}}">Personal Dashboard</a>
+            <a href="{{pathFor 'home_project'}}">{{title}}</a>
+            <small>{{renderProjectRole role}}</small>
           </h3>
         </div>
-        {{#each userProjects}}
-          <div class="home-nav-item {{#if isActiveProject}}active{{/if}}">
-            <h3 class="home-top-nav">
-              <a href="{{pathFor 'home_project'}}">{{title}}</a>
-              <small>{{renderProjectRole role}}</small>
-            </h3>
-          </div>
-          {{#each projectVersions}}
-          <div class="home-nav-item {{#if isActiveVersion}}active{{/if}}">
-            <h4 class="home-sub-nav">
-              <a href="{{pathFor 'home_version'}}">v {{version}}</a>
-              <small>{{dateFormat dateCreated}}</small>
-              <a href="{{pathFor 'doc_tree'}}">Tree</a>
-              <a href="{{pathFor 'test_case_dashboard'}}">Tests</a>
-            </h4>
-          </div>
-          {{/each}}
+        {{#each projectVersions}}
+        <div class="home-nav-item {{#if isActiveVersion}}active{{/if}}">
+          <h4 class="home-sub-nav">
+            <a href="{{pathFor 'home_version'}}">v {{version}}</a>
+            <small>{{dateFormat dateCreated}}</small>
+            <a href="{{pathFor 'doc_tree'}}">Tree</a>
+            <a href="{{pathFor 'test_case_dashboard'}}">Tests</a>
+          </h4>
+        </div>
         {{/each}}
-      </div>
-      <div class="home-content">
-        {{#if project}}
-          {{#if version}}
-            {{> version_dashboard }}
-            {{setTitle "Home :: " project.title "v" version.version}}
-          {{else}}
-            {{> project_dashboard }}
-            {{setTitle "Home :: " project.title}}
-          {{/if}}
+      {{/each}}
+    </div>
+    <div class="home-content auto-transition auto-slide-left intro-slide-left">
+      {{#if project}}
+        {{#if version}}
+          {{> version_dashboard }}
+          {{setTitle "Home :: " project.title "v" version.version}}
         {{else}}
-          {{> user_dashboard }}
-          {{setTitle "Home"}}
+          {{> project_dashboard }}
+          {{setTitle "Home :: " project.title}}
         {{/if}}
-      </div>
+      {{else}}
+        {{> user_dashboard }}
+        {{setTitle "Home"}}
+      {{/if}}
+    </div>
   </div>
 </template>

@@ -35,7 +35,6 @@ Template.TestCaseDashboard.created = function () {
  * Template Rendered
  */
 Template.TestCaseDashboard.rendered = function () {
-  
 };
 
 /**

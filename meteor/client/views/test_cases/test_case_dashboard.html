@@ -19,7 +19,7 @@
 
   {{#with getFullContext}}
   <div class="test-case-container">
-    <div class="test-case-nav">
+    <div class="test-case-nav auto-transition auto-slide-right intro-slide-right">
       <div class="home-nav-item active">
         <h4 class="home-top-nav">
           {{#with project}}
@@ -36,7 +36,7 @@
 
       {{> TestCaseList }}
     </div>
-    <div class="test-case-content">
+    <div class="test-case-content auto-transition auto-slide-left intro-slide-left">
       {{#if hasTestCase}}
         {{> TestCase getTestCase}}
       {{else}}

@@ -538,6 +538,7 @@ TreeActionHandler.prototype.generateActionPath = function(r){
 
     */
 
+    // go through
     //var delta = r.dir > 0 ? -1 * ((r.count - 1) * 6 / 2) + r.index * 6 : -1 * ((r.count - 1) * 6 / 2) + (r.count - r.index -1) * 6,
     var delta = 0,
       pointA = {

@@ -141,6 +141,21 @@ Template.TestCaseRole.rendered = function () {
       instance.$(".test-role-steps").sortable("refresh");
     }
   });
+
+  // Animate the addition of role steps
+  instance.find(".test-role-steps")._uihooks = {
+    insertElement: function(node, next) {
+      $(node)
+        .hide()
+        .insertBefore(next)
+        .fadeIn();
+    },
+    removeElement: function(node) {
+      $(node).fadeOut(function() {
+        $(node).remove();
+      });
+    }
+  }
 };
 
 /**

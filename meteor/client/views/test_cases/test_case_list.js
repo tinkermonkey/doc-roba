@@ -72,7 +72,12 @@ Template.TestCaseList.events({
     var selectable = $(e.target).closest(".test-case-list-item");
     instance.$(".test-case-list-item.selected").removeClass("selected");
     selectable.addClass("selected");
-    instance.data.testCaseId.set(selectable.attr("data-pk"));
+
+    $(".test-case-content").addClass("intro-slide-left");
+    setTimeout(function () {
+      instance.data.testCaseId.set(selectable.attr("data-pk"));
+      $(".test-case-content").removeClass("intro-slide-left");
+    }, 500);
   },
   "click .test-case-list-group": function (e, instance) {
     var selectable = $(e.target).closest(".test-case-list-group"),

@@ -9,34 +9,43 @@ RobaRouter = {
    */
   routeFromStart: function (node) {
     return new DroneRoute(node._id || node);
+  },
+  /**
+   * Get the route from one node to another
+   * @param source
+   * @param destination
+   */
+  nodeToNode: function (source, destination) {
+    return new DroneRoute(destination, source);
   }
 };
 
 /**
  * Drone Route Class
  * @constructor
- * @param destinationId The _id of the destination node
- * @param sourceId (Optional) The _id of the source node
+ * @param destination The _id of the destination node
+ * @param source (Optional) The _id of the source node
  */
-DroneRoute = function (destinationId, sourceId) {
+DroneRoute = function (destination, source) {
+  Meteor.log.info("DroneRoute: Routing from " + source + " to " + destination);
   this.destination = {
-    node: Nodes.findOne(destinationId)
+    node: _.isObject(destination) ? destination : Nodes.findOne(destination)
   };
   if(!this.destination.node){
-    Meteor.log.error("DroneRoute Failure: destination node " + destinationId + " not found");
-    throw new Meteor.Error("DroneRoute Failure", "Destination node " + destinationId + " not found");
+    Meteor.log.error("DroneRoute Failure: destination node " + destination + " not found");
+    throw new Meteor.Error("DroneRoute Failure", "Destination node " + destination + " not found");
   }
 
   // Find the destination parents
   this.findParents(this.destination);
 
-  if(sourceId){
+  if(source){
     this.source = {
-      node: Nodes.findOne(sourceId)
+      node: _.isObject(source) ? source : Nodes.findOne(source)
     };
     if(!this.source.node){
-      Meteor.log.error("DroneRoute Failure: source node " + sourceId + " not found");
-      throw new Meteor.Error("DroneRoute Failure", "Source node " + sourceId + " not found");
+      Meteor.log.error("DroneRoute Failure: source node " + source + " not found");
+      throw new Meteor.Error("DroneRoute Failure", "Source node " + source + " not found");
     }
 
     // Find the source parents
@@ -151,7 +160,8 @@ DroneRoute.prototype.route = function () {
   });
 
   // Check to see if there is a defined starting step
-  var start = this.source ? this.source.node.staticId : null;
+  var start = this.source ? this.source.node : null;
+  console.log("DroneRoute.route start: ", start, this.source);
 
   // Create a synthetic connection between the platform and the direct starting points
   // if there isn't already a defined starting step
