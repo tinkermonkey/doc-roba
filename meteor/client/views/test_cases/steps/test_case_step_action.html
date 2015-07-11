@@ -1,0 +1,5 @@
+<template name="TestCaseStepAction">
+  {{#if nodeId}}
+    {{> EditableActionRouteSelector emptyText="select action" value=data nodeId=nodeId projectVersionId=projectVersionId }}
+  {{/if}}
+</template>

@@ -240,8 +240,9 @@ AdventureStepStatusLookup = _.invert(AdventureStepStatus);
  */
 TestCaseStepTypes = {
   node: 0,
-  navigate: 1,
-  wait: 2,
-  custom: 3
+  action: 1,
+  navigate: 2,
+  wait: 3,
+  custom: 4
 };
 TestCaseStepTypesLookup = _.invert(TestCaseStepTypes);

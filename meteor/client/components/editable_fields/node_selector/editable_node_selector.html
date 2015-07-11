@@ -1,8 +1,8 @@
 <template name="EditableNodeSelector">
   <div class="{{cssClass}} editable editable-node-selector" data-key="{{dataKey}}">
-    <span class="{{#unless value}}hide{{/unless}}">
-      {{> standalone_node_snippet staticId=value projectVersionId=projectVersionId }}
-    </span>
+    <div class="{{#unless value}}hide{{/unless}}">
+      {{> StandaloneNodeSnippet staticId=value projectVersionId=projectVersionId }}
+    </div>
     <span class="{{#if value}}hide{{/if}}"><i>{{emptyText}}</i></span>
   </div>
 </template>

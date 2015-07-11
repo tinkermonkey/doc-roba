@@ -4,23 +4,26 @@
     {{> EditableTextArea emptyText="description" value=description dataKey="description" mode="popup" placement="left" }}
 
     <h2>Test Roles</h2>
-    {{#if hasRoles}}
-      {{#each testCaseRoles}}
-        <div class="inline-block test-case-role-container align-top">
-          {{> TestCaseRole }}
-        </div>
-      {{/each}}
-    {{else}}
-      <div class="inline-block test-case-role-container align-top">
-        <h4>This Test Case has no roles</h4>
-      </div>
-    {{/if}}
 
-    <div class="inline-block align-top add-role-container">
-      <button class="btn btn-xs btn-primary btn-add-role">
-        <span class="glyphicon glyphicon-user"></span>
-        Add Role
-      </button>
+    <div class="no-wrap">
+      {{#if hasRoles}}
+          {{#each testCaseRoles}}
+            <div class="inline-block test-case-role-container align-top" style="{{getRoleWidth ..}}">
+              {{> TestCaseRole }}
+            </div>
+          {{/each}}
+      {{else}}
+        <div class="inline-block test-case-role-container align-top">
+          <h4>This Test Case has no roles</h4>
+        </div>
+      {{/if}}
+
+      <div class="inline-block align-top add-role-container">
+        <button class="btn btn-xs btn-primary btn-add-role">
+          <span class="glyphicon glyphicon-user"></span>
+          Add Role
+        </button>
+      </div>
     </div>
   </div>
 </template>

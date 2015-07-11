@@ -1,0 +1,11 @@
+
+.x-editable-action-route-selector .input-group {
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+.x-editable-action-route-selector .search-results {
+  width: 400px;
+  height: 300px;
+  overflow-y: auto;
+}

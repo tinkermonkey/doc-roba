@@ -1,25 +1,7 @@
 <template name="RouteMap">
-  {{#contentFor "svgDefs"}}
-    {{> svg_def "outer-glow" }}
-    {{> svg_def "shadow" }}
-    {{> svg_def "crisp-shadow" }}
-    {{> svg_def "node-clip-path" }}
-    {{> svg_def "root-clip-path" }}
-    {{> svg_def "node-hover" }}
-    {{> svg_def "node-back" }}
-    {{> svg_def "page-back" }}
-    {{> svg_def "action-arrow" }}
-    {{> svg_def "action-arrow-blunt" }}
-    {{> svg_def "action-arrow-hover" }}
-    {{> svg_def "action-arrow-blunt-hover" }}
-  {{/contentFor}}
-  <svg id="{{getElementId}}" class="route-map-base">
-    <g class="global-layer">
-      <g class="link-layer"></g>
-      <g class="action-link-layer"></g>
-      <g class="node-layer" style="display: inherit;"></g>
-      <g class="action-hover-layer-back"></g>
-      <g class="action-hover-layer-front"></g>
-    </g>
-  </svg>
+  {{#if route}}
+    {{#with getRouteSteps }}
+      {{> VerticalRouteSnippet steps=this projectVersionId=../projectVersionId}}
+    {{/with}}
+  {{/if}}
 </template>

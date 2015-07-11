@@ -29,12 +29,16 @@ Template.TestCaseDashboard.events({});
 Template.TestCaseDashboard.created = function () {
   var instance = Template.instance();
   instance.testCaseId = new ReactiveVar();
+
 };
 
 /**
  * Template Rendered
  */
 Template.TestCaseDashboard.rendered = function () {
+  // sometimes the transition doesn't fire, seeing if this ever fails
+  $(".auto-transition.intro-slide-right").removeClass("intro-slide-right");
+  $(".auto-transition.intro-slide-left").removeClass("intro-slide-left");
 };
 
 /**

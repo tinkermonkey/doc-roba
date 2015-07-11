@@ -106,6 +106,9 @@
 
 .add-role-container {
   padding: 10px;
+  transform: rotate(90deg);
+  -webkit-transform: rotate(90deg);
+  width: 20px;
 }
 
 .test-case-step {
@@ -117,6 +120,10 @@
   margin-bottom: 5px;
 }
 
+.test-case-step-error {
+  background-color: #FF0000 !important;
+}
+
 .test-case-step-type-0 {
   background-color: #0A7BFF;
 }
@@ -126,10 +133,14 @@
 }
 
 .test-case-step-type-2 {
-  background-color: #5bc0de;
+  background-color: #9701ff;
 }
 
 .test-case-step-type-3 {
+  background-color: #5bc0de;
+}
+
+.test-case-step-type-4 {
   background-color: #ff8400;
 }
 
@@ -194,3 +205,12 @@
   text-align: center;
 }
 
+.wait-role-container {
+  width: 50%;
+  margin-left: 25%;
+  text-align: left;
+}
+
+.wait-role {
+  cursor: pointer;
+}

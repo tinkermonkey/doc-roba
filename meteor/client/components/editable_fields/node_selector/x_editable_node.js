@@ -27,13 +27,6 @@
       if(this.options.parentInstance){
         this.options.parentInstance.searchView = Blaze.getView( this.search.children().get(0) )
       }
-    },
-
-    activate: function() {
-      if(this.$input.is(':visible')) {
-        this.$input.focus();
-        $.fn.editableutils.setCursorPosition(this.$input.get(0), this.$input.val().length);
-      }
     }
   });
 
@@ -42,7 +35,7 @@
      @property tpl
      @default <input type="text">
      **/
-    tpl: '<input type="text" class="x-editable-node-value hide">',
+    tpl: '<input type="hidden" class="x-editable-node-value">',
 
     /**
      @property projectVersionId

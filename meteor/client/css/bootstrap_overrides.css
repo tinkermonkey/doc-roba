@@ -38,3 +38,23 @@
   color: #fff;
   background-color: #ff8400;
 }
+
+.label-purple {
+  background-color: #9701ff;
+}
+
+.btn-purple {
+  background-color: #9701ff;
+  border-color: #7802cc;
+  color: #fff;
+}
+
+.btn-purple:hover,
+.btn-purple:focus,
+.btn-purple.focus,
+.btn-purple:active,
+.btn-purple.active,
+.open > .dropdown-toggle.btn-purple {
+  color: #fff;
+  background-color: #9701ff;
+}

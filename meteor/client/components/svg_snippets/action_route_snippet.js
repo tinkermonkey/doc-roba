@@ -4,20 +4,20 @@
 Template.ActionRouteSnippet.helpers({
   width: function () {
     var scale = Template.instance().scale.get();
-    return DocTreeConfig.nodes.width * 3 * scale + 10;
+    return DocTreeConfig.nodes.width * 3 * scale + DocTreeConfig.standalone.margin * 2;
   },
   height: function () {
     var scale = Template.instance().scale.get();
-    return (DocTreeConfig.nodes.height * this.routes.length + DocTreeConfig.nodes.yMargin / 2 * (this.routes.length - 1)) * scale + 10;
+    return (DocTreeConfig.nodes.height * this.routes.length + DocTreeConfig.nodes.yMargin / 2 * (this.routes.length - 1)) * scale + DocTreeConfig.standalone.margin * 2;
   },
   scale: function () {
     return Template.instance().scale.get();
   },
   xMargin: function () {
-    return 5;
+    return DocTreeConfig.standalone.margin;
   },
   yMargin: function () {
-    return 5;
+    return DocTreeConfig.standalone.margin;
   },
   sourceNodeY: function sourceNodeY() {
     var height = this.routes.length * DocTreeConfig.nodes.height + (this.routes.length - 1) * DocTreeConfig.nodes.yMargin / 2;

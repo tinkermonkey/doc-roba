@@ -1,21 +1,21 @@
 /**
  * Template Helpers
  */
-Template.single_route_snippet.helpers({
+Template.SingleRouteSnippet.helpers({
   width: function () {
-    return DocTreeConfig.nodes.width * 3 + DocTreeConfig.nodes.xMargin;
+    return DocTreeConfig.nodes.width * 3 + DocTreeConfig.standalone.margin * 2;
   },
   height: function () {
-    return DocTreeConfig.nodes.height + DocTreeConfig.nodes.yMargin;
+    return DocTreeConfig.nodes.height + DocTreeConfig.standalone.margin * 2;
   },
   scale: function () {
     return this.scale || 1;
   },
   xMargin: function () {
-    return DocTreeConfig.nodes.xMargin / 2;
+    return DocTreeConfig.standalone.margin;
   },
   yMargin: function () {
-    return DocTreeConfig.nodes.yMargin / 2;
+    return DocTreeConfig.standalone.margin;
   },
   routeNodeX: function () {
     return DocTreeConfig.nodes.width * 2;
@@ -35,18 +35,18 @@ Template.single_route_snippet.helpers({
 /**
  * Template Helpers
  */
-Template.single_route_snippet.events({});
+Template.SingleRouteSnippet.events({});
 
 /**
  * Template Rendered
  */
-Template.single_route_snippet.rendered = function () {
+Template.SingleRouteSnippet.rendered = function () {
 
 };
 
 /**
  * Template Destroyed
  */
-Template.single_route_snippet.destroyed = function () {
+Template.SingleRouteSnippet.destroyed = function () {
 
 };

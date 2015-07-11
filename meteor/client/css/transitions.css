@@ -1,12 +1,12 @@
 .auto-transition {
-  transition: transform 0.4s, opacity 0.4s;
-  -webkit-transition: -webkit-transform 0.4s, opacity 0.4s;
+  transition: transform 0.4s, opacity 0.4s, height 0.4s, width 0.4s;
+  -webkit-transition: -webkit-transform 0.4s, opacity 0.4s, height 0.4s, width 0.4s;
 }
 
 .intro-slide-right {
-  transform: translateX(-105%);
+  transform: translateX(-101%);
 }
 
 .intro-slide-left {
-  transform: translateX(105%);
+  transform: translateX(101%);
 }

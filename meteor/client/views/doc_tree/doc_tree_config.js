@@ -44,6 +44,13 @@ DocTreeConfig = {
   },
 
   /**
+   * Standalone node display
+   */
+  standalone: {
+    margin: 9
+  },
+
+  /**
    * Node controls configuration
    */
   nodeControls: {
@@ -65,7 +72,8 @@ DocTreeConfig = {
     hideTimer: 250, // ms to wait before hiding the controls after a mouse-leave
     textXMargin: 8,
     textYMargin: 8,
-    cornerRadius: 3
+    cornerRadius: 3,
+    tipCompensation: 3
   }
 };
 

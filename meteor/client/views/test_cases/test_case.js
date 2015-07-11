@@ -3,10 +3,21 @@
  */
 Template.TestCase.helpers({
   testCaseRoles: function () {
-    return TestCaseRoles.find({testCaseId: this.staticId });
+    return TestCaseRoles.find({testCaseId: this.staticId, projectVersionId: this.projectVersionId });
   },
   hasRoles: function () {
-    return TestCaseRoles.find({testCaseId: this.staticId }).count() > 0;
+    return TestCaseRoles.find({testCaseId: this.staticId, projectVersionId: this.projectVersionId }).count() > 0;
+  },
+  getRoleWidth: function (testCase) {
+    var roleCount = TestCaseRoles.find({testCaseId: testCase.staticId, projectVersionId: this.projectVersionId }).count();
+    console.log("getRoleWidth: ", roleCount);
+    switch(roleCount){
+      case 1:
+      case 2:
+        return "width: 40%;";
+      default:
+        return "";
+    }
   }
 });
 

@@ -14,7 +14,7 @@ Main Container
 	box-shadow: 0px 0px 35px 1px rgba(128, 128, 128, 0.25);
 	background-color: #fff;
 	overflow: hidden;
-	position: absolute;
+	position: fixed;
 	min-height: 100px;
 	min-width: 300px;
 	z-index: 100;

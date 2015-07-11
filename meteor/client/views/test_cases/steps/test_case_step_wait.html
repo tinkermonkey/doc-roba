@@ -1,3 +1,13 @@
 <template name="TestCaseStepWait">
-  test_case_step_wait
+  <div class="wait-role-container">
+    {{#with getRole}}
+
+    {{/with}}
+    {{#each getRoles}}
+      <div class="wait-role" data-role-id="{{staticId}}">
+        <span class="glyphicon glyphicon-{{#if checked this ..}}check{{else}}unchecked{{/if}}"></span>
+        <span class="no-wrap">{{title}}</span>
+      </div>
+    {{/each}}
+  </div>
 </template>

@@ -24,7 +24,7 @@ Template.EditableNodeSelector.rendered = function () {
   instance.$(".editable").editable({
     type: "nodeSelector",
     mode: instance.data.mode || "popup",
-    placement: instance.data.placement,
+    placement: instance.data.placement || "auto",
     value: instance.data.value,
     projectVersionId: instance.data.projectVersionId,
     parentInstance: instance,
@@ -43,7 +43,9 @@ Template.EditableNodeSelector.rendered = function () {
   // this event listener needs to be registered directly
   instance.$(".editable").on("hidden", function(e, reason) {
     if(instance.searchView){
-      Blaze.remove(instance.searchView);
+      setTimeout(function () {
+        Blaze.remove(instance.searchView);
+      }, 100);
     }
   });
 

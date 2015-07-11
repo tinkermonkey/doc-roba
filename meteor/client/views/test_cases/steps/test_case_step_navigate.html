@@ -1,19 +1,5 @@
 <template name="TestCaseStepNavigate">
-    {{#if complete}}
-      {{#if routeError }}
-        <div class="alert alert-danger" style="margin-top: 15px;">{{routeError}}</div>
-      {{else}}
-        {{> RouteMap source=source destination=destination route=route }}
-      {{/if}}
-    {{else}}
-      {{#unless source}}
-        No source to navigate from
-      {{/unless}}
-      {{#unless destination}}
-        <div>
-          <span class="glyphicon glyphicon-exclamation-sign"></span>
-          No destination
-        </div>
-      {{/unless}}
-    {{/if}}
+  {{#if complete}}
+    {{> RouteMap route=route projectVersionId=projectVersionId }}
+  {{/if}}
 </template>

@@ -1,0 +1,8 @@
+<template name="EditableActionRouteSelector">
+  <div class="{{cssClass}} editable editable-action-route-selector" data-key="{{dataKey}}">
+    <span class="{{#unless value}}hide{{/unless}}">
+      {{> VerticalRouteSnippet steps=getSteps projectVersionId=projectVersionId }}
+    </span>
+    <span class="{{#if value}}hide{{/if}}"><i>{{emptyText}}</i></span>
+  </div>
+</template>

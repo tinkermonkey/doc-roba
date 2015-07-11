@@ -3,24 +3,17 @@
  */
 Template.TestCaseStepNavigate.helpers({
   source: function () {
-    var instance = Template.instance();
-    return instance.sourceNode.get()
+    return Template.instance().nodeId.get()
   },
   destination: function () {
-    var instance = Template.instance();
-    return instance.destinationNode.get()
+    return Template.instance().destinationNode.get()
   },
   complete: function () {
     var instance = Template.instance();
-    return instance.sourceNode.get() && instance.destinationNode.get()
+    return instance.nodeId.get() && instance.destinationNode.get()
   },
   route: function () {
-    var instance = Template.instance();
-    return instance.route.get()
-  },
-  routeError: function () {
-    var instance = Template.instance();
-    return instance.routeError.get()
+    return Template.instance().route.get()
   }
 });
 
@@ -34,33 +27,43 @@ Template.TestCaseStepNavigate.events({});
  */
 Template.TestCaseStepNavigate.created = function () {
   var instance = this;
-  instance.sourceNode = new ReactiveVar();
+  instance.nodeId = new ReactiveVar();
   instance.destinationNode = new ReactiveVar();
   instance.route = new ReactiveVar();
-  instance.routeError = new ReactiveVar();
 
   instance.autorun(function () {
     var data = Template.currentData(),
-      sourceStep = TestCaseSteps.findOne({testCaseRoleId: data.testCaseRoleId, order: {$lt: data.order}}, {sort: {order: -1}}),
-      destinationStep = TestCaseSteps.findOne({testCaseRoleId: data.testCaseRoleId, order: {$gt: data.order}}, {sort: {order: 1}}),
+      sourceStep = TestCaseSteps.findOne({
+        testCaseRoleId: data.testCaseRoleId,
+        order: {$lt: data.order},
+        type: {$in: [TestCaseStepTypes.node, TestCaseStepTypes.action]}
+      }, {sort: {order: -1}}),
+      destinationStep = TestCaseSteps.findOne({
+        testCaseRoleId: data.testCaseRoleId,
+        order: {$gt: data.order}
+      }, {sort: {order: 1}}),
       sourceNode, destinationNode;
 
-    if(sourceStep && sourceStep.data){
-      instance.sourceNode.set(sourceStep.data.nodeId);
+    // clear the error
+    data.error.set();
+
+    if(sourceStep && sourceStep.data && sourceStep.data.nodeId){
+      instance.nodeId.set(sourceStep.data.nodeId);
       sourceNode = sourceStep.data.nodeId
     } else {
-      instance.sourceNode.set();
+      instance.nodeId.set();
+      data.error.set("This step requires a node from which to navigate");
     }
 
-    if(destinationStep && destinationStep.data){
+    if(destinationStep && destinationStep.data && destinationStep.data.nodeId){
       instance.destinationNode.set(destinationStep.data.nodeId);
       destinationNode = destinationStep.data.nodeId
     } else {
       instance.destinationNode.set();
+      data.error.set("This step requires a node to navigate to");
     }
 
     // create the route
-    instance.routeError.set();
     if(sourceNode && destinationNode){
       var sourceNodeRecord = Nodes.findOne({projectVersionId: data.projectVersionId, staticId: sourceNode}),
         destinationNodeRecord = Nodes.findOne({projectVersionId: data.projectVersionId, staticId: destinationNode});
@@ -70,10 +73,11 @@ Template.TestCaseStepNavigate.created = function () {
           var route = RobaRouter.nodeToNode(sourceNodeRecord, destinationNodeRecord);
           instance.route.set(route);
         } catch(e){
-          instance.routeError.set("Route not found");
+          data.error.set("There was no route found for this step");
         }
       } else {
         instance.route.set();
+        data.error.set("One of the nodes for this step could not be found");
       }
     } else {
       instance.route.set();

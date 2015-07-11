@@ -9,7 +9,7 @@
           <div class="btn-select-parent">
           {{#with record}}
             {{#if parentId}}
-              {{> standalone_node_snippet staticId=parentId projectVersionId=../adventure.projectVersionId}}
+              {{> StandaloneNodeSnippet staticId=parentId projectVersionId=../adventure.projectVersionId}}
             {{else}}
               <i>click to select a parent node</i>
             {{/if}}

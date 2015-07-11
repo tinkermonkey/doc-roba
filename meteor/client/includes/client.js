@@ -328,6 +328,15 @@ Template.registerHelper("getNode", function (staticId, versionId) {
 });
 
 /**
+ * Get a version of an action
+ */
+Template.registerHelper("getAction", function (staticId, versionId) {
+  if(staticId && versionId) {
+    return Actions.findOne({staticId: staticId, projectVersionId: versionId});
+  }
+});
+
+/**
  * Determine if an adventure is not in motion
  */
 Template.registerHelper("adventureIsStill", function (context) {

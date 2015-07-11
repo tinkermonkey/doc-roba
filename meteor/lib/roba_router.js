@@ -8,7 +8,7 @@ RobaRouter = {
    * @param node
    */
   routeFromStart: function (node) {
-    return new DroneRoute(node._id || node);
+    return new RobaRoute(node._id || node);
   },
   /**
    * Get the route from one node to another
@@ -16,7 +16,7 @@ RobaRouter = {
    * @param destination
    */
   nodeToNode: function (source, destination) {
-    return new DroneRoute(destination, source);
+    return new RobaRoute(destination, source);
   }
 };
 
@@ -26,14 +26,14 @@ RobaRouter = {
  * @param destination The _id of the destination node
  * @param source (Optional) The _id of the source node
  */
-DroneRoute = function (destination, source) {
-  Meteor.log.info("DroneRoute: Routing from " + source + " to " + destination);
+RobaRoute = function (destination, source) {
+  //Meteor.log.info("RobaRoute: Routing from " + source + " to " + destination);
   this.destination = {
     node: _.isObject(destination) ? destination : Nodes.findOne(destination)
   };
   if(!this.destination.node){
-    Meteor.log.error("DroneRoute Failure: destination node " + destination + " not found");
-    throw new Meteor.Error("DroneRoute Failure", "Destination node " + destination + " not found");
+    Meteor.log.error("RobaRoute Failure: destination node " + destination + " not found");
+    throw new Meteor.Error("RobaRoute Failure", "Destination node " + destination + " not found");
   }
 
   // Find the destination parents
@@ -44,8 +44,8 @@ DroneRoute = function (destination, source) {
       node: _.isObject(source) ? source : Nodes.findOne(source)
     };
     if(!this.source.node){
-      Meteor.log.error("DroneRoute Failure: source node " + source + " not found");
-      throw new Meteor.Error("DroneRoute Failure", "Source node " + source + " not found");
+      Meteor.log.error("RobaRoute Failure: source node " + source + " not found");
+      throw new Meteor.Error("RobaRoute Failure", "Source node " + source + " not found");
     }
 
     // Find the source parents
@@ -57,8 +57,8 @@ DroneRoute = function (destination, source) {
 
   // determine the starting point
   if(!this.feasible){
-    Meteor.log.error("DroneRoute Failure: route is not feasible");
-    throw new Meteor.Error("DroneRoute Failure", "Route is not feasible");
+    Meteor.log.error("RobaRoute Failure: route is not feasible");
+    throw new Meteor.Error("RobaRoute Failure", "Route is not feasible");
   }
 
   // Get the route
@@ -71,7 +71,7 @@ DroneRoute = function (destination, source) {
  * Find the parents for the destination node
  * @param branch Either the 'destination' or 'source' for this route
  */
-DroneRoute.prototype.findParents = function (branch) {
+RobaRoute.prototype.findParents = function (branch) {
   check(branch.node.parentId, String);
 
   // get the first parent
@@ -82,8 +82,8 @@ DroneRoute.prototype.findParents = function (branch) {
     parentLevel = 1;
 
   if(!parent){
-    Meteor.log.error("DroneRoute Failure: Parent node " + branch.node.parentId + " not found in project version " + branch.node.projectVersionId);
-    throw new Meteor.Error("DroneRoute Failure", "Parent node " + branch.node.parentId + " not found in project version " + branch.node.projectVersionId);
+    Meteor.log.error("RobaRoute Failure: Parent node " + branch.node.parentId + " not found in project version " + branch.node.projectVersionId);
+    throw new Meteor.Error("RobaRoute Failure", "Parent node " + branch.node.parentId + " not found in project version " + branch.node.projectVersionId);
   }
 
   branch.parents = [parent];
@@ -109,7 +109,7 @@ DroneRoute.prototype.findParents = function (branch) {
 /**
  * Check that the route is likely to succeed
  */
-DroneRoute.prototype.checkFeasibility = function () {
+RobaRoute.prototype.checkFeasibility = function () {
   this.feasible = this.destination.node !== undefined
                 && this.destination.userType !== undefined
                 && this.destination.platform !== undefined;
@@ -126,7 +126,7 @@ DroneRoute.prototype.checkFeasibility = function () {
 /**
  * Determine the route from start to destination
  */
-DroneRoute.prototype.route = function () {
+RobaRoute.prototype.route = function () {
   // get the list of nodes for this project
   var routeMap = {},
     versionId = this.destination.node.projectVersionId,
@@ -161,17 +161,16 @@ DroneRoute.prototype.route = function () {
 
   // Check to see if there is a defined starting step
   var start = this.source ? this.source.node : null;
-  console.log("DroneRoute.route start: ", start, this.source);
 
   // Create a synthetic connection between the platform and the direct starting points
   // if there isn't already a defined starting step
   if(!start){
     var platform = this.destination.platform;
 
-    Meteor.log.debug("DroneRoute.route, start not found, using destination platform: ", platform.title);
+    //Meteor.log.debug("RobaRoute.route, start not found, using destination platform: ", platform.title);
     if(!platform){
-      Meteor.log.error("DroneRoute.route, could not create route: destination platform not defined");
-      throw new Meteor.Error("DroneRoute Failure", "Could not create route: destination platform not defined");
+      Meteor.log.error("RobaRoute.route, could not create route: destination platform not defined");
+      throw new Meteor.Error("RobaRoute Failure", "Could not create route: destination platform not defined");
     }
 
     if(!routeMap[platform.staticId]){
@@ -189,15 +188,15 @@ DroneRoute.prototype.route = function () {
   var graph = new DijkstraGraph(routeMap);
 
   // get the raw route of nodeIds to string together
-  Meteor.log.info("DroneRoute.route, determining route from " + start.staticId + " to " + this.destination.node.staticId);
+  //Meteor.log.info("RobaRoute.route, determining route from " + start.staticId + " to " + this.destination.node.staticId);
   var rawRoute = graph.findShortestPath(start.staticId, this.destination.node.staticId);
 
   if(!rawRoute){
-    Meteor.log.error("DroneRoute.route, could not create route: route not found");
-    throw new Meteor.Error("DroneRoute Failure", "Could not create route: route not found");
+    Meteor.log.error("RobaRoute.route, could not create route: route not found");
+    throw new Meteor.Error("RobaRoute Failure", "Could not create route: route not found");
   }
 
-  Meteor.log.debug("DroneRoute.route, found route with " + rawRoute.length + " steps");
+  //Meteor.log.debug("RobaRoute.route, found route with " + rawRoute.length + " steps");
 
   // Create the full route with node records and actions
   this.route = [];
@@ -211,7 +210,7 @@ DroneRoute.prototype.route = function () {
 
     // skip the platform step
     if(step.node.type == NodeTypes.platform){
-      Meteor.log.debug("DroneRoute.route, skipping platform node: " + step.node.title);
+      //Meteor.log.debug("RobaRoute.route, skipping platform node: " + step.node.title);
       continue;
     }
 
@@ -244,8 +243,8 @@ DroneRoute.prototype.route = function () {
           j++;
         }
         if(!step.action){
-          Meteor.log.error("DroneRoute.route, could not create route: action could not be found between " + step.nodeId + " and " + step.destinationId);
-          throw new Meteor.Error("DroneRoute Failure", "Could not create route: action could not be found between " + step.nodeId + " and " + step.destinationId);
+          Meteor.log.error("RobaRoute.route, could not create route: action could not be found between " + step.nodeId + " and " + step.destinationId);
+          throw new Meteor.Error("RobaRoute Failure", "Could not create route: action could not be found between " + step.nodeId + " and " + step.destinationId);
         }
       }
     }
@@ -258,7 +257,7 @@ DroneRoute.prototype.route = function () {
 /**
  * Create a clone of this route ready for storage
  */
-DroneRoute.prototype.export = function () {
+RobaRoute.prototype.export = function () {
   return {
     feasible: this.feasible,
     projectId: this.destination.node.projectId,

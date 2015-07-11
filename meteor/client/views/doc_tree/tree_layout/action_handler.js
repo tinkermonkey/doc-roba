@@ -508,6 +508,7 @@ TreeActionHandler.prototype.generateActionPath = function(r){
   //console.log("GenerateActionPath: ", r);
   var self = this,
     config = self.treeLayout.nodeHandler.config,
+    arrowTipComp = -3,
     source, destination, path;
 
   if(r.source.parent.visExpanded){
@@ -585,7 +586,7 @@ TreeActionHandler.prototype.generateActionPath = function(r){
         .q(0, -1 * pointC.radius, dirCD * pointC.radius, -1 * pointC.radius)
         .L(pointD.x - dirCD * pointD.radius, pointD.y)
         .q(dirCD * pointD.radius, 0, dirCD * pointD.radius, pointD.radius)
-        .L(destination.x, destination.y)
+        .L(destination.x, destination.y + arrowTipComp)
         .compile();
     } else {
       var dirAD = pointD.x < pointA.x ? -1 : 1;
@@ -604,7 +605,7 @@ TreeActionHandler.prototype.generateActionPath = function(r){
 
       path = path.L(pointD.x - dirAD * pointD.radius, pointD.y)
         .q(dirAD * pointD.radius, 0, dirAD * pointD.radius, pointD.radius)
-        .L(destination.x, destination.y)
+        .L(destination.x, destination.y + arrowTipComp)
         .compile();
     }
   } else {

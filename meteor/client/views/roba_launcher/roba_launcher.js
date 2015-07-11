@@ -188,7 +188,7 @@ Template.roba_launcher.destroyed = function () {
  * Helper to assist in the creation of the correct context
  */
 RobaContext = function (config) {
-  check(config.route, DroneRoute);
+  check(config.route, RobaRoute);
 
   var route = config.route.export();
 

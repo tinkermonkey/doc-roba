@@ -1,0 +1,46 @@
+<template name="XEditableActionRouteSelector">
+  <div class="input-group input-group-sm">
+    <input type="text" class="form-control input-search" placeholder="Filter actions...">
+  </div>
+  <div style="margin: 5px;">
+    {{#if getValue}}
+      Current Value:
+      <div class="align-center">
+        {{#with getAction getValue.actionId projectVersionId}}
+          <div>{{title}}</div>
+        {{/with}}
+        {{> SingleRouteSnippet sourceId=nodeId destinationId=getValue.nodeId projectVersionId=projectVersionId }}
+      </div>
+    {{/if}}
+  </div>
+  <div class="search-results">
+    {{#with getNode nodeId projectVersionId}}
+      <h4>Actions for this <span class="dark-blue">{{renderNodeType type}}</span></h4>
+
+      <ul class="list-group">
+        {{#each actions}}
+          <li class="list-group-item">
+            <span>{{title}}</span><br>
+            {{> ActionRouteSnippet actionWithScale }}
+          </li>
+        {{/each}}
+      </ul>
+
+
+      {{#each navMenus}}
+        {{#with getNode this ../projectVersionId}}
+          <h4>Actions from <span class="dark-blue">{{title}}</span></h4>
+
+          <ul class="list-group">
+            {{#each actions}}
+              <li class="list-group-item">
+                <span>{{title}}</span><br>
+                {{> ActionRouteSnippet actionWithScale }}
+              </li>
+            {{/each}}
+          </ul>
+        {{/with}}
+      {{/each}}
+    {{/with}}
+  </div>
+</template>
