@@ -1,13 +1,25 @@
 <template name="TestCaseStepWait">
-  <div class="wait-role-container">
+  <div class="no-select">
     {{#with getRole}}
-
-    {{/with}}
-    {{#each getRoles}}
-      <div class="wait-role" data-role-id="{{staticId}}">
-        <span class="glyphicon glyphicon-{{#if checked this ..}}check{{else}}unchecked{{/if}}"></span>
-        <span class="no-wrap">{{title}}</span>
+      <div>
+        <div class="draggable-wait" data-wait-id="{{../data.waitId}}" data-role-id="{{staticId}}" data-step-id="{{../_id}}">
+          <span class="glyphicon glyphicon-user"></span>
+          {{title}}
+        </div>
       </div>
-    {{/each}}
+    {{/with}}
+    <div class="droppable-wait" data-wait-id="{{data.waitId}}" data-step-id="{{_id}}" data-static-id="{{staticId}}">
+      {{#if data.waitId }}
+        {{#each waitPartners }}
+          <div>
+            <div class="removable-wait" data-remove-id="{{stepId}}" data-step-id="{{../_id}}">
+              <span class="glyphicon glyphicon-user"></span>
+              {{title}}
+            </div>
+          </div>
+        {{/each}}
+      {{/if}}
+    </div>
+    <div class="wait-inflator auto-transition" style="height: 0px;" data-wait-id="{{data.waitId}}"></div>
   </div>
 </template>

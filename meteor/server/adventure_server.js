@@ -28,39 +28,30 @@ Meteor.startup(function () {
    * Publications
    */
   Meteor.publish('adventure', function (adventureId) {
-    Meteor.log.debug("Publish: adventure");
     return Adventures.find({_id: adventureId});
   });
   Meteor.publish('adventure_test_system', function (testSystemId) {
-    Meteor.log.debug("Publish: adventure_test_system");
     return TestSystems.find({staticId: testSystemId});
   });
   Meteor.publish('adventure_test_agent', function (testAgentId) {
-    Meteor.log.debug("Publish: adventure_test_agent");
     return TestAgents.find({staticId: testAgentId});
   });
   Meteor.publish('adventure_server', function (serverId) {
-    Meteor.log.debug("Publish: adventure_server");
     return Servers.find({staticId: serverId});
   });
   Meteor.publish('adventure_state', function (adventureId) {
-    Meteor.log.debug("Publish: adventure_state");
     return AdventureStates.find({adventureId: adventureId});
   });
   Meteor.publish('adventures', function () {
-    Meteor.log.debug("Publish: adventures");
     return Adventures.find({});
   });
   Meteor.publish('adventure_log', function (adventureId) {
-    Meteor.log.debug("Publish: adventure");
     return LogMessages.find({adventureId: adventureId});
   });
   Meteor.publish('adventure_actions', function (adventureId) {
-    Meteor.log.debug("Publish: adventure_actions");
     return AdventureSteps.find({adventureId: adventureId}, {sort: {order: 1}});
   });
   Meteor.publish('adventure_commands', function (adventureId) {
-    Meteor.log.debug("Publish: adventure_commands");
     return AdventureCommands.find({adventureId: adventureId}, {sort: {dateCreated: 1}});
   });
 

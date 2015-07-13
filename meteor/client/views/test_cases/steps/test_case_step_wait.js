@@ -2,27 +2,27 @@
  * Template Helpers
  */
 Template.TestCaseStepWait.helpers({
-  getRoles: function () {
-    var waitRoles = [],
-      stepData = this.data;
-    TestCaseRoles.find({
-      staticId: {$ne: this.testCaseRoleId },
-      testCaseId: this.testCaseId,
-      projectVersionId: this.projectVersionId
-    }, {sort: {order: 1}}).forEach(function (role) {
-      // check for a wait step
-      if(TestCaseSteps.find({
-          testCaseRoleId: role.staticId,
-          type: TestCaseStepTypes.wait
-        }).count()){
-        waitRoles.push(role);
-      }
-    });
-    return waitRoles;
+  getRole: function () {
+    return TestCaseRoles.findOne({staticId: this.testCaseRoleId, projectVersionId: this.projectVersionId});
   },
-  checked: function (role, step) {
-    if(step.data){
-      return step.data[role.staticId];
+  waitPartners: function () {
+    if(this.data && this.data.waitId){
+      var stepIdMap = [], // keep a handy lookup of the step Is so we know what to remove
+        waitPartnerIds = _.without(TestCaseSteps.find({
+          "data.waitId": this.data.waitId,
+          projectVersionId: this.projectVersionId
+        }).map(function (step) {
+          stepIdMap[step.testCaseRoleId] = step._id;
+          return step.testCaseRoleId
+        }), this.testCaseRoleId);
+
+      return TestCaseRoles.find({
+        staticId: {$in: waitPartnerIds},
+        projectVersionId: this.projectVersionId
+      }).map(function (role) {
+        role.stepId = stepIdMap[role.staticId];
+        return role
+      })
     }
   }
 });
@@ -31,99 +31,6 @@ Template.TestCaseStepWait.helpers({
  * Template Event Handlers
  */
 Template.TestCaseStepWait.events({
-  "click .wait-role": function (e, instance) {
-    var testCaseStep = instance.data,
-      currentData = instance.data.data || {},
-      pairedRole = $(e.target).closest(".wait-role").attr("data-role-id"),
-      check;
-
-    if(pairedRole){
-      check = currentData[pairedRole] ? false : true;
-
-      // If our goal is to check the checkbox
-      if(check){
-        // make sure there is a paired step
-        var query = {
-          testCaseId: testCaseStep.testCaseId,
-          projectVersionId: testCaseStep.projectVersionId,
-          testCaseRoleId: pairedRole,
-          type: TestCaseStepTypes.wait
-        };
-        query["data." + pairedRole] = {$exists: false};
-        var pairedStep = TestCaseSteps.findOne(query, {sort: {order: 1}});
-
-        // update the paired step
-        var updatedList = [];
-        if(pairedStep) {
-          var pairedData = pairedStep.data || {},
-            // get the list of already paired roles on the paired step and this step
-            alsoRoleList = _.without(_.keys(pairedData), testCaseStep.testCaseRoleId),
-            updateList = _.map(alsoRoleList, function (role) {return pairedData[role]})
-              .concat(_.values(currentData));
-
-          // update the update list
-          updateList.push(pairedStep.staticId);
-          _.each(updateList, function (stepId) {
-            var step = TestCaseSteps.findOne({ staticId: stepId, projectVersionId: testCaseStep.projectVersionId }),
-              update = {$set: {}};
-            update.$set["data." + testCaseStep.testCaseRoleId] = testCaseStep.staticId;
-
-            TestCaseSteps.update(step._id, update, function (error) {
-              if(error){
-                Meteor.log.error("Failed to update step: " + error.message);
-                Dialog.error("Failed to update step: " + error.message);
-              }
-            });
-
-            // note that this node was paired
-            updatedList.push({
-              role: step.testCaseRoleId,
-              step: step.staticId
-            })
-          });
-
-          // update this step
-          _.each(updatedList, function (update) {
-            currentData[update.role] = update.step;
-          });
-          console.log("TestCaseStep data update: ", testCaseStep, currentData);
-          TestCaseSteps.update(testCaseStep._id, {$set: {data: currentData}}, function (error) {
-            if(error){
-              Meteor.log.error("Failed to update step: " + error.message);
-              Dialog.error("Failed to update step: " + error.message);
-            }
-          });
-        } else {
-          testCaseStep.error.set("Couldn't pair step for the other role");
-        }
-      } else {
-        // grab the paired step if it still exists
-        var pairedStep = TestCaseSteps.findOne({
-          staticId: currentData[pairedRole],
-          projectVersionId: testCaseStep.projectVersionId
-        });
-        if(pairedStep && pairedStep.data && pairedStep.data[testCaseStep.testCaseRoleId]){
-          delete pairedStep.data[testCaseStep.testCaseRoleId];
-          console.log("TestCaseStep paired data update: ", pairedStep);
-          TestCaseSteps.update(pairedStep._id, {$set: {data: pairedStep.data}}, function (error) {
-            if(error){
-              Meteor.log.error("Failed to update step: " + error.message);
-              Dialog.error("Failed to update step: " + error.message);
-            }
-          });
-        }
-
-        delete currentData[pairedRole];
-        console.log("TestCaseStep data update: ", testCaseStep, currentData);
-        TestCaseSteps.update(testCaseStep._id, {$set: {data: currentData}}, function (error) {
-          if(error){
-            Meteor.log.error("Failed to update step: " + error.message);
-            Dialog.error("Failed to update step: " + error.message);
-          }
-        });
-      }
-    }
-  }
 });
 
 /**
@@ -131,13 +38,24 @@ Template.TestCaseStepWait.events({
  */
 Template.TestCaseStepWait.created = function () {
   var instance = this;
+
+  // we need a reactive variable to keep waitId accurate for drag and drop
+  instance.waitId = new ReactiveVar();
+
+  // check for errors and manage changes to the waitId
   instance.autorun(function () {
     var data = Template.currentData(),
-      roles =  TestCaseRoles.find({
+      roles = TestCaseRoles.find({
         staticId: {$ne: data.testCaseRoleId },
         testCaseId: data.testCaseId,
         projectVersionId: data.projectVersionId
       }, {sort: {order: 1}}).fetch();
+
+    if(data.data && data.data.waitId){
+      instance.waitId.set(data.data.waitId);
+    } else {
+      instance.waitId.set();
+    }
 
     data.error.set();
 
@@ -147,13 +65,165 @@ Template.TestCaseStepWait.created = function () {
       data.error.set("You need more than one role in order for a wait step to make sense");
     }
   });
+
+  // setup the functionality of updating the removables list
+  instance.updateRemovables = function (propagate){
+    var refreshFailed = false,
+      waitId = instance.waitId.get();
+    try {
+      instance.$(".removable-wait").draggable("refresh");
+    } catch(error) {
+      refreshFailed = true;
+    }
+    if(refreshFailed){
+      instance.$(".removable-wait").draggable({
+        revert: true,
+        revertDuration: 100,
+        start: function (event, ui) {
+          ui.helper.addClass("draggable-wait-dragged");
+          ui.helper.data("dropped", false);
+        },
+        stop: function (event, ui) {
+          var keep = ui.helper.data("dropped"),
+            removeId = ui.helper.attr("data-remove-id");
+
+          if(!keep && removeId){
+            console.log("Update Step remove waitId", removeId);
+            TestCaseSteps.update(removeId, {$unset: {"data.waitId": true }}, function (error) {
+              if(error){
+                Meteor.log.error("Failed to update step: " + error.message);
+                Dialog.error("Failed to update step: " + error.message);
+              }
+            });
+          }
+        }
+      });
+    }
+
+    // propagate to the other member of this waitId
+    if(propagate && waitId){
+      $(".droppable-wait[data-wait-id='" + waitId + "']:not([data-step-id='" + instance.data._id + "'])").each(function (i, el) {
+        try {
+          Blaze.getView(el).templateInstance().updateRemovables(false);
+        } catch (error) {
+          Meteor.log.error("Failed to propagate updateRemovables: " + error.message);
+        }
+      });
+    }
+  };
 };
 
 /**
  * Template Rendered
  */
 Template.TestCaseStepWait.rendered = function () {
-  
+  var instance = this;
+
+  // Setup the join draggable behavior
+  instance.$(".draggable-wait").draggable({
+    helper: "clone",
+    start: function (event, ui) {
+      ui.helper.addClass("draggable-wait-dragged");
+    }
+  });
+
+  // Setup the remove draggable behavior
+  instance.updateRemovables();
+
+  // Setup the droppable behavior
+  instance.$(".droppable-wait").droppable({
+    accept: function (el){
+      var data = instance.data,
+        currentWaitId = instance.waitId.get(),
+        drag = $(el);
+
+      // check for removables
+      if(drag.hasClass("removable-wait")){
+        return drag.attr("data-step-id") == data._id
+      }
+
+      if(!drag.hasClass("draggable-wait")){
+        return false;
+      }
+
+      if(currentWaitId){
+        return !(drag.attr("data-role-id") == data.testCaseRoleId || drag.attr("data-wait-id") == currentWaitId)
+      } else {
+        return !(drag.attr("data-role-id") == data.testCaseRoleId)
+      }
+    },
+    activeClass: "droppable-wait-active",
+    hoverClass: "droppable-wait-hover",
+    drop: function (event, ui) {
+      var drop = $(this),
+        drag = ui.draggable;
+
+      // check for a self-drop or remove
+      if(drag.hasClass("removable-wait")){
+        ui.draggable.data("dropped", true);
+        return;
+      }
+
+      // see if either of these elements has a wait id
+      var dragWaitId  = drag.attr("data-wait-id"),
+        dropWaitId    = drop.attr("data-wait-id"),
+        dragStepId    = drag.attr("data-step-id"),
+        dropStepId    = drop.attr("data-step-id"),
+        dropStaticId  = drop.attr("data-static-id"),
+        updates = [];
+
+      // make sure we don't have a collision here
+      if(dragWaitId && dropWaitId){
+        // not so sure what to do
+      } else if(dragWaitId || dropWaitId){
+        // there is a waitId, propagate it
+        if(dragWaitId){
+          // update the drop target to use this waitId
+          updates.push({
+            stepId: dropStepId,
+            waitId: dragWaitId
+          });
+        } else {
+          // update the drag element to use this waitId
+          updates.push({
+            stepId: dragStepId,
+            waitId: dropWaitId
+          });
+        }
+      } else {
+        // no one has a waitId yet, pick one and move on
+        updates.push({
+          stepId: dragStepId,
+          waitId: dropStaticId
+        },{
+          stepId: dropStepId,
+          waitId: dropStaticId
+        });
+      }
+
+      // do the actual updating
+      _.each(updates, function (update) {
+        if(update.waitId){
+          var stepData = TestCaseSteps.findOne(update.stepId).data || {};
+          stepData.waitId = update.waitId;
+          console.log("Update Step waitId", update.stepId, {$set: {data: stepData }});
+          TestCaseSteps.update(update.stepId, {$set: {data: stepData }}, function (error) {
+            if(error){
+              Meteor.log.error("Failed to update step: " + error.message);
+              Dialog.error("Failed to update step: " + error.message);
+            }
+          });
+        } else {
+          Meteor.log.error("Failed to update step: no waitId defined");
+        }
+      });
+
+      // update the removable draggables
+      setTimeout(function () {
+        instance.updateRemovables(true);
+      }, 100);
+    }
+  });
 };
 
 /**

@@ -205,12 +205,33 @@
   text-align: center;
 }
 
-.wait-role-container {
-  width: 50%;
-  margin-left: 25%;
-  text-align: left;
+.draggable-wait {
+  display: inline-block;
+  cursor: pointer;
 }
 
-.wait-role {
+.draggable-wait-dragged {
+  z-index: 10000;
+}
+
+.droppable-wait {
+  display: inline-block;
+  padding: 10px;
+  border-radius: 15px;
+  background-color: #eeeeee;
+  min-width: 50%;
+  min-height: 50%;
+}
+
+.droppable-wait-active {
+  background-color: #ffff00;
+}
+
+.droppable-wait-hover {
+  background-color: #a7ff00 !important;
+}
+
+.removable-wait {
+  display: inline-block;
   cursor: pointer;
 }

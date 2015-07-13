@@ -125,8 +125,7 @@ function ExecuteAdventure () {
   logger.debug("Commands Loaded: ", _.keys(commands).length);
 
   // work out the config
-  var config = adventure.config || {};
-  _.defaults(config, {
+  var config = {
     host: testSystem.hostname,
     port: testSystem.port,
     desiredCapabilities: {
@@ -145,8 +144,7 @@ function ExecuteAdventure () {
         Exit(1);
       }
     }.bind(adventure)
-  });
-  console.log("Config: ", config);
+  };
 
   // Setup the driver
   logger.debug("Adventure Test Agent: ", config.desiredCapabilities.browserName);

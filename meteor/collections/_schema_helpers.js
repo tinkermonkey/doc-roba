@@ -246,3 +246,26 @@ TestCaseStepTypes = {
   custom: 4
 };
 TestCaseStepTypesLookup = _.invert(TestCaseStepTypes);
+
+/**
+ * Test Case result status
+ */
+TestResultStatus = {
+  staged: 0,
+  queued: 1,
+  launched: 2,
+  executing: 3,
+  paused: 4,
+  complete: 5,
+  error: 6,
+  skipped: 7
+};
+
+/**
+ * Test Case result status
+ */
+TestResultCodes = {
+  fail: 0,
+  pass: 1,
+  warn: 2
+};

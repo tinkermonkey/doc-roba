@@ -393,17 +393,15 @@ TreeActionHandler.prototype.updateActionDisplay = function () {
 
     // measure the title width of the label
     self.dummyActionLabel.text(d.action.title);
-    d.labelWidth = self.dummyActionLabel.node().getBBox().width;
+    d.labelWidth  = self.dummyActionLabel.node().getBBox().width;
     d.labelHeight = self.dummyActionLabel.node().getBBox().height;
 
     var node = tree.layoutRoot.select(".action-" + d._id + ".action-" + d.source._id).select(".action").node();
     if(node){
       startPoint = node.getPointAtLength(0);
 
-      //d.x = startPoint.x;
-      //d.y = startPoint.y;
-      d.x = startPoint.x - (d.labelWidth / 2) - self.config.textXMargin;
-      d.y = startPoint.y + (d.labelHeight / 2);
+      d.x = startPoint.x;
+      d.y = startPoint.y + (d.labelHeight / 2) + self.config.textYMargin;
     }
   });
 };
@@ -567,18 +565,12 @@ TreeActionHandler.prototype.generateActionPath = function(r){
       dirCD = pointD.x < pointC.x ? -1 : 1;
 
     // Path that routes "up"
-    //if (destination.y < source.y) {
     if (pointD.y < pointA.y) {
-
       path = PathBuilder.start()
         .M(source.x, source.y);
 
-      if(r.action.routes.length == 1){
-        path.L(pointA.x, pointA.y - pointA.radius)
-          .q(0, pointA.radius, dirAB * pointA.radius, pointA.radius);
-      } else {
-        path.L(pointA.x, pointA.y);
-      }
+      path.L(pointA.x, pointA.y - pointA.radius)
+        .q(0, pointA.radius, dirAB * pointA.radius, pointA.radius);
 
       path = path.L(pointB.x - dirAB * pointB.radius, pointB.y)
         .q(dirAB * pointB.radius, 0, dirAB * pointB.radius, -1 * pointB.radius)
@@ -590,18 +582,15 @@ TreeActionHandler.prototype.generateActionPath = function(r){
         .compile();
     } else {
       var dirAD = pointD.x < pointA.x ? -1 : 1;
+
       // path that routes "down"
       pointA.radius = Math.min(pointA.radius, Math.abs(pointD.x - pointA.x) / 2);
       pointD.radius = Math.min(pointD.radius, Math.abs(pointD.x - pointA.x) / 2);
       path = PathBuilder.start()
         .M(source.x, source.y);
 
-      if(r.action.routes.length == 1){
-        path.L(pointA.x, (Math.max(pointA.y, pointD.y)) - pointA.radius)
-          .q(0, pointA.radius, dirAD * pointA.radius, pointA.radius);
-      } else {
-        path.L(pointA.x, pointA.y);
-      }
+      path.L(pointA.x, (Math.max(pointA.y, pointD.y)) - pointA.radius)
+        .q(0, pointA.radius, dirAD * pointA.radius, pointA.radius);
 
       path = path.L(pointD.x - dirAD * pointD.radius, pointD.y)
         .q(dirAD * pointD.radius, 0, dirAD * pointD.radius, pointD.radius)

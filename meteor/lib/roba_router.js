@@ -8,7 +8,7 @@ RobaRouter = {
    * @param node
    */
   routeFromStart: function (node) {
-    return new RobaRoute(node._id || node);
+    return new RobaRoute(node);
   },
   /**
    * Get the route from one node to another

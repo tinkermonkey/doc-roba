@@ -70,8 +70,8 @@ DocTreeConfig = {
    */
   actions: {
     hideTimer: 250, // ms to wait before hiding the controls after a mouse-leave
-    textXMargin: 8,
-    textYMargin: 8,
+    textXMargin: 2,
+    textYMargin: 2,
     cornerRadius: 3,
     tipCompensation: 3
   }

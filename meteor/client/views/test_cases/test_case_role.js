@@ -90,10 +90,6 @@ Template.TestCaseRole.events({
   "mousedown .test-case-step-title": function (e, instance) {
     // because the page height is defined by this list, we need to pin it to prevent unwanted scrolling
     instance.$(".test-role-steps").height(instance.$(".test-role-steps").outerHeight());
-  },
-  "mouseup .test-case-step-title": function (e, instance) {
-    // restore the flexible height of the list
-    instance.$(".test-role-steps").height("auto");
   }
 });
 
@@ -118,6 +114,8 @@ Template.TestCaseRole.rendered = function () {
     placeholder: "test-case-step-placeholder",
     forcePlaceholderSize: true,
     update: function (event, ui) {
+      // restore the flexible height of the list
+      instance.$(".test-role-steps").height("auto");
       instance.$(".test-case-step").each(function (newOrder, el) {
         var step = $(el),
           stepId = step.attr("data-pk"),
@@ -143,6 +141,7 @@ Template.TestCaseRole.rendered = function () {
   });
 
   // Animate the addition of role steps
+  /*
   instance.find(".test-role-steps")._uihooks = {
     insertElement: function(node, next) {
       $(node)
@@ -156,6 +155,7 @@ Template.TestCaseRole.rendered = function () {
       });
     }
   }
+  */
 };
 
 /**

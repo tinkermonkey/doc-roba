@@ -303,6 +303,53 @@ trackChanges(TestCaseSteps, "test_case_steps");
 
 /**
  * ============================================================================
+ * Test run - the setup for the running of multiple test cases
+ * ============================================================================
+ */
+Schemas.TestRun = new SimpleSchema({
+  // Link to the project to which this test belongs
+  projectId: {
+    type: String,
+    denyUpdate: true
+  },
+  // Link to the project version to which this test belongs
+  projectVersionId: {
+    type: String,
+    denyUpdate: true
+  },
+  // Link to the server we're running against
+  serverId: {
+    type: String,
+    denyUpdate: true
+  },
+  // Whether to wait for commands if there is a problem
+  pauseOnFailure: {
+    type: Boolean,
+    defaultValue: false
+  },
+  // Standard tracking fields
+  dateCreated: {
+    type: Date,
+    autoValue: autoValueDateCreated,
+    denyUpdate: true
+  },
+  createdBy: {
+    type: String,
+    autoValue: autoValueCreatedBy,
+    denyUpdate: true
+  },
+  dateModified: {
+    type: Date,
+    autoValue: autoValueDateModified
+  },
+  modifiedBy: {
+    type: String,
+    autoValue: autoValueModifiedBy
+  }
+});
+
+/**
+ * ============================================================================
  * Test case result - the umbrella result for a test execution
  * ============================================================================
  */
@@ -317,9 +364,42 @@ Schemas.TestResult = new SimpleSchema({
     type: String,
     denyUpdate: true
   },
+  // Link to the test run
+  testRunId: {
+    type: String,
+    denyUpdate: true,
+    optional: true
+  },
   // Link to the test case via the staticId
   testCaseId: {
     type: String,
+    denyUpdate: true
+  },
+  // Link to the server we're running against
+  serverId: {
+    type: String,
+    denyUpdate: true
+  },
+  // Whether to wait for commands if there is a problem
+  pauseOnFailure: {
+    type: Boolean,
+    defaultValue: false
+  },
+  // The status
+  status: {
+    type: Number,
+    allowedValues: _.map(TestResultStatus, function (d) { return d; }),
+    defaultValue: TestResultStatus.staged
+  },
+  // An abort flag
+  abort: {
+    type: Boolean,
+    defaultValue: false
+  },
+  // The result
+  result: {
+    type: Number,
+    allowedValues: _.map(TestResultCodes, function (d) { return d; }),
     optional: true
   },
   // Standard tracking fields
@@ -364,13 +444,60 @@ Schemas.TestRoleResult = new SimpleSchema({
     type: String,
     denyUpdate: true
   },
-  // Link to the test result via the staticId
+  // Link to the test run
+  testRunId: {
+    type: String,
+    denyUpdate: true,
+    optional: true
+  },
+  // Link to the test result
   testResultId: {
-    type: String
+    type: String,
+    denyUpdate: true
   },
   // Link to the test case role via the staticId
   testCaseRoleId: {
-    type: String
+    type: String,
+    denyUpdate: true
+  },
+  // Link to the test system on which the adventure will execute
+  testSystemId: {
+    type: String,
+    denyUpdate: true
+  },
+  // Link to the test agent to execute this adventure with
+  testAgentId: {
+    type: String,
+    denyUpdate: true
+  },
+  // The url to start at (for web platform operations)
+  startUrl: {
+    type: String,
+    optional: true,
+    denyUpdate: true
+  },
+  // The data context to operate in
+  dataContext: {
+    type: Object,
+    blackbox: true,
+    denyUpdate: true
+  },
+  // The process id for this adventure
+  pid: {
+    type: Number,
+    optional: true
+  },
+  // The status
+  status: {
+    type: Number,
+    allowedValues: _.map(TestResultStatus, function (d) { return d; }),
+    defaultValue: TestResultStatus.staged
+  },
+  // The result
+  result: {
+    type: Number,
+    allowedValues: _.map(TestResultCodes, function (d) { return d; }),
+    optional: true
   }
 });
 TestRoleResults = new Mongo.Collection("test_role_results");
@@ -403,13 +530,60 @@ Schemas.TestStepResult = new SimpleSchema({
     type: String,
     denyUpdate: true
   },
-  // Link to the test result via the staticId
+  // Link to the test run
+  testRunId: {
+    type: String,
+    denyUpdate: true,
+    optional: true
+  },
+  // Link to the test result
   testResultId: {
-    type: String
+    type: String,
+    denyUpdate: true
+  },
+  // Link to the test role result
+  testRoleResultId: {
+    type: String,
+    denyUpdate: true
   },
   // Link to the test case step via the staticId
   testCaseStepId: {
-    type: String
+    type: String,
+    denyUpdate: true
+  },
+  // The order to run this
+  order: {
+    type: Number,
+    denyUpdate: true
+  },
+  // The type of test case step
+  type: {
+    type: Number,
+    allowedValues: _.map(TestCaseStepTypes, function (d) { return d; }),
+    denyUpdate: true
+  },
+  // The data context for this step
+  dataContext: {
+    type: Object,
+    blackbox: true,
+    denyUpdate: true
+  },
+  // The status
+  status: {
+    type: Number,
+    allowedValues: _.map(TestResultStatus, function (d) { return d; }),
+    defaultValue: TestResultStatus.staged
+  },
+  // Various checks done during the course of the step
+  checks: {
+    type: [Object],
+    blackbox: true
+  },
+  // The result
+  result: {
+    type: Number,
+    allowedValues: _.map(TestResultCodes, function (d) { return d; }),
+    optional: true
   }
 });
 TestStepResults = new Mongo.Collection("test_step_results");
