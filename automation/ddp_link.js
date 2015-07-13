@@ -152,6 +152,15 @@ DDPLink.prototype.setTestRoleResultStatus = function (roleResultId, status) {
 };
 
 /**
+ * Set the result code of a testRoleResult
+ */
+DDPLink.prototype.setTestRoleResultCode = function (roleResultId, code) {
+  assert(roleResultId, "setTestRoleResultCode: roleResultId must not be null");
+  assert(code !== undefined, "setTestRoleResultCode: code must not be null");
+  this.call("setTestRoleResultCode", [roleResultId, code]);
+};
+
+/**
  * Set the status of a testStepResult
  */
 DDPLink.prototype.setTestStepResultStatus = function (stepResultId, status) {

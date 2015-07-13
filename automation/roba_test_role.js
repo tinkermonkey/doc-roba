@@ -105,7 +105,7 @@ function ExecuteTestRole () {
   ddpLink.setTestRoleResultStatus(test.role._id, TestResultStatus.launched);
   
   ddpAppender.setContext(test.result._id, test.role._id);
-  logger.info("MILESTONE", {context: {type: "test_role_result", testRoleResult: test.role}});
+  logger.info("MILESTONE", { type: "test_role_result", data: test.role });
   logger.debug("Executing Test Result Role: ", test.role._id);
   logger.info("Log File: ", logFile);
 
@@ -160,12 +160,12 @@ function ExecuteTestRole () {
   // get the route
   driver.getClientLogs();
   ddpLink.setTestRoleResultStatus(test.role._id, TestResultStatus.executing);
-  var i = 0, step, failed = false;
-  while(i < test.steps.length && !resultLink.abort && !driverEnded && !failed){
+  var i = 0, step, pass = false;
+  while(i < test.steps.length && !resultLink.abort && !driverEnded && pass){
     step = test.steps[i];
 
     // if the role is failed, skip over the rest of the steps
-    if(failed){
+    if(!pass){
       ddpLink.setTestStepResultStatus(step._id, TestResultStatus.skipped);
       i++;
       continue;
@@ -173,25 +173,25 @@ function ExecuteTestRole () {
 
     ddpLink.setTestStepResultStatus(step._id, TestResultStatus.launched);
     logger.info("Executing Test Step " + (i) + " of " + test.steps.length);
-    logger.info("MILESTONE", {context: {type: "step", step: step}});
+    logger.info("MILESTONE", { type: "step", data: step });
 
     // Execute the step
     try{
       switch(step.type){
         case TestCaseStepTypes.node:
-          ExecuteNodeStep(step);
+          pass = ExecuteNodeStep(step);
           break;
         case TestCaseStepTypes.action:
-          ExecuteActionStep(step);
+          pass = ExecuteActionStep(step);
           break;
         case TestCaseStepTypes.navigate:
-          ExecuteNavigationStep(step);
+          pass = ExecuteNavigationStep(step);
           break;
         case TestCaseStepTypes.wait:
-          ExecuteWaitStep(step);
+          pass = ExecuteWaitStep(step);
           break;
         case TestCaseStepTypes.custom:
-          ExecuteCustomStep(step);
+          pass = ExecuteCustomStep(step);
           break;
         default:
           throw new Error("Test Role Execution failed: Unknown step type [" + step.type + "]");
@@ -199,14 +199,20 @@ function ExecuteTestRole () {
       // done
       ddpLink.setTestStepResultStatus(step._id, TestResultStatus.complete);
     } catch (error) {
-      failed = true;
+      pass = false;
       ddpLink.setTestStepResultStatus(step._id, TestResultStatus.error);
+      ddpLink.setTestStepResultCode(step._id, TestResultCodes.fail);
     }
+
+    logger.info("MILESTONE-END", { type: "step" });
 
     i++;
   }
   logger.info("All Steps Executed");
   ddpLink.setTestRoleResultStatus(test.role._id, TestResultStatus.complete);
+  ddpLink.setTestRoleResultCode(test.role._id, pass ? TestResultCodes.pass : TestResultCodes.fail);
+
+  logger.info("MILESTONE-END", { type: "test_step_role" });
 
   // Exit out
   Exit(0);
@@ -215,10 +221,12 @@ function ExecuteTestRole () {
 /**
  * Execute a Node step
  * @param step
- * @constructor
  */
 function ExecuteNodeStep (step) {
   ddpLink.setTestStepResultStatus(step._id, TestResultStatus.executing);
+
+  // set the milestone in the log
+  logger.info("MILESTONE", { type: "node", data: step.data.node });
 
   // first step needs to be navigated manually
   if(step.order == 0){
@@ -231,34 +239,52 @@ function ExecuteNodeStep (step) {
   // Validate the current node
   var result = ValidateNode(step.data.node),
     pass = result.isReady && result.isValid;
-
-  // Save the validation checks
-  ddpLink.saveTestStepResultChecks(step._id, result.checks);
-
-  // Set the result code
-  ddpLink.setTestStepResultCode(step._id, pass ? TestResultCodes.pass : TestResultCodes.fail)
-}
-
-/**
- * Execute an Action step
- * @param step
- * @constructor
- */
-function ExecuteActionStep (step) {
-  ddpLink.setTestStepResultStatus(step._id, TestResultStatus.executing);
-
-  // take the action
-  TakeAction(step.data.action, step.data.context);
-
-  // Validate the current node
-  var result = ValidateNode(step.data.node),
-    pass = result.isReady && result.isValid;
+  logger.info("MILESTONE-END", { type: "node" });
 
   // Save the validation checks
   ddpLink.saveTestStepResultChecks(step._id, result.checks);
 
   // Set the result code
   ddpLink.setTestStepResultCode(step._id, pass ? TestResultCodes.pass : TestResultCodes.fail);
+  return pass;
+}
+
+/**
+ * Execute an Action step
+ * @param step
+ */
+function ExecuteActionStep (step) {
+  ddpLink.setTestStepResultStatus(step._id, TestResultStatus.executing);
+
+  // take the action
+  var pass = true,
+    result = {},
+    actionResult, actionError;
+  logger.info("MILESTONE", { type: "action", data: { action: step.data.action, context: step.data.context } });
+  try{
+    actionResult = TakeAction(step.data.action, step.data.context);
+  } catch(error) {
+    logger.error("Action execution failed: ", error.toString);
+    actionError = error.toString();
+    pass = false;
+  }
+  logger.info("MILESTONE-END", { type: "action" });
+
+  if(pass){
+    logger.info("MILESTONE", { type: "node", data: step.data.node });
+
+    // Validate the current node
+    result = ValidateNode(step.data.node);
+    pass = result.isReady && result.isValid;
+    logger.info("MILESTONE-END", { type: "node" });
+  }
+
+  // Save the validation checks
+  ddpLink.saveTestStepResultChecks(step._id, result.checks);
+
+  // Set the result code
+  ddpLink.setTestStepResultCode(step._id, pass ? TestResultCodes.pass : TestResultCodes.fail);
+  return pass;
 }
 
 /**
@@ -270,14 +296,19 @@ function ExecuteNavigationStep (step) {
 
   // fetch the route from the server
   var route = ddpLink.call("loadNavigationRoute", [step.data.destination, step.data.source]);
+  logger.info("MILESTONE", { type: "route", data: route });
 
   // Execute the route steps, but skip the last one because another step will validate that
-  var i = 0, failed = false, routeStep, checks = [];
-  while(i < route.steps.length - 1 && !resultLink.abort && !driverEnded && !failed ){
-    var routeStep = route.steps[i];
+  var i = 0, pass = true, routeStep, checks = [];
+  while(i < route.steps.length - 1 && !resultLink.abort && !driverEnded && pass ){
+    var actionExecuted = false, result = {},
+      actionError, actionResult;
+
+    routeStep = route.steps[i];
 
     // first step needs to be navigated manually if this is the first test step
     if(i == 0 && step.order == 0){
+      logger.info("MILESTONE", { type: "node", data: routeStep.node });
       var startingUrl = driver.buildUrl(server.url, routeStep.node.url);
       logger.trace("Navigating to starting point: ", startingUrl);
       driver.url(startingUrl);
@@ -287,19 +318,43 @@ function ExecuteNavigationStep (step) {
     // validate the node if this is the first for the test, or the nth for the route
     if((i == 0 && step.order == 0) || i > 0) {
       // Validate the node we just landed on
-      var result = ValidateNode(step.data.node),
-        pass = result.isReady && result.isValid;
+      result = ValidateNode(step.data.node);
+      pass = result.isReady && result.isValid;
+      logger.info("MILESTONE-END", { type: "node" });
     }
 
     // take the action
-    var actionResult = TakeAction(step.data.action, step.data.context);
+    if(pass){
+      logger.info("MILESTONE", { type: "action", data: { action: routeStep.action, context: step.data.context } });
+      actionExecuted = true;
+      try {
+        actionResult = TakeAction(routeStep.action, routeStep.context);
+      } catch(error){
+        pass = false;
+        actionError = error.toString();
+      }
+      logger.info("MILESTONE-END", { type: "action" });
+    }
+
+    // store the route and the checks
+    checks.push({
+      order: i,
+      pass: pass,
+      routeStep: routeStep,
+      checks: result.checks,
+      actionExecuted: actionExecuted,
+      actionResult: actionResult,
+      actionError: actionError
+    });
   }
+  logger.info("MILESTONE-END", { type: "route" });
 
   // Save the validation checks
   ddpLink.saveTestStepResultChecks(step._id, checks);
 
   // Set the result code
-  ddpLink.setTestStepResultCode(step._id, pass ? TestResultCodes.pass : TestResultCodes.fail)
+  ddpLink.setTestStepResultCode(step._id, pass ? TestResultCodes.pass : TestResultCodes.fail);
+  return pass;
 }
 
 /**
@@ -319,8 +374,9 @@ function ExecuteCustomStep (step) {
 }
 
 /**
- * 
- * @param action
+ * Take an action
+ * @param action The action to execute
+ * @param context The context from which to pull variable values
  */
 function TakeAction(action, context) {
   // take the action
@@ -412,7 +468,6 @@ function ValidateNode(node) {
 /**
  * Shut everything down
  * @param code
- * @constructor
  */
 function Exit(code) {
   // shut down the driver

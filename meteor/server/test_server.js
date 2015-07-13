@@ -133,6 +133,17 @@ Meteor.startup(function () {
     },
 
     /**
+     * Set the result code of a testRoleResult record
+     * @param testRoleResultId
+     * @param code
+     */
+    setTestRoleResultCode: function (testRoleResultId, code) {
+      check(testRoleResultId, String);
+      check(code, Number);
+      TestRoleResults.update({_id: testRoleResultId}, {$set:{result: code}});
+    },
+
+    /**
      * Set the result code of a testStepResult record
      * @param testStepResultId
      * @param code
