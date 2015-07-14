@@ -248,6 +248,92 @@ Meteor.startup(function () {
      */
     quickLaunchTestCase: function (testResult) {
 
+    },
+
+    /**
+     * Launch a test test case run
+     * @param testCaseId
+     */
+    launchDemoTestCase: function () {
+      var testCase = TestCases.findOne("FbcpXNeHvrDToZXu6"),
+        testCaseRoles = TestCaseRoles.find({
+          testCaseId: testCase.staticId,
+          projectVersionId: testCase.projectVersionId
+        }).fetch(),
+        server = Servers.findOne({
+          projectVersionId: testCase.projectVersionId,
+          active: true
+        }),
+        testSystem = TestSystems.findOne({
+          projectVersionId: testCase.projectVersionId,
+          active: true
+        }),
+        testAgent = TestAgents.findOne({
+          projectVersionId: testCase.projectVersionId,
+          staticId: {$in: testSystem.testAgents }
+        });
+
+      // Create a testResult record
+      var testResultId = TestResults.insert({
+        projectId: testCase.projectId,
+        projectVersionId: testCase.projectVersionId,
+        testCaseId: testCase.staticId,
+        serverId: server.staticId
+      });
+
+      // Create the testResult Roles
+      var testRoleResultIds = [];
+      _.each(testCaseRoles, function (testCaseRole) {
+        // identify the usertype(s) for this role
+        var nodeStep = TestCaseSteps.findOne({
+            projectVersionId: testCase.projectVersionId,
+            testCaseRoleId: testCaseRole.staticId,
+            type: TestCaseStepTypes.node
+          }),
+          userTypeNode = Nodes.findOne({
+            staticId: step.data.nodeId,
+            projectVersionId: testCase.projectVersionId
+          }),
+          userType = Util.getNodePlatformUserType(userTypeNode).userType;
+
+        // get some accounts
+        var userStore = DataStores.findOne({ dataKey: userType }),
+          account = DataStoreRows.findOne({dataStoreId: userStore._id}, {sort: {dateCreated: 1}});
+
+        // get the steps
+        var testCaseSteps = TestCaseSteps.find({
+          projectVersionId: testCase.projectVersionId,
+          testCaseRoleId: testCaseRole.staticId
+        }, {sort: {order: 1}}).fetch();
+
+        // create the role result
+        var roleResultId = TestRoleResults.insert({
+          projectId: testCase.projectId,
+          projectVersionId: testCase.projectVersionId,
+          testResultId: testResultId,
+          testCaseRoleId: testCaseRole.staticId,
+          testSystemId: testSystem.staticId,
+          testAgentId: testAgent.staticId,
+          dataContext: {
+            account: account
+          }
+        });
+        testRoleResultIds.push(roleId);
+
+        // create the step results
+        _.each(testCaseSteps, function (step) {
+          TestStepResults.insert({
+            projectId: testCase.projectId,
+            projectVersionId: testCase.projectVersionId,
+            testResultId: testResultId,
+            testRoleResultId: roleResultId,
+            testCaseStepId: step.staticId,
+            order: step.order,
+            type: step.type,
+            dataContext: {}
+          });
+        })
+      });
     }
   });
 });

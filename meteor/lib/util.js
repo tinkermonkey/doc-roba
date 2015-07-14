@@ -204,5 +204,28 @@ Util = {
     var escapedFix = new RegExp("\/\"", "g"),
       quoteFix = new RegExp("\"", "g");
     return str.replace(escapedFix, "\\\\\"").replace(quoteFix, "\\\"");
+  },
+
+  /**
+   * Get the platform and usertype for a node
+   * TODO: denormalize this data because this searching will be everywhere
+   */
+  getNodePlatformUserType: function (node) {
+    var platform, userType,
+      level = 0;
+
+    // follow the structure up to the determine the platform and user type
+    while(node.type !== NodeTypes.root && level++ < 1000){
+      if(node.type == NodeTypes.platform){
+        platform = node.staticId;
+      } else if(node.type == NodeTypes.userType){
+        userType = node.staticId;
+      }
+      node = Nodes.findOne({staticId: node.parentId, projectVersionId: node.projectVersionId});
+    }
+    return {
+      platform: platform,
+      userType: userType
+    }
   }
 };

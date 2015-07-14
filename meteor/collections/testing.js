@@ -470,12 +470,6 @@ Schemas.TestRoleResult = new SimpleSchema({
     type: String,
     denyUpdate: true
   },
-  // The url to start at (for web platform operations)
-  startUrl: {
-    type: String,
-    optional: true,
-    denyUpdate: true
-  },
   // The data context to operate in
   dataContext: {
     type: Object,
@@ -577,7 +571,8 @@ Schemas.TestStepResult = new SimpleSchema({
   // Various checks done during the course of the step
   checks: {
     type: [Object],
-    blackbox: true
+    blackbox: true,
+    optional: true
   },
   // The result
   result: {
