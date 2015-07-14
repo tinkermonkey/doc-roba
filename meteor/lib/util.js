@@ -216,13 +216,16 @@ Util = {
 
     // follow the structure up to the determine the platform and user type
     while(node.type !== NodeTypes.root && level++ < 1000){
+      console.log("getNodePlatformUserType Checking node: ", node.title, NodeTypesLookup[node.type]);
       if(node.type == NodeTypes.platform){
-        platform = node.staticId;
+        platform = node._id;
       } else if(node.type == NodeTypes.userType){
-        userType = node.staticId;
+        userType = node._id;
       }
       node = Nodes.findOne({staticId: node.parentId, projectVersionId: node.projectVersionId});
     }
+
+    console.log("getNodePlatformUserType: ", platform, userType);
     return {
       platform: platform,
       userType: userType

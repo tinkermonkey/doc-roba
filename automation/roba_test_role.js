@@ -100,8 +100,8 @@ function ExecuteTestRole () {
   TestCaseStepTypes = enums.stepTypes;
 
   // load the data bundle
-  logger.debug("Loading TestRoleResult record");
-  test = ddpLink.call("loadTestRole", testRoleResultId);
+  logger.debug("Loading the TestRole Manifest");
+  test = ddpLink.call("loadTestRoleManifest", [testRoleResultId]);
   ddpLink.setTestRoleResultStatus(test.role._id, TestResultStatus.launched);
   
   ddpAppender.setContext(test.result._id, test.role._id);

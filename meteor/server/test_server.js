@@ -87,11 +87,12 @@ Meteor.startup(function () {
       };
     },
     /**
-     * Load the context for a test
+     * Load the context for a test role execution
      * @param testRoleResultId
      */
-    loadTestRole: function (testRoleResultId) {
+    loadTestRoleManifest: function (testRoleResultId) {
       check(testRoleResultId, String);
+      Meteor.log.debug("loadTestRoleManifest: ", testRoleResultId);
 
       // load the role and the steps
       var result = {
@@ -103,9 +104,9 @@ Meteor.startup(function () {
       result.result = TestResults.findOne(result.role.testResultId);
 
       // load the test system, test agent, and server
-      result.system = TestSystems.findOne(result.role.testSystemId);
-      result.agent  = TestSystems.findOne(result.role.testAgentId);
-      result.server = TestSystems.findOne(result.result.serverId);
+      result.system = TestSystems.findOne({staticId: result.role.testSystemId, projectVersionId: result.role.projectVersionId});
+      result.agent  = TestSystems.findOne({staticId: result.role.testAgentId, projectVersionId: result.role.projectVersionId});
+      result.server = TestSystems.findOne({staticId: result.result.serverId, projectVersionId: result.role.projectVersionId});
 
       return result;
     },
@@ -284,21 +285,38 @@ Meteor.startup(function () {
       // Create the testResult Roles
       var testRoleResultIds = [];
       _.each(testCaseRoles, function (testCaseRole) {
+        console.log("Creating TestRoleResult for testCaseRole: ", testCaseRole.title, testCaseRole.staticId);
+
         // identify the usertype(s) for this role
         var nodeStep = TestCaseSteps.findOne({
             projectVersionId: testCase.projectVersionId,
             testCaseRoleId: testCaseRole.staticId,
-            type: TestCaseStepTypes.node
+            type: TestCaseStepTypes.node,
+            "data.nodeId": { $exists: true }
           }),
           userTypeNode = Nodes.findOne({
-            staticId: step.data.nodeId,
-            projectVersionId: testCase.projectVersionId
+            projectVersionId: testCase.projectVersionId,
+            staticId: nodeStep.data.nodeId
           }),
           userType = Util.getNodePlatformUserType(userTypeNode).userType;
+        console.log("Using node step to determine userType: ", nodeStep);
+        console.log("Using node to determine userType: ", userType);
 
-        // get some accounts
-        var userStore = DataStores.findOne({ dataKey: userType }),
-          account = DataStoreRows.findOne({dataStoreId: userStore._id}, {sort: {dateCreated: 1}});
+        if(!userType){
+          Meteor.log.error("Could not get userType for node: ", userTypeNode, nodeStep);
+          return;
+        }
+
+        // get the account for this role
+        var userStore = DataStores.findOne({
+          dataKey: userType
+        });
+        if(!userStore){
+          Meteor.log.error("Could not get userStore for userType: " + userType);
+          return;
+        }
+
+        var account = DataStoreRows.findOne({dataStoreId: userStore._id}, {sort: {dateCreated: 1}});
 
         // get the steps
         var testCaseSteps = TestCaseSteps.find({
@@ -318,7 +336,7 @@ Meteor.startup(function () {
             account: account
           }
         });
-        testRoleResultIds.push(roleId);
+        testRoleResultIds.push(roleResultId);
 
         // create the step results
         _.each(testCaseSteps, function (step) {

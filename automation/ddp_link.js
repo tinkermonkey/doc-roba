@@ -118,6 +118,11 @@ DDPLink.prototype.disconnect = function () {
 DDPLink.prototype.call = function (method, args) {
   var future = new Future();
 
+  assert(method, "call: method must not be null");
+  if(args){
+    assert(typeof args == "object", "call: args must be an array or object, not " + typeof(args));
+  }
+
   logger.debug("Calling method: ", method);
   this.ddp.call(method, args, function (error, result) {
     if(error){
