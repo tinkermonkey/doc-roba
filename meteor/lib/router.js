@@ -180,6 +180,15 @@ Router.map(function () {
       Meteor.subscribe("adventure_log", this.params.adventureId)
     ]; }
   });
+  this.route("test_result", {
+    path: "/test_result/:projectId/:_id",
+    data: function () { return TestResults.findOne(this.params._id); },
+    waitOn: function () { return [
+      Meteor.subscribe("test_result", this.params.projectId, this.params._id),
+      Meteor.subscribe("test_result_roles", this.params.projectId, this.params._id),
+      Meteor.subscribe("test_result_steps", this.params.projectId, this.params._id),
+    ]; }
+  });
   this.route("test", {
     path: "/test/",
     //layoutTemplate: "test_layout",

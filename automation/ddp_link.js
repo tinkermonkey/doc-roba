@@ -188,7 +188,7 @@ DDPLink.prototype.saveTestStepResultChecks = function (stepResultId, checks) {
  */
 DDPLink.prototype.setTestStepResultCode = function (stepResultId, code) {
   assert(stepResultId, "setTestStepResultCode: stepResultId must not be null");
-  assert(code, "setTestStepResultCode: status must not be null");
+  assert(code !== undefined, "setTestStepResultCode: code must not be null");
   this.call("setTestStepResultCode", [stepResultId, code]);
 };
 

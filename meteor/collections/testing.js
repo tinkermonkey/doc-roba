@@ -556,11 +556,19 @@ Schemas.TestStepResult = new SimpleSchema({
     allowedValues: _.map(TestCaseStepTypes, function (d) { return d; }),
     denyUpdate: true
   },
+  // The data from the test step (not the context from the test case run)
+  data: {
+    type: Object,
+    blackbox: true,
+    denyUpdate: true,
+    optional: true
+  },
   // The data context for this step
   dataContext: {
     type: Object,
     blackbox: true,
-    denyUpdate: true
+    denyUpdate: true,
+    optional: true
   },
   // The status
   status: {

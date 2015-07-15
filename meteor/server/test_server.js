@@ -18,7 +18,6 @@ Meteor.startup(function () {
         return TestGroups.find({projectVersionId: projectVersionId});
       }
     }
-    console.log("TestGroups publication: returning nothing");
     return [];
   });
   Meteor.publish('test_cases', function (projectId, projectVersionId) {
@@ -30,7 +29,17 @@ Meteor.startup(function () {
         return TestCases.find({projectVersionId: projectVersionId});
       }
     }
-    console.log("TestCases publication: returning nothing");
+    return [];
+  });
+  Meteor.publish('test_case', function (projectId, projectVersionId, testCaseId) {
+    console.log("Publish: test_case");
+    // check that there is a project role for the current user
+    if(this.userId && projectId && projectVersionId){
+      var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
+      if(role){
+        return TestCases.find({projectVersionId: projectVersionId, staticId: testCaseId});
+      }
+    }
     return [];
   });
   Meteor.publish('test_case_roles', function (projectId, projectVersionId, testCaseId) {
@@ -42,7 +51,6 @@ Meteor.startup(function () {
         return TestCaseRoles.find({projectVersionId: projectVersionId, testCaseId: testCaseId});
       }
     }
-    console.log("TestCases publication: returning nothing");
     return [];
   });
   Meteor.publish('test_case_steps', function (projectId, projectVersionId, testCaseId) {
@@ -54,7 +62,39 @@ Meteor.startup(function () {
         return TestCaseSteps.find({projectVersionId: projectVersionId, testCaseId: testCaseId});
       }
     }
-    console.log("TestCases publication: returning nothing");
+    return [];
+  });
+  Meteor.publish('test_result', function (projectId, testResultId) {
+    console.log("Publish: test_result");
+    // check that there is a project role for the current user
+    if(this.userId && projectId){
+      var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
+      if(role){
+        return TestResults.find(testResultId);
+      }
+    }
+    return [];
+  });
+  Meteor.publish('test_result_roles', function (projectId, testResultId) {
+    console.log("Publish: test_result_roles");
+    // check that there is a project role for the current user
+    if(this.userId && projectId){
+      var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
+      if(role){
+        return TestRoleResults.find({testResultId: testResultId});
+      }
+    }
+    return [];
+  });
+  Meteor.publish('test_result_steps', function (projectId, testResultId) {
+    console.log("Publish: test_result_steps");
+    // check that there is a project role for the current user
+    if(this.userId && projectId){
+      var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
+      if(role){
+        return TestStepResults.find({testResultId: testResultId});
+      }
+    }
     return [];
   });
 
@@ -105,8 +145,8 @@ Meteor.startup(function () {
 
       // load the test system, test agent, and server
       result.system = TestSystems.findOne({staticId: result.role.testSystemId, projectVersionId: result.role.projectVersionId});
-      result.agent  = TestSystems.findOne({staticId: result.role.testAgentId, projectVersionId: result.role.projectVersionId});
-      result.server = TestSystems.findOne({staticId: result.result.serverId, projectVersionId: result.role.projectVersionId});
+      result.agent  = TestAgents.findOne({staticId: result.role.testAgentId, projectVersionId: result.role.projectVersionId});
+      result.server = Servers.findOne({staticId: result.result.serverId, projectVersionId: result.role.projectVersionId});
 
       return result;
     },
@@ -162,7 +202,7 @@ Meteor.startup(function () {
      */
     saveTestStepResultChecks: function (testStepResultId, checks) {
       check(testStepResultId, String);
-      check(checks, Array);
+      //check(checks, Array); This might be empty, legitimately
       TestStepResults.update({_id: testStepResultId}, {$set:{checks: checks}});
     },
 
@@ -340,6 +380,23 @@ Meteor.startup(function () {
 
         // create the step results
         _.each(testCaseSteps, function (step) {
+          // fetch the data needed for this step
+          var data = step.data;
+
+          // this only applies to node and action steps
+          // - route steps are done live to be nimble
+          // - wait doesn't need data ahead of time
+          // - custom is just custom
+          switch(step.type){
+            case TestCaseStepTypes.node:
+              data.node = Nodes.findOne({staticId: step.data.nodeId, projectVersionId: testCase.projectVersionId});
+              break;
+            case TestCaseStepTypes.action:
+              data.action = Actions.findOne({staticId: step.data.actionId, projectVersionId: testCase.projectVersionId});
+              data.node = Nodes.findOne({staticId: step.data.nodeId, projectVersionId: testCase.projectVersionId});
+              break;
+          }
+
           TestStepResults.insert({
             projectId: testCase.projectId,
             projectVersionId: testCase.projectVersionId,
@@ -348,6 +405,7 @@ Meteor.startup(function () {
             testCaseStepId: step.staticId,
             order: step.order,
             type: step.type,
+            data: data,
             dataContext: {}
           });
         })

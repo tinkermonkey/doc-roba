@@ -1,0 +1,10 @@
+.test-result-container {
+  padding: 5px;
+}
+
+.test-role-result-container {
+  display: inline-block;
+  vertical-align: top;
+  padding: 10px;
+  border-right: 1px dashed #dddddd;
+}

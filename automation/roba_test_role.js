@@ -49,7 +49,7 @@ if(!fs.existsSync(logPath)){
 // Get the logging setup
 //log4js.clearAppenders();
 log4js.loadAppender("file");
-logger.setLevel("DEBUG");
+logger.setLevel("TRACE");
 logger.debug("Adding log appender: ", logFile);
 log4js.addAppender(log4js.appenders.file(logFile));
 
@@ -98,10 +98,12 @@ function ExecuteTestRole () {
   TestResultStatus  = enums.resultStatus;
   TestResultCodes   = enums.resultCodes;
   TestCaseStepTypes = enums.stepTypes;
+  logger.trace("enums: ", enums);
 
   // load the data bundle
   logger.debug("Loading the TestRole Manifest");
   test = ddpLink.call("loadTestRoleManifest", [testRoleResultId]);
+  logger.trace("Manifest: ", test);
   ddpLink.setTestRoleResultStatus(test.role._id, TestResultStatus.launched);
   
   ddpAppender.setContext(test.result._id, test.role._id);
@@ -150,17 +152,18 @@ function ExecuteTestRole () {
 
   // pull out the data context
   account = test.role.dataContext.account;
+  server = test.server;
 
   // update the steps status' to queued
   logger.trace("Setting steps to queued status");
   _.each(test.steps, function (step) {
-    ddpLink.set(step.stepId, TestResultStatus.queued);
+    ddpLink.setTestStepResultStatus(step._id, TestResultStatus.queued);
   });
 
   // get the route
   driver.getClientLogs();
   ddpLink.setTestRoleResultStatus(test.role._id, TestResultStatus.executing);
-  var i = 0, step, pass = false;
+  var i = 0, step, pass = true;
   while(i < test.steps.length && !resultLink.abort && !driverEnded && pass){
     step = test.steps[i];
 
@@ -172,7 +175,7 @@ function ExecuteTestRole () {
     }
 
     ddpLink.setTestStepResultStatus(step._id, TestResultStatus.launched);
-    logger.info("Executing Test Step " + (i) + " of " + test.steps.length);
+    logger.info("Executing Test Step " + (i + 1) + " of " + test.steps.length);
     logger.info("MILESTONE", { type: "step", data: step });
 
     // Execute the step
@@ -199,6 +202,7 @@ function ExecuteTestRole () {
       // done
       ddpLink.setTestStepResultStatus(step._id, TestResultStatus.complete);
     } catch (error) {
+      logger.error("Step execution failed: ", error);
       pass = false;
       ddpLink.setTestStepResultStatus(step._id, TestResultStatus.error);
       ddpLink.setTestStepResultCode(step._id, TestResultCodes.fail);
@@ -209,6 +213,17 @@ function ExecuteTestRole () {
     i++;
   }
   logger.info("All Steps Executed");
+
+  if(i !== test.steps.length || !pass || resultLink.abort || driverEnded){
+    logger.debug("Main Loop Criteria: ", {
+      i: i,
+      stepCount: test.steps.length,
+      abort: resultLink.abort,
+      driverEnded: driverEnded,
+      pass: pass
+    });
+  }
+
   ddpLink.setTestRoleResultStatus(test.role._id, TestResultStatus.complete);
   ddpLink.setTestRoleResultCode(test.role._id, pass ? TestResultCodes.pass : TestResultCodes.fail);
 
@@ -223,6 +238,7 @@ function ExecuteTestRole () {
  * @param step
  */
 function ExecuteNodeStep (step) {
+  logger.debug("Executing node step: ", step.order);
   ddpLink.setTestStepResultStatus(step._id, TestResultStatus.executing);
 
   // set the milestone in the log
@@ -230,10 +246,11 @@ function ExecuteNodeStep (step) {
 
   // first step needs to be navigated manually
   if(step.order == 0){
+    logger.debug("This is step 0, building URL from components: ", server.url, step.data.node.url);
     var startingUrl = driver.buildUrl(server.url, step.data.node.url);
-    logger.trace("Navigating to starting point: ", startingUrl);
+    logger.debug("Navigating to starting point: ", startingUrl);
     driver.url(startingUrl);
-    logger.debug("Reached starting point: ", startingUrl);
+    logger.debug("Reached starting point");
   }
 
   // Validate the current node
@@ -330,6 +347,7 @@ function ExecuteNavigationStep (step) {
       try {
         actionResult = TakeAction(routeStep.action, routeStep.context);
       } catch(error){
+        logger.error("Action failed: ", error);
         pass = false;
         actionError = error.toString();
       }

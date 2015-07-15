@@ -7,18 +7,18 @@
 
     <div class="no-wrap">
       {{#if hasRoles}}
-          {{#each testCaseRoles}}
-            <div class="inline-block test-case-role-container align-top" style="{{getRoleWidth ..}}">
-              {{> TestCaseRole }}
-            </div>
-          {{/each}}
+        {{#each testCaseRoles}}
+          <div class="test-case-role-container" style="{{getRoleWidth ..}}">
+            {{> TestCaseRole }}
+          </div>
+        {{/each}}
       {{else}}
-        <div class="inline-block test-case-role-container align-top">
+        <div class="test-case-role-container">
           <h4>This Test Case has no roles</h4>
         </div>
       {{/if}}
 
-      <div class="inline-block align-top add-role-container">
+      <div class="add-role-container">
         <button class="btn btn-xs btn-primary btn-add-role">
           <span class="glyphicon glyphicon-user"></span>
           Add Role

@@ -4,13 +4,6 @@
 $.fn.editable.defaults.mode = "inline";
 
 /**
- * Date formatter function
- */
-Template.registerHelper("dateFormat", function(timestamp, format){
-  return moment(timestamp).format("ddd, M/D");
-});
-
-/**
  * Debug
  */
 Template.registerHelper("debug", function(){
@@ -80,7 +73,7 @@ Template.registerHelper("renderChangeType", function (type) {
  * Render a formatted date
  */
 Template.registerHelper("dateFormat", function (date, format) {
-  format = format ? "MMM Do, YY" : format;
+  format = _.isString(format) ? format : "MMM Do, YY";
   if(date){
     return moment(date).format(format);
   }

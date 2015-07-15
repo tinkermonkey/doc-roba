@@ -1,0 +1,16 @@
+<template name="TestResult">
+  {{#if Template.subscriptionsReady}}
+    <div class="test-result-container">
+      {{#with resultWithCase}}
+        <h2>Test Result: <span class="dark-blue">{{testCase.title}}</span><br><small>{{dateFormat dateCreated "ddd MMM do, YY h:mm:ss A"}}</small></h2>
+      {{/with}}
+      <div class="no-wrap">
+        {{#each roleResults}}
+          <div class="test-role-result-container">
+            {{> TestRoleResult }}
+          </div>
+        {{/each}}
+      </div>
+    </div>
+  {{/if}}
+</template>

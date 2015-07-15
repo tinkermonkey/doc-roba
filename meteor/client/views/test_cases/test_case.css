@@ -100,11 +100,15 @@
 }
 
 .test-case-role-container {
+  vertical-align: top;
+  display: inline-block;
   padding: 10px;
   border-right: 1px dashed #dddddd;
 }
 
 .add-role-container {
+  vertical-align: top;
+  display: inline-block;
   padding: 10px;
   transform: rotate(90deg);
   -webkit-transform: rotate(90deg);
