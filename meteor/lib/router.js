@@ -1,21 +1,3 @@
-/**
- * Setup a static path for the stored documentation
- */
-if (Meteor.isServer) {
-  Meteor.startup(function () {
-    // code to run on server at startup
-    var fs = Npm.require("fs"),
-      logPath = fs.realpathSync(process.env.PWD) + "/" + Meteor.settings.paths.automation_logs;
-
-    // Make sure the log path exists
-    if(!fs.existsSync(logPath)){
-      console.log("Creating log directory: ", logPath);
-      fs.mkdirSync(logPath);
-    }
-
-    StaticServer.add("/logs", logPath);
-  });
-}
 
 /**
  * Setup the default router config
@@ -186,13 +168,14 @@ Router.map(function () {
     waitOn: function () { return [
       Meteor.subscribe("test_result", this.params.projectId, this.params._id),
       Meteor.subscribe("test_result_roles", this.params.projectId, this.params._id),
-      Meteor.subscribe("test_result_steps", this.params.projectId, this.params._id),
+      Meteor.subscribe("test_result_steps", this.params.projectId, this.params._id)
     ]; }
   });
   this.route("test", {
     path: "/test/",
     //layoutTemplate: "test_layout",
     waitOn: function () { return [
+      Meteor.subscribe("screen_shots")
     ]; }
   });
 });

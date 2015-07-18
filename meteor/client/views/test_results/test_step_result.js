@@ -1,7 +1,8 @@
 /**
  * Template Helpers
  */
-Template.TestStepResult.helpers({});
+Template.TestStepResult.helpers({
+});
 
 /**
  * Template Event Handlers

@@ -88,6 +88,56 @@ Meteor.startup(function () {
     renderDataStoreRow: function (rowId) {
       check(rowId, String);
       return DSUtil.renderRow(rowId);
+    },
+
+    /**
+     * Perform an unvalidated insert for a data store row
+     * This bypasses the DataStoreRow validation, but validates using the DataStore
+     * fabricated schema so it is not a black box
+     */
+    updateDataStoreRow: function (recordId, update) {
+      // Require authentication
+      var userId = this.userId;
+      if(!userId){
+        throw new Meteor.Error("Authentication Failed", "User is not authenticated");
+      }
+
+      // require a full set of source material
+      check(recordId, String);
+      check(update, Object);
+
+      // pull the DataStoreRow record
+      var record = DataStoreRows.findOne(recordId);
+      if(!record){
+        throw new Meteor.Error("Update Failed", "Record not found");
+      }
+
+      // Validate all of the Ids by pulling in the records
+      var sourceVersion = ProjectVersions.findOne(record.projectVersionId),
+        project = Projects.findOne(sourceVersion.projectId);
+      if(sourceVersion && project) {
+        // validate that the current user has permission to create a new version
+        var role = ProjectRoles.findOne({projectId: sourceVersion.projectId, userId: userId});
+        if (!role || !(role.role === RoleTypes.admin || role.role === RoleTypes.owner)) {
+          Meteor.log.error("updateDataStoreRow: user " + userId + " not authorized, " + (role ? role.role : "no role for this project"));
+          throw new Meteor.Error("Not Authorized", "You are not authorized to make this change");
+        }
+
+        // validate against the schema for this datastore
+        var datastore = DataStores.findOne(record.dataStoreId),
+          dsSchema = DSUtil.simpleSchema(datastore.schema),// TODO: these should be cached
+          valid = dsSchema.newContext().validate(update);
+
+        if(!valid){
+          throw new Meteor.Error("Validated Failed", "Record is not valid");
+        }
+
+        DataStoreRows.update(recordId, {$set: update}, {filter: false, validate: false}, function (error, response) {
+          if(error){
+            throw new Meteor.Error("DataStoreRow Update Failed", error);
+          }
+        });
+      }
     }
   });
 });

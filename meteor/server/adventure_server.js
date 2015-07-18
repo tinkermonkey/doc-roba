@@ -1,29 +1,7 @@
 /**
- * keep track of the drones that are launched
- */
-var launcherPath, adventureProcs, spawn, fs;
-
-/**
  * Methods and publications to enable the adventure execution
  */
 Meteor.startup(function () {
-  // Needed to launch helpers
-  fs             = Npm.require("fs");
-  exec           = Npm.require("child_process").exec;
-  spawn          = Npm.require("child_process").spawn;
-  logPath        = fs.realpathSync(process.env.PWD) + "/" + Meteor.settings.paths.automation_logs + "/launcher/";
-  launcherPath   = fs.realpathSync(process.env.PWD) + "/" + Meteor.settings.paths.automation + "/";
-  adventureProcs = {};
-
-  Meteor.log.info("Adventure Server logPath: " + logPath);
-  Meteor.log.info("Adventure Server launcherPath: " + launcherPath);
-
-  // Make sure the log path exists
-  if(!fs.existsSync(logPath)){
-    Meteor.log.debug("Creating log directory: " + logPath);
-    fs.mkdirSync(logPath);
-  }
-
   /**
    * Publications
    */
@@ -256,12 +234,12 @@ launchAdventure = function (adventureId) {
     Adventures.update({_id: adventureId}, {$set: {status: AdventureStatus.queued}});
 
     // create a log file path
-    var logFilePath = logPath + "launch_" + adventure._id + ".log",
+    var logFilePath = baseLogPath + "launch_" + adventure._id + ".log",
       out = fs.openSync(logFilePath, "a"),
       err = fs.openSync(logFilePath, "a");
 
     // if the helper is not running, launch locally
-    var proc = spawn("node", [launcherPath + "roba_adventure.js", adventure._id], {
+    var proc = spawn("node", [automationPath + "roba_adventure.js", adventure._id], {
       stdio: [ 'ignore', out, err ]
     });
 

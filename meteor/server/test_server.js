@@ -97,18 +97,17 @@ Meteor.startup(function () {
     }
     return [];
   });
-
-  /**
-   * publications to support test running
-   */
-  Meteor.publish('test_result', function (testResultId) {
-    return TestResults.find({_id: testResultId});
-  });
-  Meteor.publish('test_role_result', function (testRoleResultId) {
-    return TestRoleResults.find({_id: testRoleResultId});
-  });
-  Meteor.publish('test_step_results', function (testRoleResultId) {
-    return TestStepResults.find({testRoleResultId: testRoleResultId});
+  Meteor.publish('screen_shots', function (projectId, testResultId) {
+    console.log("Publish: screen_shots");
+    return ScreenShots.find();
+    // check that there is a project role for the current user
+    if(this.userId && projectId){
+      var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
+      if(role){
+        return ScreenShots.find({testResultId: testResultId});
+      }
+    }
+    return [];
   });
 
   /**
@@ -285,18 +284,18 @@ Meteor.startup(function () {
 
     /**
      * Launch a test case run
-     * @param testResult
+     * @param testCaseId
      */
-    quickLaunchTestCase: function (testResult) {
+    quickLaunchTestCase: function (testCaseId) {
 
     },
 
     /**
-     * Launch a test test case run
+     * Create a test test case run
      * @param testCaseId
      */
-    launchDemoTestCase: function () {
-      var testCase = TestCases.findOne("FbcpXNeHvrDToZXu6"),
+    createDemoTestCase: function (testCaseId) {
+      var testCase = TestCases.findOne(testCaseId || "FbcpXNeHvrDToZXu6"),
         testCaseRoles = TestCaseRoles.find({
           testCaseId: testCase.staticId,
           projectVersionId: testCase.projectVersionId
@@ -409,6 +408,30 @@ Meteor.startup(function () {
             dataContext: {}
           });
         })
+      });
+    },
+
+    /**
+     * Launch a test result run
+     */
+    launchTestResult: function (testResultId) {
+      check(testResultId, String);
+      //(Meteor.user(), Object);
+      Meteor.log.info("launchTestResult: " + testResultId);
+
+      // get the list of roles, create a launch token and fire away
+      TestRoleResults.find({testResultId: testResultId}).forEach(function (role) {
+        Meteor.log.info("launchTestResult launching role: " + role._id);
+        var token = Tokenizer.generate({
+            user: Meteor.user(),
+            expires: { minutes: 5 }
+          }),
+          command = ["roba_test_role.js", "--roleId", role._id, "--token", token].join(" "),
+          logFile = ["test_role_result_", role._id, ".log"].join(""),
+          proc = ProcessLauncher.launchAutomation(command, logFile);
+
+        TestRoleResults.update(role._id, {$set: {pid: proc.pid}});
+        Meteor.log.info("launchTestResult launched: " + role._id + " as " + proc.pid + " > " + logFile);
       });
     }
   });

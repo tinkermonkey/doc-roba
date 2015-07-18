@@ -24,7 +24,7 @@ var Future  = require("fibers/future"),
     }
   };
 
-logger.setLevel("INFO");
+logger.setLevel("DEBUG");
 ddpLogger.setLevel("INFO");
 
 /**
@@ -52,18 +52,24 @@ var DDPLink = function (config) {
 /**
  * Connect to the ddp server
  */
-DDPLink.prototype.connect = function () {
+DDPLink.prototype.connect = function (authToken) {
+  logger.debug("ddplink.connect: ", authToken);
   var link = this,
     connectFuture = new Future();
 
-  logger.debug("Calling ddp.connect");
   link.ddp.connect(function(error, wasReconnect){
     if(error){
-      logger.error("Connect error: ", error);
+      logger.error("ddplink.connect error: ", error);
+    }
+
+    // if there is an authToken, try to use it
+    if(authToken){
+      logger.info("ddplink.connect: sending authToken");
+      link.userToken = link.call("getUserToken", [authToken]);
     }
 
     if(wasReconnect){
-      logger.info("Reconnected");
+      logger.info("ddplink.connect: reconnected");
 
       // reconnect the subscriptions
       _.each(link.subscriptions, function (subscription) {
@@ -71,7 +77,7 @@ DDPLink.prototype.connect = function () {
         link.ddp.subscribe(subscription.name, subscription.params || []);
       })
     } else {
-      logger.debug("Connected");
+      logger.info("ddplink.connect: connected");
     }
 
     // if this is the first time (eg. not a reconnect), make sure to resolve the future
@@ -81,12 +87,12 @@ DDPLink.prototype.connect = function () {
       // setup the heartbeat
       if(!link.heartbeatTimeout){
         link.heartbeatTimeout = setInterval(function () {
-          logger.debug("Sending heartbeat");
+          logger.trace("ddplink: sending heartbeat");
           link.ddp.call("heartbeat", [], function (error, response) {
             if(error){
               logger.error("Heartbeat error: ", error);
             } else {
-              logger.debug("Heartbeat response: ", response)
+              logger.trace("ddplink heartbeat response: ", response)
             }
           });
         }, heartbeatTime)

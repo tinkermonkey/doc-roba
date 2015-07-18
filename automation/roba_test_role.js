@@ -13,7 +13,9 @@ var Future      = require("fibers/future"),
   DDPLink       = require("./ddp_link"),
   RobaDriver    = require("./roba_driver"),
   RobaReady     = require("./roba_ready"),
-  testRoleResultId   = process.argv[2],
+  argv          = require('minimist')(process.argv.slice(2)),
+  testRoleResultId = argv.roleId,
+  authToken     = argv.token,
   timestamp     = moment().format("YYYY-MM-DD_HH-mm-ss"),
   logger        = log4js.getLogger("test_role"),
   logPath       = fs.realpathSync(__dirname + '/..') + '/logs/test_role_results/' + timestamp + '_' + testRoleResultId + '/',
@@ -25,8 +27,13 @@ var Future      = require("fibers/future"),
   test, resultLink,
   TestResultStatus, TestResultCodes, TestCaseStepTypes;
 
-// Need an adventure ID to do anything
+// Need a testRoleResultId to do anything
+//console.log("roba_test_role arguments: ", argv);
+//console.log("roba_test_role raw: ", process.argv);
 if(!testRoleResultId){
+  throw new Error("No testRoleResultId specified");
+  process.exit(1);
+} else if(!authToken){
   throw new Error("No testRoleResultId specified");
   process.exit(1);
 }
@@ -86,7 +93,7 @@ function ExecuteTestRole () {
 
   // Connect to the server
   logger.info("Initiating DDP connection");
-  ddpLink.connect();
+  ddpLink.connect(authToken);
 
   // Create the ddpLogger
   logger.debug("Creating DDP logger");

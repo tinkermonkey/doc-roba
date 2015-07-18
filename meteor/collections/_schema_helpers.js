@@ -94,6 +94,9 @@ allowIfTester = function (userId, doc) {
   var pr = ProjectRoles.findOne({userId: userId, projectId: doc.projectId});
   return !(userId && pr && (pr.role === RoleTypes.admin || pr.role === RoleTypes.owner || pr.role === RoleTypes.tester));
 };
+denyIfNotAuthenticated = function (userId, doc) {
+  return userId == null || userId == false;
+};
 
 /**
  * ============================================================================

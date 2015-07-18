@@ -24,6 +24,7 @@ Template.TestResult.created = function () {
   instance.subscribe("test_case", instance.data.projectId, instance.data.projectVersionId, instance.data.testCaseId);
   instance.subscribe("test_case_roles", instance.data.projectId, instance.data.projectVersionId, instance.data.testCaseId);
   instance.subscribe("test_case_steps", instance.data.projectId, instance.data.projectVersionId, instance.data.testCaseId);
+  instance.subscribe("server", instance.data.projectId, instance.data.projectVersionId, instance.data.serverId);
 };
 
 /**

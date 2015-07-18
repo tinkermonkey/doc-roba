@@ -1,5 +1,19 @@
 <template name="TestRoleResult">
-  {{#with resultWithRole}}
-    <h3>{{testCaseRole.title}}</h3>
-  {{/with}}
+  {{#if Template.subscriptionsReady}}
+    {{#with resultWithRole}}
+      <h3>{{testCaseRole.title}}</h3>
+    {{/with}}
+    <table class="test-role-result-table">
+      <tr>
+        <td></td>
+        <td rowspan="{{getMapRowSpan}}">
+          {{> TestRoleResultMap stepResults }}
+        </td>
+        <td></td>
+      </tr>
+      {{#each stepResults}}
+        {{> TestStepResult }}
+      {{/each}}
+    </table>
+  {{/if}}
 </template>

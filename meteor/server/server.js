@@ -2,6 +2,9 @@
  * Expose these for the client to call
  */
 Meteor.startup(function () {
+  // we need a synchronous version of Tokenizer.verify
+  Tokenizer.verifySync = Meteor.wrapAsync(Tokenizer.verify);
+
   Meteor.methods({
     echo: function () {
       // Require authentication
@@ -12,19 +15,31 @@ Meteor.startup(function () {
       Meteor.log.debug("Echo called by user " + this.userId);
       return { user: this.userId, argv: arguments };
     },
-    test: function () {
-      // Require authentication
-      if(!this.userId){
-        throw new Meteor.Error("Authentication Failed", "User is not authenticated");
-      }
 
-      var record = Nodes.findOne("LrjQ5725Y9BgKiJ35"),
-        clean = _.omit(record, "_id"),
-        replica = createReplica(record);
-      console.log("Cleaned:", clean);
-      console.log("Replica:", clean);
-      return replica;
+    /**
+     * Get a user's real auth token from a one-time token
+     * @param token
+     */
+    getUserToken: function (token) {
+      check(token, String);
+
+      // lookup the user before the token is verified and destroyed
+      var user = Meteor.users.findOne({
+        'services.email.verificationTokens.token': token
+      });
+
+      // make sure there a user associated with the token
+      if(user){
+        // make sure the token is also valid
+        var valid = Tokenizer.verifySync(token);
+        if(valid){
+          console.log("getUserToken: ", user);
+        }
+      } else {
+        new Meteor.Error(403, 'Error 403: Not authorized');
+      }
     },
+
     /**
      * Delete a node from a project version (and only from this version!)
      * Also delete items linking to this node (Actions, variants, etc)
@@ -68,6 +83,7 @@ Meteor.startup(function () {
       }
       //return nodeId;
     },
+
     /**
      * Create a new version, replicating all data from a version
      * @param projectId The project to
@@ -127,56 +143,6 @@ Meteor.startup(function () {
         return versionId;
       } else {
         throw new Meteor.Error("Source Data Failure", "Unable to create version from information provided");
-      }
-    },
-
-    /**
-     * Perform an unvalidated insert for a data store row
-     * This bypasses the DataStoreRow validation, but validates using the DataStore
-     * fabricated schema so it is not a black box
-     */
-    updateDataStoreRow: function (recordId, update) {
-      // Require authentication
-      var userId = this.userId;
-      if(!userId){
-        throw new Meteor.Error("Authentication Failed", "User is not authenticated");
-      }
-
-      // require a full set of source material
-      check(recordId, String);
-      check(update, Object);
-
-      // pull the DataStoreRow record
-      var record = DataStoreRows.findOne(recordId);
-      if(!record){
-        throw new Meteor.Error("Update Failed", "Record not found");
-      }
-
-      // Validate all of the Ids by pulling in the records
-      var sourceVersion = ProjectVersions.findOne(record.projectVersionId),
-        project = Projects.findOne(sourceVersion.projectId);
-      if(sourceVersion && project) {
-        // validate that the current user has permission to create a new version
-        var role = ProjectRoles.findOne({projectId: sourceVersion.projectId, userId: userId});
-        if (!role || !(role.role === RoleTypes.admin || role.role === RoleTypes.owner)) {
-          Meteor.log.error("updateDataStoreRow: user " + userId + " not authorized, " + (role ? role.role : "no role for this project"));
-          throw new Meteor.Error("Not Authorized", "You are not authorized to make this change");
-        }
-
-        // validate against the schema for this datastore
-        var datastore = DataStores.findOne(record.dataStoreId),
-          dsSchema = DSUtil.simpleSchema(datastore.schema),// TODO: these should be cached
-          valid = dsSchema.newContext().validate(update);
-
-        if(!valid){
-          throw new Meteor.Error("Validated Failed", "Record is not valid");
-        }
-
-        DataStoreRows.update(recordId, {$set: update}, {filter: false, validate: false}, function (error, response) {
-          if(error){
-            throw new Meteor.Error("DataStoreRow Update Failed", error);
-          }
-        });
       }
     }
   });

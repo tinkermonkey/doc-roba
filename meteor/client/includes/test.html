@@ -1,15 +1,37 @@
 <template name="test">
-  <div style="position:absolute; width: 100px; height: 10px; top: 400px; left: 400px; background-color: #F00;">
-    <div style="position: absolute; width: 150px; bottom: -15px; right: 10px; padding:10px; background-color: #ffff00;">
-      <div style="width:100%; background-color: #1a85ff;">Hello<br>
-        This is some text
-      </div>
-      <div style="width:100%; background-color: deeppink;">more text
-      </div>
-    </div>
+  <h2>Image Files</h2>
+  <div class="well imageDropArea">
+    <input type="file" multiple class="images myFileInput">
+  </div>
+  <div class="imageArea clearfix">
+    {{#each screenShots}}
+      {{> uploadedImage}}
+    {{/each}}
   </div>
 </template>
 
 <template name="test_layout">
   {{> yield }}
+</template>
+
+<template name="uploadedImage">
+  <div class="media well">
+    <div class="media-body">
+      <h4 class="media-heading">{{this.name}}</h4>
+      <p><em>Original size: {{this.formattedSize}}<br>Type: {{this.type store="screenshots"}}</em></p>
+      {{#if this.isUploaded}}
+        {{#if this.hasStored 'screenshots'}}
+          {{#with this.url download=true}}
+            <a href="{{this}}" class="btn btn-default btn-xs" role="button">Download</a>
+          {{/with}}
+        {{else}}
+          Storing...
+        {{/if}}
+      {{else}}
+        Uploading: {{this.uploadProgress}}%
+        <p>{{> FS.UploadProgressBar}}</p>
+      {{/if}}
+      {{> FS.DeleteButton class="btn btn-danger btn-xs"}}
+    </div>
+  </div>
 </template>
