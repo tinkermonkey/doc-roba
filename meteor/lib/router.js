@@ -168,14 +168,16 @@ Router.map(function () {
     waitOn: function () { return [
       Meteor.subscribe("test_result", this.params.projectId, this.params._id),
       Meteor.subscribe("test_result_roles", this.params.projectId, this.params._id),
-      Meteor.subscribe("test_result_steps", this.params.projectId, this.params._id)
+      Meteor.subscribe("test_result_steps", this.params.projectId, this.params._id),
+      Meteor.subscribe("test_result_screenshots", this.params.projectId, this.params._id),
+      Meteor.subscribe("test_result_log", this.params.projectId, this.params._id)
     ]; }
   });
   this.route("test", {
     path: "/test/",
     //layoutTemplate: "test_layout",
     waitOn: function () { return [
-      Meteor.subscribe("screen_shots")
+      Meteor.subscribe("screenshots")
     ]; }
   });
 });

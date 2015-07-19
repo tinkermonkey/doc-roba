@@ -13,28 +13,29 @@ var Future      = require("fibers/future"),
   DDPLink       = require("./ddp_link"),
   RobaDriver    = require("./roba_driver"),
   RobaReady     = require("./roba_ready"),
-  argv          = require('minimist')(process.argv.slice(2)),
+  RobaContext   = require("./roba_context"),
+  argv          = require("minimist")(process.argv.slice(2)),
   testRoleResultId = argv.roleId,
-  authToken     = argv.token,
+  singleUseToken   = argv.token,
   timestamp     = moment().format("YYYY-MM-DD_HH-mm-ss"),
   logger        = log4js.getLogger("test_role"),
   logPath       = fs.realpathSync(__dirname + '/..') + '/logs/test_role_results/' + timestamp + '_' + testRoleResultId + '/',
   logFile       = logPath + 'role_result.log',
   driverEnded   = false,
   endIntentional= false,
-  ddpLink, driver,
+  ddpLink, driver, context,
   server, account,
   test, resultLink,
-  TestResultStatus, TestResultCodes, TestCaseStepTypes;
+  TestResultStatus, TestResultCodes, TestCaseStepTypes, ScreenshotKeys;
 
 // Need a testRoleResultId to do anything
 //console.log("roba_test_role arguments: ", argv);
 //console.log("roba_test_role raw: ", process.argv);
 if(!testRoleResultId){
-  throw new Error("No testRoleResultId specified");
+  throw new Error("No roleId specified");
   process.exit(1);
-} else if(!authToken){
-  throw new Error("No testRoleResultId specified");
+} else if(!singleUseToken){
+  throw new Error("No token specified");
   process.exit(1);
 }
 
@@ -87,39 +88,48 @@ Future.task(function(){
  * @constructor
  */
 function ExecuteTestRole () {
+  //create the context
+  context = new RobaContext({testRoleResultId: testRoleResultId});
+
   // Create the ddp link
   logger.info("TestRole " + testRoleResultId + " launched");
-  ddpLink = new DDPLink();
+  ddpLink = new DDPLink({}, context);
 
   // Connect to the server
   logger.info("Initiating DDP connection");
-  ddpLink.connect(authToken);
+  ddpLink.connect(singleUseToken);
 
   // Create the ddpLogger
   logger.debug("Creating DDP logger");
-  var ddpLogger = ddpAppender.createAppender(ddpLink);
+  var ddpLogger = ddpAppender.createAppender(ddpLink, context);
   log4js.addAppender(ddpLogger);
+  logger.info("Log File: ", logFile);
 
   // load the status enum
   var enums = ddpLink.call("loadTestEnums");
   TestResultStatus  = enums.resultStatus;
   TestResultCodes   = enums.resultCodes;
   TestCaseStepTypes = enums.stepTypes;
+  ScreenshotKeys    = enums.screenshotKeys;
   logger.trace("enums: ", enums);
 
   // load the data bundle
   logger.debug("Loading the TestRole Manifest");
   test = ddpLink.call("loadTestRoleManifest", [testRoleResultId]);
   logger.trace("Manifest: ", test);
+  context.update({
+    projectId:        test.role.projectId,
+    projectVersionId: test.role.projectVersionId,
+    testAgentId:      test.agent.staticId,
+    serverId:         test.server.staticId,
+    testRunId:        test.role.testRunId,
+    testResultId:     test.role.testResultId
+  });
   ddpLink.setTestRoleResultStatus(test.role._id, TestResultStatus.launched);
-  
-  ddpAppender.setContext(test.result._id, test.role._id);
-  logger.info("MILESTONE", { type: "test_role_result", data: test.role });
-  logger.debug("Executing Test Result Role: ", test.role._id);
-  logger.info("Log File: ", logFile);
+  context.milestone({ type: "test_role_result", data: test.role });
 
   // load a live record so that we can know when to abort
-  resultLink = ddpLink.liveRecord("test_result", test.result._id, "test_results");
+  resultLink = ddpLink.liveRecord("test_run_result", test.result._id, "test_results");
   
   // work out the config
   var config = {
@@ -130,6 +140,7 @@ function ExecuteTestRole () {
       loggingPrefs: { browser: "ALL", driver: "WARNING", client: "WARNING", server: "WARNING" }
     },
     logLevel: "silent",
+    logPath: logPath,
     end: function (event){
       logger.debug("End event received from driver");
       driverEnded = true;
@@ -168,11 +179,14 @@ function ExecuteTestRole () {
   });
 
   // get the route
+  context.backup(); //backup the context so we can restore it after each step
   driver.getClientLogs();
   ddpLink.setTestRoleResultStatus(test.role._id, TestResultStatus.executing);
   var i = 0, step, pass = true;
   while(i < test.steps.length && !resultLink.abort && !driverEnded && pass){
     step = test.steps[i];
+    context.restore(); // erase any context from a previous step
+    context.update({testStepResultId: step._id}); // each step handler should further update the context
 
     // if the role is failed, skip over the rest of the steps
     if(!pass){
@@ -183,7 +197,7 @@ function ExecuteTestRole () {
 
     ddpLink.setTestStepResultStatus(step._id, TestResultStatus.launched);
     logger.info("Executing Test Step " + (i + 1) + " of " + test.steps.length);
-    logger.info("MILESTONE", { type: "step", data: step });
+    context.milestone({ type: "step", data: step });
 
     // Execute the step
     try{
@@ -215,10 +229,9 @@ function ExecuteTestRole () {
       ddpLink.setTestStepResultCode(step._id, TestResultCodes.fail);
     }
 
-    logger.info("MILESTONE-END", { type: "step" });
-
     i++;
   }
+  context.restore();
   logger.info("All Steps Executed");
 
   if(i !== test.steps.length || !pass || resultLink.abort || driverEnded){
@@ -234,8 +247,6 @@ function ExecuteTestRole () {
   ddpLink.setTestRoleResultStatus(test.role._id, TestResultStatus.complete);
   ddpLink.setTestRoleResultCode(test.role._id, pass ? TestResultCodes.pass : TestResultCodes.fail);
 
-  logger.info("MILESTONE-END", { type: "test_step_role" });
-
   // Exit out
   Exit(0);
 }
@@ -248,8 +259,9 @@ function ExecuteNodeStep (step) {
   logger.debug("Executing node step: ", step.order);
   ddpLink.setTestStepResultStatus(step._id, TestResultStatus.executing);
 
-  // set the milestone in the log
-  logger.info("MILESTONE", { type: "node", data: step.data.node });
+  // Update the context
+  context.update({nodeId: step.data.node.staticId});
+  context.milestone({ type: "node", data: step.data.node });
 
   // first step needs to be navigated manually
   if(step.order == 0){
@@ -263,7 +275,10 @@ function ExecuteNodeStep (step) {
   // Validate the current node
   var result = ValidateNode(step.data.node),
     pass = result.isReady && result.isValid;
-  logger.info("MILESTONE-END", { type: "node" });
+  context.update({ pass: pass });
+
+  // save a screenshot of the page
+  ddpLink.saveImage(driver.getScreenshot(), ScreenshotKeys.afterLoad);
 
   // Save the validation checks
   ddpLink.saveTestStepResultChecks(step._id, result.checks);
@@ -280,11 +295,14 @@ function ExecuteNodeStep (step) {
 function ExecuteActionStep (step) {
   ddpLink.setTestStepResultStatus(step._id, TestResultStatus.executing);
 
+  // Update the context
+  context.update({ actionId: step.data.action.staticId});
+  context.milestone({ type: "action", data: { action: step.data.action, context: step.data.context } });
+
   // take the action
   var pass = true,
     result = {},
     actionResult, actionError;
-  logger.info("MILESTONE", { type: "action", data: { action: step.data.action, context: step.data.context } });
   try{
     actionResult = TakeAction(step.data.action, step.data.context);
   } catch(error) {
@@ -292,18 +310,27 @@ function ExecuteActionStep (step) {
     actionError = error.toString();
     pass = false;
   }
-  logger.info("MILESTONE-END", { type: "action" });
+
+  // update the context and grab a screenshot
+  context.update({ pass: pass });
+  ddpLink.saveImage(driver.getScreenshot(), ScreenshotKeys.afterAction);
 
   if(pass){
-    logger.info("MILESTONE", { type: "node", data: step.data.node });
+    // Update the context
+    context.update({ nodeId: step.data.node.staticId});
+    context.milestone({ type: "node", data: step.data.node });
 
     // Validate the current node
     result = ValidateNode(step.data.node);
     pass = result.isReady && result.isValid;
-    logger.info("MILESTONE-END", { type: "node" });
+    context.update({ pass: pass });
+
+    // save a screenshot
+    ddpLink.saveImage(driver.getScreenshot(), ScreenshotKeys.afterLoad);
   }
 
   // Save the validation checks
+  // TODO: splice in the action result & checks
   ddpLink.saveTestStepResultChecks(step._id, result.checks);
 
   // Set the result code
@@ -319,8 +346,10 @@ function ExecuteNavigationStep (step) {
   ddpLink.setTestStepResultStatus(step._id, TestResultStatus.executing);
 
   // fetch the route from the server
-  var route = ddpLink.call("loadNavigationRoute", [step.data.destination, step.data.source]);
-  logger.info("MILESTONE", { type: "route", data: route });
+  var route = ddpLink.call("loadNavigationRoute", [step.data.destinationId, step.data.sourceId, step.projectVersionId]);
+
+  // Update the context
+  context.milestone({ type: "route", data: route });
 
   // Execute the route steps, but skip the last one because another step will validate that
   var i = 0, pass = true, routeStep, checks = [];
@@ -332,7 +361,6 @@ function ExecuteNavigationStep (step) {
 
     // first step needs to be navigated manually if this is the first test step
     if(i == 0 && step.order == 0){
-      logger.info("MILESTONE", { type: "node", data: routeStep.node });
       var startingUrl = driver.buildUrl(server.url, routeStep.node.url);
       logger.trace("Navigating to starting point: ", startingUrl);
       driver.url(startingUrl);
@@ -341,15 +369,23 @@ function ExecuteNavigationStep (step) {
 
     // validate the node if this is the first for the test, or the nth for the route
     if((i == 0 && step.order == 0) || i > 0) {
+      // update the context
+      context.update({nodeId: routeStep.node.staticId});
+      context.milestone({ type: "node", data: routeStep.node });
+
       // Validate the node we just landed on
-      result = ValidateNode(step.data.node);
+      result = ValidateNode(routeStep.node);
       pass = result.isReady && result.isValid;
-      logger.info("MILESTONE-END", { type: "node" });
+      context.update({ pass: pass });
+
+      // save a screenshot of the page
+      ddpLink.saveImage(driver.getScreenshot(), ScreenshotKeys.afterLoad);
     }
 
     // take the action
     if(pass){
-      logger.info("MILESTONE", { type: "action", data: { action: routeStep.action, context: step.data.context } });
+      context.update({ actionId: routeStep.action.staticId});
+      context.milestone({ type: "action", data: { action: routeStep.action, context: step.data.context } });
       actionExecuted = true;
       try {
         actionResult = TakeAction(routeStep.action, routeStep.context);
@@ -358,7 +394,10 @@ function ExecuteNavigationStep (step) {
         pass = false;
         actionError = error.toString();
       }
-      logger.info("MILESTONE-END", { type: "action" });
+
+      // update the context and grab a screenshot
+      context.update({ pass: pass });
+      ddpLink.saveImage(driver.getScreenshot(), ScreenshotKeys.afterAction);
     }
 
     // store the route and the checks
@@ -371,8 +410,9 @@ function ExecuteNavigationStep (step) {
       actionResult: actionResult,
       actionError: actionError
     });
+
+    i++;
   }
-  logger.info("MILESTONE-END", { type: "route" });
 
   // Save the validation checks
   ddpLink.saveTestStepResultChecks(step._id, checks);

@@ -1,18 +1,20 @@
 "use strict";
-var moment = require("moment"), adventureId, nodeId, actionId;
+var moment = require("moment"),
+  startTime;
 
 /**
- *
+ * context logging with events
  */
-exports.createAppender = function createAppender (ddpLink) {
+exports.createAppender = function createAppender (ddpLink, context) {
+  startTime = Date.now();
+
   function logMsg (event) {
     return {
-      adventureId: adventureId,
-      nodeId: nodeId,
-      actionId: actionId,
+      time: (Date.now() - startTime) / 1000,
       timestamp: moment(event.startTime).valueOf(),
       level: event.level.levelStr,
-      sender: event.categoryName,
+      send: event.categoryName,
+      context: context ? context.get() : null,
       data: event.data
     };
   }
@@ -24,10 +26,4 @@ exports.createAppender = function createAppender (ddpLink) {
       console.log("event: ", logMsg(loggingEvent));
     }
   };
-};
-
-exports.setContext = function (adventure, node, action) {
-  adventureId = adventure;
-  nodeId = node;
-  actionId = action;
 };

@@ -578,7 +578,7 @@ Schemas.TestStepResult = new SimpleSchema({
   },
   // Various checks done during the course of the step
   checks: {
-    type: [Object],
+    type: Object,
     blackbox: true,
     optional: true
   },

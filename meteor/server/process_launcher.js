@@ -47,7 +47,7 @@ ProcessLauncher = {
     });
 
     Meteor.log.debug("Process Launched: " + proc.pid, automationPath + command);
-    console.log([automationPath + script].concat(args));
+
     // Catch the exit
     proc.on("exit", Meteor.bindEnvironment(exitListener || function (code) {
         Meteor.log.debug("Process Exit: " + proc.pid + ", " + code);

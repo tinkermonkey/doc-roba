@@ -36,6 +36,12 @@ Template.Home.events({
  * Template Rendered
  */
 Template.Home.rendered = function(){
+  setTimeout(function () {
+    console.log("insertElement code fires");
+    $(".auto-slide-right").removeClass("intro-slide-right");
+    $(".auto-slide-left").removeClass("intro-slide-left");
+  }, 500);
+
   // Wire in the tabs
   Tabs.init(Template.instance());
 };

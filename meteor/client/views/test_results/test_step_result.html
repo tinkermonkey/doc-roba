@@ -1,10 +1,25 @@
 <template name="TestStepResult">
   <tr class="test-step-result">
-    <td class="test-step-result-title  test-step-result-title-{{type}}">
+    <td class="test-step-result-title {{getStepClass}}">
       <div class="test-step-result-title-rotate">
         <div class="test-step-result-title-text">{{renderTestCaseStepType type}}</div>
       </div>
     </td>
-    <td></td>
+    <td class="test-step-result-body {{getStepClass}}">
+      <div class="test-step-result-body-content">
+        <div class="test-result-screenshots">
+          {{#each screenshots}}
+            {{#if isImage store='thumbs'}}
+              <div>
+                <img src="{{url store='thumbs'}}" class="test-result-screenshot">
+              </div>
+            {{/if}}
+          {{/each}}
+        </div>
+        <div class="test-result-detail-1">
+          <span class="glyphicon glyphicon-arrow-right"></span>
+        </div>
+      </div>
+    </td>
   </tr>
 </template>

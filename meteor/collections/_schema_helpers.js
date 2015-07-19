@@ -263,6 +263,7 @@ TestResultStatus = {
   error: 6,
   skipped: 7
 };
+TestResultStatusLookup = _.invert(TestResultStatus);
 
 /**
  * Test Case result status
@@ -271,4 +272,16 @@ TestResultCodes = {
   fail: 0,
   pass: 1,
   warn: 2
+};
+TestResultCodesLookup = _.invert(TestResultCodes);
+
+/**
+ * Screenshot Keys
+ * This is an enum for the sake of good standard, but it also a little Mickey Mouse
+ */
+ScreenshotKeys = {
+  error: "error",
+  loading: "loading",
+  afterLoad: "afterLoad",
+  afterAction: "afterAction"
 };

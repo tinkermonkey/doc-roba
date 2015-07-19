@@ -156,8 +156,8 @@ Template.TestCase.rendered = function () {
     }
 
     instance.testCaseObserver = TestCaseSteps.find({testCaseId: data.staticId}).observe({
-      added: function () {
-        console.log("Test case step added");
+      added: function (doc) {
+        console.log("Test case step added: ", doc._id);
         instance.updateAlignment();
       },
       removed: function () {

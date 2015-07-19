@@ -21,20 +21,18 @@ Template.layout.created = function () {
 Template.layout.rendered = function () {
   this.find('#page')._uihooks = {
     insertElement: function(node, next) {
+      console.log("insertElement");
       $(node)
         .hide()
         .insertBefore(next)
-        .fadeIn(function () {
-          $(".auto-slide-right").removeClass("intro-slide-right");
-          $(".auto-slide-left").removeClass("intro-slide-left");
-        });
+        .show();
     },
     removeElement: function(node) {
       $(".auto-slide-right").addClass("intro-slide-right");
       $(".auto-slide-left").addClass("intro-slide-left");
-      setTimeout(function () {
-        $(node).remove();
-      }, 500);
+      $(node)
+        .delay(2000)
+        .remove();
     }
   }
 };

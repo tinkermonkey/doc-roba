@@ -217,24 +217,36 @@ RobaDriver.prototype.end = function () {
 };
 
 /**
+ * Save a screenshot
+ */
+RobaDriver.prototype.getScreenshot = function () {
+  var filename = Date.now() + ".png",
+    path = this.config.logPath + filename;
+  logger.debug("getScreenshot: ", path);
+
+  this.saveScreenshot(path);
+  return path;
+};
+
+/**
  * Capture the current browser state
  */
-RobaDriver.prototype.getState = function (savePath) {
-  assert(savePath, "getState called with null savePath");
-  logger.debug("getState: ", savePath);
-  var state = {};
+RobaDriver.prototype.getState = function () {
+  logger.debug("getState");
+  var state = {},
+    tmpPath = this.config.logPath;
 
   // get a screenshot
-  if(savePath){
+  if(tmpPath){
     var filename = Date.now() + ".png";
     logger.info("Screenshot: ", filename);
     logger.trace("Calling saveScreenshot");
-    this.saveScreenshot(savePath + filename);
+    this.saveScreenshot(tmpPath + filename);
 
     // make sure the file exists
-    if(fs.existsSync(savePath + filename)){
+    if(fs.existsSync(tmpPath + filename)){
       logger.trace("Reading file");
-      var data = fs.readFileSync(savePath + filename);
+      var data = fs.readFileSync(tmpPath + filename);
       logger.trace("Base64 encoding file");
       state.screenshot = new Buffer(data, "binary").toString("base64");
     } else {

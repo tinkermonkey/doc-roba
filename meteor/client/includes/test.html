@@ -16,6 +16,11 @@
 
 <template name="uploadedImage">
   <div class="media well">
+    <div class="media-left">
+      {{#if isImage store='thumbs'}}
+        <img src="{{this.url store='thumbs'}}" alt="thumbnail">
+      {{/if}}
+    </div>
     <div class="media-body">
       <h4 class="media-heading">{{this.name}}</h4>
       <p><em>Original size: {{this.formattedSize}}<br>Type: {{this.type store="screenshots"}}</em></p>

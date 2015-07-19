@@ -65,6 +65,25 @@ Template.TestCaseStepNavigate.created = function () {
 
     // create the route
     if(sourceNode && destinationNode){
+      // save the data if it changed
+      var save = true;
+      if(data.data && data.data.sourceId && data.data.destinationId){
+        save = !(data.data.sourceId == sourceNode && data.data.destinationId == destinationNode);
+      }
+
+      if(save){
+        var stepData = data.data || {};
+        stepData.sourceId = sourceNode;
+        stepData.destinationId = destinationNode;
+        console.log("Saving navigation step data: ", stepData, data.data);
+        TestCaseSteps.update(data._id, {$set: {data: stepData}}, function (error) {
+          if(error){
+            Meteor.log.error("Failed to update navigation step: " + error.message);
+            Dialog.error("Failed to update navigation step: " + error.message);
+          }
+        });
+      }
+
       var sourceNodeRecord = Nodes.findOne({projectVersionId: data.projectVersionId, staticId: sourceNode}),
         destinationNodeRecord = Nodes.findOne({projectVersionId: data.projectVersionId, staticId: destinationNode});
       if(sourceNodeRecord && destinationNodeRecord){

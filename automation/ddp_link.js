@@ -1,13 +1,17 @@
 /**
  * Basic ddp client for helper functionality
+ * With request to send images and logs via http
  */
 
 // Dependencies
 var Future  = require("fibers/future"),
   DDPClient = require("ddp"),
+  request   = require("request"),
   log4js    = require("log4js"),
   _         = require("underscore"),
   assert    = require("assert"),
+  fs        = require("fs"),
+  path      = require("path"),
   logger    = log4js.getLogger("ddp-link"),
   ddpLogger = log4js.getLogger("ddp"),
   heartbeatTime = 15000, // ms between heartbeats
@@ -21,6 +25,9 @@ var Future  = require("fibers/future"),
       maintainCollections : true,
       ddpVersion : "pre2",
       useSockJs: true
+    },
+    http: {
+      transport: "http://"
     }
   };
 
@@ -30,11 +37,15 @@ ddpLogger.setLevel("INFO");
 /**
  * Constructor
  */
-var DDPLink = function (config) {
+var DDPLink = function (config, context) {
   logger.debug("Creating new DDPLink");
 
   // combine the config and defaults
   this.config = _.defaults(config || {}, defaultConfig);
+  this.config.serverUrl = this.config.http.transport + this.config.ddp.host + ":" + this.config.ddp.port + "/";
+
+  // set the context object
+  this.context = context;
 
   // create the ddp link
   this.ddp = new DDPClient(this.config.ddp);
@@ -52,20 +63,14 @@ var DDPLink = function (config) {
 /**
  * Connect to the ddp server
  */
-DDPLink.prototype.connect = function (authToken) {
-  logger.debug("ddplink.connect: ", authToken);
+DDPLink.prototype.connect = function (singleUseToken) {
+  logger.debug("ddplink.connect: ", singleUseToken);
   var link = this,
     connectFuture = new Future();
 
   link.ddp.connect(function(error, wasReconnect){
     if(error){
       logger.error("ddplink.connect error: ", error);
-    }
-
-    // if there is an authToken, try to use it
-    if(authToken){
-      logger.info("ddplink.connect: sending authToken");
-      link.userToken = link.call("getUserToken", [authToken]);
     }
 
     if(wasReconnect){
@@ -82,7 +87,23 @@ DDPLink.prototype.connect = function (authToken) {
 
     // if this is the first time (eg. not a reconnect), make sure to resolve the future
     if(!connectFuture.resolved){
-      connectFuture.return(error);
+      // if there is an singleUseToken, try to use it
+      if(singleUseToken){
+        // try to authenticate
+        console.log("Loggin in: ", singleUseToken);
+        link.ddp.call("login", [{token: singleUseToken}], function (error, result) {
+          if(error){
+            logger.error("Failed to authenticare: ", error.toString());
+          } else {
+            logger.info("Authentication success");
+            link.rawToken = result.token;
+            link.authToken = new Buffer(JSON.stringify({authToken: result.token}), 'binary').toString('base64');
+          }
+          connectFuture.return(error);
+        });
+      } else {
+        connectFuture.return(error);
+      }
 
       // setup the heartbeat
       if(!link.heartbeatTimeout){
@@ -256,10 +277,66 @@ DDPLink.prototype.setCommandStatus = function (commandId, status, result) {
 };
 
 /**
- * Save a screen capture from the test system
+ * Send an image with some context and optionally delete it
+ * @imageFilePath The path of the stored image to send
+ * @imageKey The key to use to identify this image and correlate it to other similar images
  */
-DDPLink.prototype.saveScreen = function (actionId, image) {
-  this.call("saveScreen", [actionId, image]);
+DDPLink.prototype.saveImage = function (imageFilePath, imageKey) {
+  assert(imageFilePath, "saveImage: imageFilePath must not be null");
+  assert(imageKey, "saveImage: imageKey must not be null");
+  var ddp = this,
+    context = this.context.get();
+  context.key = imageKey;
+
+  // use http(s) for this and don't block on it
+  fs.exists(imageFilePath, function (exists) {
+    logger.debug("Saving image: ", imageFilePath);
+    if(exists){
+      var filename = path.basename(imageFilePath),
+        putUrl = [
+          ddp.config.serverUrl,
+          "cfs/files/screenshots/?chunk=0&filename=",
+          filename,
+          "&token=",
+          encodeURIComponent(ddp.authToken)
+        ].join("");
+      logger.debug("Saving image to url", putUrl);
+      try{
+        fs.createReadStream(imageFilePath)
+          .pipe(request.put(putUrl, function (error, response, body) {
+            if(error){
+              logger.error("Saving image error: ", error);
+            } else {
+              if(response.statusCode == 200){
+                try {
+                  var fileInfo = JSON.parse(body);
+                  if(fileInfo._id){
+                    // can't use the future because we're already async
+                    logger.debug("Updating screenshot context: ", fileInfo._id, context);
+                    ddp.ddp.call("saveScreenshotContext", [fileInfo._id, context], function (error, result) {
+                      if(error){
+                        logger.error("saveScreenshotContext failed: ", error, result);
+                      }
+                    });
+                  } else {
+                    logger.error("Image saving failed, no _id returned: ", body, response.statusCode);
+                  }
+                } catch (error) {
+                  logger.error("Failed to parse image save response body: ", body, response.statusCode, error);
+                }
+              } else {
+                logger.error("Saving image failed: ", response.statusCode, body);
+              }
+
+            }
+          }));
+      } catch (error) {
+        logger.error("saveImage failed: ", error.toString());
+      }
+    } else {
+      logger.error("saveImage failed, file not found: ", imageFilePath);
+    }
+  });
 };
 
 /**

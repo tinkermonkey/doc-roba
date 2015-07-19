@@ -2,9 +2,6 @@
  * Expose these for the client to call
  */
 Meteor.startup(function () {
-  // we need a synchronous version of Tokenizer.verify
-  Tokenizer.verifySync = Meteor.wrapAsync(Tokenizer.verify);
-
   Meteor.methods({
     echo: function () {
       // Require authentication
@@ -14,30 +11,6 @@ Meteor.startup(function () {
 
       Meteor.log.debug("Echo called by user " + this.userId);
       return { user: this.userId, argv: arguments };
-    },
-
-    /**
-     * Get a user's real auth token from a one-time token
-     * @param token
-     */
-    getUserToken: function (token) {
-      check(token, String);
-
-      // lookup the user before the token is verified and destroyed
-      var user = Meteor.users.findOne({
-        'services.email.verificationTokens.token': token
-      });
-
-      // make sure there a user associated with the token
-      if(user){
-        // make sure the token is also valid
-        var valid = Tokenizer.verifySync(token);
-        if(valid){
-          console.log("getUserToken: ", user);
-        }
-      } else {
-        new Meteor.Error(403, 'Error 403: Not authorized');
-      }
     },
 
     /**

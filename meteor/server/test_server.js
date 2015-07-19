@@ -3,10 +3,6 @@
  */
 Meteor.startup(function () {
   /**
-   * Init
-   */
-
-  /**
    * Publications
    */
   Meteor.publish('test_groups', function (projectId, projectVersionId) {
@@ -97,9 +93,19 @@ Meteor.startup(function () {
     }
     return [];
   });
-  Meteor.publish('screen_shots', function (projectId, testResultId) {
-    console.log("Publish: screen_shots");
-    return ScreenShots.find();
+  Meteor.publish('test_result_log', function (projectId, testResultId) {
+    console.log("Publish: test_result_log");
+    // check that there is a project role for the current user
+    if(this.userId && projectId){
+      var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
+      if(role){
+        return LogMessages.find({testResultId: testResultId});
+      }
+    }
+    return [];
+  });
+  Meteor.publish('test_result_screenshots', function (projectId, testResultId) {
+    console.log("Publish: test_result_screenshots");
     // check that there is a project role for the current user
     if(this.userId && projectId){
       var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
@@ -108,6 +114,19 @@ Meteor.startup(function () {
       }
     }
     return [];
+  });
+  Meteor.publish('test_run_result', function (testResultId) {
+    console.log("Publish: test_run_result");
+    // check that there is a project role for the current user
+    if(this.userId){
+      return TestResults.find(testResultId);
+    }
+    return [];
+  });
+
+  //TODO: remove this publication once testing is complete
+  Meteor.publish('screenshots', function (testResultId) {
+    return ScreenShots.find();
   });
 
   /**
@@ -122,7 +141,8 @@ Meteor.startup(function () {
       return {
         resultStatus: TestResultStatus,
         resultCodes: TestResultCodes,
-        stepTypes: TestCaseStepTypes
+        stepTypes: TestCaseStepTypes,
+        screenshotKeys: ScreenshotKeys
       };
     },
     /**
@@ -132,6 +152,11 @@ Meteor.startup(function () {
     loadTestRoleManifest: function (testRoleResultId) {
       check(testRoleResultId, String);
       Meteor.log.debug("loadTestRoleManifest: ", testRoleResultId);
+
+      // Require authentication
+      if(!this.userId){
+        throw new Meteor.Error("Authentication Failed", "User is not authenticated");
+      }
 
       // load the role and the steps
       var result = {
@@ -201,8 +226,20 @@ Meteor.startup(function () {
      */
     saveTestStepResultChecks: function (testStepResultId, checks) {
       check(testStepResultId, String);
-      //check(checks, Array); This might be empty, legitimately
-      TestStepResults.update({_id: testStepResultId}, {$set:{checks: checks}});
+      if(checks){
+        TestStepResults.update({_id: testStepResultId}, {$set:{checks: checks}});
+      }
+    },
+
+    /**
+     * Save the context for a screenshot
+     * @param imageId
+     * @param context
+     */
+    saveScreenshotContext: function (imageId, context) {
+      check(imageId, String);
+      check(context, Object);
+      ScreenShots.update(imageId, {$set: context});
     },
 
     /**
@@ -291,10 +328,10 @@ Meteor.startup(function () {
     },
 
     /**
-     * Create a test test case run
+     * Create a test test case result to run
      * @param testCaseId
      */
-    createDemoTestCase: function (testCaseId) {
+    createDemoTestResult: function (testCaseId) {
       var testCase = TestCases.findOne(testCaseId || "FbcpXNeHvrDToZXu6"),
         testCaseRoles = TestCaseRoles.find({
           testCaseId: testCase.staticId,
@@ -409,6 +446,7 @@ Meteor.startup(function () {
           });
         })
       });
+      return testResultId;
     },
 
     /**
@@ -416,16 +454,13 @@ Meteor.startup(function () {
      */
     launchTestResult: function (testResultId) {
       check(testResultId, String);
-      //(Meteor.user(), Object);
+      check(Meteor.user(), Object);
       Meteor.log.info("launchTestResult: " + testResultId);
 
       // get the list of roles, create a launch token and fire away
       TestRoleResults.find({testResultId: testResultId}).forEach(function (role) {
         Meteor.log.info("launchTestResult launching role: " + role._id);
-        var token = Tokenizer.generate({
-            user: Meteor.user(),
-            expires: { minutes: 5 }
-          }),
+        var token = Accounts.singleUseAuth.generate({ expires: { seconds: 30 } }),
           command = ["roba_test_role.js", "--roleId", role._id, "--token", token].join(" "),
           logFile = ["test_role_result_", role._id, ".log"].join(""),
           proc = ProcessLauncher.launchAutomation(command, logFile);

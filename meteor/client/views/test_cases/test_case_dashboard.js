@@ -36,9 +36,10 @@ Template.TestCaseDashboard.created = function () {
  * Template Rendered
  */
 Template.TestCaseDashboard.rendered = function () {
-  // sometimes the transition doesn't fire, seeing if this ever fails
-  $(".auto-transition.intro-slide-right").removeClass("intro-slide-right");
-  $(".auto-transition.intro-slide-left").removeClass("intro-slide-left");
+  setTimeout(function () {
+    $(".auto-slide-right").removeClass("intro-slide-right");
+    $(".auto-slide-left").removeClass("intro-slide-left");
+  }, 500);
 };
 
 /**
