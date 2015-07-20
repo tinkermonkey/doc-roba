@@ -1,0 +1,14 @@
+<template name="TestStepResultLog">
+  <table>
+    <tbody>
+    {{#each this}}
+      <tr>
+        <td>{{time}}</td>
+        <td>{{level}}</td>
+        <td>{{sender}}</td>
+        <td>{{data}}</td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+</template>

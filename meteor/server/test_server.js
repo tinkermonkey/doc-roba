@@ -99,7 +99,7 @@ Meteor.startup(function () {
     if(this.userId && projectId){
       var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
       if(role){
-        return LogMessages.find({testResultId: testResultId});
+        return LogMessages.find({"context.testResultId": testResultId});
       }
     }
     return [];
@@ -456,6 +456,13 @@ Meteor.startup(function () {
       check(testResultId, String);
       check(Meteor.user(), Object);
       Meteor.log.info("launchTestResult: " + testResultId);
+
+      // do some quick cleanup in case this is a re-run
+      LogMessages.remove({"context.testResultId": testResultId});
+      ScreenShots.remove({testResultId: testResultId});
+      TestResults.update({_id: testResultId}, {$set: {status: TestResultStatus.staged, abort: false}, $unset: {result: ""}});
+      TestRoleResults.update({testResultId: testResultId}, {$set: {status: TestResultStatus.staged}, $unset: {result: "", pid: ""}});
+      TestStepResults.update({testResultId: testResultId}, {$set: {status: TestResultStatus.staged}, $unset: {result: "", checks: ""}});
 
       // get the list of roles, create a launch token and fire away
       TestRoleResults.find({testResultId: testResultId}).forEach(function (role) {

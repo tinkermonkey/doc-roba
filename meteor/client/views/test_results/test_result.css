@@ -86,27 +86,36 @@
   background-color: #fff;
   padding: 5px;
   display: table;
+  width: 100%;
+}
+.test-step-result-body-content > div {
+  display: table-cell;
+  vertical-align: top;
+}
+
+.test-result-body-sponge {
+  width: 100%;
 }
 
 .test-result-screenshots {
-  display: table-cell;
 }
 
 .test-result-screenshot {
+  margin: 2px;
   border: 1px solid #ddd;
   border-radius: 3px;
 }
 
-.test-result-detail-1 {
-  display: table-cell;
+.test-result-detail-reveal {
   text-align: center;
-  vertical-align: middle;
+  vertical-align: middle !important;
   height: 100%;
-  width: 20px;
   color: #ddd;
+  padding: 4px;
+  border-radius: 5px;
 }
 
-.test-result-detail-1:hover {
+.test-result-detail-reveal:hover {
   color: #fff;
   background-color: #ddd;
 }

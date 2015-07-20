@@ -13,7 +13,7 @@ exports.createAppender = function createAppender (ddpLink, context) {
       time: (Date.now() - startTime) / 1000,
       timestamp: moment(event.startTime).valueOf(),
       level: event.level.levelStr,
-      send: event.categoryName,
+      sender: event.categoryName,
       context: context ? context.get() : null,
       data: event.data
     };
