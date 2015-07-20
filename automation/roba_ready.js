@@ -5,7 +5,7 @@ var Future  = require("fibers/future"),
   _         = require("underscore"),
   assert    = require("assert"),
   log4js    = require("log4js"),
-  logger    = log4js.getLogger("runner"),
+  logger    = log4js.getLogger("ready"),
   commands  = [
     "waitFor",
     "waitForChecked",
@@ -17,12 +17,14 @@ var Future  = require("fibers/future"),
     "waitForVisible"
   ];
 
+logger.setLevel("DEBUG");
+
 /**
  * Create a new ready checker
  * @constructor
  */
 var RobaReady = function (driver, timeout) {
-  logger.info("Creating Ready Checker");
+  logger.debug("Creating Ready Checker");
 
   // can't function without a driver
   assert(driver, "RobaReady called without a driver");
@@ -59,6 +61,7 @@ RobaReady.prototype.check = function () {
 
   // make sure there are checks to run
   if(!this.checks.length){
+    logger.trace("Ready.check called with no checks");
     return true;
   }
 
@@ -84,7 +87,7 @@ RobaReady.prototype.check = function () {
       };
 
       if(error){
-        logger.debug("Check returned: ", i, checksReturned, check.result);
+        logger.error("Check returned: ", i, checksReturned, check.result);
         check.result.error = error;
       } else {
         logger.trace("Check returned: ", i, checksReturned, check.result);
@@ -96,7 +99,7 @@ RobaReady.prototype.check = function () {
         future.return();
       }
     });
-    logger.debug("Ready Check Command: ", check.command, check.args[0]);
+    logger.debug("Ready Check Command setup: ", check.command, check.args[0]);
     driver[check.command].apply(driver, args);
   });
 

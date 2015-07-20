@@ -1,0 +1,27 @@
+<template name="TestResultLogDataObject">
+  <div class="log-data-object-container">
+    {{#if getKeys}}
+      <div class="log-data-object-expander">
+        Object <span class="glyphicon glyphicon-arrow-right"></span>
+      </div>
+      <div class="log-data-object" style="display: none;">
+          <table>
+            {{#each getKeys}}
+              <tr>
+                <td class="log-data-object-key">{{this}}</td>
+                <td class="log-data-object-value">
+                  {{#with getKeyValue this ..}}
+                    {{> Template.dynamic template=getLogDataTemplate}}
+                  {{else}}
+                    <i>null</i>
+                  {{/with}}
+                </td>
+              </tr>
+            {{/each}}
+          </table>
+      </div>
+    {{else}}
+      {{stringify}}
+    {{/if}}
+  </div>
+</template>

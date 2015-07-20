@@ -1,0 +1,43 @@
+.log-data-container {
+  display: block;
+  vertical-align: top;
+}
+.log-data-value {
+  display: inline-block;
+  word-break: break-all;
+  overflow-wrap: break-word;
+  vertical-align: top;
+}
+
+.log-data-object-expander {
+  padding: 3px;
+  color: #fff;
+  background-color: #ccc;
+  border-radius: 3px;
+  width: auto;
+  cursor: pointer;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.log-data-object-expander:hover {
+  background-color: #0A7BFF;
+}
+
+.log-data-object-container {
+  display: block;
+}
+
+.log-data-object {
+  display: inline-block;
+}
+
+.log-data-object-key {
+  font-weight: bold;
+}
+
+.log-data-array-value {
+  display: block;
+  vertical-align: top;
+  margin: 1px;
+}

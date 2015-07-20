@@ -49,22 +49,48 @@ Template.TestStepResult.helpers({
  */
 Template.TestStepResult.events({
   "click .test-result-detail-1-reveal": function (e, instance) {
-    var reveal = $(e.target).closest(".test-result-detail-reveal");
-    instance.$(".test-result-detail-1").toggleClass("hide");
+    var reveal = $(e.target).closest(".test-result-detail-reveal"),
+      detail1 = instance.$(".test-result-detail-1"),
+      detail2 = instance.$(".test-result-detail-2"),
+      reveal2 = instance.$(".test-result-detail-2-reveal");
+
+    // show the detail-1 content
+    if(detail1.is(":visible")){
+      /*
+      detail2.hide('slide',{ direction:'left' }, 400, function () {
+        reveal2.hide();
+        detail1.hide('slide',{ direction:'left' }, 400);
+      });
+      */
+      detail2.fadeOut();
+      reveal2.fadeOut();
+      detail1.fadeOut();
+    } else {
+      detail1.fadeIn();
+      reveal2.fadeIn();
+      /*
+      detail1.show('slide',{ direction:'left' }, 400, function () {
+        reveal2.show();
+      });
+      */
+    }
+
     reveal.find(".glyphicon").toggleClass("glyphicon-arrow-left");
     reveal.find(".glyphicon").toggleClass("glyphicon-arrow-right");
-    if(instance.$(".test-result-detail-1").hasClass("hide")){
-      instance.$(".test-result-detail-2-reveal").addClass("hide");
-      instance.$(".test-result-detail-2").addClass("hide");
-    } else {
-      instance.$(".test-result-detail-2-reveal").removeClass("hide");
-    }
   },
   "click .test-result-detail-2-reveal": function (e, instance) {
-    var reveal = $(e.target).closest(".test-result-detail-reveal");
-    instance.$(".test-result-detail-2").toggleClass("hide");
-    reveal.find(".glyphicon").toggleClass("glyphicon-arrow-left");
-    reveal.find(".glyphicon").toggleClass("glyphicon-arrow-right");
+    var reveal2 = $(e.target).closest(".test-result-detail-reveal"),
+      detail2 = instance.$(".test-result-detail-2");
+
+    if(detail2.is(":visible")){
+      //detail2.hide('slide',{ direction:'left' }, 400);
+      detail2.fadeOut();
+    } else {
+      //detail2.show('slide',{ direction:'left' }, 400);
+      detail2.fadeIn();
+    }
+    reveal2.find(".glyphicon").toggleClass("glyphicon-arrow-left");
+    reveal2.find(".glyphicon").toggleClass("glyphicon-arrow-right");
   }
 });
 

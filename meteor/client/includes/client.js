@@ -80,6 +80,13 @@ Template.registerHelper("dateFormat", function (date, format) {
 });
 
 /**
+ * Render a formatted number
+ */
+Template.registerHelper("numberFormat", function (value, format) {
+  return value.toString();
+});
+
+/**
  * Get a list of projects for a user, including their role
  */
 Template.registerHelper("userProjects", function () {
@@ -364,6 +371,31 @@ Template.registerHelper("adventureIsPaused", function (context) {
  */
 Template.registerHelper("renderDataStoreRow", function (rowId) {
   return DSUtil.renderRow(rowId);
+});
+
+/**
+ * Get the right data template for test result log data
+ */
+Template.registerHelper("getLogDataTemplate", function (data) {
+  // accept the param or default to this
+  data = data || this;
+  if(_.isString(data)){
+    return "TestResultLogDataString";
+  } else if(_.isDate(data)){
+    return "TestResultLogDataString";
+  } else if(_.isNumber(data)){
+    return "TestResultLogDataString";
+  } else if(_.isArray(data)){
+    return "TestResultLogDataArray";
+  } else if(_.isObject(data)){
+    return "TestResultLogDataObject";
+  } else {
+    return "TestResultLogDataString";
+  }
+});
+
+Template.registerHelper("stringify", function () {
+  return JSON.stringify(this);
 });
 
 /**

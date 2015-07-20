@@ -87,6 +87,7 @@
   padding: 5px;
   display: table;
   width: 100%;
+  height: 100%;
 }
 .test-step-result-body-content > div {
   display: table-cell;
@@ -118,4 +119,8 @@
 .test-result-detail-reveal:hover {
   color: #fff;
   background-color: #ddd;
+}
+
+.test-result-detail-2 {
+  max-width: 80em;
 }

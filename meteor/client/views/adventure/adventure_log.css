@@ -26,9 +26,11 @@ OFF: "grey"
   width: 900px !important;
 }
 
-.log-message-data b {
+.log-message-data, .log-message-data b {
   word-wrap: break-word;
   overflow-wrap: break-word;
+  white-space: pre-wrap;
+  overflow: scroll;
 }
 
 .log-message-TRACE, .log-message-trace {

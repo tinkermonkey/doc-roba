@@ -6,7 +6,11 @@
         <td>{{time}}</td>
         <td>{{level}}</td>
         <td>{{sender}}</td>
-        <td>{{data}}</td>
+        <td>
+          {{#with data}}
+            {{> Template.dynamic template=getLogDataTemplate}}
+          {{/with}}
+        </td>
       </tr>
     {{/each}}
     </tbody>

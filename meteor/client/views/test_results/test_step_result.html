@@ -20,13 +20,13 @@
         <div class="test-result-detail-reveal test-result-detail-1-reveal">
           <span class="glyphicon glyphicon-arrow-right"></span>
         </div>
-        <div class="test-result-detail-1 hide">
+        <div class="test-result-detail-1" style="display: none;">
           {{> Template.dynamic template=getStepTemplate }}
         </div>
-        <div class="test-result-detail-reveal test-result-detail-2-reveal hide">
+        <div class="test-result-detail-reveal test-result-detail-2-reveal" style="display: none;">
           <span class="glyphicon glyphicon-arrow-right"></span>
         </div>
-        <div class="test-result-detail-2 hide">
+        <div class="test-result-detail-2" style="display: none;">
           {{> TestStepResultLog getStepLogMessages }}
         </div>
         <div class="test-result-body-sponge"></div>
