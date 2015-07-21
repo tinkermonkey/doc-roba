@@ -1,6 +1,9 @@
 .log-data-container {
   display: block;
   vertical-align: top;
+  word-break: break-all;
+  overflow-wrap: break-word;
+  white-space: normal;
 }
 .log-data-value {
   display: inline-block;
@@ -34,10 +37,11 @@
 
 .log-data-object-key {
   font-weight: bold;
+  white-space: nowrap;
 }
 
 .log-data-array-value {
-  display: block;
+  display: inline-block;
   vertical-align: top;
   margin: 1px;
 }

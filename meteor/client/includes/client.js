@@ -408,7 +408,7 @@ Meteor.startup(function(){
       clearTimeout(this.resizeTimeout);
     }
     this.resizeTimeout = setTimeout(function(){
-      Session.set("resize", new Date());
+      Session.set("resize", { timestamp: Date.now(), width: window.innerWidth, height: window.innerHeight });
     }.bind(self), 250);
   });
 });

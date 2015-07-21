@@ -7,9 +7,11 @@
         <td>{{level}}</td>
         <td>{{sender}}</td>
         <td>
-          {{#with data}}
-            {{> Template.dynamic template=getLogDataTemplate}}
-          {{/with}}
+          <div style="width: {{maxLogWidth}}px;">
+            {{#with data}}
+              {{> Template.dynamic template=getLogDataTemplate}}
+            {{/with}}
+          </div>
         </td>
       </tr>
     {{/each}}
