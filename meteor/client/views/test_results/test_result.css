@@ -17,6 +17,7 @@
 .test-role-result-table td {
   padding: 2px;
   vertical-align: top;
+  height: 100%;
 }
 
 .test-step-result-title-rotate {
@@ -24,21 +25,17 @@
   transform-origin: right bottom;
   -webkit-transform: rotate(-90deg);
   -webkit-transform-origin: right bottom;
-  width: 1.4em;
+  width: 0;
+  display: block !important;
+  margin-left: -10px;
 }
 
 .test-step-result-title-text {
   color: #fff;
   text-align: right;
-  width: 6em;
-  height: 1.4em;
-  margin-left: -3.5em;
-}
-
-.test-step-result-title {
-  border-top-left-radius: 10px;
-  border-bottom-left-radius: 10px;
-  background-color: #CCCCCC;
+  width: 75px;
+  height: 20px;
+  margin-left: -55px;
 }
 
 .test-step-result-0 {
@@ -74,24 +71,27 @@
 }
 
 .test-step-result-body {
-  border-top-right-radius: 10px;
-  border-bottom-right-radius: 10px;
+  border-radius: 10px;
   background-color: #CCCCCC;
-  padding: 0px 10px 0px 0px !important;
+  padding: 0px 10px 0px 25px !important;
 }
 
 .test-step-result-body-content {
-  border-top-right-radius: 8px;
-  border-bottom-right-radius: 8px;
+  border-radius: 8px;
   background-color: #fff;
   padding: 5px;
   display: table;
   width: 100%;
   height: 100%;
 }
+
 .test-step-result-body-content > div {
   display: table-cell;
   vertical-align: top;
+}
+
+.test-role-result-map-spacer {
+  width: 150px;
 }
 
 .test-result-body-sponge {
@@ -99,12 +99,34 @@
 }
 
 .test-result-screenshots {
+  position: relative;
+  display: block;
+}
+
+.test-result-screenshot-container {
+  border: 2px solid #fff;
+  border-radius: 10px;
+  background-color: #ccc;
+  color: #fff;
+  z-index: 1;
+  cursor: pointer;
+  position: absolute;
+}
+
+.test-result-screenshot-container:hover {
+  z-index: 2;
+  background-color: #0A7BFF;
 }
 
 .test-result-screenshot {
   margin: 2px;
   border: 1px solid #ddd;
-  border-radius: 3px;
+  border-radius: 8px;
+}
+
+.test-result-screenshot-title {
+  text-transform: capitalize;
+  padding: 0 10px 0 10px;
 }
 
 .test-result-detail-reveal {

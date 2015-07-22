@@ -18,6 +18,7 @@ Template.registerHelper("debug", function(){
 
 /**
  * Render a project role type to a string
+ * TODO: Replace this with css
  */
 Template.registerHelper("renderProjectRole", function (role) {
   var name = RoleTypesLookup[role];
@@ -38,6 +39,7 @@ Template.registerHelper("renderNodeTitle", function (staticId, projectVersionId)
 
 /**
  * Render a node type to a string
+ * TODO: Replace this with css
  */
 Template.registerHelper("renderNodeType", function (type) {
   var name = NodeTypesLookup[type];
@@ -61,11 +63,21 @@ Template.registerHelper("renderNameByRole", function (userId) {
 
 /**
  * Render a change type to a string
+ * TODO: Replace this with css
  */
 Template.registerHelper("renderChangeType", function (type) {
   var name = ChangeTypesLookup[type];
   if(name){
     return name.substr(0,1).toUpperCase() + name.substr(1);
+  }
+});
+
+/**
+ * Render a camel case string as words
+ */
+Template.registerHelper("renderCamelCaseAsWords", function (message) {
+  if(message){
+    return message.replace(/([A-Z])/g, " $1").trim();
   }
 });
 

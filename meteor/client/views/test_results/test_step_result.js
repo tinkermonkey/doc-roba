@@ -1,18 +1,15 @@
+// TODO: This sucks, find a better way to figure out the pitch
+var screenshotPitch = 23;
+
 /**
  * Template Helpers
  */
 Template.TestStepResult.helpers({
   screenshots: function () {
-    return ScreenShots.find({ testStepResultId: this._id }, {sort: {createdAt: 1}});
+    return ScreenShots.find({ testStepResultId: this._id }, {sort: {createdAt: -1}}).map(function (image, i) {image.index = i; return image});
   },
-  isExecuting: function () {
-    return _.contains([TestResultStatus.executing, TestResultStatus.launched], this.status);
-  },
-  hasExecuted: function () {
-    return _.contains([TestResultStatus.complete], this.status);
-  },
-  isError: function () {
-    return _.contains([TestResultStatus.error], this.status);
+  getScreenshotBottom: function () {
+    return this.index * screenshotPitch;
   },
   getStepClass: function () {
     switch (this.status) {
@@ -91,6 +88,27 @@ Template.TestStepResult.events({
     }
     reveal2.find(".glyphicon").toggleClass("glyphicon-arrow-left");
     reveal2.find(".glyphicon").toggleClass("glyphicon-arrow-right");
+  },
+  "load .test-result-screenshot": function (e, instance) {
+    var maxHeight = 0,
+      maxWidth = 0,
+      totalHeight = 0,
+      width, height;
+
+    instance.$(".test-result-screenshot-container").each(function (i, el) {
+      width = parseInt($(el).outerWidth());
+      height = parseInt($(el).outerHeight());
+      maxWidth = width > maxWidth ? width : maxWidth;
+      maxHeight = height > maxHeight ? height : maxHeight;
+      totalHeight += screenshotPitch;
+    });
+    totalHeight += maxHeight - screenshotPitch;
+
+    if(maxWidth && totalHeight){
+      console.log("onload: ", instance.data._id, maxWidth, totalHeight);
+      instance.$(".test-result-screenshots > div").height(totalHeight).width(maxWidth);
+      instance.$(".test-result-screenshots").height(totalHeight).width(maxWidth).show();
+    }
   }
 });
 
@@ -98,14 +116,12 @@ Template.TestStepResult.events({
  * Template Created
  */
 Template.TestStepResult.created = function () {
-  
 };
 
 /**
  * Template Rendered
  */
 Template.TestStepResult.rendered = function () {
-  
 };
 
 /**

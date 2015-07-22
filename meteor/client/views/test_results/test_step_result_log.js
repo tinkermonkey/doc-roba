@@ -26,7 +26,7 @@ Template.TestStepResultLog.rendered = function () {
   var instance = this;
   instance.autorun(function () {
     var resize = Session.get("resize");
-    this.maxLogWidth.set(parseInt(resize.width / 3));
+    instance.maxLogWidth.set(parseInt(resize.width / 3));
   });
 };
 

@@ -8,9 +8,6 @@ Template.TestRoleResult.helpers({
   },
   stepResults: function () {
     return TestStepResults.find({testRoleResultId: this._id}, {sort: {order: 1}});
-  },
-  getMapRowSpan: function () {
-    return TestStepResults.find({testRoleResultId: this._id}).count() + 1;
   }
 });
 

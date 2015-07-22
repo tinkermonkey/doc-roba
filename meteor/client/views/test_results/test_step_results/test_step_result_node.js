@@ -1,7 +1,14 @@
 /**
  * Template Helpers
  */
-Template.TestStepResultNode.helpers({});
+Template.TestStepResultNode.helpers({
+  nodeContext: function () {
+    var logContext = LogMessages.findOne({"context.testStepResultId": this._id, sender:"context", "data.type": "node"});
+    if(logContext && logContext.data.length){
+      return logContext.data[0].data
+    }
+  }
+});
 
 /**
  * Template Event Handlers
