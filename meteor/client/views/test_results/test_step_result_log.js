@@ -17,12 +17,14 @@ Template.TestStepResultLog.events({});
  */
 Template.TestStepResultLog.created = function () {
   this.maxLogWidth = new ReactiveVar(parseInt(window.innerWidth / 3));
+  console.log("TestStepResultLog.created: ", Date.now());
 };
 
 /**
  * Template Rendered
  */
 Template.TestStepResultLog.rendered = function () {
+  console.log("TestStepResultLog.rendered: ", Date.now());
   var instance = this;
   instance.autorun(function () {
     var resize = Session.get("resize");

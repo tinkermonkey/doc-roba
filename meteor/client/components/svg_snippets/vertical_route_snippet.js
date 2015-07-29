@@ -3,7 +3,7 @@
  */
 Template.VerticalRouteSnippet.helpers({
   width: function () {
-    return DocTreeConfig.nodes.width * (this.scale || 1) + DocTreeConfig.standalone.margin * 2
+    return DocTreeConfig.nodes.width * 2 * (this.scale || 1) + DocTreeConfig.standalone.margin * 2
   },
   height: function () {
     var height = 0;

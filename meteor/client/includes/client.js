@@ -415,6 +415,7 @@ Template.registerHelper("stringify", function () {
  */
 Meteor.startup(function(){
   var self = {};
+  Session.set("resize", { timestamp: Date.now(), width: window.innerWidth, height: window.innerHeight });
   $(window).resize(function(event) {
     if(this.resizeTimeout){
       clearTimeout(this.resizeTimeout);

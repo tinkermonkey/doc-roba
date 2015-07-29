@@ -1,3 +1,32 @@
 <template name="TestRoleResultMap">
-  test_role_result_map
+  {{#contentFor "svgDefs"}}
+    {{> svg_def "outer-glow" }}
+    {{> svg_def "shadow" }}
+    {{> svg_def "crisp-shadow" }}
+    {{> svg_def "node-clip-path" }}
+    {{> svg_def "node-hover" }}
+    {{> svg_def "action-arrow" }}
+    {{> svg_def "action-arrow-hover" }}
+  {{/contentFor}}
+
+  <div class="test-role-result-map-container">
+    <svg class="action-snippet auto-transition" width="100%" height="{{height}}">
+      <g transform="translate({{xMargin}}, {{yMargin}})">
+        {{#each getSteps }}
+          <g transform="translate(0,{{startY}})">
+            {{#if node}}
+              <g>
+                {{> NodeSnippet node}}
+              </g>
+            {{/if}}
+            {{#if action}}
+              <g transform="translate(0,{{actionY}})">
+                {{> ActionSnippet action}}
+              </g>
+            {{/if}}
+          </g>
+        {{/each}}
+      </g>
+    </svg>
+  </div>
 </template>

@@ -5,7 +5,7 @@
     {{/with}}
     <table class="test-role-result-table">
       {{#each stepResults}}
-        {{> TestStepResult }}
+        {{> TestStepResult step=this stepMap=getStepMap }}
       {{/each}}
     </table>
   {{/if}}

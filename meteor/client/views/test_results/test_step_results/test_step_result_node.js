@@ -3,7 +3,7 @@
  */
 Template.TestStepResultNode.helpers({
   nodeContext: function () {
-    var logContext = LogMessages.findOne({"context.testStepResultId": this._id, sender:"context", "data.type": "node"});
+    var logContext = LogMessages.findOne({"context.testStepResultId": this.step._id, sender:"context", "data.type": "node"});
     if(logContext && logContext.data.length){
       return logContext.data[0].data
     }

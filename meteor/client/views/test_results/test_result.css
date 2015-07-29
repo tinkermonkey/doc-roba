@@ -91,7 +91,11 @@
 }
 
 .test-role-result-map-spacer {
-  width: 150px;
+  width: 200px;
+}
+
+.test-role-result-map-container {
+  position: absolute;
 }
 
 .test-result-body-sponge {
@@ -145,4 +149,13 @@
 
 .test-result-detail-2 {
   max-width: 80em;
+}
+
+/**
+ * Test Role Result
+ */
+.result-map-base {
+  width: 100%;
+  height: 100%;
+  border: 1px solid #f00;
 }
