@@ -16,19 +16,21 @@ Template.TestStepResultLog.events({});
  * Template Created
  */
 Template.TestStepResultLog.created = function () {
+  this.startTime = Date.now();
   this.maxLogWidth = new ReactiveVar(parseInt(window.innerWidth / 3));
-  console.log("TestStepResultLog.created: ", Date.now());
 };
 
 /**
  * Template Rendered
  */
 Template.TestStepResultLog.rendered = function () {
-  console.log("TestStepResultLog.rendered: ", Date.now());
+  console.log("TestStepResultLog.rendered: ", Date.now() - this.startTime);
   var instance = this;
   instance.autorun(function () {
     var resize = Session.get("resize");
-    instance.maxLogWidth.set(parseInt(resize.width / 3));
+    if(resize.width){
+      instance.maxLogWidth.set(parseInt(resize.width / 3));
+    }
   });
 };
 

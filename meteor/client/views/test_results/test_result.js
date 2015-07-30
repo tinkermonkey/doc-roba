@@ -25,14 +25,12 @@ Template.TestResult.created = function () {
   instance.subscribe("test_case_roles", instance.data.projectId, instance.data.projectVersionId, instance.data.testCaseId);
   instance.subscribe("test_case_steps", instance.data.projectId, instance.data.projectVersionId, instance.data.testCaseId);
   instance.subscribe("server", instance.data.projectId, instance.data.projectVersionId, instance.data.serverId);
-  console.log("TestResult.created: ", Date.now());
 };
 
 /**
  * Template Rendered
  */
 Template.TestResult.rendered = function () {
-  console.log("TestResult.rendered: ", Date.now());
 };
 
 /**

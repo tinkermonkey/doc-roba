@@ -11,9 +11,6 @@ Template.TestRoleResult.helpers({
   },
   getStepMap: function () {
     return Template.instance().stepMap.get()
-  },
-  getRoleLogMessages: function () {
-    return LogMessages.find({"context.testRoleResultId": this._id}, {sort: {time: 1}});
   }
 });
 
@@ -33,23 +30,22 @@ Template.TestRoleResult.created = function () {
 
   // steps are rendering slowly (because of the log messages), so we want a spinner until they're complete
   instance.stepsRendered = new ReactiveVar(0);
-  console.log("TestRoleResult.created: ", Date.now());
 };
 
 /**
  * Template Rendered
  */
 Template.TestRoleResult.rendered = function () {
-  console.log("TestRoleResult.rendered: ", Date.now());
   var instance = this;
   instance.autorun(function () {
     var data = Template.currentData(),
       stepMap = { list: [] },
       computeStart = Date.now();
+
     LogMessages.find({
-      "context.testRoleResultId": data._id,
-      sender: "context",
-      "data.type": "step"
+      "sender": "context",
+      "data.type": "step",
+      "context.testRoleResultId": data._id
     }, {sort: {time: 1}}).forEach(function (stepContext, i) {
       if(stepContext.data[0].data){
         // update the previous step end time to this step's start time
@@ -61,20 +57,53 @@ Template.TestRoleResult.rendered = function () {
           order: i,
           startTime: i > 0 ? stepContext.time : 0,
           stepType: stepContext.data[0].data.type,
-          stepId: stepContext.data[0].data._id
+          stepId: stepContext.data[0].data._id,
+          navigationSteps: []
         });
       } else {
         Meteor.log.error("Step Context without step data: " + JSON.stringify(stepContext));
       }
     });
+
     // get the time of the last message
+    /*
     stepMap.list[stepMap.list.length - 1].endTime = LogMessages.findOne({
       "context.testRoleResultId": data._id
     }, {sort: {time: -1}}).time;
+    */
 
     // Create a map by id for places without a reliable index value
     _.each(stepMap.list, function (mapItem) {
       stepMap[mapItem.stepId] = mapItem;
+    });
+
+    // now get the navigation steps for each step
+    // Get the log messages and scrub nodes and actions from them
+    var nodes = [],
+      actions = [];
+
+    LogMessages.find({
+      "sender": "context",
+      "data.type": {$in: ["node", "action"]},
+      "context.testRoleResultId": data._id
+    }, {sort: {time: 1}}).forEach(function (message, i) {
+      if(message.data[0].type == "node"){
+        // use a fake parentId (the previous node's id) to build of the hierarchy
+        var node = message.data[0].data;
+        node.stepId = message.context.testStepResultId;
+        nodes.push(node);
+      } else {
+        // catalog the actions
+        actions.push(message.data[0].data.action);
+      }
+    });
+
+    // stitch everything together as steps
+    _.each(nodes, function (node, i) {
+      stepMap[node.stepId].navigationSteps.push({
+        node: node,
+        action: i < actions.length ? actions[i] : null
+      });
     });
 
     console.log("StepMap compute time: ", Date.now() - computeStart, stepMap);

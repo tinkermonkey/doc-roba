@@ -37,7 +37,6 @@ Template.TestStepResult.helpers({
     }
   },
   getStepLogMessages: function () {
-    console.log("getStepLogMessages: ", this.step._id, this.stepMap[this.step._id]);
     if(this.stepMap[this.step._id].order < this.stepMap.list.length - 1){
       // for most steps grab all of the messages after the context start and before the next start
       return LogMessages.find({
@@ -51,8 +50,13 @@ Template.TestStepResult.helpers({
       // for the last step grab everything
       return LogMessages.find({
         "context.testRoleResultId": this.step.testRoleResultId,
-        time: { $gte: this.stepMap[this.step._id].startTime },
+        time: { $gte: this.stepMap[this.step._id].startTime }
       }, {sort: {time: 1}});
+    }
+  },
+  getResultSteps: function () {
+    if(this.stepMap && this.step && this.step._id && this.stepMap[this.step._id]){
+      return this.stepMap[this.step._id].navigationSteps;
     }
   }
 });
@@ -108,7 +112,7 @@ Template.TestStepResult.events({
     totalHeight += maxHeight - screenshotPitch;
 
     if(maxWidth && totalHeight){
-      console.log("onload: ", instance.data._id, maxWidth, totalHeight);
+      //console.log("onload: ", instance.data._id, maxWidth, totalHeight);
       instance.$(".test-result-screenshots > div").height(totalHeight).width(maxWidth);
       instance.$(".test-result-screenshots").height(totalHeight).width(maxWidth).show();
     }
@@ -119,14 +123,15 @@ Template.TestStepResult.events({
  * Template Created
  */
 Template.TestStepResult.created = function () {
-  console.log("TestStepResult.created: ", Date.now());
+  this.timeCreated = Date.now();
+  //console.log("TestStepResult.created: ", Date.now());
 };
 
 /**
  * Template Rendered
  */
 Template.TestStepResult.rendered = function () {
-  console.log("TestStepResult.rendered: ", Date.now());
+  //console.log("TestStepResult.rendered: ", Date.now() - this.timeCreated);
 };
 
 /**

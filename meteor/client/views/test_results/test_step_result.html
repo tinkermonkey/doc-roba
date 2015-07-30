@@ -7,9 +7,7 @@
         </div>
         <div>
           <div class="test-role-result-map-spacer">
-            {{#unless step.order}}
-              {{> TestRoleResultMap stepMap=stepMap testRoleResult=../..}}
-            {{/unless}}
+            {{> TestRoleResultMap steps=getResultSteps testRoleResult=../..}}
           </div>
         </div>
         <div><!-- needed to isolate the block display screenshots container -->

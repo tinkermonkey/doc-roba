@@ -4,7 +4,7 @@
 Template.TestRoleResultMap.helpers({
   height: function () {
     var height = 0;
-    var steps = Template.instance().steps.get();
+    var steps = this.steps;
     if(steps){
       // calculate the starting Y value for each step
       _.each(steps, function (step, i) {
@@ -24,7 +24,7 @@ Template.TestRoleResultMap.helpers({
     return DocTreeConfig.standalone.margin
   },
   getSteps: function () {
-    var steps = Template.instance().steps.get();
+    var steps = this.steps;
     if(steps && steps.length){
       // calculate the starting Y value for each step
       var startY = 0;
@@ -48,7 +48,7 @@ Template.TestRoleResultMap.events({});
  */
 Template.TestRoleResultMap.created = function () {
   var instance = this;
-  instance.steps = new ReactiveVar([]);
+  //instance.steps = new ReactiveVar([]);
 };
 
 /**
@@ -58,33 +58,32 @@ Template.TestRoleResultMap.rendered = function () {
   var instance = this;
 
   // for the data binding we just need to setup an update call
+  /*
   instance.autorun(function () {
     var data = Template.currentData(),
       startTime = Date.now();
     Meteor.log.debug("Auto-run executing ResultMap: ", data.testRoleResult._id);
 
     // Get the log messages and scrub nodes and actions from them
-    var parentId = null,
-      nodes = [],
+    var nodes = [],
       actions = [],
-      steps = [],
-      messages = LogMessages.find({
-      "context.testRoleResultId": data.testRoleResult._id,
+      steps = [];
+
+    LogMessages.find({
       "sender": "context",
-      "data.type": {$in: ["node", "action"]}
+      "data.type": {$in: ["node", "action"]},
+      "context.testRoleResultId": data.testRoleResult._id
     }, {sort: {time: 1}}).forEach(function (message, i) {
-        if(message.data[0].type == "node"){
-          // use a fake parentId (the previous node's id) to build of the hierarchy
-          var node = message.data[0].data;
-          node.parentId = parentId;
-          node.order = i;
-          nodes.push(node);
-          parentId = node.staticId;
-        } else {
-          // catalog the actions
-          actions.push(message.data[0].data.action);
-        }
-      });
+      console.log("RoleResultMap: ", message);
+      if(message.data[0].type == "node"){
+        // use a fake parentId (the previous node's id) to build of the hierarchy
+        var node = message.data[0].data;
+        nodes.push(node);
+      } else {
+        // catalog the actions
+        actions.push(message.data[0].data.action);
+      }
+    });
 
     // stitch everything together as steps
     _.each(nodes, function (node, i) {
@@ -97,6 +96,7 @@ Template.TestRoleResultMap.rendered = function () {
     console.log("ResultMap Data: ", Date.now() - startTime, steps);
     instance.steps.set(steps);
   });
+  */
 };
 
 /**
