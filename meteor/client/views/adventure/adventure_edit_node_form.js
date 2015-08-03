@@ -47,6 +47,27 @@ Template.AdventureEditNodeForm.events({
       Meteor.log.error("Failed to update node value: data-key not found");
       Dialog.error("Failed to update node value: data-key not found");
     }
+  },
+  "click .btn-preview": function (e, instance) {
+    var field = $(e.target).closest(".btn").attr("data-field"),
+      node = this,
+      adventureContext = Template.parentData(1);
+    console.log("Preview: ", field);
+
+    // send the command to get information about the "clicked" element
+    if(field && node[field] && _.contains([AdventureStatus.awaitingCommand], adventureContext.adventure.status)){
+      AdventureCommands.insert({
+        projectId: adventureContext.adventure.projectId,
+        adventureId: adventureContext.adventure._id,
+        updateState: false,
+        code: "driver.previewCode(\"" + btoa(node[field]) + "\");"
+      }, function (error) {
+        if(error){
+          Meteor.log.error("Error adding adventure command: " + error.message);
+          Dialog.error("Error adding adventure command: " + error.message);
+        }
+      });
+    }
   }
 });
 

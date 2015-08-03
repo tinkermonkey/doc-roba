@@ -1,7 +1,7 @@
 Template.AdventureLogTable.helpers({
   messages: function () {
     console.log("Messages: ", this);
-    return LogMessages.find({adventureId: this._id}, {sort: {timestamp: -1}});
+    return LogMessages.find({"context.adventureId": this._id}, {sort: {time: -1}});
   },
   getTimestamp: function () {
     return moment(this.timestamp).format("hh:mm:ss.SSS");

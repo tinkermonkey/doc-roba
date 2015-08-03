@@ -201,9 +201,11 @@ Util = {
    * @returns {string}
    */
   escapeDoubleQuotes: function (str) {
-    var escapedFix = new RegExp("\/\"", "g"),
-      quoteFix = new RegExp("\"", "g");
-    return str.replace(escapedFix, "\\\\\"").replace(quoteFix, "\\\"");
+    if(str && str.length){
+      var escapedFix = new RegExp("\/\"", "g"),
+        quoteFix = new RegExp("\"", "g");
+      return str.replace(escapedFix, "\\\\\"").replace(quoteFix, "\\\"");
+    }
   },
 
   /**

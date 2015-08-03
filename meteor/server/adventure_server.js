@@ -24,7 +24,7 @@ Meteor.startup(function () {
     return Adventures.find({});
   });
   Meteor.publish('adventure_log', function (adventureId) {
-    return LogMessages.find({adventureId: adventureId});
+    return LogMessages.find({"context.adventureId": adventureId});
   });
   Meteor.publish('adventure_actions', function (adventureId) {
     return AdventureSteps.find({adventureId: adventureId}, {sort: {order: 1}});
@@ -45,7 +45,30 @@ Meteor.startup(function () {
       check(adventureId, String);
 
       Meteor.log.debug("launchAdventure: " + adventureId);
-      launchAdventure(adventureId);
+      var adventure = Adventures.findOne(adventureId);
+      check(adventure, Object);
+      check(adventure._id, String);
+
+      // Queue the adventure
+      Adventures.update(adventureId, {$set: {status: AdventureStatus.staged }});
+      AdventureSteps.update({adventureId: adventureId }, {$set: {status: AdventureStepStatus.staged }});
+
+      var token = Accounts.singleUseAuth.generate({ expires: { seconds: 5 } }),
+        command = [ProcessLauncher.adventureScript, "--adventureId", adventureId, "--token", token].join(" "),
+        logFile = ["adventure_", adventureId, ".log"].join(""),
+        proc = ProcessLauncher.launchAutomation(command, logFile, function (code) {
+          var adventure = this;
+          Meteor.log.debug("Adventure Exit: " + adventure._id + ", " + code);
+          Adventures.update(adventure._id , {$unset: {pid: ""}});
+          if(code){
+            Adventures.update(adventure._id , {$set: {status: AdventureStatus.failed}});
+          } else {
+            Adventures.update({_id: adventure._id, status: {$nin: [AdventureStatus.failed]} }, {$set: {status: AdventureStatus.complete}});
+          }
+        }.bind(adventure));
+
+      Adventures.update(adventureId, {$set: {pid: proc.pid}});
+      Meteor.log.info("launchAdventure launched: " + adventureId + " as " + proc.pid + " > " + logFile);
     },
 
     /**
@@ -60,19 +83,25 @@ Meteor.startup(function () {
     },
 
     /**
-     * Send the adventure status enum to the clients
-     * @returns {AdventureStatus|*}
+     * pauseAdventure
+     * @param adventureId
      */
-    loadAdventureStatusEnum: function () {
-      return AdventureStatus;
+    pauseAdventure: function (adventureId) {
+      check(adventureId, String);
+
+      Meteor.log.debug("pauseAdventure: " + adventureId);
+      Adventures.update(adventureId, {$set: { status: AdventureStatus.paused }})
     },
 
     /**
      * Send the adventure status enum to the clients
-     * @returns {AdventureStepStatus|*}
+     * @returns {AdventureStatus|*}
      */
-    loadAdventureStepStatusEnum: function () {
-      return AdventureStepStatus;
+    loadAdventureEnums: function () {
+      return {
+        status: AdventureStatus,
+        stepStatus: AdventureStepStatus
+      };
     },
 
     /**
@@ -243,7 +272,6 @@ launchAdventure = function (adventureId) {
       stdio: [ 'ignore', out, err ]
     });
 
-    adventureProcs[adventure._id] = proc;
     Adventures.update({_id: adventure._id}, {$set: {pid: proc.pid}});
     Meteor.log.debug("Adventure Launched: " + adventure._id + " as process " + proc.pid + "\n");
 
@@ -262,27 +290,6 @@ launchAdventure = function (adventureId) {
         });
       }
     }));
-  } else {
-    Meteor.log.error("Adventure not found: " + adventureId);
-  }
-};
-
-/**
- * Get an adventure ready to be assembled
- * @param adventure
- */
-stageAdventure = function (adventureId) {
-  var adventure = Adventures.findOne(adventureId);
-  if(adventure) {
-    // clean up any log messages for this adventure
-    LogMessages.remove({adventureId: adventureId});
-
-    // Set the adventure to staged
-    Adventures.update({_id: adventureId}, {$set: {status: AdventureStatus.staged}});
-
-    // Set all of the results to ready
-    AdventureSteps.update({adventureId: adventureId}, {$set: {status: AdventureStepStatus.staged}}, {multi: true});
-    AdventureCommands.update({adventureId: adventureId}, {$set: {status: AdventureStepStatus.staged}}, {multi: true});
   } else {
     Meteor.log.error("Adventure not found: " + adventureId);
   }

@@ -8,6 +8,7 @@ var Future        = require("fibers/future"),
   assert          = require("assert"),
   webdriver       = require("webdriverio"),
   fs              = require("fs"),
+  RobaPreviewer   = require("./roba_previewer"),
   logger          = log4js.getLogger("roba-driver"),
   browserLogger   = log4js.getLogger("browser"),
   clientLogger    = log4js.getLogger("client"),
@@ -93,23 +94,19 @@ var RobaDriver = function (config) {
     });
   future.wait();
 
-  // wrap the webdriver class in futures
-  logger.info("Wrapping driver commands");
+  // wrap the webdriver functions in a custom futurized container
+  logger.debug("Wrapping driver commands");
   var fDriver = this;
+  fDriver.commandList = [];
   _.each(_.keys(commands), function(family){
     _.each(commands[family], function(command){
       if(fDriver.driver[command]){
-        //logger.debug("Futurizing command: ", command, ", ", typeof fDriver.driver[command]);
+        fDriver.commandList.push(command);
         fDriver[command] = function () {
           var commandArgs = arguments,
             args = _.map(_.keys(commandArgs), function(i){ return commandArgs["" + i];});
           logger.trace("Wrapper: ", command, ":", args);
-          //try{
-            return this.command(command, args);
-          //} catch (e) {
-            //logger.error("Exception executing command [" + command + "](", args,"): ", e ? e.toString() : "");
-            //logger.error(new Error(e.toString()).stack);
-          //}
+          return this.command(command, args);
         }.bind(fDriver);
       } else {
         logger.error("Failed to wrap command: ", command);
@@ -496,7 +493,14 @@ RobaDriver.prototype.injectHelpers = function () {
             }
           }
 
-          return selectors;
+          // return a list of selector objects for formatting
+          return selectors.map(function (selector) {
+            return {
+              selector: selector,
+              match: true,
+              matchCount: 1
+            }
+          });
         }
       };
 
@@ -534,9 +538,11 @@ RobaDriver.prototype.getElementAtLocation = function (x, y, highlight, exclusive
  * Test out a selector by highlighting and returning the matches
  * @param selector The selector to "test" by returning all matched elements
  */
-RobaDriver.prototype.testSelector = function (selector) {
+RobaDriver.prototype.testSelector = function (selector, getText, getHtml) {
   logger.debug("testSelector: ", selector);
-  var result = this.execute(function (selector) {
+  getText = _.isUndefined(getText) ? true : getText;
+  getHtml = _.isUndefined(getHtml) ? true : getHtml;
+  var result = this.execute(function (selector, getText, getHtml) {
     var elements = [],
       elementInfo = [];
 
@@ -549,10 +555,10 @@ RobaDriver.prototype.testSelector = function (selector) {
 
     // highlight each of the matches and gather basic info
     for(var i in elements){
-      elementInfo.push(roba_driver.element_info(elements[i], true, true));
+      elementInfo.push(roba_driver.element_info(elements[i], getText, getHtml));
     }
     return { highlightElements: elementInfo };
-  }, selector);
+  }, selector, getText, getHtml);
   return result;
 };
 
@@ -614,6 +620,19 @@ RobaDriver.prototype.refineSelector = function (x, y, selector) {
  */
 RobaDriver.prototype.getSelectors = function (x, y) {
 
+};
+
+/**
+ * Get information for all of the elements affected by running a piece of codeRaw
+ * @param codeRaw
+ */
+RobaDriver.prototype.previewCode = function (codeRaw, account, context) {
+  // codeRaw should be base64 encoded
+  var code = new Buffer(codeRaw, "base64").toString();
+  logger.debug("previewCode: ", code, account, context);
+
+  var preview = new RobaPreviewer(this, account, context);
+  return preview.run(code);
 };
 
 /**

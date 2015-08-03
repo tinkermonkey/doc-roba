@@ -9,8 +9,7 @@
       <li role="presentation" class="active"><a data-tab-name="node">
         {{renderNodeType type}}
       </a></li>
-      <li role="presentation"><a data-tab-name="wait-for">Ready</a></li>
-      <li role="presentation"><a data-tab-name="validations">Validations</a></li>
+      <li role="presentation"><a data-tab-name="checks">Checks</a></li>
       <li role="presentation"><a data-tab-name="actions">Actions</a></li>
     </ul>
     <div class="tab-container">
@@ -97,12 +96,23 @@
           {{> edit_node_url_parameters }}
         </div>
       </div>
-      <div class="tab" data-tab-name="wait-for">
-        <h4>Code to determine if this {{renderNodeType type}} is ready</h4>
+      <div class="tab" data-tab-name="checks">
+        <h4>
+          Code to determine if this {{renderNodeType type}} is ready
+          <button class="btn btn-xs btn-primary btn-preview" data-field="readyCode">
+            <span class="glyphicon glyphicon-play"></span>
+            Preview
+          </button>
+        </h4>
         {{> RobaAce minLines=10 maxLines=30 dataKey="readyCode" value=readyCode}}
-      </div>
-      <div class="tab" data-tab-name="validations">
-        <h4>Code to determine if this {{renderNodeType type}} is valid</h4>
+
+        <h4>
+          Code to determine if this {{renderNodeType type}} is valid
+          <button class="btn btn-xs btn-primary btn-preview" data-field="validationCode">
+            <span class="glyphicon glyphicon-play"></span>
+            Preview
+          </button>
+        </h4>
         {{> RobaAce minLines=10 maxLines=30 dataKey="validationCode" value=validationCode}}
       </div>
       <div class="tab" data-tab-name="actions">

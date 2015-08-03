@@ -467,8 +467,8 @@ Meteor.startup(function () {
       // get the list of roles, create a launch token and fire away
       TestRoleResults.find({testResultId: testResultId}).forEach(function (role) {
         Meteor.log.info("launchTestResult launching role: " + role._id);
-        var token = Accounts.singleUseAuth.generate({ expires: { seconds: 30 } }),
-          command = ["roba_test_role.js", "--roleId", role._id, "--token", token].join(" "),
+        var token = Accounts.singleUseAuth.generate({ expires: { seconds: 5 } }),
+          command = [ProcessLauncher.testRoleScript, "--roleId", role._id, "--token", token].join(" "),
           logFile = ["test_role_result_", role._id, ".log"].join(""),
           proc = ProcessLauncher.launchAutomation(command, logFile);
 

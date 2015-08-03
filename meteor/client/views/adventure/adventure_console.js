@@ -71,9 +71,9 @@ Template.AdventureConsole.rendered = function () {
   // pick up any updates to the last known node
   Adventures.find({_id: instance.data.adventure._id}).observeChanges({
     changed: function (id, fields) {
-      console.log("Adventure changed: ", fields);
+      //console.log("Adventure changed: ", fields);
       if(_.contains(_.keys(fields), "lastKnownNode")){
-        console.log("AdventureConsole: checking current location against updated lastKnownNode ", fields.lastKnownNode);
+        //console.log("AdventureConsole: checking current location against updated lastKnownNode ", fields.lastKnownNode);
         setTimeout(function () {
           NodeSearch.checkAdventureLocation(instance);
         }, 100);
@@ -82,10 +82,10 @@ Template.AdventureConsole.rendered = function () {
   });
 
   // React to changes in the url
-  console.log("Observing changes for adventure state: ", instance.data.state._id);
+  //console.log("Observing changes for adventure state: ", instance.data.state._id);
   AdventureStates.find({_id: instance.data.state._id}).observeChanges({
     changed: function (id, fields) {
-      console.log("Adventure State changed: ", _.keys(fields));
+      //console.log("Adventure State changed: ", _.keys(fields));
       if(_.contains(_.keys(fields), "url")){
         console.log("AdventureConsole: checking current location against updated url ", fields.url);
         setTimeout(function () {
@@ -97,25 +97,4 @@ Template.AdventureConsole.rendered = function () {
 
   // perform an initial check
   NodeSearch.checkAdventureLocation(instance);
-
-  /*
-  instance.autorun(function () {
-    var nodeId = instance.currentNode.get();
-    console.log("AutoRun currentNode: ", nodeId);
-    if(nodeId){
-      // stop the previous watcher
-      if(instance.nodeWatch){
-        console.log("Stopping existing node watch");
-        instance.nodeWatch.stop();
-      }
-
-      // watch changes to this node
-      instance.nodeWatch = Nodes.find({staticId: nodeId, projectVersionId: instance.data.adventure.projectVersionId}).observeChanges({
-        changed: function (id, fields) {
-          console.log("Watched node changed: ", id, fields);
-        }
-      });
-    }
-  });
-  */
 };

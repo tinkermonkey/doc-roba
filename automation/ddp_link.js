@@ -228,6 +228,14 @@ DDPLink.prototype.saveAdventureState = function (adventureId, state) {
 };
 
 /**
+ * Pause an adventure
+ */
+DDPLink.prototype.pauseAdventure = function (adventureId) {
+  assert(adventureId, "pauseAdventure: adventureId must not be null");
+  this.call("pauseAdventure", [adventureId]);
+};
+
+/**
  * Set the status of an adventure
  */
 DDPLink.prototype.setAdventureStatus = function (adventureId, status) {

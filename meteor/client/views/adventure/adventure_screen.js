@@ -29,7 +29,7 @@ Template.AdventureScreen.helpers({
   getScreenMaskPosition: function () {
     var instance = Template.instance(),
       localViewport = instance.viewport.get(),
-      width = $(".remote-screen").width(),
+      width   = $(".remote-screen").width(),
       height  = $(".remote-screen").height(),
       offset  = $(".remote-screen").offset(),
       adjust  = $(".remote-screen").parent().offset();
@@ -169,7 +169,6 @@ Template.AdventureScreen.events({
     this.selectorElements.set({});
     this.checkResult.set();
     $(".adventure-highlight-detail").find(".selected").removeClass("selected");
-
 
     // send the command to get information about the "clicked" element
     AdventureCommands.insert({
@@ -325,6 +324,15 @@ Template.AdventureScreen.events({
       .css("width", "1px")
       .css("height", "1px")
       .css("visibility", "hidden");
+  },
+  "click .adventure-selector-check-menu a": function (e, instance) {
+    // check for a data command
+    var selector = this,
+      item = $(e.target),
+      command = item.attr("data-command"),
+      commandType = item.closest(".command-type").attr("data-command-type");
+
+    console.log("Select: ", commandType, command, selector);
   }
 });
 

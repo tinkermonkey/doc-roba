@@ -13,15 +13,16 @@
 	<div class="adventure-highlight-hierarchy-content" style="padding-left: {{getLeftPadding}}px;">
         <h4>Selectors</h4>
         {{#each selectors}}
-          <div>
-            {{this}}
-            <span class="label label-success">Matched a single element</span>
-          </div>
+          {{> AdventureSelectorResult }}
         {{/each}}
+
         {{#if text}}
         <h4>Text</h4>
-        <div>{{text}}</div>
+        <div>
+          <span class="attr hide">text</span><span class="clickable value">{{text}}</span>
+        </div>
         {{/if}}
+
         {{#if html}}
         <h4>HTML</h4>
         <div>{{html}}</div>

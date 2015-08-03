@@ -55,7 +55,7 @@ treeUtils = {
    * @param depth
    */
   setNodeDepth: function(d, depth) {
-    console.log("SetNodeDepth: ", d.title, 0);
+    //console.log("SetNodeDepth: ", d.title, 0);
     var children = [].concat(d.childPages, d.childViews);
 
     d.depth = depth;

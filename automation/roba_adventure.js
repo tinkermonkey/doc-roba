@@ -13,7 +13,10 @@ var Future      = require("fibers/future"),
   DDPLink       = require("./ddp_link"),
   RobaDriver    = require("./roba_driver"),
   RobaReady     = require("./roba_ready"),
-  adventureId   = process.argv[2],
+  RobaContext   = require("./roba_context"),
+  argv          = require("minimist")(process.argv.slice(2)),
+  adventureId   = argv.adventureId,
+  singleUseToken  = argv.token,
   timestamp     = moment().format("YYYY-MM-DD_HH-mm-ss"),
   logger        = log4js.getLogger("runner"),
   logPath       = fs.realpathSync(__dirname + '/..') + '/logs/adventures/' + timestamp + '_' + adventureId + '/',
@@ -79,30 +82,39 @@ Future.task(function(){
  * @constructor
  */
 function ExecuteAdventure () {
+  //create the context
+  context = new RobaContext({adventureId: adventureId});
+
   // Create the ddp link
   logger.info("Adventure " + adventureId + " launched");
-  ddpLink = new DDPLink();
+  ddpLink = new DDPLink({}, context);
 
   // Connect to the server
   logger.info("Initiating DDP connection");
-  ddpLink.connect();
+  ddpLink.connect(singleUseToken);
 
   // Create the ddpLogger
   logger.debug("Creating DDP logger");
-  var ddpLogger = ddpAppender.createAppender(ddpLink);
+  var ddpLogger = ddpAppender.createAppender(ddpLink, context);
   log4js.addAppender(ddpLogger);
+  logger.info("Log File: ", logFile);
 
   // load the status enums
-  AdventureStatus     = ddpLink.call("loadAdventureStatusEnum");
-  AdventureStepStatus = ddpLink.call("loadAdventureStepStatusEnum");
+  var enums = ddpLink.call("loadAdventureEnums");
+  AdventureStatus     = enums.status;
+  AdventureStepStatus = enums.stepStatus;
 
   // load the adventure
+  logger.debug("Loading the Adventure live record")
   adventure = ddpLink.liveRecord("adventure", adventureId, "adventures");
-  ddpAppender.setContext(adventure._id);
-  logger.info("MILESTONE", {context: {type: "adventure", adventure: adventure}});
-  logger.info("Executing Adventure: ", adventure._id);
-  logger.info("Log File: ", logFile);
+  context.update({
+    projectId:        adventure.projectId,
+    projectVersionId: adventure.projectVersionId,
+    testAgentId:      adventure.testAgentId,
+    serverId:         adventure.serverId
+  });
   ddpLink.setAdventureStatus(adventure._id, AdventureStatus.launched);
+  context.milestone({type: "adventure", data: adventure});
 
   // load the test system info
   var testSystem = ddpLink.liveRecord("adventure_test_system", adventure.testSystemId, "test_systems");
@@ -133,6 +145,7 @@ function ExecuteAdventure () {
       loggingPrefs: { browser: "ALL", driver: "WARNING", client: "WARNING", server: "WARNING" }
     },
     logLevel: "silent",
+    logPath: logPath,
     end: function (event){
       logger.debug("End event received from driver");
       driverEnded = true;
@@ -171,25 +184,44 @@ function ExecuteAdventure () {
   });
 
   // get the route
+  context.backup(); //backup the context so we can restore it after each step
   driver.getClientLogs();
   logger.info("Executing Route: ", adventure.route);
   ddpLink.setAdventureStatus(adventure._id, AdventureStatus.routing);
-  var i = 0, step;
+  var i = 0, step, pass = true;
   while(i < adventure.route.steps.length && !adventure.abort && !driverEnded){
+    step = adventure.route.steps[i];
+    context.restore(); // erase any context from a previous step
+    context.update({adventureStepId: step._id}); // each step handler should further update the context
+    logger.info("Executing Route Step " + (i + 1) + " of " + adventure.route.steps.length);
+    context.milestone({ type: "step", data: step });
+
+    // if we're failing, pause
+    if(!pass){
+      ddpLink.pauseAdventure(adventureId);
+      adventure.status = AdventureStatus.paused;
+    }
+
     // possibly wait for it
     CheckForPause();
 
-    // Get the step and update the context
-    step = adventure.route.steps[i];
-    logger.info("Executing Route Step " + (i) + " of " + adventure.route.steps.length);
-
-    ExecuteStep(step, i);
+    // Execute the step
+    try {
+      ExecuteStep(step, i);
+      pass = true;
+    } catch (error) {
+      logger.error("Step execution failed: ", error);
+      pass = false;
+      ddpLink.setTestStepResultStatus(step._id, TestResultStatus.error);
+      ddpLink.setTestStepResultCode(step._id, TestResultCodes.fail);
+    }
 
     // done
     ddpLink.setAdventureStepStatus(step.stepId, AdventureStepStatus.complete);
 
     i++;
   }
+  context.restore();
   logger.info("All Steps Executed");
 
   // possibly wait for it
@@ -208,13 +240,15 @@ function ExecuteAdventure () {
 
       // go into a wait loop
       if(i < _.keys(commands).length){
+        command = commands[_.keys(commands)[i]];
+        context.update({adventureCommandId: command._id}); // each step handler should further update the context
+        logger.trace("Command " + i + ": ", command);
+        context.milestone({ type: "command", data: command });
+
         // possibly wait for it
         CheckForPause();
 
         ddpLink.setAdventureStatus(adventure._id, AdventureStatus.executingCommand);
-        command = commands[_.keys(commands)[i]];
-        ddpAppender.setContext(adventure._id, adventure.lastKnownNode, command._id);
-        logger.trace("Command " + i + ": ", command);
 
         // execute the command
         ExecuteCommand(command, adventure);
@@ -228,6 +262,7 @@ function ExecuteAdventure () {
         if(i >= _.keys(commands).length){
           ddpLink.setAdventureStatus(adventure._id, AdventureStatus.awaitingCommand);
         }
+        context.restore();
       } else {
         // Keep-alive
         try {
@@ -285,7 +320,6 @@ function ExecuteStep (step, stepNum) {
   logger.info("MILESTONE", {context: {type: "step", step: step}});
   logger.debug("Step " + stepNum + ": ", step);
   ddpLink.setAdventureStepStatus(step.stepId, AdventureStepStatus.running);
-  //ddpAppender.setContext(adventure._id, step.node._id, step.stepId);
 
   // first step needs to be navigated manually
   if(stepNum == 0){
@@ -358,7 +392,6 @@ function ExecuteCommand(command) {
 
   // set the logging context
   ddpLink.setCommandStatus(command._id, AdventureStepStatus.running);
-  ddpAppender.setContext(adventure._id, adventure.lastKnownNode, command._id);
 
   // inject the helpers
   logger.trace("Injecting browser-side driver helpers");

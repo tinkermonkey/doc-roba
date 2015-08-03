@@ -7,6 +7,7 @@
   width: 60%;
   -webkit-transition: width 0.25s;
   transition: width 0.25s;
+  z-index: 1;
 }
 
 .adventure-sidebar {
@@ -17,6 +18,7 @@
   padding-right: 10px !important;
   -webkit-transition: width 0.25s;
   transition: width 0.25s;
+  z-index: 0;
 }
 
 .adventure-sidebar .tab-container {
@@ -179,7 +181,6 @@
   position: absolute;
   box-shadow: 0px 0px 15px #fff;
   z-index: 100;
-  min-width: 200px;
 }
 
 .hidden-editable {
@@ -220,6 +221,7 @@
 
 .adventure-highlight-detail.active {
   display: block;
+  margin-bottom: 100px;
 }
 
 .adventure-highlight-hierarchy {
@@ -245,7 +247,7 @@
   visibility: visible;
 }
 
-.adventure-highlight-hierarchy .clickable {
+.adventure-highlight-detail .clickable {
   padding-left: 1px;
   padding-right: 1px;
   margin-left: 1px;
@@ -253,7 +255,7 @@
   border-radius: 2px;
 }
 
-.adventure-highlight-hierarchy .clickable:hover, .adventure-highlight-hierarchy .clickable.selected {
+.adventure-highlight-detail .clickable:hover, .adventure-highlight-detail .clickable.selected {
   cursor: pointer;
   background: #0A7BFF;
 }

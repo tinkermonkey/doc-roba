@@ -4,7 +4,7 @@
       {{#if state.url}}
         <div class="live-adventure-header">
           {{#with state}}
-          <div>{{title}}</div>
+          <h4>{{title}}</h4>
           <div>{{url}}</div>
           <div>
             <small>viewport is {{viewportSize.width}}px x {{viewportSize.height}}px,</small>
@@ -17,28 +17,14 @@
             {{> AdventureToolbar fullContext}}
         </div>
           {{#if getCheckResult}}
-              {{#with getCheckResult}}
-                <div class="well">
-                  <div>
-                      {{selector}}
-                      {{#if match}}
-                        <span class="label label-success">Matched a single element</span>
-                      {{else}}
-                          {{#if matchCount}}
-                            <span class="label label-warning">Matched multiple elements</span>
-                          {{else}}
-                            <span class="label label-default">Matched no elements</span>
-                          {{/if}}
-                      {{/if}}
-                  </div>
-                    {{#each selectors}}
-                      <div>
-                          {{this}}
-                        <span class="label label-success">Matched a single element</span>
-                      </div>
-                    {{/each}}
-                </div>
-              {{/with}}
+            {{#with getCheckResult}}
+              <div class="well">
+                {{> AdventureSelectorResult }}
+                {{#each selectors}}
+                  {{> AdventureSelectorResult }}
+                {{/each}}
+              </div>
+            {{/with}}
           {{/if}}
       {{/if}}
 
@@ -119,8 +105,6 @@
           </div>
         {{/if}}
       </div>
-
-
     </div>
   </div>
 </template>

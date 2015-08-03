@@ -32,7 +32,7 @@ Template.AdventureEditNodeActionRow.events({
   },
   "click .btn-execute-action": function (e, instance) {
     // make sure there's an adventure to work with
-    var adventureContext = Template.parentData(1),
+    var adventureContext = Template.parentData(2),
       code = this.code;
 
     // make sure the adventure is operating

@@ -24,6 +24,9 @@ Meteor.startup(function () {
  * Functionality for launching and kill child processes
  */
 ProcessLauncher = {
+  testRoleScript: "roba_test_role.js",
+  adventureScript: "roba_adventure.js",
+
   /**
    * Launch an automation process
    * This can be a test or adventure

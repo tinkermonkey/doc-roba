@@ -1,11 +1,11 @@
 /**
- * Asynchronous page-ready checking that functions with the synchronous roba_driver
+ * Asynchronous page-valid checking that functions with the synchronous roba_driver
  */
 var Future  = require("fibers/future"),
   _         = require("underscore"),
   assert    = require("assert"),
   log4js    = require("log4js"),
-  logger    = log4js.getLogger("ready"),
+  logger    = log4js.getLogger("valid"),
   commands  = [
     "waitFor",
     "waitForChecked",
@@ -20,72 +20,72 @@ var Future  = require("fibers/future"),
 logger.setLevel("DEBUG");
 
 /**
- * Create a new ready checker
+ * Create a new valid checker
  * @constructor
  */
-var RobaReady = function (driver, timeout) {
-  logger.debug("Creating Ready Checker");
+var RobaValid = function (driver, timeout) {
+  logger.debug("Creating Valid Checker");
 
   // can't function without a driver
-  assert(driver, "RobaReady requires a driver");
+  assert(driver, "RobaValid called without a driver");
 
   // create the list of commands
-  var ready = this;
-  ready.commandList = [];
-  ready.driver      = driver;
-  ready.checks      = [];
-  ready.timeout     = timeout || 5000;
+  var valid = this;
+  valid.commandList = [];
+  valid.driver      = driver;
+  valid.checks      = [];
+  valid.timeout     = timeout || 5000;
 
   // hook up the command listeners
   _.each(commands, function(command){
-    logger.trace("Registering Ready Check: ", command);
-    ready.commandList.push(command);
-    ready[command] = function () {
-      logger.trace("Ready Command called: ", command);
+    logger.trace("Registering Valid Check: ", command);
+    valid.commandList.push(command);
+    valid[command] = function () {
+      logger.trace("Valid Command called: ", command);
       var commandArgs = arguments,
         args = _.map(_.keys(commandArgs), function(i){ return commandArgs["" + i];});
 
-      ready.checks.push({
+      valid.checks.push({
         command: command,
         args: args
       });
-    };
+    }.bind(valid);
   });
 
-  return ready;
+  return valid;
 };
 
 /**
- * Perform the actual ready checks
+ * Perform the actual valid checks
  */
-RobaReady.prototype.check = function () {
-  logger.debug("Ready Checker Running");
+RobaValid.prototype.check = function () {
+  logger.debug("Valid Checker Running");
 
   // make sure there are checks to run
   if(!this.checks.length){
-    logger.trace("Ready.check called with no checks");
+    logger.trace("Valid.check called with no checks");
     return true;
   }
 
-  var ready = this,
-    driver = ready.driver.driver,
+  var valid = this,
+    driver = valid.driver.driver,
     future = new Future(),
     startTime = Date.now(),
     allPass = true,
     checksReturned = 0;
 
   // run the checks
-  logger.trace("Ready Checker running checks");
-  _.each(ready.checks, function (check, i) {
+  logger.trace("Valid Checker running checks");
+  _.each(valid.checks, function (check, i) {
     var args = check.args;
-    args.push(ready.timeout);
+    args.push(valid.timeout);
     args.push(function (error, result) {
       // log the result
       allPass = allPass && result;
       check.result = {
         pass: result,
         time: Date.now() - startTime,
-        timeout: ready.timeout
+        timeout: valid.timeout
       };
 
       if(error){
@@ -97,20 +97,20 @@ RobaReady.prototype.check = function () {
 
       // check for completion
       checksReturned++;
-      if(checksReturned == ready.checks.length){
+      if(checksReturned == valid.checks.length){
         future.return();
       }
     });
-    logger.debug("Ready Check Command setup: ", check.command, check.args[0]);
+    logger.debug("Valid Check Command setup: ", check.command, check.args[0]);
     driver[check.command].apply(driver, args);
   });
 
   // wait for the checks to return
-  logger.trace("Ready Checker waiting for checks");
+  logger.trace("Valid Checker waiting for checks");
   future.wait();
 
   // make sure everything passed
-  logger.debug("Ready Checker complete: ", allPass);
+  logger.debug("Valid Checker complete: ", allPass);
   return allPass;
 };
 
@@ -118,4 +118,4 @@ RobaReady.prototype.check = function () {
  * Export the class
  * @type {Function}
  */
-module.exports = RobaReady;
+module.exports = RobaValid;

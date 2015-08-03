@@ -1,0 +1,58 @@
+<template name="AdventureSelectorCheckMenu">
+  <ul class="dropdown-menu">
+    <li class="dropdown-submenu command-type" data-command-type="ready">
+      <a href="#">Ready</a>
+      <ul class="dropdown-menu adventure-selector-check-menu">
+        <li class="dropdown-submenu">
+          <a>Wait For</a>
+          <ul class="dropdown-menu">
+            <li><a data-command="waitForVisible">Visible</a></li>
+            <li><a data-command="waitForEnabled">Enabled</a></li>
+            <li><a data-command="waitForExisting">Existing</a></li>
+            <li><a data-command="waitForSelected">Selected</a></li>
+            <li><a data-command="waitForChecked">Checked</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li class="dropdown-submenu command-type" data-command-type="valid">
+      <a href="#">Valid</a>
+      <ul class="dropdown-menu adventure-selector-check-menu">
+        <li class="dropdown-submenu">
+          <a>Is</a>
+          <ul class="dropdown-menu">
+            <li><a data-command="isVisible">Visible</a></li>
+            <li><a data-command="isEnabled">Enabled</a></li>
+            <li><a data-command="isExisting">Existing</a></li>
+            <li><a data-command="isSelected">Selected</a></li>
+            <li><a data-command="isChecked">Checked</a></li>
+          </ul>
+        </li>
+        <li class="dropdown-submenu">
+          <a>Is Not</a>
+          <ul class="dropdown-menu">
+            <li><a data-command="isNotVisible">Visible</a></li>
+            <li><a data-command="isNotEnabled">Enabled</a></li>
+            <li><a data-command="isNotExisting">Existing</a></li>
+            <li><a data-command="isNotSelected">Selected</a></li>
+            <li><a data-command="isNotChecked">Checked</a></li>
+          </ul>
+        </li>
+        <li class="dropdown-submenu">
+          <a>Has</a>
+          <ul class="dropdown-menu">
+            <li><a data-command="hasText">Text</a></li>
+            <li><a data-command="hasValue">Value</a></li>
+          </ul>
+        </li>
+        <li class="dropdown-submenu">
+          <a>Does Not Have</a>
+          <ul class="dropdown-menu">
+            <li><a data-command="doesNotHaveText">Text</a></li>
+            <li><a data-command="doesNotHaveValue">Value</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</template>
