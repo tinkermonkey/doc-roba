@@ -1,14 +1,20 @@
 <template name="AdventureLogTable">
-	<table class="table">
-		<tbody>
+  <table class="adventure-log-table">
+    <tbody>
 		{{#each messages}}
-		<tr class="log-message log-message-{{level}}">
-			<td>{{getTimestamp}}</td>
-			<td><div class="log-message-sender log-message-{{sender}}" style="white-space: nowrap;">{{sender}}</div></td>
-			<td class="log-message-level">{{level}}</td>
-			<td class="log-message-data break-word">{{{getData}}}</td>
-		</tr>
+      <tr>
+        <td class="adventure-log-time">{{renderLogTime time}}</td>
+        <td class="adventure-log-level log-level-{{level}}">{{level}}</td>
+        <td class="adventure-log-sender  no-wrap">{{sender}}</td>
+        <td>
+          <div style="width: 100%;">
+						{{#with data}}
+							{{> Template.dynamic template=getLogDataTemplate}}
+						{{/with}}
+          </div>
+        </td>
+      </tr>
 		{{/each}}
-		</tbody>
-	</table>
+    </tbody>
+  </table>
 </template>

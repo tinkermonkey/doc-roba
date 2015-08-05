@@ -8,52 +8,39 @@ ERROR: "red",
 FATAL: "magenta",
 OFF: "grey"
 */
-
-.log-message {
-  font-family: "Helvetic Neue", Helvetica, Arial;
-  font-size: 10pt;
+.adventure-log-table {
+  width: 100%;
 }
 
-.log-message-level {
-
+.adventure-log-table > tbody > tr > td {
+  padding: 0 3px;
 }
 
-.log-message-data {
-  font-family: "Menlo", "Consolas", "Courier", monospace;
+.adventure-log-time {
+  text-align: right;
 }
 
-.log-message-data pre {
-  width: 900px !important;
-}
-
-.log-message-data, .log-message-data b {
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  white-space: pre-wrap;
-  overflow: scroll;
-}
-
-.log-message-TRACE, .log-message-trace {
+.log-level-TRACE, .log-level-trace {
   color: #bfbfbf;
 }
 
-.log-message-DEBUG, .log-message-debug {
+.log-level-DEBUG, .log-level-debug {
   color: #808080;
 }
 
-.log-message-INFO, .log-message-info {
-  color: #333333;
+.log-level-INFO, .log-level-info {
+  color: #298cff;
 }
 
-.log-message-WARN, .log-message-warn {
+.log-level-WARN, .log-level-warn {
   color: #999900;
 }
 
-.log-message-ERROR, .log-message-error {
+.log-level-ERROR, .log-level-error {
   color: red;
 }
 
-.log-message-FATAL, .log-message-fatal {
+.log-level-FATAL, .log-level-fatal {
   color: #990099;
 }
 

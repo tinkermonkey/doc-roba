@@ -195,6 +195,7 @@
   background-color: rgba(255, 255, 0, 0.0);
   border: 1px dashed #f00;
   border-radius: 3px;
+  cursor: pointer;
 }
 
 .adventure-highlight-element:hover, .adventure-highlight-element.active {
@@ -204,6 +205,32 @@
 
 .adventure-highlight-element.highlight {
   background-color: rgba(255, 255, 0, 0.5);
+}
+
+/**
+ * Live console preview components
+ */
+.adventure-preview-element {
+  position: absolute;
+  background-color: rgba(0, 255, 0, 0.5);
+  border: 1px dashed #0d0;
+  border-radius: 3px;
+  overflow: hidden;
+  padding: 3px;
+  cursor: pointer;
+}
+
+.adventure-preview-element:hover, .adventure-preview-element.active {
+  background-color: rgba(255, 255, 0, 0.85);
+  border-radius: 3px;
+}
+
+.adventure-preview-element.preview {
+  background-color: rgba(255, 255, 0, 0.5);
+}
+
+.adventure-preview-detail-command {
+  color: #00ff00;
 }
 
 /**

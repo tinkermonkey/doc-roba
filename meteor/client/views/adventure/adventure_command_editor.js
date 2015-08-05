@@ -14,6 +14,8 @@ Template.AdventureCommandEditor.helpers({
  */
 Template.AdventureCommandEditor.events({
   "click .btn-run-command": function (e, instance) {
+    console.log("btn-run: ", this);
+
     // make sure the adventure is operating
     if(instance.data.adventure.status == AdventureStatus.complete){
       return;

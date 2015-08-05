@@ -1,5 +1,5 @@
 <template name="AdventureScreen">
-  <div>
+  <div style="min-height: 100%;">
     <div class="live-adventure-view">
       {{#if state.url}}
         <div class="live-adventure-header">
@@ -52,16 +52,34 @@
           <div class="adventure-hover-element-highlight" style="visibility: hidden;"></div>
 
         {{> AdventureHoverControls fullContext}}
+
         {{#each getHighlightElements}}
           {{#with processHighlightElement}}
             {{> AdventureHighlightElement }}
           {{/with}}
         {{/each}}
+
+        {{#each getPreviewElements}}
+          {{#each getPreviewMatches}}
+            {{#with processHighlightElement}}
+              {{> AdventurePreviewElement }}
+            {{/with}}
+          {{/each}}
+        {{/each}}
       </div>
+
       {{#each getHighlightElements}}
         {{#with processHighlightElement}}
           {{> AdventureHighlightDetail }}
         {{/with}}
+      {{/each}}
+
+      {{#each getPreviewElements}}
+        {{#each getPreviewMatches}}
+          {{#with processHighlightElement}}
+            {{> AdventurePreviewDetail }}
+          {{/with}}
+        {{/each}}
       {{/each}}
 
       <div class="adventure-highlight-list" style="top: {{getListTop}}px;">

@@ -1,11 +1,11 @@
 <template name="TestStepResultLog">
-  <table>
+  <table class="adventure-log-table">
     <tbody>
     {{#each this}}
       <tr>
-        <td>{{time}}</td>
-        <td>{{level}}</td>
-        <td>{{sender}}</td>
+        <td class="adventure-log-time">{{renderLogTime time}}</td>
+        <td class="adventure-log-level log-level-{{level}}">{{level}}</td>
+        <td class="adventure-log-sender  no-wrap">{{sender}}</td>
         <td>
           <div style="width: {{maxLogWidth}}px;">
             {{#with data}}

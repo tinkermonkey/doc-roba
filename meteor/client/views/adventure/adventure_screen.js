@@ -10,6 +10,7 @@ Template.AdventureScreen.helpers({
     var instance = Template.instance();
     this.viewport           = instance.viewport.get();
     this.highlightElements  = instance.highlightElements.get();
+    this.previewElements    = instance.previewElements.get();
     this.controlledElement  = instance.controlledElement.get();
     this.selectorElements   = instance.selectorElements; // need read/write access in the toolbar
     this.checkResult        = instance.checkResult; // track the results of selector check
@@ -17,11 +18,13 @@ Template.AdventureScreen.helpers({
 
     return this;
   },
+
   updateViewport: function () {
-    console.log("updateViewport");
+    //console.log("updateViewport");
     var instance = Template.instance();
     Meteor.setTimeout(instance.updateViewport, 1000);
   },
+
   /**
    * Get the coordinates for the screen shot mask
    * @returns {{top: number, left: number, height: number, width: number}}
@@ -63,22 +66,46 @@ Template.AdventureScreen.helpers({
     }
     return coords;
   },
+
   /**
    * Get the elements to highlight from the last command that returned highlight elements
    * @returns [elements]
    */
   getHighlightElements: function () {
-    var instance = Template.instance();
-    return instance.highlightElements.get();
+    return Template.instance().highlightElements.get()
   },
+
+  /**
+   * Get the preview elements from the last preview command
+   * @returns [elements]
+   */
+  getPreviewElements: function () {
+    return Template.instance().previewElements.get().map(function (el, i) { el.index = i; return el })
+  },
+
+  /**
+   * Get the preview elements from the last preview command
+   * @returns [elements]
+   */
+  getPreviewMatches: function () {
+    if(this.matches){
+      var parent = this;
+      return parent.matches.map(function (el, i) {
+        el.index = parent.index + "" + i;
+        el.preview = parent;
+        return el
+      })
+    }
+  },
+
   /**
    * Get the element which the hover controls are for
    * @returns [elements]
    */
   getControlledElement: function () {
-    var instance = Template.instance();
-    return instance.controlledElement.get();
+    return Template.instance().controlledElement.get()
   },
+
   /**
    * Process a highlight element into something usable
    * @returns {*}
@@ -282,6 +309,10 @@ Template.AdventureScreen.events({
    */
   "mouseleave .adventure-highlight-element, mouseleave .hover-controls-container": function (e, instance) {
     var context = this;
+    if(instance.hideHoverControlsTimeout){
+      clearTimeout(instance.hideHoverControlsTimeout);
+    }
+
     instance.hideHoverControlsTimeout = setTimeout(function () {
       delete instance.hideHoverControlsTimeout;
       instance.$(".hover-controls-container").css("display", "");
@@ -342,7 +373,8 @@ Template.AdventureScreen.events({
 Template.AdventureScreen.created = function () {
   var instance = Template.instance();
   instance.viewport           = new ReactiveVar();
-  instance.highlightElements  = new ReactiveVar();
+  instance.highlightElements  = new ReactiveVar([]);
+  instance.previewElements    = new ReactiveVar([]);
   instance.selectorElements   = new ReactiveVar({});
   instance.controlledElement  = new ReactiveVar();
   instance.checkResult        = new ReactiveVar();
@@ -382,17 +414,29 @@ Template.AdventureScreen.rendered = function () {
     "result.highlightElements": {$exists: true}
   }, {sort: {dateCreated: -1}, limit: 1}).observe({
     addedAt: function (command) {
-      //console.log("Command added: ", command);
+      console.log("Command added: ", command);
       if(command && command.result && command.result.highlightElements){
         _.each(command.result.highlightElements, function (d, i) {d.index = i;});
-        instance.highlightElements.set(command.result.highlightElements);
+        if(command.result.preview){
+          instance.previewElements.set(command.result.highlightElements);
+          instance.highlightElements.set([]);
+        } else {
+          instance.highlightElements.set(command.result.highlightElements);
+          instance.previewElements.set([]);
+        }
       }
     },
     changedAt: function (command) {
       console.log("Command changed: ", command);
       if(command && command.result && command.result.highlightElements){
         _.each(command.result.highlightElements, function (d, i) {d.index = i;});
-        instance.highlightElements.set(command.result.highlightElements);
+        if(command.result.preview){
+          instance.previewElements.set(command.result.highlightElements);
+          instance.highlightElements.set([]);
+        } else {
+          instance.highlightElements.set(command.result.highlightElements);
+          instance.previewElements.set([]);
+        }
       }
     }
   });

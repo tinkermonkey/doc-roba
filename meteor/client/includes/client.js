@@ -95,7 +95,14 @@ Template.registerHelper("dateFormat", function (date, format) {
  * Render a formatted number
  */
 Template.registerHelper("numberFormat", function (value, format) {
-  return value.toString();
+  return numeral(value).format(format);
+});
+
+/**
+ * Render a formatted number
+ */
+Template.registerHelper("renderLogTime", function (value) {
+  return numeral(value).format("0.000");
 });
 
 /**

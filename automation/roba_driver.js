@@ -64,7 +64,7 @@ var Future        = require("fibers/future"),
   },
   skipLoggingCommands = ["screenshot", "saveScreenshot"];
 
-logger.setLevel("INFO");
+logger.setLevel("DEBUG");
 browserLogger.setLevel("TRACE");
 clientLogger.setLevel("TRACE");
 driverLogger.setLevel("TRACE");
@@ -632,7 +632,10 @@ RobaDriver.prototype.previewCode = function (codeRaw, account, context) {
   logger.debug("previewCode: ", code, account, context);
 
   var preview = new RobaPreviewer(this, account, context);
-  return preview.run(code);
+  return {
+    preview: true,
+    highlightElements: preview.run(code)
+  };
 };
 
 /**

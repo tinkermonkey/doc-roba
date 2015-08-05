@@ -29,7 +29,7 @@ var Future  = require("fibers/future"),
     valid: []
   };
 
-logger.setLevel("TRACE");
+logger.setLevel("DEBUG");
 
 /**
  * Create a new previewer checker
@@ -57,9 +57,9 @@ var RobaPreviewer = function (driver, account, context) {
       // check the blocked list
       logger.trace("Registering Previewer Command: ", actorName, command);
       previewer[actorName][command] = function () {
-        logger.debug("Previewer Command called: ", actorName, command);
         var commandArgs = arguments,
           args = _.map(_.keys(commandArgs), function(i){ return commandArgs["" + i];});
+        logger.trace("Previewer Command called: ", actorName, command, args);
 
         // store the command and the args
         if(args.length){
@@ -72,7 +72,7 @@ var RobaPreviewer = function (driver, account, context) {
 
         // run the real command if it's safe
         if(!_.contains(blocked[actorName], command)){
-          return previewer["real_" + actorName][command].call(args);
+          return previewer["real_" + actorName][command].call(previewer["real_" + actorName], args);
         } else {
           logger.debug("Previewer Command blocked: ", actorName, command);
         }
