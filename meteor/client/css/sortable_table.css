@@ -32,7 +32,6 @@
 .sortable-table-row:hover .drag-handle:hover {
   background-color: #298cff;
   color: #fff;
-  box-shadow: 0 0 10px 1px rgba(64, 64, 64, 0.5);
 }
 
 /* Delete Button */
@@ -48,7 +47,6 @@
 .sortable-table-row:hover .btn-delete:hover {
   background-color: #FF793E;
   color: #fff;
-  box-shadow: 0 0 10px 1px rgba(64, 64, 64, 0.5);
 }
 .drag-handle .glyphicon, .btn-delete .glyphicon {
   margin-left:3px;

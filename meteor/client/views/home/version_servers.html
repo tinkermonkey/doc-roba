@@ -1,15 +1,19 @@
 <template name="version_servers">
   <ul class="nav nav-tabs">
     <li role="presentation" class="active"><a data-tab-name="server-list">Server List</a></li>
+    <li role="presentation"><a data-tab-name="server-config-vars">Server Configuration Variables</a></li>
     <li role="presentation"><a data-tab-name="user-data-sets">Server Data Sets</a></li>
   </ul>
 
   <div class="tab-container">
     <div class="tab" data-tab-name="server-list">
-      {{> server_list }}
+      {{> VersionServerList }}
+    </div>
+    <div class="tab" data-tab-name="server-config-vars">
+      {{> VersionServerConfig }}
     </div>
     <div class="tab" data-tab-name="user-data-sets">
-      User Data Sets
+      Credentials Data Sets
     </div>
   </div>
 </template>

@@ -3,6 +3,7 @@
  * A step for an adventure
  * ============================================================================
  */
+//TODO: This should be replaced with the TestStep infrastructure, it is redundant and less useful
 Schemas.AdventureStep = new SimpleSchema({
   // Link to the project to which this adventure belongs
   // Used for lightweight permissions checking

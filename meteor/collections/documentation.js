@@ -48,10 +48,45 @@ Schemas.Node = new SimpleSchema({
     custom: function () {
       // Required for all non-root nodes
       var isRoot = this.field('type').value === NodeTypes.root;
-      if (!isRoot && !this.isSet && (!this.operator || (this.value === null || this.value === ""))) {
+      if (!isRoot && !this.field('type').isSet && (!this.operator || (this.value === null || this.value === ""))) {
         return "required";
       }
     }
+  },
+  // user type id
+  userTypeId: {
+    type: String,
+    optional: true,
+    custom: function () {
+      // Required for all non-root nodes
+      var requiresUserType = _.contains([NodeTypes.navMenu, NodeTypes.page, NodeTypes.view, NodeTypes.platform], this.field("type").value);
+      console.log("requiresUserType: ", requiresUserType, this.field("type").value, this.isSet, this.field("userTypeId"));
+      if (requiresUserType && !this.field("userTypeId").isSet) {
+        return "required";
+      }
+    }
+  },
+  // Platform id
+  platformId: {
+    type: String,
+    optional: true,
+    custom: function () {
+      // Required for all non-root nodes
+      var requiresPlatform = _.contains([NodeTypes.navMenu, NodeTypes.page, NodeTypes.view], this.field("type").value);
+      if (requiresPlatform && !this.isSet) {
+        return "required";
+      }
+    }
+  },
+  // Keep track of the platform entry points
+  isEntry: {
+    type: Boolean,
+    defaultValue: false
+  },
+  // Keep track of the platform exit points
+  isExit: {
+    type: Boolean,
+    defaultValue: false
   },
   // Document title, does not need to be unique
   title: {
@@ -81,7 +116,7 @@ Schemas.Node = new SimpleSchema({
   // Bind to the static Type constant
   type: {
     type: Number,
-    allowedValues: _.map(NodeTypes, function (d) { return d; })
+    allowedValues: _.values(NodeTypes)
   },
   // Code that determines when the node is ready
   readyCode: {
@@ -299,7 +334,7 @@ Schemas.ProjectRole = new SimpleSchema({
   },
   role: {
     type: Number,
-    allowedValues: _.map(RoleTypes, function (d) { return d; })
+    allowedValues: _.values(RoleTypes)
   },
   // Standard tracking fields
   dateCreated: {
@@ -376,7 +411,7 @@ Schemas.ActionVariable = new SimpleSchema({
   // The type of the variable
   type: {
     type: Number,
-    allowedValues: _.map(FieldTypes, function (d) { return d; })
+    allowedValues: _.values(FieldTypes)
   },
   // The custom type if this is complex
   customFieldType: {

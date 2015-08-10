@@ -1,9 +1,4 @@
 /**
- * Create a cache for storing data store schemas that have been generated
- */
-DataStoreSchemas = {};
-
-/**
  * Utility functions
  */
 Util = {

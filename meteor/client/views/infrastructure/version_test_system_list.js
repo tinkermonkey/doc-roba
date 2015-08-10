@@ -1,7 +1,7 @@
 /**
  * Template Helpers
  */
-Template.TestSystemList.helpers({
+Template.VersionTestSystemList.helpers({
   sortedTestSystems: function () {
     return TestSystems.find({projectVersionId: this.version._id}, {sort: {order: 1}}).fetch();
   }
@@ -10,7 +10,7 @@ Template.TestSystemList.helpers({
 /**
  * Template Helpers
  */
-Template.TestSystemList.events({
+Template.VersionTestSystemList.events({
   "click .btn-add-test-system": function () {
     var instance = Template.instance(),
       order = instance.$(".sortable-table-row").length;
@@ -78,7 +78,7 @@ Template.TestSystemList.events({
 /**
  * Template Rendered
  */
-Template.TestSystemList.rendered = function () {
+Template.VersionTestSystemList.rendered = function () {
   var instance = Template.instance();
 
   instance.$(".sortable-table")
@@ -116,6 +116,6 @@ Template.TestSystemList.rendered = function () {
 /**
  * Template Destroyed
  */
-Template.TestSystemList.destroyed = function () {
+Template.VersionTestSystemList.destroyed = function () {
 
 };

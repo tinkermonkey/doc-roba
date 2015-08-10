@@ -1,6 +1,5 @@
 <template name="TestCaseRole">
-  {{> EditableTextField emptyText="title" value=title dataKey="title" cssClass="test-case-role-title" mode="popup" placement="left" }}
-  {{> EditableTextArea emptyText="role description" value=description dataKey="description" mode="popup" placement="left" }}
+  {{> EditableTitleDescription value=this dataKey="title-description" titleClass="test-case-role-title"}}
 
   <div class="test-role-steps">
     {{#each testCaseSteps}}

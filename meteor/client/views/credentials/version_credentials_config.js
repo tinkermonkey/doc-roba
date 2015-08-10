@@ -1,23 +1,26 @@
 /**
- *
- * Created by austin sand on 1/4/15
- *
+ * Template Helpers
  */
+Template.VersionCredentialsConfig.helpers({
+  userTypes: function () {
+    if(this.version && this.version._id){
+      return Nodes.find({projectVersionId: this.version._id, type: NodeTypes.userType}, {sort: {title: 1}});
+    }
+  },
+  getDataStore: function () {
+    return DataStores.findOne({dataKey: this._id});
+  }
+});
 
 /**
  * Template Helpers
  */
-Template.version_credentials_config.helpers({});
-
-/**
- * Template Helpers
- */
-Template.version_credentials_config.events({});
+Template.VersionCredentialsConfig.events({});
 
 /**
  * Template Rendered
  */
-Template.version_credentials_config.rendered = function () {
+Template.VersionCredentialsConfig.rendered = function () {
   var instance = Template.instance();
 
   // Initialize the tabs
@@ -27,6 +30,6 @@ Template.version_credentials_config.rendered = function () {
 /**
  * Template Destroyed
  */
-Template.version_credentials_config.destroyed = function () {
+Template.VersionCredentialsConfig.destroyed = function () {
 
 };

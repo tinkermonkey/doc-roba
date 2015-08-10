@@ -136,6 +136,16 @@ Template.AdventureContext.events({
         return;
       }
 
+      // Get the parent node to figure out the platform and user type
+      var parent = Nodes.findOne({staticId: record.parentId, projectVersionId: record.projectVersionId});
+      if(!parent){
+        Meteor.log.error("Create node failed: could not find parent node " + record.parentId + " for project " + record.projectVersionId);
+        Dialog.error("Create node failed: could not find parent node " + record.parentId + " for project " + record.projectVersionId);
+        return;
+      }
+      record.userTypeId = parent.userTypeId;
+      record.platformId = parent.platformId;
+
       // create the record
       Nodes.insert(record);
 

@@ -79,7 +79,11 @@ TreeNodeHandler.prototype.addNode = function(parent, dir){
   tree.nodeStateCache[parent._id].logExpanded = true;
   tree.nodeStateCache[parent._id].visExpanded = true;
 
-  var config = { parentId: parent.staticId };
+  var config = {
+    parentId: parent.staticId,
+    userTypeId: parent.type == NodeTypes.userType ? parent.staticId : parent.userTypeId,
+    platformId: parent.type == NodeTypes.platform ? parent.staticId : parent.platformId,
+  };
   switch (parent.type){
     case NodeTypes.root:
       config.type = NodeTypes.userType;
@@ -90,8 +94,12 @@ TreeNodeHandler.prototype.addNode = function(parent, dir){
       config.title = "New Platform";
       break;
     case NodeTypes.platform:
-      config.type = NodeTypes.page;
-      config.title = "New Login";
+      if(parent.config && parent.config.type){
+
+      } else {
+        config.type = NodeTypes.page;
+        config.title = "New Login";
+      }
       break;
     default:
       if(dir === "right"){

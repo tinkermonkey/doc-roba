@@ -17,11 +17,11 @@ Template.dialog.helpers({
         // otherwise center it
         position = "top:50%; left:50%; margin-left:-" + (this.width / 2) + "px; margin-top:-150px;";
       }
+    }
 
-      // if width is specified, use it
-      if (this.width) {
-        position += "width:" + parseInt(this.width) + "px;";
-      }
+    // if width is specified, use it
+    if (this.width) {
+      position += "width:" + parseInt(this.width) + "px;";
     }
 
     return position;

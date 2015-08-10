@@ -1,7 +1,7 @@
 /**
  * Template Helpers
  */
-Template.custom_field_types.helpers({
+Template.VersionCustomFieldTypes.helpers({
   customTypes: function () {
     return DataStores.find({
       projectVersionId: this.version._id,
@@ -14,7 +14,7 @@ Template.custom_field_types.helpers({
 /**
  * Template Helpers
  */
-Template.custom_field_types.events({
+Template.VersionCustomFieldTypes.events({
   "click .btn-add-custom-type": function (event) {
     console.log("Add Custom Type");
     var instance = Template.instance();
@@ -52,7 +52,7 @@ Template.custom_field_types.events({
 /**
  * Template Rendered
  */
-Template.custom_field_types.rendered = function () {
+Template.VersionCustomFieldTypes.rendered = function () {
   var instance = Template.instance();
 
   // Initialize the tabs
@@ -73,7 +73,7 @@ Template.custom_field_types.rendered = function () {
 /**
  * Template Destroyed
  */
-Template.custom_field_types.destroyed = function () {
+Template.VersionCustomFieldTypes.destroyed = function () {
 
 };
 

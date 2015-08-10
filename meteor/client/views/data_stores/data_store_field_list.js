@@ -1,7 +1,7 @@
 /**
  * Template Helpers
  */
-Template.data_store_field_list.helpers({
+Template.DataStoreFieldList.helpers({
   getFields: function () {
     if(this._id){
       return DataStoreFields.find({dataStoreId: this._id}, {sort: {order: 1}});
@@ -12,7 +12,7 @@ Template.data_store_field_list.helpers({
 /**
  * Template Helpers
  */
-Template.data_store_field_list.events({
+Template.DataStoreFieldList.events({
   "click .btn-add-field": function () {
     var instance = Template.instance(),
       order = parseInt(instance.$(".sortable-table-row").length || 0) + 1;
@@ -93,7 +93,7 @@ Template.data_store_field_list.events({
 /**
  * Template Rendered
  */
-Template.data_store_field_list.rendered = function () {
+Template.DataStoreFieldList.rendered = function () {
   var instance = Template.instance();
 
   // Make the field list sortable
@@ -131,6 +131,6 @@ Template.data_store_field_list.rendered = function () {
 /**
  * Template Destroyed
  */
-Template.data_store_field_list.destroyed = function () {
+Template.DataStoreFieldList.destroyed = function () {
 
 };

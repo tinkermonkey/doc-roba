@@ -20,7 +20,8 @@ Template.VerticalRouteSnippet.helpers({
     return this.nodeId ? DocTreeConfig.nodes.height : 0
   },
   xMargin: function () {
-    return DocTreeConfig.standalone.margin
+    var width = DocTreeConfig.nodes.width * 2 * (this.scale || 1) + DocTreeConfig.standalone.margin * 2;
+    return (width - DocTreeConfig.nodes.width) / 2
   },
   yMargin: function () {
     return DocTreeConfig.standalone.margin

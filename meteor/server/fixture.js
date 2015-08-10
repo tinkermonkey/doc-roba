@@ -154,14 +154,17 @@ if (Nodes.find().count() === 0) {
   var addNode = function (node, parentId, projectId, versionId, userId) {
     // insert the node
     console.log("Inserting node: ", node.title, parentId, projectId, versionId, userId );
-    var nodeId = Nodes.insert({
-      title: node.title,
-      type: node.type,
-      parentId: parentId,
-      projectId: projectId,
-      projectVersionId: versionId,
-      createdBy: userId,
-      modifiedBy: userId
+    var parent = Nodes.findOne({staticId: parentId, projectVersionId: versionId});
+      nodeId = Nodes.insert({
+        title: node.title,
+        type: node.type,
+        parentId: parentId,
+        projectId: projectId,
+        projectVersionId: versionId,
+        userTypeId: parent.type == NodeTypes.userType ? parent.staticId : parent.userTypeId,
+        platformId: parent.type == NodeTypes.platform ? parent.staticId : parent.platformId,
+        createdBy: userId,
+        modifiedBy: userId
     });
 
     // get the static id to link the nodes correctly

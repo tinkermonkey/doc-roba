@@ -12,6 +12,27 @@ Meteor.startup(function () {
       Meteor.log.debug("Echo called by user " + this.userId);
       return { user: this.userId, argv: arguments };
     },
+    updateNodePlatform: function () {
+      var setData = function (parentId, versionId, userTypeId, platformId) {
+        console.log("setData: ", parentId, versionId, userTypeId, platformId);
+        Nodes.find({parentId: parentId, projectVersionId: versionId}).forEach(function (node) {
+          console.log("setData Update: ", node._id, userTypeId, platformId);
+          Nodes.update(node._id, {$set: {userTypeId: userTypeId, platformId: platformId}});
+          setData(node.staticId, versionId, userTypeId, platformId);
+        });
+      };
+      Nodes.find({type: NodeTypes.userType}).forEach(function (userType) {
+        // get all of the childNodes
+        Nodes.find({parentId: userType.staticId, projectVersionId: userType.projectVersionId}).forEach(function (node) {
+          var platformId;
+          if(node.type == NodeTypes.platform){
+            platformId = node.staticId;
+          }
+          Nodes.update(node._id, {$set: {userTypeId: userType.staticId}});
+          setData(node.staticId, userType.projectVersionId, userType.staticId, platformId);
+        })
+      });
+    },
 
     /**
      * Delete a node from a project version (and only from this version!)

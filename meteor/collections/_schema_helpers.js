@@ -1,11 +1,11 @@
 /**
- * Define this global for use in all of the collections
+ * Top level object to capture all of the schemas
  */
 Schemas = {};
 
 /**
  * ============================================================================
- * Define global helper functions used in the schemas
+ * Global helper functions used in the schemas
  * ============================================================================
  */
 // Generate an ID value if one does not exist
@@ -80,7 +80,7 @@ autoUpdateOrder = function (collection, orderedFields) {
 
 /**
  * ============================================================================
- * Define global allow/deny functions
+ * Global allow/deny functions
  * ============================================================================
  */
 allowIfAuthenticated = function (userId, doc) {
@@ -100,7 +100,7 @@ denyIfNotAuthenticated = function (userId, doc) {
 
 /**
  * ============================================================================
- * Define globals here so they can be used in the definition of the schemas
+ * Enums and enum lookups
  * ============================================================================
  */
 
@@ -113,9 +113,21 @@ NodeTypes = {
   platform: 2,
   page: 3,
   view: 4,
-  navMenu: 5
+  navMenu: 5,
+  email: 6
 };
 NodeTypesLookup = _.invert(NodeTypes);
+
+/**
+ * High level platform types
+ */
+PlatformTypes = {
+  web: 0,
+  mobileWeb: 1,
+  mobileApp: 2,
+  email: 3
+};
+PlatformTypesLookup = _.invert(PlatformTypes);
 
 /**
  * Node documentation reference doc types
@@ -172,7 +184,8 @@ FieldTypesLookup = _.invert(FieldTypes);
 DataStoreCategories = {
   userType: "user_type",
   userTypeCustom: "user_type_custom",
-  custom: "custom"
+  custom: "custom",
+  serverConfig: "server_config"
 };
 DataStoreCategoriesLookup = _.invert(DataStoreCategories);
 
@@ -285,3 +298,56 @@ ScreenshotKeys = {
   afterLoad: "afterLoad",
   afterAction: "afterAction"
 };
+
+/**
+ * ============================================================================
+ * Global helper schemas
+ * ============================================================================
+ */
+
+/**
+ * Viewport
+ */
+Schemas.Viewport = new SimpleSchema({
+  title: {
+    type: String
+  },
+  height: {
+    type: Number
+  },
+  width: {
+    type: Number
+  }
+});
+
+/**
+ * Web configuration
+ */
+Schemas.WebPlatformConfig = new SimpleSchema({
+  viewports: {
+    type: [Schemas.Viewport]
+  }
+});
+
+/**
+ * Mobile Web Configuration
+ */
+Schemas.MobileWebPlatformConfig = new SimpleSchema({
+  viewports: {
+    type: [Schemas.Viewport]
+  }
+});
+
+/**
+ * Mobile App Configuration
+ */
+Schemas.MobileAppPlatformConfig = new SimpleSchema({
+
+});
+
+/**
+ * Email Configuration
+ */
+Schemas.EmailPlatformConfig = new SimpleSchema({
+
+});

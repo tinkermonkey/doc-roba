@@ -1,7 +1,7 @@
 /**
  * Template Helpers
  */
-Template.user_types_config.helpers({
+Template.VersionUserTypesConfig.helpers({
   userTypes: function () {
     if(this.version && this.version._id){
       return Nodes.find({projectVersionId: this.version._id, type: NodeTypes.userType}, {sort: {title: 1}});
@@ -15,7 +15,7 @@ Template.user_types_config.helpers({
 /**
  * Template Helpers
  */
-Template.user_types_config.events({
+Template.VersionUserTypesConfig.events({
   "edited .render-row-selector": function (e, instance, newValue) {
     console.log("Data Store update: ", $(e.target).attr("data-key"));
     var dataStoreId = $(e.target).closest(".user-type-data-store").attr("data-pk"),
@@ -35,7 +35,7 @@ Template.user_types_config.events({
 /**
  * Template Rendered
  */
-Template.user_types_config.rendered = function () {
+Template.VersionUserTypesConfig.rendered = function () {
   var instance = Template.instance();
 
   // Initialize the tabs
@@ -45,6 +45,6 @@ Template.user_types_config.rendered = function () {
 /**
  * Template Destroyed
  */
-Template.user_types_config.destroyed = function () {
+Template.VersionUserTypesConfig.destroyed = function () {
 
 };

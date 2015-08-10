@@ -303,6 +303,115 @@ trackChanges(TestCaseSteps, "test_case_steps");
 
 /**
  * ============================================================================
+ * Test Run Template - A named template for a test run
+ * ============================================================================
+ */
+Schemas.TestRunTemplate = new SimpleSchema({
+  // Link to the project to which this test belongs
+  projectId: {
+    type: String,
+    denyUpdate: true
+  },
+  // Link to the project version to which this test belongs
+  projectVersionId: {
+    type: String,
+    denyUpdate: true
+  },
+  // Link to the test case via the staticId
+  parentTemplateId: {
+    type: String,
+    optional: true
+  },
+  // Template Title
+  title: {
+    type: String
+  },
+  // Longer description of the test run template
+  description: {
+    type: String,
+    optional: true
+  },
+  // Unique identifier for launching this test run programatically
+  identifier: {
+    type: String,
+    optional: true
+  },
+  // Standard tracking fields
+  dateCreated: {
+    type: Date,
+    autoValue: autoValueDateCreated,
+    denyUpdate: true
+  },
+  createdBy: {
+    type: String,
+    autoValue: autoValueCreatedBy,
+    denyUpdate: true
+  }
+});
+TestRunTemplates = new Mongo.Collection("test_run_templates");
+TestRunTemplates.attachSchema(Schemas.TestRunTemplate);
+TestRunTemplates.allow({
+  insert: allowIfAuthenticated,
+  update: allowIfAuthenticated,
+  remove: allowIfAuthenticated
+});
+TestRunTemplates.deny({
+  insert: allowIfTester,
+  update: allowIfTester,
+  remove: allowIfTester,
+  fetch: ['projectId']
+});
+
+
+/**
+ * ============================================================================
+ * Test Run Template Test - a test setup in a named run config
+ * ============================================================================
+ */
+Schemas.TestRunTemplateTest = new SimpleSchema({
+  // Link to the project to which this test belongs
+  projectId: {
+    type: String,
+    denyUpdate: true
+  },
+  // Link to the project version to which this test belongs
+  projectVersionId: {
+    type: String,
+    denyUpdate: true
+  },
+  // Link to the test case via the staticId
+  testCaseId: {
+    type: String,
+    denyUpdate: true
+  },
+  // Standard tracking fields
+  dateCreated: {
+    type: Date,
+    autoValue: autoValueDateCreated,
+    denyUpdate: true
+  },
+  createdBy: {
+    type: String,
+    autoValue: autoValueCreatedBy,
+    denyUpdate: true
+  }
+});
+TestRunTemplateTests = new Mongo.Collection("test_run_template_tests");
+TestRunTemplateTests.attachSchema(Schemas.TestRunTemplateTest);
+TestRunTemplateTests.allow({
+  insert: allowIfAuthenticated,
+  update: allowIfAuthenticated,
+  remove: allowIfAuthenticated
+});
+TestRunTemplateTests.deny({
+  insert: allowIfTester,
+  update: allowIfTester,
+  remove: allowIfTester,
+  fetch: ['projectId']
+});
+
+/**
+ * ============================================================================
  * Test run - the setup for the running of multiple test cases
  * ============================================================================
  */

@@ -1,7 +1,7 @@
 /**
  * Template Helpers
  */
-Template.version_credentials.helpers({
+Template.VersionCredentials.helpers({
   userTypes: function () {
     if(this.version && this.version._id){
       return Nodes.find({projectVersionId: this.version._id, type: NodeTypes.userType}, {sort: {title: 1}});
@@ -15,12 +15,12 @@ Template.version_credentials.helpers({
 /**
  * Template Helpers
  */
-Template.version_credentials.events({});
+Template.VersionCredentials.events({});
 
 /**
  * Template Rendered
  */
-Template.version_credentials.rendered = function () {
+Template.VersionCredentials.rendered = function () {
   var instance = Template.instance();
 
   Tabs.init(instance).activateFirst(instance);
@@ -29,6 +29,6 @@ Template.version_credentials.rendered = function () {
 /**
  * Template Destroyed
  */
-Template.version_credentials.destroyed = function () {
+Template.VersionCredentials.destroyed = function () {
 
 };

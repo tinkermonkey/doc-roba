@@ -7,6 +7,9 @@ Template.edit_node.helpers({
   },
   isVisitable: function () {
     return this.type == NodeTypes.page || this.type == NodeTypes.view
+  },
+  getEditPanel: function () {
+
   }
 });
 

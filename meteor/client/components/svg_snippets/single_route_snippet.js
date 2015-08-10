@@ -12,7 +12,8 @@ Template.SingleRouteSnippet.helpers({
     return this.scale || 1;
   },
   xMargin: function () {
-    return DocTreeConfig.standalone.margin;
+    var width = DocTreeConfig.nodes.width * 3 + DocTreeConfig.standalone.margin * 2;
+    return (width - DocTreeConfig.nodes.width) / 2;
   },
   yMargin: function () {
     return DocTreeConfig.standalone.margin;

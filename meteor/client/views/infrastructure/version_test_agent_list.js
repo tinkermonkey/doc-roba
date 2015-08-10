@@ -1,7 +1,7 @@
 /**
  * Template Helpers
  */
-Template.TestAgentList.helpers({
+Template.VersionTestAgentList.helpers({
   sortedTestAgents: function () {
     return TestAgents.find({projectVersionId: this.version._id}, {sort: {order: 1}}).fetch();
   }
@@ -10,7 +10,7 @@ Template.TestAgentList.helpers({
 /**
  * Template Event Handlers
  */
-Template.TestAgentList.events({
+Template.VersionTestAgentList.events({
   "click .btn-add-test-agent": function () {
     var instance = Template.instance(),
       order = instance.$(".sortable-table-row").length;
@@ -76,7 +76,7 @@ Template.TestAgentList.events({
 /**
  * Template Rendered
  */
-Template.TestAgentList.rendered = function () {
+Template.VersionTestAgentList.rendered = function () {
   var instance = Template.instance();
 
   instance.$(".sortable-table")
@@ -114,6 +114,6 @@ Template.TestAgentList.rendered = function () {
 /**
  * Template Destroyed
  */
-Template.TestAgentList.destroyed = function () {
+Template.VersionTestAgentList.destroyed = function () {
 
 };

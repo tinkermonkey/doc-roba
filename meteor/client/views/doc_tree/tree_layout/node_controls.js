@@ -504,8 +504,8 @@ TreeNodeControls.prototype.show = function (d) {
       self.addDownButton.attr("display", "");
       break;
     case NodeTypes.platform:
-      self.addRightButton.attr("display", "");
-      self.addNavButton.attr("display", "");
+      self.addRightButton.attr("display", "none");
+      self.addNavButton.attr("display", "none");
       self.addActionDragHandle.attr("display", "none");
       self.addActionDragHandleDummy.attr("display", "none");
       self.robaButton.attr("display", "none");
@@ -516,6 +516,14 @@ TreeNodeControls.prototype.show = function (d) {
       self.addNavButton.attr("display", "none");
       self.addActionDragHandle.attr("display", "");
       self.addActionDragHandleDummy.attr("display", "");
+      self.robaButton.attr("display", "none");
+      self.addDownButton.attr("display", "none");
+      break;
+    case NodeTypes.email:
+      self.addRightButton.attr("display", "none");
+      self.addNavButton.attr("display", "none");
+      self.addActionDragHandle.attr("display", "none");
+      self.addActionDragHandleDummy.attr("display", "none");
       self.robaButton.attr("display", "none");
       self.addDownButton.attr("display", "none");
       break;

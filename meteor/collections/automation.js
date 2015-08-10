@@ -1,19 +1,36 @@
+/**
+ * Log messages
+ * This is schema-less
+ * @type {Mongo.Collection}
+ */
+LogMessages = new Mongo.Collection("log_messages");
 
 /**
  * ============================================================================
- * Results from executing actions
+ * Generalized code snippets which are attached to various objects
  * ============================================================================
  */
-ActionResults = new Mongo.Collection("action_results");
-
-Commands = new Mongo.Collection("commands");
-CommandResults = new Mongo.Collection("command_results");
-
-Validations = new Mongo.Collection("validations");
-ValidationResults = new Mongo.Collection("validation_results");
-
-ScreenImage = new Mongo.Collection("screen_image");
-
-ElementIdentifiers = new Mongo.Collection("element_identifiers");
-
-LogMessages = new Mongo.Collection("log_messages");
+Schemas.CodeSnippet = new SimpleSchema({
+  // Static ID field that will be constant across versions of the project
+  staticId: {
+    type: String,
+    index: true,
+    autoValue: autoValueObjectId,
+    denyUpdate: true
+  },
+  // Link to the project to which this group belongs
+  projectId: {
+    type: String,
+    denyUpdate: true
+  },
+  // Link to the project version to which this group belongs
+  projectVersionId: {
+    type: String,
+    denyUpdate: true
+  },
+  // The namespace
+  namespace: {
+    type: String,
+    denyUpdate: true
+  }
+});

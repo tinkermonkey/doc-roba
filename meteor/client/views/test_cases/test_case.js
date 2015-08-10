@@ -32,10 +32,14 @@ Template.TestCase.events({
       update = {$set: {}},
       testCaseId = instance.data._id;
 
-    console.log("update: ", dataKey, testCaseId);
     if(dataKey){
-      update["$set"][dataKey] = newValue;
-      console.log("Updating test case record: ", dataKey, newValue, update);
+      if(dataKey == "title-description"){
+        update["$set"].title = newValue.title;
+        update["$set"].description = newValue.description;
+      } else {
+        update["$set"][dataKey] = newValue;
+      }
+
       TestCases.update(testCaseId, update, function (error) {
         if(error){
           Meteor.log.error("Failed to update test case value: " + error.message);

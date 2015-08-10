@@ -1,19 +1,19 @@
-<template name="server_list">
-  <button class="btn btn-warning btn-add-server" data-pk="{{version._id}}">Add Server</button>
+<template name="VersionServerList">
   <table class="sortable-table">
     <tr class="sortable-table-header">
       <td></td>
       <td>Name</td>
-      <td width="60%">URL</td>
+      <td>URL</td>
+      <td>Configuration</td>
       <td>Active</td>
       <td></td>
     </tr>
     <tr class="sortable-table-divider">
-      <td colspan="6"><div class="divider"></div></td>
+      <td colspan="7"><div class="divider"></div></td>
     </tr>
     {{#unless sortedServers.length}}
       <tr>
-        <td colspan="5"><i>Click Add Server to add a server for testing against</i></td>
+        <td colspan="7"><i>Click Add Server to add a server for testing against</i></td>
       </tr>
     {{/unless}}
     {{#each sortedServers}}
@@ -21,12 +21,30 @@
         <td class="drag-handle"><span class="glyphicon glyphicon-record"></span></td>
         <td>{{> EditableTextField cssClass="server-editable" value=title dataKey="title"}}</td>
         <td>{{> EditableTextField cssClass="server-editable" value=url dataKey="url" dataType="url"}}</td>
+        <td>
+          <div class="server-config-container">
+            {{#if hasConfig}}
+              <table class="server-config-display-table">
+                {{#each getServerConfigVars}}
+                  <tr>
+                    <td>{{label}}: </td><td>{{renderValueByType value}}</td>
+                  </tr>
+                {{/each}}
+              </table>
+            {{else}}
+              <i>none</i>
+            {{/if}}
+          </div>
+        </td>
         <td>{{> EditableFieldYesNo cssClass="server-editable" value=active dataKey="active"}}</td>
         <td class="btn-delete"><span class="glyphicon glyphicon-remove"></span></td>
       </tr>
     {{/each}}
     <tr class="sortable-table-divider">
-      <td colspan="6"><div class="divider"></div></td>
+      <td colspan="7"><div class="divider"></div></td>
     </tr>
   </table>
+  <div>
+    <button class="btn btn-small btn-warning btn-add-server" data-pk="{{version._id}}">Add Server</button>
+  </div>
 </template>

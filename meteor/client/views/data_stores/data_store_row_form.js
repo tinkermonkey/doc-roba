@@ -1,23 +1,23 @@
 /**
  * Template Helpers
  */
-Template.data_store_row_form.helpers({});
+Template.DataStoreRowForm.helpers({});
 
 /**
  * Template Helpers
  */
-Template.data_store_row_form.events({});
+Template.DataStoreRowForm.events({});
 
 /**
  * Template Rendered
  */
-Template.data_store_row_form.rendered = function () {
+Template.DataStoreRowForm.rendered = function () {
 
 };
 
 /**
  * Template Destroyed
  */
-Template.data_store_row_form.destroyed = function () {
+Template.DataStoreRowForm.destroyed = function () {
 
 };

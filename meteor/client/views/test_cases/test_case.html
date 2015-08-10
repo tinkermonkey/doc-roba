@@ -1,7 +1,8 @@
 <template name="TestCase">
   <div class="test-case-form">
-    {{> EditableTextField emptyText="title" value=title dataKey="title" cssClass="test-case-title" mode="popup" placement="left" }}
-    {{> EditableTextArea emptyText="description" value=description dataKey="description" mode="popup" placement="left" }}
+    <div style="width: 50%;">
+      {{> EditableTitleDescription value=this dataKey="title-description" titleClass="test-case-title"}}
+    </div>
 
     <h2>Test Roles</h2>
 

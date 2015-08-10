@@ -17,6 +17,21 @@ Template.registerHelper("debug", function(){
 });
 
 /**
+ * Quick general field renderer
+ */
+Template.registerHelper("renderValueByType", function (value){
+  if(_.isBoolean(value)){
+    return value ? "true" : "false"
+  } else if(_.isDate(value)){
+    return moment(value).format("MMM Do, YY");
+  } else if(_.isObject(value)){
+    return JSON.stringify(value);
+  } else {
+    return value;
+  }
+});
+
+/**
  * Render a project role type to a string
  * TODO: Replace this with css
  */
@@ -39,12 +54,18 @@ Template.registerHelper("renderNodeTitle", function (staticId, projectVersionId)
 
 /**
  * Render a node type to a string
- * TODO: Replace this with css
  */
 Template.registerHelper("renderNodeType", function (type) {
-  var name = NodeTypesLookup[type];
+  return NodeTypesLookup[type];
+});
+
+/**
+ * Render a platform type to a string
+ */
+Template.registerHelper("renderPlatformType", function (type) {
+  var name = PlatformTypesLookup[type];
   if(name){
-    return name.substr(0,1).toUpperCase() + name.substr(1);
+    return name.split(/[A-Z]/g).join(" ");
   }
 });
 
@@ -63,13 +84,9 @@ Template.registerHelper("renderNameByRole", function (userId) {
 
 /**
  * Render a change type to a string
- * TODO: Replace this with css
  */
 Template.registerHelper("renderChangeType", function (type) {
-  var name = ChangeTypesLookup[type];
-  if(name){
-    return name.substr(0,1).toUpperCase() + name.substr(1);
-  }
+  return ChangeTypesLookup[type];
 });
 
 /**
@@ -317,23 +334,11 @@ Template.registerHelper("getElementId", function () {
 });
 
 /**
- *
- */
-Template.registerHelper("getDataStoreSchema", function (dataStoreId) {
-  if(!DataStoreSchemas[dataStoreId]){
-    var dataStore = DataStores.findOne(dataStoreId);
-    DataStoreSchemas[dataStoreId] = DSUtil.simpleSchema(dataStore.schema);
-  }
-  return DataStoreSchemas[dataStoreId];
-});
-
-/**
  * Return a safe data value for a user type
  */
-Template.registerHelper("titleDataName", function (record) {
-  var userType = record || this;
-  if(userType.title){
-    return userType.title.replace(/[\W]/g, "-").toLowerCase();
+Template.registerHelper("getDataName", function (value) {
+  if(value){
+    return value.replace(/[\W]/g, "-").toLowerCase();
   }
 });
 

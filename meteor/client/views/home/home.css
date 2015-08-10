@@ -136,3 +136,12 @@
 .field-type-editable {
   color: #0A7BFF !important;
 }
+
+/* Server config display table */
+.server-config-display-table td {
+  padding: 2px;
+}
+
+.server-config-display-table td:first-child {
+  color: #0A7BFF !important;
+}

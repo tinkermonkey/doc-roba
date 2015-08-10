@@ -1,0 +1,16 @@
+.x-editable-title-description-editor {
+  width: 400px;
+}
+
+.x-editable-title-description-editor label {
+  width: 100px;
+}
+
+.x-editable-title-description-editor input,
+.x-editable-title-description-editor textarea {
+  width: 300px !important;
+}
+
+.x-editable-title-description-editor > div {
+  margin-bottom: 5px;
+}

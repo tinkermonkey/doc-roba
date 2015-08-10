@@ -5,25 +5,6 @@
  * ============================================================================
  */
 Schemas.DataStore = new SimpleSchema({
-  title: {
-    type: String
-  },
-  dataKey: {
-    type: String
-  },
-  category: {
-    type: String
-  },
-  schema: {
-    type: Object,
-    blackbox: true,
-    optional: true
-  },
-  // We don't want to deal with deleting the actual data, so just mark it deleted
-  deleted: {
-    type: Boolean,
-    defaultValue: false
-  },
   // Link to the project to which this field belongs
   projectId: {
     type: String,
@@ -33,6 +14,29 @@ Schemas.DataStore = new SimpleSchema({
   projectVersionId: {
     type: String,
     denyUpdate: true
+  },
+  // Descriptive title
+  title: {
+    type: String
+  },
+  // Key used to identify records
+  dataKey: {
+    type: String
+  },
+  // DataStoreCategory
+  category: {
+    type: String
+  },
+  // Stored basic schema
+  schema: {
+    type: Object,
+    blackbox: true,
+    optional: true
+  },
+  // We don't want to deal with deleting the actual data, so just mark it deleted
+  deleted: {
+    type: Boolean,
+    defaultValue: false
   },
   // A code fragment to render an identifier for a row (Like assemble a name or whatever so you can select a row)
   renderRowSelector: {
@@ -89,9 +93,25 @@ trackChanges(DataStores, "data_stores");
  * ============================================================================
  */
 Schemas.DataStoreField = new SimpleSchema({
+  // Link to the project to which this field belongs
+  projectId: {
+    type: String,
+    denyUpdate: true
+  },
+  // Link to the project version to which this field belongs
+  projectVersionId: {
+    type: String,
+    denyUpdate: true
+  },
+  // Link to the data store to which this field belongs
+  dataStoreId: {
+    type: String
+  },
+  // Field title
   title: {
     type: String
   },
+  // Field datakey
   dataKey: {
     type: String
   },
@@ -110,19 +130,10 @@ Schemas.DataStoreField = new SimpleSchema({
   order: {
     type: Number
   },
-  // Link to the data store to which this field belongs
-  dataStoreId: {
-    type: String
-  },
-  // Link to the project to which this field belongs
-  projectId: {
+  // Javascript literal
+  defaultValue: {
     type: String,
-    denyUpdate: true
-  },
-  // Link to the project version to which this field belongs
-  projectVersionId: {
-    type: String,
-    denyUpdate: true
+    optional: true
   },
   // Standard tracking fields
   dateCreated: {
@@ -276,7 +287,8 @@ if(Meteor.isServer){
         label: field.title,
         type: field.type,
         customFieldType: field.customFieldType,
-        fieldIsArray: field.fieldIsArray
+        fieldIsArray: field.fieldIsArray,
+        defaultValue: field.defaultValue
       };
 
       schema[field.dataKey] = fieldDef;

@@ -1,7 +1,38 @@
 /**
+ * Create a cache for storing data store schemas that have been generated
+ */
+DataStoreSchemas = {};
+
+/**
  * DataStore utility functions
  */
 DSUtil = {
+  /**
+   * Fetch a simple schema by _id
+   */
+  getSimpleSchemaById: function (dataStoreId) {
+    var ds = DataStores.findOne({_id: dataStoreId});
+    if(ds){
+      //if(!DataStoreSchemas[ds._id]){
+        DataStoreSchemas[ds._id] = DSUtil.simpleSchema(ds.schema);
+      //}
+      return DataStoreSchemas[ds._id];
+    }
+  },
+
+  /**
+   * Fetch a simple schema by dataStoreKey
+   */
+  getSimpleSchemaByKey: function (dataStoreKey) {
+    var ds = DataStores.findOne({dataKey: dataStoreKey});
+    if(ds){
+      //if(!DataStoreSchemas[ds._id]){
+        DataStoreSchemas[ds._id] = DSUtil.simpleSchema(ds.schema);
+      //}
+      return DataStoreSchemas[ds._id];
+    }
+  },
+
   /**
    * Take a data store schema and create a simple schema from it
    */
@@ -14,7 +45,8 @@ DSUtil = {
       schemaFields[fieldName] = {
         label: field.label,
         type: field.fieldIsArray ? [Util.fieldTypeLiteral(field.type)] : Util.fieldTypeLiteral(field.type),
-        optional: true
+        optional: true,
+        defaultValue: field.defaultValue
       };
 
       if(field.type === FieldTypes.custom){
@@ -27,7 +59,7 @@ DSUtil = {
             if(childStore){
               DataStoreSchemas[field.customFieldType] = DSUtil.simpleSchema(childStore.schema);
             } else {
-              console.error("getDataStoreSchema Failed, could not find child store: ", field);
+              console.error("DSUtil.simpleSchema Failed, could not find child store: ", field);
               return;
             }
           }

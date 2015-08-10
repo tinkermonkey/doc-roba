@@ -2,38 +2,6 @@
  * Template Helpers
  */
 Template.data_store_data_table.helpers({
-  getTableSchemaDead: function () {
-    var tableSchema = {
-        primaryColumns: [],
-        children: [],
-        childCols: {}
-      },
-      ss = this || param,
-      schema = ss.schema();
-
-    // Get the primary and secondary columns
-    _.each(_.keys(schema), function (key) {
-      var field = _.clone(schema[key]);
-      field.key = key;
-
-      //console.log("Out: ", key, key.indexOf("."), field.type != Object, field.type != Array, field.type);
-      if(key.indexOf(".") < 0 && field.type != Object && field.type != Array){
-        tableSchema.primaryColumns.push(field);
-      } else if(key.indexOf(".") < 0) {
-        tableSchema.children.push(field);
-      } else {
-        var child = key.split(".")[0];
-        if(!tableSchema.childCols[child]){
-          tableSchema.childCols[child] = [];
-        }
-        tableSchema.childCols[child].push(key);
-      }
-    });
-
-    //console.log("Schema: ", cache);
-
-    return tableSchema;
-  },
   getTableSchema: function () {
     // TODO: Make this reactive, if the schema changes this is not re-running
     return DSUtil.flexSchema(this._id);
@@ -76,9 +44,8 @@ Template.data_store_data_table.helpers({
  * Template Helpers
  */
 Template.data_store_data_table.events({
-  "click .btn-add-ds-row": function (e) {
-    var dataStoreId = $(e.target).attr("data-store-id"),
-      instance = Template.instance();
+  "click .btn-add-ds-row": function (e, instance) {
+    var dataStoreId = $(e.target).attr("data-store-id");
 
     // Build the form context
     var formContext = {
@@ -90,7 +57,7 @@ Template.data_store_data_table.events({
 
     // render the form
     Dialog.show({
-      contentTemplate: 'data_store_row_form',
+      contentTemplate: 'DataStoreRowForm',
       contentData: formContext,
       title: "New " + instance.data.title + " row",
       //width: 600,
@@ -138,10 +105,9 @@ Template.data_store_data_table.events({
       }
     });
   },
-  "click .btn-edit-row": function (e) {
+  "click .btn-edit-row": function (e, instance) {
     console.log("Edit: ", this);
-    var row = this,
-      instance = Template.instance();
+    var row = this;
 
     // Build the form context
     var formContext = {
@@ -153,7 +119,7 @@ Template.data_store_data_table.events({
 
     // render the form
     Dialog.show({
-      contentTemplate: 'data_store_row_form',
+      contentTemplate: 'DataStoreRowForm',
       contentData: formContext,
       title: "Edit " + instance.data.title + " row",
       //width: 600,

@@ -1,0 +1,13 @@
+<template name="EditableTitleDescription">
+  <div class="editable-title-description"
+       data-key="{{dataKey}}"
+       data-emptytext="{{emptyText}}">
+    <div class="{{titleClass}}">
+      <span>{{value.title}}</span>
+      <span class="{{#if value.title}}hide{{/if}}"><i>{{emptyText}}</i></span>
+    </div>
+    <div class="{{descriptionClass}}">
+      <span>{{value.description}}</span>
+    </div>
+  </div>
+</template>

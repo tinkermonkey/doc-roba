@@ -34,6 +34,18 @@ Schemas.Server = new SimpleSchema({
   active: {
     type: Boolean
   },
+  // Server Configuration
+  config: {
+    type: Object,
+    blackbox: true,
+    defaultValue: {}
+  },
+  // DB connection info
+  dbConfig: {
+    type: Object,
+    blackbox: true,
+    defaultValue: {}
+  },
   // Sort order
   order: {
     type: Number
