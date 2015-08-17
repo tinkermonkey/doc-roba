@@ -98,6 +98,16 @@ Meteor.startup(function () {
     }
     return [];
   });
+  Meteor.publish('platforms', function (projectId, projectVersionId) {
+    // check that there is a project role for the current user
+    if(this.userId && projectId && projectVersionId){
+      var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
+      if(role){
+        return Nodes.find({projectVersionId: projectVersionId, type: NodeTypes.platform});
+      }
+    }
+    return [];
+  });
 
   /**
    * ============================================================================

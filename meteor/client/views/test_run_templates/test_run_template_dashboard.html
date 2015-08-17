@@ -1,0 +1,42 @@
+<template name="TestRunTemplateDashboard">
+  {{#contentFor "title"}}
+    Test Run Dashboard
+  {{/contentFor}}
+
+  {{#contentFor "svgDefs"}}
+    {{> svg_def "node-clip-path" }}
+    {{> svg_def "node-hover" }}
+    {{> svg_def "action-arrow" }}
+  {{/contentFor}}
+
+  {{#with getFullContext}}
+    <div class="test-case-container">
+      <div class="test-case-nav auto-transition auto-slide-right intro-slide-right">
+        <div class="home-nav-item active">
+          <h4 class="home-top-nav">
+            {{#with project}}
+              <a href="{{pathFor 'home_project'}}">{{title}}</a>
+            {{/with}}
+            {{#with version}}
+              <small><a href="{{pathFor 'home_version'}}">v {{version}}</a></small>
+            {{/with}}
+            {{#with project}}
+              <small>{{renderProjectRole userRole}}</small>
+            {{/with}}
+          </h4>
+        </div>
+
+        {{> TestRunTemplateList }}
+      </div>
+      <div class="test-case-content auto-transition auto-slide-left intro-slide-left">
+        {{#if hasTestRun}}
+          {{> TestRun getTestRunTemplate}}
+        {{else}}
+          <div class="align-center">
+            <h2>Select a Test Run Template</h2>
+          </div>
+        {{/if}}
+      </div>
+    </div>
+  {{/with}}
+</template>

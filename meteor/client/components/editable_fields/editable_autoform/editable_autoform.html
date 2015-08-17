@@ -1,0 +1,16 @@
+<template name="EditableAutoform">
+  {{debug}}
+  <div class="{{cssClass}} editable editable-autoform" data-key="{{dataKey}}">
+    {{#if hasData}}
+      <table class="editable-autoform-display-table">
+        {{#each getDataVars}}
+          <tr>
+            <td>{{label}}: </td><td>{{renderValueByType value}}</td>
+          </tr>
+        {{/each}}
+      </table>
+    {{else}}
+      <i>{{emptyText}}</i>
+    {{/if}}
+  </div>
+</template>

@@ -310,12 +310,15 @@ ScreenshotKeys = {
  */
 Schemas.Viewport = new SimpleSchema({
   title: {
+    label: "Title",
     type: String
   },
   height: {
+    label: "Height (px)",
     type: Number
   },
   width: {
+    label: "Width (px)",
     type: Number
   }
 });
@@ -325,6 +328,7 @@ Schemas.Viewport = new SimpleSchema({
  */
 Schemas.WebPlatformConfig = new SimpleSchema({
   viewports: {
+    label: "Viewports",
     type: [Schemas.Viewport]
   }
 });
@@ -334,6 +338,7 @@ Schemas.WebPlatformConfig = new SimpleSchema({
  */
 Schemas.MobileWebPlatformConfig = new SimpleSchema({
   viewports: {
+    label: "Viewports",
     type: [Schemas.Viewport]
   }
 });

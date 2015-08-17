@@ -18,7 +18,7 @@ Template.EditableTestAgentOS.rendered = function () {
     mode: instance.data.mode || "inline",
     type: "select",
     source: _.map(_.keys(TestAgentOSLookup), function (os) {
-      return {value: os, text: Util.capitalize(TestAgentOSLookup[os])};
+      return {value: os, text: Util.camelToTitle(TestAgentOSLookup[os])};
     }),
     highlight: false,
     display: function () {

@@ -144,3 +144,7 @@ button {
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
+
+.capitalize {
+  text-transform: capitalize;
+}

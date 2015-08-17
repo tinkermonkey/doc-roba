@@ -1,19 +1,16 @@
 /**
  * Template Helpers
  */
-Template.TestCaseList.helpers({
-  getGroups: function () {
-    return TestGroups.find({ parentGroupId: null }, { sort: { title: 1 } });
-  },
-  getTestCases: function () {
-    return TestCases.find({ testGroupId: null }, { sort: { title: 1 } });
+Template.TestRunTemplateList.helpers({
+  getRootTestRunTemplates: function () {
+    return TestRunTemplates.find({ parentTemplateId: null }, { sort: { title: 1 } });
   }
 });
 
 /**
  * Template Event Handlers
  */
-Template.TestCaseList.events({
+Template.TestRunTemplateList.events({
   "keyup .add-item-form input": function (e, instance) {
     var value = $(e.target).val();
 
@@ -31,40 +28,24 @@ Template.TestCaseList.events({
     var itemType = $(e.target).closest("a").attr("data-name"),
       itemName = $(".add-item-form input").val().trim(),
       version = instance.data.version,
-      groupId = instance.$(".test-case-list-group.selected").attr("data-group-id");
+      parentId = instance.$(".test-case-list-group.selected").attr("data-parent-id");
 
-    console.log("Add Item: ", itemType, itemName, groupId);
+    console.log("Add Item: ", itemType, itemName, parentId);
 
     if(itemType && itemName && itemName.length){
-      if(itemType == "testcase"){
-        TestCases.insert({
-          projectId: version.projectId,
-          projectVersionId: version._id,
-          testGroupId: groupId,
-          title: itemName
-        }, function (error, result) {
-          if(error){
-            Meteor.log.error("Failed to insert test case: " + error.message);
-            Dialog.error("Failed to insert test case: " + error.message);
-          } else {
-            $(".add-item-form input").val("")
-          }
-        });
-      } else if(itemType == "testgroup") {
-        TestGroups.insert({
-          projectId: version.projectId,
-          projectVersionId: version._id,
-          parentGroupId: groupId,
-          title: itemName
-        }, function (error, result) {
-          if(error){
-            Meteor.log.error("Failed to insert test group: " + error.message);
-            Dialog.error("Failed to insert test group: " + error.message);
-          } else {
-            $(".add-item-form input").val("")
-          }
-        });
-      }
+      TestRunTemplates.insert({
+        projectId: version.projectId,
+        projectVersionId: version._id,
+        parentTemplateId: itemType == "subtestrun" ? parentId : null,
+        title: itemName
+      }, function (error, result) {
+        if(error){
+          Meteor.log.error("Failed to insert test run template: " + error.message);
+          Dialog.error("Failed to insert test run template: " + error.message);
+        } else {
+          $(".add-item-form input").val("")
+        }
+      });
     }
   },
   "click .test-case-list-item": function (e, instance) {
@@ -92,14 +73,14 @@ Template.TestCaseList.events({
 /**
  * Template Created
  */
-Template.TestCaseList.created = function () {
+Template.TestRunTemplateList.created = function () {
   
 };
 
 /**
  * Template Rendered
  */
-Template.TestCaseList.rendered = function () {
+Template.TestRunTemplateList.rendered = function () {
   var instance = Template.instance();
 
   // make all of the test case list elements draggable
@@ -111,6 +92,6 @@ Template.TestCaseList.rendered = function () {
 /**
  * Template Destroyed
  */
-Template.TestCaseList.destroyed = function () {
+Template.TestRunTemplateList.destroyed = function () {
   
 };

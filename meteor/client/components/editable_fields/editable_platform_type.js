@@ -18,7 +18,7 @@ Template.EditablePlatformType.rendered = function () {
     mode: instance.data.mode || "inline",
     type: "select",
     source: _.map(_.values(PlatformTypes), function (type) {
-      return { value: type, text: Util.capitalize(PlatformTypesLookup[type])}
+      return { value: type, text: Util.camelToTitle(PlatformTypesLookup[type])}
     }),
     highlight: false,
     display: function () {

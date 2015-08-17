@@ -115,6 +115,14 @@ Util = {
   },
 
   /**
+   * Convert camel case to title case
+   * @param word
+   */
+  camelToTitle: function (word) {
+    return (word.substr(0,1).toUpperCase() + word.substr(1)).replace(/([A-Z])/g, " $1").trim();
+  },
+
+  /**
    * Get the name of a test agent with the versions
    * @param testAgent The testAgent record to build the name for
    */

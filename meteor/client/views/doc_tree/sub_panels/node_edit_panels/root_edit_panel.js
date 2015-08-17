@@ -1,23 +1,23 @@
 /**
  * Template Helpers
  */
-Template.root_edit_panel.helpers({});
+Template.RootEditPanel.helpers({});
 
 /**
  * Template Helpers
  */
-Template.root_edit_panel.events({});
+Template.RootEditPanel.events({});
 
 /**
  * Template Rendered
  */
-Template.root_edit_panel.rendered = function () {
+Template.RootEditPanel.rendered = function () {
 
 };
 
 /**
  * Template Destroyed
  */
-Template.root_edit_panel.destroyed = function () {
+Template.RootEditPanel.destroyed = function () {
 
 };

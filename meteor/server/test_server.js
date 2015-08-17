@@ -3,7 +3,37 @@
  */
 Meteor.startup(function () {
   /**
-   * Publications
+   * ============================================================================
+   * Test Run Publications
+   * ============================================================================
+   */
+  Meteor.publish('test_run_templates', function (projectId, projectVersionId) {
+    console.log("Publish: test_run_templates");
+    // check that there is a project role for the current user
+    if(this.userId && projectId && projectVersionId){
+      var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
+      if(role){
+        return TestRunTemplates.find({projectVersionId: projectVersionId});
+      }
+    }
+    return [];
+  });
+  Meteor.publish('test_run_template_tests', function (projectId, projectVersionId, templateId) {
+    console.log("Publish: test_run_templates");
+    // check that there is a project role for the current user
+    if(this.userId && projectId && projectVersionId && templateId){
+      var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
+      if(role){
+        return TestRunTemplateTests.find({projectVersionId: projectVersionId, testRunTemplateId: templateId});
+      }
+    }
+    return [];
+  });
+
+  /**
+   * ============================================================================
+   * Test Case Publications
+   * ============================================================================
    */
   Meteor.publish('test_groups', function (projectId, projectVersionId) {
     console.log("Publish: test_groups");
@@ -60,6 +90,12 @@ Meteor.startup(function () {
     }
     return [];
   });
+
+  /**
+   * ============================================================================
+   * Test Result Publications
+   * ============================================================================
+   */
   Meteor.publish('test_result', function (projectId, testResultId) {
     console.log("Publish: test_result");
     // check that there is a project role for the current user

@@ -1,6 +1,6 @@
 <template name="EditablePlatformType">
   <div class="{{cssClass}} editable-platform-type"  data-key="{{dataKey}}">
-    <span class="{{#unless value}}hide{{/unless}}">{{renderNodeType value}}</span>
+    <span class="{{#unless value}}hide{{/unless}} capitalize">{{renderPlatformType value}}</span>
     <span class="{{#if value}}hide{{/if}}"><i>{{emptyText}}</i></span>
   </div>
 </template>

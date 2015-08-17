@@ -23,7 +23,7 @@ Template.EditableTestAgentType.rendered = function () {
     mode: instance.data.mode || "inline",
     type: "select",
     source: _.map(types, function (type) {
-      return {value: type, text: Util.capitalize(TestAgentTypesLookup[type])};
+      return {value: type, text: Util.camelToTitle(TestAgentTypesLookup[type])};
     }),
     highlight: false,
     display: function () {

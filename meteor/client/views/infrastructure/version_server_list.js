@@ -5,22 +5,8 @@ Template.VersionServerList.helpers({
   sortedServers: function () {
     return Servers.find({projectVersionId: this.version._id}, {sort: {order: 1}}).fetch();
   },
-  getServerConfigVars: function () {
-    if(this.config){
-      var serverConfig = this.config,
-        schema = Template.instance().configSchema.get();
-      console.log("Schema: ", schema);
-      return _.keys(this.config)
-        .sort()
-        .map(function (key) { return {
-          key: key,
-          value: serverConfig[key],
-          label: schema && schema.schema ? schema.schema()[key].label : key
-        } });
-    }
-  },
-  hasConfig: function () {
-    return this.config && _.keys(this.config).length;
+  getConfigSchema: function () {
+    return Template.instance().configSchema.get();
   }
 });
 
@@ -67,7 +53,7 @@ Template.VersionServerList.events({
       }
     });
   },
-  "edited .server-editable": function (e, instance, newValue) {
+  "edited .editable": function (e, instance, newValue) {
     var serverId = $(e.target).closest(".server-list-row").attr("data-pk"),
       dataKey = $(e.target).attr("data-key"),
       update = {$set: {}};
@@ -76,71 +62,6 @@ Template.VersionServerList.events({
       if(error){
         Meteor.log.error("Server update failed: " + error.message);
         Dialog.error("Server update failed: " + error.message);
-      }
-    });
-  },
-  "click .server-config-container": function (e, instance) {
-    var server = this,
-      rowSchema = instance.configSchema.get(),
-      defaultConfig = {};
-
-    // Merge in the fields defaults with the server config
-    _.each(_.keys(rowSchema.schema()), function (field) {
-      if(rowSchema.schema()[field].defaultValue){
-        try {
-          defaultConfig[field] = eval(rowSchema.schema()[field].defaultValue)
-        } catch (e) {
-          Meteor.log.error("Failed to interpret default value for [" + field + "]: " + e.toString());
-        }
-      }
-    });
-    console.log("Default config: ", defaultConfig);
-    var config = _.defaults(server.config, defaultConfig);
-    console.log("config: ", config);
-
-    // Build the form context
-    var formContext = {
-      type: "update",
-      rowSchema: rowSchema,
-      rowData: config
-    };
-
-    // render the form
-    Dialog.show({
-      contentTemplate: 'DataStoreRowFormVert',
-      contentData: formContext,
-      title: server.title + " Configuration",
-      width: 400,
-      buttons: [
-        { text: "Cancel" },
-        { text: "Save" }
-      ],
-      callback: function (btn) {
-        console.log("Dialog button pressed: ", btn);
-        if(btn == "Save"){
-          // grab the form data
-          var formId = Dialog.currentInstance.$("form").attr("id");
-          if(formId){
-            // pull in the update doc from the form but reshape it to update the config field
-            var rawUpdate = _.clone(AutoForm.getFormValues(formId).updateDoc),
-              update = {
-                $set: {config: rawUpdate.$set}
-              };
-
-            Servers.update(server._id, update, function (error, response) {
-              Dialog.hide();
-              if(error){
-                Meteor.log.error("Config update failed: " + error.message);
-                Dialog.error("Config update failed" + error.message);
-              }
-            });
-          } else {
-            Meteor.log.error("Delete failed: could not find form");
-            Dialog.error("Delete failed: could not find form");
-          }
-        } else {
-          Dialog.hide();
-        }
       }
     });
   }

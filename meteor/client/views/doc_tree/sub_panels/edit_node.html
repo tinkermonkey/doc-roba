@@ -1,71 +1,9 @@
 <template name="edit_node">
   {{#with getNodeRecord}}
-  <div class="container-fluid full-height">
-    <div class="row full-height">
-      <div class="col-xs-3 full-height">
-        <h2>
-          {{> EditableTextField cssClass="" value=title dataKey="title" }}
-        </h2>
-        {{#if isVisitable}}
-          <div>
-            <span class="field-label">Type: </span>
-            {{> EditableNodeType cssClass="inline-block" pageView=true value=type dataKey="type" emptyText="Select a node type" }}
-          </div>
-          <hr>
-          <div>
-            <span class="field-label">Page Title: </span>
-            {{> EditableTextField cssClass="inline-block" value=pageTitle dataKey="pageTitle" emptyText="none"}}
-          </div>
-          <div>
-            <span class="dark-blue">Base Url:</span>
-            {{> EditableTextField cssClass="edit-node-url" value=url dataKey="url" emptyText="none"}}
-          </div>
-          <div>
-            {{> edit_node_url_parameters }}
-          </div>
-        {{else}}
-          {{renderNodeType type}}
-        {{/if}}
-      </div>
-      <div class="col-xs-8 full-height">
-      {{#if isVisitable}}
-        <ul class="nav nav-pills full-height" style="padding-top: 10px;">
-          <li role="presentation"><a data-tab-name="ready">Ready</a></li>
-          <li role="presentation"><a data-tab-name="validations">Validations</a></li>
-          <li role="presentation"><a data-tab-name="nav-menus">Nav Menus</a></li>
-          <li role="presentation"><a data-tab-name="documentation">Documentation</a></li>
-          <li role="presentation"><a data-tab-name="recent">Recent Renditions</a></li>
-        </ul>
-        <div class="tab-container full-height">
-          <div class="tab" data-tab-name="ready">
-            <div class="simple-col simple-col-9">
-                {{> RobaAce fullHeight=true dataKey="readyCode" value=readyCode}}
-            </div>
-            <div class="simple-col simple-col-3">
-                <div class="sub-heading">Code to determine if this {{renderNodeType type}} is ready:</div>
-            </div>
-          </div>
-          <div class="tab" data-tab-name="validations">
-            <div class="simple-col simple-col-9">
-                {{> RobaAce fullHeight=true dataKey="validationCode" value=validationCode}}
-            </div>
-            <div class="simple-col simple-col-3">
-              <div class="sub-heading">Code to determine if this {{renderNodeType type}} is valid:</div>
-            </div>
-          </div>
-          <div class="tab" data-tab-name="nav-menus">
-            <div class="sub-heading">Navigation Menus on this page:</div>
-            {{> EditableNavMenuList projectVersionId=projectVersionId value=navMenus dataKey="navMenus" }}
-          </div>
-          <div class="tab" data-tab-name="documentation">Documentation</div>
-          <div class="tab" data-tab-name="recent">Recent Renditions</div>
-        </div>
-      {{/if}}
-      </div>
-      <div class="col-xs-1">
-
+    <div class="container-fluid full-height">
+      <div class="row full-height">
+        {{> Template.dynamic template=getEditPanel}}
       </div>
     </div>
-  </div>
   {{/with}}
 </template>

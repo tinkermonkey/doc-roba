@@ -128,6 +128,20 @@ Router.map(function () {
       Meteor.subscribe("actions", this.params.projectId, this.params._id)
     ]; }
   });
+  this.route("test_run_template_dashboard", {
+    path: "/test_run_template_dashboard/:projectId/:_id",
+    data: function () {
+      return {
+        project: Projects.findOne({_id: this.params.projectId}),
+        version: ProjectVersions.findOne({_id: this.params._id})
+      };
+    },
+    waitOn: function () { return [
+      Meteor.subscribe("test_cases", this.params.projectId, this.params._id),
+      Meteor.subscribe("test_run_templates", this.params.projectId, this.params._id),
+      Meteor.subscribe("test_run_template_tests", this.params.projectId, this.params._id)
+    ]; }
+  });
   this.route("driver_command_list", {
     path: "/driver_command_list",
     data: function () { return DriverCommands.find({}, {sort: {type: 1, name: 1}}); },

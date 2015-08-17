@@ -20,7 +20,7 @@ Template.EditableNodeType.rendered = function () {
     source: _.map(_.values(NodeTypes).filter(function (t) {
       return instance.data.pageView ? t == NodeTypes.page || t == NodeTypes.view : true;
     }), function (type) {
-      return { value: type, text: Util.capitalize(NodeTypesLookup[type])}
+      return { value: type, text: Util.camelToTitle(NodeTypesLookup[type])}
     }),
     highlight: false,
     display: function () {

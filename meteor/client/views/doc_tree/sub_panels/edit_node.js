@@ -9,7 +9,17 @@ Template.edit_node.helpers({
     return this.type == NodeTypes.page || this.type == NodeTypes.view
   },
   getEditPanel: function () {
-
+    switch (this.type) {
+      case NodeTypes.root:
+        return "RootEditPanel";
+      case NodeTypes.userType:
+        return "UserTypeEditPanel";
+      case NodeTypes.platform:
+        return "PlatformEditPanel";
+      case NodeTypes.page:
+      case NodeTypes.view:
+        return "PageViewEditPanel";
+    }
   }
 });
 

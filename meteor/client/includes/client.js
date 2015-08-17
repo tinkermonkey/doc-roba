@@ -33,12 +33,12 @@ Template.registerHelper("renderValueByType", function (value){
 
 /**
  * Render a project role type to a string
- * TODO: Replace this with css
+ * TODO: Replace all these stupid lookups with a renderLookup function
  */
 Template.registerHelper("renderProjectRole", function (role) {
   var name = RoleTypesLookup[role];
   if(name){
-    return name.substr(0,1).toUpperCase() + name.substr(1);
+    return Util.camelToTitle(name);
   }
 });
 
@@ -56,7 +56,10 @@ Template.registerHelper("renderNodeTitle", function (staticId, projectVersionId)
  * Render a node type to a string
  */
 Template.registerHelper("renderNodeType", function (type) {
-  return NodeTypesLookup[type];
+  var name = NodeTypesLookup[type];
+  if(name){
+    return Util.camelToTitle(name);
+  }
 });
 
 /**
@@ -65,7 +68,7 @@ Template.registerHelper("renderNodeType", function (type) {
 Template.registerHelper("renderPlatformType", function (type) {
   var name = PlatformTypesLookup[type];
   if(name){
-    return name.split(/[A-Z]/g).join(" ");
+    return Util.camelToTitle(name);
   }
 });
 
@@ -94,7 +97,7 @@ Template.registerHelper("renderChangeType", function (type) {
  */
 Template.registerHelper("renderCamelCaseAsWords", function (message) {
   if(message){
-    return message.replace(/([A-Z])/g, " $1").trim();
+    return Util.camelToTitle(message);
   }
 });
 
@@ -200,7 +203,7 @@ Template.registerHelper("renderTestAgentOS", function (os) {
  */
 Template.registerHelper("renderTestAgentType", function (type) {
   var name = TestAgentTypesLookup[type];
-  return Util.capitalize(name);
+  return Util.camelToTitle(name);
 });
 
 /**
@@ -274,14 +277,14 @@ Template.registerHelper("renderTestSystemNameFromStaticId", function (staticId, 
  * Render an adventure status name
  */
 Template.registerHelper("renderAdventureStatus", function (statusId) {
-  return Util.capitalize(AdventureStatusLookup[statusId]);
+  return Util.camelToTitle(AdventureStatusLookup[statusId]);
 });
 
 /**
  * Render an action status name
  */
 Template.registerHelper("renderAdventureStepStatus", function (statusId) {
-  return Util.capitalize(AdventureStepStatusLookup[statusId]);
+  return Util.camelToTitle(AdventureStepStatusLookup[statusId]);
 });
 
 /**

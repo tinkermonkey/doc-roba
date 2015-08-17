@@ -322,6 +322,11 @@ Schemas.TestRunTemplate = new SimpleSchema({
     type: String,
     optional: true
   },
+  // Order if part of a larger test run
+  order: {
+    type: Number,
+    optional: true
+  },
   // Template Title
   title: {
     type: String
@@ -379,10 +384,24 @@ Schemas.TestRunTemplateTest = new SimpleSchema({
     type: String,
     denyUpdate: true
   },
+  // Link to the test run template via the staticId
+  testRunTemplateId: {
+    type: String,
+    denyUpdate: true
+  },
   // Link to the test case via the staticId
   testCaseId: {
     type: String,
     denyUpdate: true
+  },
+  // Test order
+  order: {
+    type: Number
+  },
+  // Test config
+  config: {
+    type: Object,
+    blackbox: true
   },
   // Standard tracking fields
   dateCreated: {
@@ -423,6 +442,11 @@ Schemas.TestRun = new SimpleSchema({
   },
   // Link to the project version to which this test belongs
   projectVersionId: {
+    type: String,
+    denyUpdate: true
+  },
+  // Link to test run template
+  testRunTemplateId: {
     type: String,
     denyUpdate: true
   },

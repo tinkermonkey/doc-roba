@@ -1,0 +1,7 @@
+.editable-autoform-display-table td {
+  padding: 2px;
+}
+
+.editable-autoform-display-table td:first-child {
+  color: #0A7BFF !important;
+}
