@@ -16,7 +16,7 @@
         <div class="home-nav-item {{#if isActiveProject}}active{{/if}}">
           <h3 class="home-top-nav">
             <a href="{{pathFor 'home_project'}}">{{title}}</a>
-            <small>{{renderProjectRole role}}</small>
+            <small>{{renderLookup "RoleTypesLookup" role}}</small>
           </h3>
         </div>
         {{#each projectVersions}}

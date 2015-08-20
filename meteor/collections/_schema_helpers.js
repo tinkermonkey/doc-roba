@@ -289,6 +289,16 @@ TestResultCodes = {
 TestResultCodesLookup = _.invert(TestResultCodes);
 
 /**
+ *
+ */
+TestRunTemplateItemTypes = {
+  template: 0,
+  stage: 1,
+  test: 2
+};
+TestRunTemplateItemTypesLookup = _.invert(TestRunTemplateItemTypes);
+
+/**
  * Screenshot Keys
  * This is an enum for the sake of good standard, but it also a little Mickey Mouse
  */

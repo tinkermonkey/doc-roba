@@ -1,7 +1,7 @@
 <template name="TestCaseStep">
   <div class="test-case-step test-case-step-type-{{type}} {{#if error}}test-case-step-error{{/if}}" data-pk="{{_id}}" data-order="{{order}}">
     <div class="test-case-step-title no-select">
-      {{renderTestCaseStepType type}}
+      {{renderLookup "TestCaseStepTypesLookup" type}}
     </div>
     <div class="test-case-step-delete"><span class="glyphicon glyphicon-remove"></span></div>
     <div class="test-case-step-body-container">

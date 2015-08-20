@@ -21,7 +21,7 @@
             <small><a href="{{pathFor 'home_version'}}">v {{version}}</a></small>
           {{/with}}
           {{#with project}}
-            <small>{{renderProjectRole userRole}}</small>
+            <small>{{renderLookup "RoleTypesLookup" userRole}}</small>
           {{/with}}
         </h4>
       </div>

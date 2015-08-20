@@ -1,6 +1,6 @@
 <template name="nodes_change">
   {{#with combineData}}
-    <span class="change-list-type">{{renderNodeType record.type}}</span>
+    <span class="change-list-type">{{renderLookup "NodeTypesLookup" record.type}}</span>
     {{#if isUpdated}}
       updated:
       {{#each values}}

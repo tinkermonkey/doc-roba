@@ -1,0 +1,9 @@
+<template name="TestRunTemplate">
+  <div class="test-run-template-container">
+    {{> EditableTitleDescription value=this dataKey="title-description" titleClass="test-case-title"}}
+
+    <div>
+      {{renderLookup "RoleTypesLookup" 0}}
+    </div>
+  </div>
+</template>

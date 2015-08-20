@@ -14,19 +14,13 @@
               Test Run
             </a>
           </li>
-          <li>
-            <a href="#" data-name="subtestrun">
-              <span class="glyphicon glyphicon-folder-close"></span>
-              Sub Test Run
-            </a>
-          </li>
         </ul>
       </div>
     </div>
   </div>
   <div class="test-case-list">
-    {{#each getRootTestRunTemplates}}
-      {{> TestRunListItem }}
+    {{#each testRunTemplates}}
+      {{> TestRunTemplateListItem }}
     {{/each}}
   </div>
 </template>

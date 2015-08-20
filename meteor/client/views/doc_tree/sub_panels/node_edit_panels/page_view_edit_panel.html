@@ -35,7 +35,7 @@
           {{> RobaAce fullHeight=true dataKey="readyCode" value=readyCode}}
         </div>
         <div class="simple-col simple-col-3">
-          <div class="sub-heading">Code to determine if this {{renderNodeType type}} is ready:</div>
+          <div class="sub-heading">Code to determine if this {{renderLookup "NodeTypesLookup" type}} is ready:</div>
         </div>
       </div>
       <div class="tab" data-tab-name="validations">
@@ -43,7 +43,7 @@
           {{> RobaAce fullHeight=true dataKey="validationCode" value=validationCode}}
         </div>
         <div class="simple-col simple-col-3">
-          <div class="sub-heading">Code to determine if this {{renderNodeType type}} is valid:</div>
+          <div class="sub-heading">Code to determine if this {{renderLookup "NodeTypesLookup" type}} is valid:</div>
         </div>
       </div>
       <div class="tab" data-tab-name="nav-menus">

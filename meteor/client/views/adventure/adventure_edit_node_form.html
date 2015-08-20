@@ -7,7 +7,7 @@
       >X</div>
     <ul class="nav nav-pills">
       <li role="presentation" class="active"><a data-tab-name="node">
-        {{renderNodeType type}}
+        {{renderLookup "NodeTypesLookup" type}}
       </a></li>
       <li role="presentation"><a data-tab-name="checks">Checks</a></li>
       <li role="presentation"><a data-tab-name="actions">Actions</a></li>
@@ -24,10 +24,10 @@
                   <span class="dark-blue">title: </span>
                   {{#each title.pieces}}
                     <span
-                      class="inline-block node-search-result node-search-{{renderNodeSearchStatus status}}"
+                      class="inline-block node-search-result node-search-{{renderLookup "NodeSearchStatusLookup" status}}"
                       data-toggle="popover"
                       data-trigger="focus"
-                      data-content="{{renderNodeSearchStatus status}}: {{value}}"
+                      data-content="{{renderLookup "NodeSearchStatusLookup" status}}: {{value}}"
                       >{{value}}</span>
                   {{/each}}
                 </div>
@@ -39,10 +39,10 @@
                       {{#each url.pieces}}
                         <div class="inline-block">
                           /<span
-                          class="node-search-result node-search-{{renderNodeSearchStatus status}}"
+                          class="node-search-result node-search-{{renderLookup "NodeSearchStatusLookup" status}}"
                           data-toggle="popover"
                           data-trigger="focus"
-                          data-content="{{renderNodeSearchStatus status}}: {{value}}"
+                          data-content="{{renderLookup "NodeSearchStatusLookup" status}}: {{value}}"
                           >{{value}}</span>
                         </div>
                       {{/each}}
@@ -55,10 +55,10 @@
                   <div class="inline-block">
                     {{#each params.pieces}}
                       <div
-                        class="node-search-result node-search-{{renderNodeSearchStatus status}}"
+                        class="node-search-result node-search-{{renderLookup "NodeSearchStatusLookup" status}}"
                         data-toggle="popover"
                         data-trigger="focus"
-                        data-content="{{renderNodeSearchStatus status}}: {{value.param}}{{#if value.value}}={{value.value}}{{/if}}"
+                        data-content="{{renderLookup "NodeSearchStatusLookup" status}}: {{value.param}}{{#if value.value}}={{value.value}}{{/if}}"
                         >{{value.param}}{{#if value.value}}={{value.value}}{{/if}}</div>
                     {{/each}}
                   </div>
@@ -98,7 +98,7 @@
       </div>
       <div class="tab" data-tab-name="checks">
         <h4>
-          Code to determine if this {{renderNodeType type}} is ready
+          Code to determine if this {{renderLookup "NodeTypesLookup" type}} is ready
           <button class="btn btn-xs btn-primary btn-preview" data-field="readyCode">
             <span class="glyphicon glyphicon-play"></span>
             Preview
@@ -107,7 +107,7 @@
         {{> RobaAce minLines=10 maxLines=30 dataKey="readyCode" value=readyCode}}
 
         <h4>
-          Code to determine if this {{renderNodeType type}} is valid
+          Code to determine if this {{renderLookup "NodeTypesLookup" type}} is valid
           <button class="btn btn-xs btn-primary btn-preview" data-field="validationCode">
             <span class="glyphicon glyphicon-play"></span>
             Preview

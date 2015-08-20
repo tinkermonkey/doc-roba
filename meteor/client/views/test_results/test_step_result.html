@@ -3,7 +3,7 @@
     <td class="test-step-result-body {{getStepClass}}" data-step-id="{{step._id}}">
       <div class="test-step-result-body-content">
         <div class="test-step-result-title-rotate">
-          <div class="test-step-result-title-text">{{renderTestCaseStepType step.type}}</div>
+          <div class="test-step-result-title-text">{{renderLookup "TestCaseStepTypesLookup" step.type}}</div>
         </div>
         <div>
           <div class="test-role-result-map-spacer">

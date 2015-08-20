@@ -307,6 +307,13 @@ trackChanges(TestCaseSteps, "test_case_steps");
  * ============================================================================
  */
 Schemas.TestRunTemplate = new SimpleSchema({
+  // Static ID field that will be constant across versions of the project
+  staticId: {
+    type: String,
+    index: true,
+    autoValue: autoValueObjectId,
+    denyUpdate: true
+  },
   // Link to the project to which this test belongs
   projectId: {
     type: String,
@@ -367,13 +374,12 @@ TestRunTemplates.deny({
   fetch: ['projectId']
 });
 
-
 /**
  * ============================================================================
  * Test Run Template Test - a test setup in a named run config
  * ============================================================================
  */
-Schemas.TestRunTemplateTest = new SimpleSchema({
+Schemas.TestRunTemplateItem = new SimpleSchema({
   // Link to the project to which this test belongs
   projectId: {
     type: String,
@@ -384,21 +390,21 @@ Schemas.TestRunTemplateTest = new SimpleSchema({
     type: String,
     denyUpdate: true
   },
-  // Link to the test run template via the staticId
-  testRunTemplateId: {
+  // Link to the parent structure (template, stage) by staticId
+  parentId: {
     type: String,
     denyUpdate: true
   },
-  // Link to the test case via the staticId
-  testCaseId: {
-    type: String,
-    denyUpdate: true
+  // Bind to the static Type constant
+  type: {
+    type: Number,
+    allowedValues: _.map(TestRunTemplateItemTypes, function (d) { return d; })
   },
-  // Test order
+  // Item order
   order: {
     type: Number
   },
-  // Test config
+  // Item config
   config: {
     type: Object,
     blackbox: true
@@ -415,14 +421,14 @@ Schemas.TestRunTemplateTest = new SimpleSchema({
     denyUpdate: true
   }
 });
-TestRunTemplateTests = new Mongo.Collection("test_run_template_tests");
-TestRunTemplateTests.attachSchema(Schemas.TestRunTemplateTest);
-TestRunTemplateTests.allow({
+TestRunTemplateItems = new Mongo.Collection("test_run_template_items");
+TestRunTemplateItems.attachSchema(Schemas.TestRunTemplateItem);
+TestRunTemplateItems.allow({
   insert: allowIfAuthenticated,
   update: allowIfAuthenticated,
   remove: allowIfAuthenticated
 });
-TestRunTemplateTests.deny({
+TestRunTemplateItems.deny({
   insert: allowIfTester,
   update: allowIfTester,
   remove: allowIfTester,
@@ -470,15 +476,79 @@ Schemas.TestRun = new SimpleSchema({
     type: String,
     autoValue: autoValueCreatedBy,
     denyUpdate: true
-  },
-  dateModified: {
-    type: Date,
-    autoValue: autoValueDateModified
-  },
-  modifiedBy: {
-    type: String,
-    autoValue: autoValueModifiedBy
   }
+});
+TestRuns = new Mongo.Collection("test_runs");
+TestRuns.attachSchema(Schemas.TestRun);
+TestRuns.allow({
+  insert: allowIfAuthenticated,
+  update: allowIfAuthenticated,
+  remove: allowIfAuthenticated
+});
+TestRuns.deny({
+  insert: allowIfTester,
+  update: allowIfTester,
+  remove: allowIfTester,
+  fetch: ['projectId']
+});
+
+/**
+ * ============================================================================
+ * Test run stage
+ * ============================================================================
+ */
+Schemas.TestRunStage = new SimpleSchema({
+  // Link to the project to which this test belongs
+  projectId: {
+    type: String,
+    denyUpdate: true
+  },
+  // Link to the project version to which this test belongs
+  projectVersionId: {
+    type: String,
+    denyUpdate: true
+  },
+  // Link to test run template
+  parentId: {
+    type: String,
+    denyUpdate: true
+  },
+  // The status
+  status: {
+    type: Number,
+    allowedValues: _.map(TestResultStatus, function (d) { return d; }),
+    defaultValue: TestResultStatus.staged
+  },
+  // The result
+  result: {
+    type: Number,
+    allowedValues: _.map(TestResultCodes, function (d) { return d; }),
+    optional: true
+  },
+  // Standard tracking fields
+  dateCreated: {
+    type: Date,
+    autoValue: autoValueDateCreated,
+    denyUpdate: true
+  },
+  createdBy: {
+    type: String,
+    autoValue: autoValueCreatedBy,
+    denyUpdate: true
+  }
+});
+TestRunStages = new Mongo.Collection("test_run_stages");
+TestRunStages.attachSchema(Schemas.TestRunStage);
+TestRunStages.allow({
+  insert: allowIfAuthenticated,
+  update: allowIfAuthenticated,
+  remove: allowIfAuthenticated
+});
+TestRunStages.deny({
+  insert: allowIfTester,
+  update: allowIfTester,
+  remove: allowIfTester,
+  fetch: ['projectId']
 });
 
 /**
@@ -524,7 +594,7 @@ Schemas.TestResult = new SimpleSchema({
     allowedValues: _.map(TestResultStatus, function (d) { return d; }),
     defaultValue: TestResultStatus.staged
   },
-  // An abort flag
+  // Abort the test
   abort: {
     type: Boolean,
     defaultValue: false

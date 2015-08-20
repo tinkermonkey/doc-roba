@@ -3,7 +3,7 @@
     <h4 class="inline-block">
       Status:
       <small>
-        {{renderAdventureStatus adventure.status}}
+        {{renderLookup "AdventureStatusLookup" adventure.status}}
       </small>
     </h4>
     {{#unless adventureIsComplete adventure}}

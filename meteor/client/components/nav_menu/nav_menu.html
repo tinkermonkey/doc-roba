@@ -5,7 +5,7 @@
         <div>
           <div class="nav-body-left">
             {{#each userProjects}}
-              <h5><a href="{{pathFor 'home_project'}}">{{title}}</a> <small>({{renderProjectRole role}})</small></h5>
+              <h5><a href="{{pathFor 'home_project'}}">{{title}}</a> <small>({{renderLookup "RoleTypesLookup" role}})</small></h5>
               {{#each projectVersions}}
                 <div style="margin-left: 10px;">
                   <a href="{{pathFor 'home_version'}}">v {{version}}</a>

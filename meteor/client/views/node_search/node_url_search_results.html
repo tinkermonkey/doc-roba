@@ -16,10 +16,10 @@
           <span class="dark-blue">title: </span>
           {{#each title.pieces}}
             <span
-            class="inline-block node-search-result node-search-{{renderNodeSearchStatus status}}"
+            class="inline-block node-search-result node-search-{{renderLookup "NodeSearchStatusLookup" status}}"
             data-toggle="popover"
             data-trigger="focus"
-            data-content="{{renderNodeSearchStatus status}}: {{value}}"
+            data-content="{{renderLookup "NodeSearchStatusLookup" status}}: {{value}}"
             >{{value}}</span>
           {{/each}}
         </div>
@@ -31,10 +31,10 @@
             {{#each url.pieces}}
               <div class="inline-block">
               /<span
-                class="node-search-result node-search-{{renderNodeSearchStatus status}}"
+                class="node-search-result node-search-{{renderLookup "NodeSearchStatusLookup" status}}"
                 data-toggle="popover"
                 data-trigger="focus"
-                data-content="{{renderNodeSearchStatus status}}: {{value}}"
+                data-content="{{renderLookup "NodeSearchStatusLookup" status}}: {{value}}"
                 >{{value}}</span>
               </div>
             {{/each}}
@@ -47,10 +47,10 @@
           <div class="inline-block">
           {{#each params.pieces}}
             <div
-            class="node-search-result node-search-{{renderNodeSearchStatus status}}"
+            class="node-search-result node-search-{{renderLookup "NodeSearchStatusLookup" status}}"
             data-toggle="popover"
             data-trigger="focus"
-            data-content="{{renderNodeSearchStatus status}}: {{value.param}}{{#if value.value}}={{value.value}}{{/if}}"
+            data-content="{{renderLookup "NodeSearchStatusLookup" status}}: {{value.param}}{{#if value.value}}={{value.value}}{{/if}}"
             >{{value.param}}{{#if value.value}}={{value.value}}{{/if}}</div>
           {{/each}}
           </div>

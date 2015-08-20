@@ -21,7 +21,7 @@
               <small><a href="{{pathFor 'home_version'}}">v {{version}}</a></small>
             {{/with}}
             {{#with project}}
-              <small>{{renderProjectRole userRole}}</small>
+              <small>{{renderLookup "RoleTypesLookup" userRole}}</small>
             {{/with}}
           </h4>
         </div>
@@ -30,7 +30,7 @@
       </div>
       <div class="test-case-content auto-transition auto-slide-left intro-slide-left">
         {{#if hasTestRun}}
-          {{> TestRun getTestRunTemplate}}
+          {{> TestRunTemplate getTestRunTemplate}}
         {{else}}
           <div class="align-center">
             <h2>Select a Test Run Template</h2>

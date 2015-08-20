@@ -2,8 +2,8 @@
  * Template Helpers
  */
 Template.TestRunTemplateList.helpers({
-  getRootTestRunTemplates: function () {
-    return TestRunTemplates.find({ parentTemplateId: null }, { sort: { title: 1 } });
+  testRunTemplates: function () {
+    return TestRunTemplates.find({ projectVersionId: this.version._id}, { sort: { title: 1 } });
   }
 });
 
@@ -27,16 +27,14 @@ Template.TestRunTemplateList.events({
   "click .add-item-form a": function (e, instance) {
     var itemType = $(e.target).closest("a").attr("data-name"),
       itemName = $(".add-item-form input").val().trim(),
-      version = instance.data.version,
-      parentId = instance.$(".test-case-list-group.selected").attr("data-parent-id");
+      version = instance.data.version;
 
-    console.log("Add Item: ", itemType, itemName, parentId);
+    console.log("Add Item: ", itemType, itemName);
 
     if(itemType && itemName && itemName.length){
       TestRunTemplates.insert({
         projectId: version.projectId,
         projectVersionId: version._id,
-        parentTemplateId: itemType == "subtestrun" ? parentId : null,
         title: itemName
       }, function (error, result) {
         if(error){
@@ -55,18 +53,9 @@ Template.TestRunTemplateList.events({
 
     $(".test-case-content").addClass("intro-slide-left");
     setTimeout(function () {
-      instance.data.testCaseId.set(selectable.attr("data-pk"));
+      instance.data.testRunTemplateId.set(selectable.attr("data-pk"));
       $(".test-case-content").removeClass("intro-slide-left");
     }, 500);
-  },
-  "click .test-case-list-group": function (e, instance) {
-    var selectable = $(e.target).closest(".test-case-list-group"),
-      wasSelected = selectable.hasClass("selected");
-
-    instance.$(".test-case-list-group.selected").removeClass("selected");
-    if(!wasSelected){
-      selectable.addClass("selected");
-    }
   }
 });
 
