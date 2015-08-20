@@ -32,13 +32,17 @@ Template.registerHelper("renderValueByType", function (value){
 });
 
 /**
- * Render a project role type to a string
- * TODO: Replace all these stupid lookups with a renderLookup function
+ * Render a lookup value
  */
-Template.registerHelper("renderProjectRole", function (role) {
-  var name = RoleTypesLookup[role];
-  if(name){
-    return Util.camelToTitle(name);
+Template.registerHelper("renderLookup", function (lookupName, key) {
+  if(lookupName && key != null){
+    var lookup = eval(lookupName);
+    if(lookup){
+      var name = lookup[key];
+      if(name){
+        return Util.camelToTitle(name);
+      }
+    }
   }
 });
 
@@ -53,26 +57,6 @@ Template.registerHelper("renderNodeTitle", function (staticId, projectVersionId)
 });
 
 /**
- * Render a node type to a string
- */
-Template.registerHelper("renderNodeType", function (type) {
-  var name = NodeTypesLookup[type];
-  if(name){
-    return Util.camelToTitle(name);
-  }
-});
-
-/**
- * Render a platform type to a string
- */
-Template.registerHelper("renderPlatformType", function (type) {
-  var name = PlatformTypesLookup[type];
-  if(name){
-    return Util.camelToTitle(name);
-  }
-});
-
-/**
  * Render a user's name with information from the Project Roles collection
  */
 Template.registerHelper("renderNameByRole", function (userId) {
@@ -83,13 +67,6 @@ Template.registerHelper("renderNameByRole", function (userId) {
       return role.name;
     }
   }
-});
-
-/**
- * Render a change type to a string
- */
-Template.registerHelper("renderChangeType", function (type) {
-  return ChangeTypesLookup[type];
 });
 
 /**
@@ -171,16 +148,6 @@ Template.registerHelper("setTitle", function () {
 /**
  * Render a change type to a string
  */
-Template.registerHelper("renderFieldType", function (type) {
-  var name = FieldTypesLookup[type];
-  if(name){
-    return name.substr(0,1).toUpperCase() + name.substr(1);
-  }
-});
-
-/**
- * Render a change type to a string
- */
 Template.registerHelper("renderCustomFieldType", function (type) {
   if(type){
     var customType = DataStores.findOne(type);
@@ -188,22 +155,6 @@ Template.registerHelper("renderCustomFieldType", function (type) {
       return customType.title;
     }
   }
-});
-
-/**
- * Render a test agent OS
- */
-Template.registerHelper("renderTestAgentOS", function (os) {
-  var name = TestAgentOSLookup[os];
-  return name;
-});
-
-/**
- * Render a test agent type
- */
-Template.registerHelper("renderTestAgentType", function (type) {
-  var name = TestAgentTypesLookup[type];
-  return Util.camelToTitle(name);
 });
 
 /**
@@ -271,34 +222,6 @@ Template.registerHelper("renderTestSystemNameFromStaticId", function (staticId, 
   if(testSystem){
     return testSystem.title;
   }
-});
-
-/**
- * Render an adventure status name
- */
-Template.registerHelper("renderAdventureStatus", function (statusId) {
-  return Util.camelToTitle(AdventureStatusLookup[statusId]);
-});
-
-/**
- * Render an action status name
- */
-Template.registerHelper("renderAdventureStepStatus", function (statusId) {
-  return Util.camelToTitle(AdventureStepStatusLookup[statusId]);
-});
-
-/**
- * Render a node search status piece
- */
-Template.registerHelper("renderNodeSearchStatus", function (statusId) {
-  return NodeSearchStatusLookup[statusId];
-});
-
-/**
- * Render a test case step type
- */
-Template.registerHelper("renderTestCaseStepType", function (type) {
-  return TestCaseStepTypesLookup[type];
 });
 
 /**
