@@ -70,13 +70,17 @@ Template.registerHelper("renderValueByType", function (value){
 /**
  * Render a lookup value
  */
-Template.registerHelper("renderLookup", function (lookupName, key) {
+Template.registerHelper("renderLookup", function (lookupName, key, style) {
   if(lookupName && key != null){
     var lookup = eval(lookupName);
     if(lookup){
       var name = lookup[key];
       if(name){
-        return Util.camelToTitle(name);
+        if(style && style == "dash"){
+          return Util.camelToDash(name);
+        } else {
+          return Util.camelToTitle(name);
+        }
       }
     }
   }

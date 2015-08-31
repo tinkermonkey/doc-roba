@@ -119,7 +119,19 @@ Util = {
    * @param word
    */
   camelToTitle: function (word) {
-    return (word.substr(0,1).toUpperCase() + word.substr(1)).replace(/([A-Z])/g, " $1").trim();
+    if(word){
+      return (word.substr(0,1).toUpperCase() + word.substr(1)).replace(/([A-Z])/g, " $1").trim();
+    }
+  },
+
+  /**
+   * Convert camel case to dashed words
+   * @param word
+   */
+  camelToDash: function (word) {
+    if(word){
+      return word.replace(/([A-Z])/g, "-$1").trim().toLowerCase();
+    }
   },
 
   /**
@@ -213,7 +225,7 @@ Util = {
 
   /**
    * Get the platform and usertype for a node
-   * TODO: denormalize this data because this searching will be everywhere
+   * TODO: this data is now denormalized, this should be eliminated
    */
   getNodePlatformUserType: function (node) {
     var platform, userType,
@@ -234,6 +246,23 @@ Util = {
     return {
       platform: platform,
       userType: userType
+    }
+  },
+
+  /**
+   * Find a piece of data at an unknown parent depth
+   */
+  findParentData: function (key) {
+    for(var i = 0; i < 20; i++){
+      try {
+        var data = Template.parentData(i);
+        if(data.hasOwnProperty(key)){
+          //console.log("findParentData", "[" + key + "] found at depth", i, ":", data[key]);
+          return data[key];
+        }
+      } catch (e) {
+        Meteor.log.error("findParentData failed: " + e.toString);
+      }
     }
   }
 };

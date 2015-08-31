@@ -104,24 +104,6 @@ Template.AdventureAddNodeForm.events({
     record.urlParams = selection;
     instance.nodeRecord.set(record);
   },
-  "click .btn-select-parent": function (e, instance) {
-    instance.data.showSearch.set(true);
-    $(".adventure-map-container").addClass("show-parent-search");
-    try{
-      var mapInstance = Blaze.getView($(".map-tree-base").get(0)).templateInstance(),
-        finalWidth = mapInstance.$(".map-tree-base").width(),
-        finalHeight = Math.max($(".adventure-map-container").closest(".row").height() / 2, 300);
-      mapInstance.mapLayout.transitionZoomAll(finalWidth, finalHeight, 250);
-      mapInstance.mapLayout.hideLocationUnknown();
-    } catch (e) {
-      Meteor.log.error("Failed to locate map container: " + e.message);
-    }
-
-    // focus on the search field
-    setTimeout(function () {
-      $(".input-search").focus();
-    }, 500);
-  },
   "edited .editable": function (e, instance, newValue) {
     e.stopImmediatePropagation();
     var field = $(e.target).attr("data-key");

@@ -8,7 +8,6 @@ Template.AdventureConsole.helpers({
   getFullContext: function () {
     var instance = Template.instance();
     this.currentNode = instance.currentNode;
-    this.showSearch  = instance.showSearch;
     return this;
   },
   getCurrentNode: function () {
@@ -16,9 +15,6 @@ Template.AdventureConsole.helpers({
     if(nodeId){
       return Nodes.findOne({ staticId: nodeId, projectVersionId: this.adventure.projectVersionId });
     }
-  },
-  showSearch: function () {
-    return this.showSearch.get();
   }
 });
 
@@ -62,7 +58,6 @@ Template.AdventureConsole.events({
 Template.AdventureConsole.created = function () {
   var instance = Template.instance();
   instance.currentNode = new ReactiveVar();
-  instance.showSearch  = new ReactiveVar(false);
 };
 
 /**
@@ -71,8 +66,19 @@ Template.AdventureConsole.created = function () {
 Template.AdventureConsole.rendered = function () {
   var instance = Template.instance();
 
+  // respond to location changes
+  instance.autorun(function () {
+    var currentLocation = instance.currentNode.get();
+    if(instance.previousLocation && currentLocation && instance.previousLocation !== currentLocation){
+      console.log("Current node changed, clearing highlights:", currentLocation, instance.previousLocation);
+      instance.$(".btn-clear-highlight").trigger("click");
+      instance.previousLocation = currentLocation;
+    } else if(!instance.previousLocation) {
+      instance.previousLocation = currentLocation;
+    }
+  });
+
   // initialize the tabs
-  //Tabs.init(instance);
   Accordion.init(instance);
 
   // pick up any updates to the last known node
@@ -93,8 +99,8 @@ Template.AdventureConsole.rendered = function () {
   AdventureStates.find({_id: instance.data.state._id}).observeChanges({
     changed: function (id, fields) {
       //console.log("Adventure State changed: ", _.keys(fields));
-      if(_.contains(_.keys(fields), "url")){
-        console.log("AdventureConsole: checking current location against updated url ", fields.url);
+      if(_.contains(_.keys(fields), "url") || _.contains(_.keys(fields), "title")){
+        //console.log("AdventureConsole: checking current location", fields);
         setTimeout(function () {
           NodeSearch.checkAdventureLocation(instance);
         }, 100);

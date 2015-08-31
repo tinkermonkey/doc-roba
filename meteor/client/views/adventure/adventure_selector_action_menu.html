@@ -1,5 +1,5 @@
-<template name="AdventureSelectorCheckMenu">
-  <ul class="dropdown-menu adventure-selector-check-menu">
+<template name="AdventureSelectorActionMenu">
+  <ul class="dropdown-menu adventure-selector-action-menu">
     <li class="dropdown-submenu command-type" data-command-type="ready">
       <a href="#">Ready</a>
       <ul class="dropdown-menu">
@@ -54,6 +54,7 @@
         </li>
       </ul>
     </li>
+    {{debug "node" this.node}}
     {{#if node}}
       <li class="dropdown-submenu" data-command-type="action">
         <a href="#">Action</a>

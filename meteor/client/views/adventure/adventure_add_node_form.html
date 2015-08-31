@@ -6,15 +6,7 @@
       <tr>
         <td class="field-label">Parent Node</td>
         <td>
-          <div class="btn-select-parent">
-          {{#with record}}
-            {{#if parentId}}
-              {{> StandaloneNodeSnippet staticId=parentId projectVersionId=../adventure.projectVersionId}}
-            {{else}}
-              <i>click to select a parent node</i>
-            {{/if}}
-          {{/with}}
-          </div>
+          {{> EditableNodeSelector value=parentId projectVersionId=../adventure.projectVersionId dataKey="parentId" emptyText="Select Parent Node"}}
         </td>
       </tr>
       <tr>

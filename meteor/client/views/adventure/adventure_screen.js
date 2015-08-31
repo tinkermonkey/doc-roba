@@ -355,7 +355,7 @@ Template.AdventureScreen.events({
       .css("height", "1px")
       .css("visibility", "hidden");
   },
-  "click .adventure-selector-check-menu a": function (e, instance) {
+  "click .adventure-selector-action-menu a": function (e, instance) {
     // check for a data command
     var selector = this,
       item = $(e.target),
