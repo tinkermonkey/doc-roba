@@ -1,128 +1,125 @@
 <template name="AdventureScreen">
-  <div style="min-height: 100%;">
-    <div class="live-adventure-view">
-      {{#if state.url}}
-        <div class="live-adventure-header">
-          {{#with state}}
-          <h4>{{title}}</h4>
-          <div>{{url}}</div>
-          <div>
-            <small>viewport is {{viewportSize.width}}px x {{viewportSize.height}}px,</small>
-            <small>scrolled to ({{scroll.x}}, {{scroll.y}})</small>
-            <small>Mouse at ({{mouse.x}}, {{mouse.y}})</small>
-          </div>
-          {{/with}}
+  <div class="live-adventure-view">
+    {{#if state.url}}
+      <div class="live-adventure-header">
+        {{#with state}}
+        <h4>{{title}}</h4>
+        <div>{{url}}</div>
+        <div>
+          <small>viewport is {{viewportSize.width}}px x {{viewportSize.height}}px,</small>
+          <small>scrolled to ({{scroll.x}}, {{scroll.y}})</small>
+          <small>Mouse at ({{mouse.x}}, {{mouse.y}})</small>
         </div>
-        <div class="live-adventure-toolbar">
-            {{> AdventureToolbar fullContext}}
-        </div>
-          {{#if getCheckResult}}
-            {{#with getCheckResult}}
-              <div class="well">
-                {{> AdventureSelectorResult }}
-                {{#each selectors}}
-                  {{> AdventureSelectorResult }}
-                {{/each}}
-              </div>
-            {{/with}}
-          {{/if}}
-      {{/if}}
-
-      {{#if state.screenshot}}
-        {{updateViewport}}
-        <img class="remote-screen" src="data:image/png;base64,{{state.screenshot}}">
-      {{else}}
-        <div class="remote-screen remote-screen-loading">
-          <div class="remote-screen-loading-log">
-            {{> AdventureLogEmbedded }}
-          </div>
-          {{#unless adventureIsStill }}
-            {{> CustomSpinner}}
-          {{/unless}}
-        </div>
-      {{/if}}
-
-      <div class="remote-screen-mask" style="{{#with getScreenMaskPosition}}top: {{top}}px; left: {{left}}px; height: {{height}}px; width: {{width}}px;{{/with}}">
-        {{#with getMousePosition}}
-          <div class="remote-screen-pointer" style="top: {{y}}px; left: {{x}}px;">
-            <span class="glyphicon glyphicon-screenshot"></span>
-          </div>
         {{/with}}
-
-          <div class="adventure-hover-element-highlight" style="visibility: hidden;"></div>
-
-        {{> AdventureHoverControls fullContext}}
-
-        {{#each getHighlightElements}}
-          {{#with processHighlightElement}}
-            {{> AdventureHighlightElement }}
-          {{/with}}
-        {{/each}}
-
-        {{#each getPreviewElements}}
-          {{#each getPreviewMatches}}
-            {{#with processHighlightElement}}
-              {{> AdventurePreviewElement }}
-            {{/with}}
-          {{/each}}
-        {{/each}}
       </div>
+      <div class="live-adventure-toolbar">
+          {{> AdventureToolbar fullContext}}
+      </div>
+        {{#if getCheckResult}}
+          {{#with getCheckResult}}
+            <div class="well">
+              {{> AdventureSelectorResult }}
+              {{#each selectors}}
+                {{> AdventureSelectorResult }}
+              {{/each}}
+            </div>
+          {{/with}}
+        {{/if}}
+    {{/if}}
+    {{#if state.screenshot}}
+      {{updateViewport}}
+      <img class="remote-screen" src="data:image/png;base64,{{state.screenshot}}">
+    {{else}}
+      <div class="remote-screen remote-screen-loading">
+        <div class="remote-screen-loading-log">
+          {{> AdventureLogEmbedded }}
+        </div>
+        {{#unless adventureIsStill }}
+          {{> CustomSpinner}}
+        {{/unless}}
+      </div>
+    {{/if}}
+
+    <div class="remote-screen-mask" style="{{#with getScreenMaskPosition}}top: {{top}}px; left: {{left}}px; height: {{height}}px; width: {{width}}px;{{/with}}">
+      {{#with getMousePosition}}
+        <div class="remote-screen-pointer" style="top: {{y}}px; left: {{x}}px;">
+          <span class="glyphicon glyphicon-screenshot"></span>
+        </div>
+      {{/with}}
+
+        <div class="adventure-hover-element-highlight" style="visibility: hidden;"></div>
+
+      {{> AdventureHoverControls fullContext}}
 
       {{#each getHighlightElements}}
         {{#with processHighlightElement}}
-          {{> AdventureHighlightDetail }}
+          {{> AdventureHighlightElement }}
         {{/with}}
       {{/each}}
 
       {{#each getPreviewElements}}
         {{#each getPreviewMatches}}
           {{#with processHighlightElement}}
-            {{> AdventurePreviewDetail }}
+            {{> AdventurePreviewElement }}
           {{/with}}
         {{/each}}
       {{/each}}
+    </div>
 
-      <div class="adventure-highlight-list" style="top: {{getListTop}}px;">
-        {{#if getHighlightElements ..}}
-          <div class="">
-            <table class="table table-striped">
-              <caption>Matched Elements</caption>
-              <tbody>
-              {{#each getHighlightElements}}
-                <tr>
-                  <td>{{index}}</td>
-                  <td>
-                    <span class="glyphicon glyphicon-chevron-down pull-right detail-toggle"></span>
-                    <div class="adventure-highlight-list-row-header">
-                      &lt;<span class="clickable tag">{{tag}}</span>
-                        {{#each attributes}}
-                          <span class="attr">{{name}}</span>="{{#each splitValues ..}}<span class="clickable value">{{value}}</span>{{#unless last}} {{/unless}}{{/each}}"
-                        {{/each}}&gt;
-                    </div>
+    {{#each getHighlightElements}}
+      {{#with processHighlightElement}}
+        {{> AdventureHighlightDetail }}
+      {{/with}}
+    {{/each}}
 
-                    <div class="adventure-highlight-list-row-detail">
-                      <div class="">
-                        <h4>Selectors</h4>
-                          {{#each selectors}}
-                            <div>
-                              {{this}}
-                              <span class="label label-success">Matched a single element</span>
-                            </div>
-                          {{/each}}
-                        <h4>Text</h4>
-                        <div>{{text}}</div>
-                        <h4>HTML</h4>
-                        <div>{{html}}</div>
-                      </div>
+    {{#each getPreviewElements}}
+      {{#each getPreviewMatches}}
+        {{#with processHighlightElement}}
+          {{> AdventurePreviewDetail }}
+        {{/with}}
+      {{/each}}
+    {{/each}}
+
+    <div class="adventure-highlight-list" style="top: {{getListTop}}px;">
+      {{#if getHighlightElements ..}}
+        <div class="">
+          <table class="table table-striped">
+            <caption>Matched Elements</caption>
+            <tbody>
+            {{#each getHighlightElements}}
+              <tr>
+                <td>{{index}}</td>
+                <td>
+                  <span class="glyphicon glyphicon-chevron-down pull-right detail-toggle"></span>
+                  <div class="adventure-highlight-list-row-header">
+                    &lt;<span class="clickable tag">{{tag}}</span>
+                      {{#each attributes}}
+                        <span class="attr">{{name}}</span>="{{#each splitValues ..}}<span class="clickable value">{{value}}</span>{{#unless last}} {{/unless}}{{/each}}"
+                      {{/each}}&gt;
+                  </div>
+
+                  <div class="adventure-highlight-list-row-detail">
+                    <div class="">
+                      <h4>Selectors</h4>
+                        {{#each selectors}}
+                          <div>
+                            {{this}}
+                            <span class="label label-success">Matched a single element</span>
+                          </div>
+                        {{/each}}
+                      <h4>Text</h4>
+                      <div>{{text}}</div>
+                      <h4>HTML</h4>
+                      <div>{{html}}</div>
                     </div>
-                  </td>
-                </tr>
-              {{/each}}
-              </tbody>
-            </table>
-          </div>
-        {{/if}}
-      </div>
+                  </div>
+                </td>
+              </tr>
+            {{/each}}
+            </tbody>
+          </table>
+        </div>
+      {{/if}}
     </div>
   </div>
 </template>

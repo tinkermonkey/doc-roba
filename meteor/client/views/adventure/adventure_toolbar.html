@@ -13,13 +13,18 @@
               <span class="glyphicon glyphicon-remove"></span>
             </button>
             {{#unless adventureIsComplete adventure}}
-            <button type="button" class="btn btn-primary btn-refine">
-              <span class="glyphicon glyphicon-ok-circle"></span>
-            </button>
-            <button type="button" class="btn btn-primary btn-highlight">
-              <span class="glyphicon glyphicon-search"></span>
-            </button>
+              <button type="button" class="btn btn-primary btn-refine">
+                <span class="glyphicon glyphicon-ok-circle"></span>
+              </button>
+              <button type="button" class="btn btn-primary btn-highlight">
+                <span class="glyphicon glyphicon-search"></span>
+              </button>
             {{/unless}}
+            <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+              <span class="glyphicon glyphicon-plus"></span>
+              <span class="caret"></span>
+            </button>
+            {{> AdventureSelectorCheckMenu node=getCurrentNode }}
           </div>
         </div>
       </td>

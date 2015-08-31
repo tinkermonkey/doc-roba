@@ -6,7 +6,7 @@
     <span class="glyphicon {{#if isExpanded}}glyphicon-folder-open{{else}}glyphicon-folder-close{{/if}}"></span>
     <span class="test-case-list-title">{{title}}</span>
   </div>
-  <div class="{{#unless isExpanded}}hide{{/unless}}" style="margin-left: 10px;" data-group-id="{{staticId}}">
+  <div class="test-case-list-group-items {{#unless isExpanded}}hide{{/unless}}" style="margin-left: 10px;" data-group-id="{{staticId}}">
     {{#each getGroups}}
       {{> TestCaseListGroup }}
     {{/each}}

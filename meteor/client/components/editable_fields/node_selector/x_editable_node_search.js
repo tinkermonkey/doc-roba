@@ -22,6 +22,7 @@ Template.XEditableNodeSearch.events({
   "keyup .input-search, change .input-search": function (e, instance) {
     e.stopImmediatePropagation();
     var term = instance.$(".input-search").val().trim();
+    console.log("Node Selector:", term);
     instance.searchResults.set(NodeSearch.byTerm(term, instance.data.projectVersionId));
   },
   "click .list-group-item": function (e, instance) {

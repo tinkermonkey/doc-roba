@@ -1,0 +1,15 @@
+<template name="TestRunItem">
+  <div class="test-run-item test-run-item-type-{{type}}" data-pk="{{_id}}" data-order="{{order}}">
+    <div class="test-run-item-title no-select">
+      <span class="glyphicon {{getItemIcon}}"></span>
+    </div>
+    <div class="test-run-item-body-container">
+      <div class="test-run-item-body">
+        <div class="test-run-item-body-content">
+          {{> Template.dynamic template=getItemTemplate }}
+        </div>
+      </div>
+    </div>
+    <div class="test-run-item-delete"><span class="glyphicon glyphicon-remove"></span></div>
+  </div>
+</template>

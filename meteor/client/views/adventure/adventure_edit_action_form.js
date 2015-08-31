@@ -46,7 +46,7 @@ Template.AdventureEditActionForm.created = function () {
  */
 Template.AdventureEditActionForm.rendered = function () {
   var instance = Template.instance();
-  Tabs.init(instance).activateFirst(instance);
+  //Tabs.init(instance).activateFirst(instance);
 };
 
 /**

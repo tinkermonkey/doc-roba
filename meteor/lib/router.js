@@ -138,8 +138,9 @@ Router.map(function () {
     },
     waitOn: function () { return [
       Meteor.subscribe("test_cases", this.params.projectId, this.params._id),
+      Meteor.subscribe("test_groups", this.params.projectId, this.params._id),
       Meteor.subscribe("test_run_templates", this.params.projectId, this.params._id),
-      Meteor.subscribe("test_run_template_tests", this.params.projectId, this.params._id)
+      Meteor.subscribe("test_run_template_items", this.params.projectId, this.params._id)
     ]; }
   });
   this.route("driver_command_list", {

@@ -40,6 +40,7 @@ Template.TestCaseListGroup.rendered = function () {
   var instance = Template.instance();
 
   // make this draggable
+  /*
   instance.$(".test-case-list-selectable").draggable({
     revert: "invalid",
     axis: "y",
@@ -51,8 +52,10 @@ Template.TestCaseListGroup.rendered = function () {
       ui.helper.removeClass("in-drag");
     }
   });
+  */
 
   // make this droppable
+  /*
   instance.$(".test-case-list-group").droppable({
     greedy: true,
     hoverClass: "test-case-list-drop-hover",
@@ -90,6 +93,7 @@ Template.TestCaseListGroup.rendered = function () {
       return dragParentId !== targetId && !isChild;
     }
   });
+  */
 };
 
 /**

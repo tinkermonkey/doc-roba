@@ -47,25 +47,33 @@ Meteor.startup(function () {
 
       Meteor.log.debug("deleteNode: " + nodeId);
       if(nodeId){
-        // Setup the query to get all of the actions connecting to this node
-        var nodeActionQuery = {
-          $or: [
-            { source: nodeId },
-            { source: nodeId }
-          ]
-        };
+        var node = Nodes.findOne(nodeId),
+          actionRemoveList = [];
 
-        // Get all of the actions connected to this and remove all of the commands from them
-        Actions.find(nodeActionQuery).forEach(function (a) {
-          Commands.find({actionId: a._id}).forEach(function (c) {
-            RecordChanges.remove({collection: "commands", recordId: c._id});
-          });
-          Commands.remove({actionId: a._id});
+        check(node, Object);
+        check(node._id, String);
+
+        // Get all of the from this node
+        Actions.find({ nodeId: node.staticId, projectVersionId: node.projectVersionId }).forEach(function (a) {
           RecordChanges.remove({collection: "actions", recordId: a._id});
+          actionRemoveList.push(a._id);
+        });
+
+        // Find all of the actions which lead to this node and remove the routes
+        Actions.find({ "routes.nodeId": node.staticId, projectVersionId: node.projectVersionId  }).forEach(function (a) {
+          // if the action only leads
+          var otherRoutes = a.routes.filter(function (route) { return route.nodeId !== node.staticId});
+          if(!otherRoutes.length){
+            RecordChanges.remove({collection: "actions", recordId: a._id});
+            actionRemoveList.push(a._id);
+          } else {
+            // update the action to remove the route
+            Actions.update({_id: a._id}, { $pull: { routes: { nodeId: node.staticId } } });
+          }
         });
 
         // remove all of the actions which link to this node
-        Actions.remove(nodeActionQuery);
+        Actions.remove({ _id: {$in: actionRemoveList} });
 
         // Remove all of the documentation for this node
 

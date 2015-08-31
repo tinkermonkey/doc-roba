@@ -29,8 +29,6 @@ Template.TestRunTemplateList.events({
       itemName = $(".add-item-form input").val().trim(),
       version = instance.data.version;
 
-    console.log("Add Item: ", itemType, itemName);
-
     if(itemType && itemName && itemName.length){
       TestRunTemplates.insert({
         projectId: version.projectId,
@@ -46,9 +44,9 @@ Template.TestRunTemplateList.events({
       });
     }
   },
-  "click .test-case-list-item": function (e, instance) {
-    var selectable = $(e.target).closest(".test-case-list-item");
-    instance.$(".test-case-list-item.selected").removeClass("selected");
+  "click .test-run-template-list-item": function (e, instance) {
+    var selectable = $(e.target).closest(".test-run-template-list-item");
+    instance.$(".test-run-template-list-item.selected").removeClass("selected");
     selectable.addClass("selected");
 
     $(".test-case-content").addClass("intro-slide-left");
@@ -73,8 +71,17 @@ Template.TestRunTemplateList.rendered = function () {
   var instance = Template.instance();
 
   // make all of the test case list elements draggable
-  instance.$(".test-case-list-selectable").draggable({
-    revert: "invalid"
+  instance.$(".test-run-template-list-item").draggable({
+    revert: "invalid",
+    distance: 5,
+    helper: "clone",
+    connectToSortable: ".test-run-item-list",
+    start: function (event, ui) {
+      ui.helper.addClass("in-drag");
+    },
+    stop: function (event, ui) {
+      ui.helper.removeClass("in-drag");
+    }
   });
 };
 

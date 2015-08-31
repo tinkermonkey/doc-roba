@@ -4,6 +4,22 @@
 $.fn.editable.defaults.mode = "inline";
 
 /**
+ * Listen for resize events
+ */
+Meteor.startup(function(){
+  var self = {};
+  Session.set("resize", { timestamp: Date.now(), width: window.innerWidth, height: window.innerHeight });
+  $(window).resize(function(event) {
+    if(this.resizeTimeout){
+      clearTimeout(this.resizeTimeout);
+    }
+    this.resizeTimeout = setTimeout(function(){
+      Session.set("resize", { timestamp: Date.now(), width: window.innerWidth, height: window.innerHeight });
+    }.bind(self), 250);
+  });
+});
+
+/**
  * Debug
  */
 Template.registerHelper("debug", function(){
@@ -13,6 +29,26 @@ Template.registerHelper("debug", function(){
     });
   } else {
     console.log("Debug: ", this);
+  }
+});
+
+/**
+ * Get a screen size relative height value
+ */
+Template.registerHelper("relativeHeight", function(proportion){
+  if(proportion){
+    var screenSize = Session.get("resize");
+    if(screenSize.height){
+      return parseInt(parseFloat(proportion) * screenSize.height);
+    }
+  }
+});
+Template.registerHelper("relativeWidth", function(proportion){
+  if(proportion){
+    var screenSize = Session.get("resize");
+    if(screenSize.width){
+      return parseInt(parseFloat(proportion) * screenSize.width);
+    }
   }
 });
 
@@ -346,20 +382,4 @@ Template.registerHelper("getLogDataTemplate", function (data) {
 
 Template.registerHelper("stringify", function () {
   return JSON.stringify(this);
-});
-
-/**
- * Listen for resize events
- */
-Meteor.startup(function(){
-  var self = {};
-  Session.set("resize", { timestamp: Date.now(), width: window.innerWidth, height: window.innerHeight });
-  $(window).resize(function(event) {
-    if(this.resizeTimeout){
-      clearTimeout(this.resizeTimeout);
-    }
-    this.resizeTimeout = setTimeout(function(){
-      Session.set("resize", { timestamp: Date.now(), width: window.innerWidth, height: window.innerHeight });
-    }.bind(self), 250);
-  });
 });

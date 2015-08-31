@@ -13,7 +13,8 @@ Schemas.UrlParameter = new SimpleSchema({
   },
   // the value identifying this node
   value: {
-    type: String
+    type: String,
+    optional: true
   }
 });
 

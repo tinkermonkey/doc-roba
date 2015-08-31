@@ -1,11 +1,4 @@
 /**
- * AdventureContext
- *
- * Created by austinsand on 3/28/15
- *
- */
-
-/**
  * Template Helpers
  */
 Template.AdventureContext.helpers({
@@ -33,7 +26,7 @@ Template.AdventureContext.helpers({
           matchCount++;
           match = result;
         }
-        console.log("searchNodes: ", result.node.title, result.url.match, result.params.match, result.title.match);
+        //console.log("searchNodes: ", result.node.title, result.url.match, result.params.match, result.title.match);
       });
 
       if(matchCount == 1 && match){
@@ -51,6 +44,18 @@ Template.AdventureContext.helpers({
         return results;
       }
     }
+  },
+  isMatch: function (node, data) {
+    if(node && data){
+      var result = NodeSearch.compareNode(data.state.url, data.state.title, node);
+      return result.url.match && result.params.match && result.title.match;
+    }
+  },
+  nodeComparison: function (node, data) {
+    if(node && data) {
+      var result = NodeSearch.compareNode(data.state.url, data.state.title, node);
+      return result;
+    }
   }
 });
 
@@ -58,6 +63,12 @@ Template.AdventureContext.helpers({
  * Template Event Handlers
  */
 Template.AdventureContext.events({
+  "edited .editable-node-selector": function (e, instance, newValue) {
+    if(newValue){
+      console.log("Node Selected: ", newValue);
+      instance.data.currentNode.set(newValue)
+    }
+  },
   "click .btn-add-node": function (e, instance) {
     // Transition the page layout
     $(".adventure-main-view, .adventure-sidebar").addClass("adventure-focus-form");
@@ -165,6 +176,48 @@ Template.AdventureContext.events({
         Dialog.error("Failed to find console from adventure context: " + e.message);
       }
     }
+  },
+  "edited .node-edit-form .editable": function (e, instance, newValue) {
+    e.stopImmediatePropagation();
+    var target = $(e.target),
+      dataKey = target.attr("data-key"),
+      update = {$set: {}};
+
+    console.log("update: ", dataKey, instance.data._id);
+    if(dataKey){
+      update["$set"][dataKey] = newValue;
+      //console.log("Edited: ", dataKey, newValue, node);
+      Nodes.update(instance.data._id, update, function (error) {
+        if(error){
+          Meteor.log.error("Failed to update node value: " + error.message);
+          Dialog.error("Failed to update node value: " + error.message);
+        }
+      });
+    } else {
+      Meteor.log.error("Failed to update node value: data-key not found");
+      Dialog.error("Failed to update node value: data-key not found");
+    }
+  },
+  "click .btn-preview": function (e, instance) {
+    var field = $(e.target).closest(".btn").attr("data-field"),
+      node = this,
+      adventureContext = Template.parentData(1);
+    console.log("Preview: ", field);
+
+    // send the command to get information about the "clicked" element
+    if(field && node[field] && _.contains([AdventureStatus.awaitingCommand], adventureContext.adventure.status)){
+      AdventureCommands.insert({
+        projectId: adventureContext.adventure.projectId,
+        adventureId: adventureContext.adventure._id,
+        updateState: false,
+        code: "driver.previewCode(\"" + btoa(node[field]) + "\");"
+      }, function (error) {
+        if(error){
+          Meteor.log.error("Error adding adventure command: " + error.message);
+          Dialog.error("Error adding adventure command: " + error.message);
+        }
+      });
+    }
   }
 });
 
@@ -179,15 +232,15 @@ Template.AdventureContext.created = function () {
  */
 Template.AdventureContext.rendered = function () {
   var instance = Template.instance();
-  instance.autorun(function () {
-    var nodeId = instance.data.currentNode.get();
-    if(nodeId){
-      setTimeout(function () {
-        console.log("AdventureContext init tabs");
-        Tabs.init(instance);
-      }, 250);
-    }
+
+  // Enable the popover hint for the wrong-node button
+  instance.$(".btn-wrong-node").popover({
+    placement: 'left',
+    trigger: 'hover',
+    html: true,
+    delay: 500
   });
+
 };
 
 /**

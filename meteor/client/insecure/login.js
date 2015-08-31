@@ -17,6 +17,8 @@ Template.Login.events({
       .classed("slide-right", true);
     d3.selectAll(".login-container")
       .classed("login-expand", true);
+    document.title = "DocRoba :: Sign Up";
+    document.location.search = "?SignUp";
   },
 
   /**
@@ -28,6 +30,8 @@ Template.Login.events({
       .classed("slide-right", false);
     d3.selectAll(".login-container")
       .classed("login-expand", false);
+    document.title = "DocRoba :: Login";
+    document.location.search = "";
   },
 
   /**

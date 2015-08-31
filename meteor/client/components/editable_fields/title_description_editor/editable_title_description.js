@@ -20,7 +20,7 @@ Template.EditableTitleDescription.created = function () {
  */
 Template.EditableTitleDescription.rendered = function () {
   var instance = this;
-  console.log("EditableTitleDescription: ", instance.data);
+
   instance.$(".editable-title-description").editable({
     type: "titleDescriptionEditor",
     mode: instance.data.mode || "popup",
@@ -40,7 +40,6 @@ Template.EditableTitleDescription.rendered = function () {
 
   instance.autorun(function () {
     var data = Template.currentData();
-    console.log("EditableTitleDescription autorun: ", data);
     instance.$(".editable-title-description").editable("setValue", data.value);
   });
 

@@ -289,14 +289,15 @@ TestResultCodes = {
 TestResultCodesLookup = _.invert(TestResultCodes);
 
 /**
- *
+ * Types of test run items
  */
-TestRunTemplateItemTypes = {
+TestRunItemTypes = {
   template: 0,
   stage: 1,
-  test: 2
+  test: 2,
+  testGroup: 3
 };
-TestRunTemplateItemTypesLookup = _.invert(TestRunTemplateItemTypes);
+TestRunItemTypesLookup = _.invert(TestRunItemTypes);
 
 /**
  * Screenshot Keys

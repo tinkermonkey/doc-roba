@@ -1,15 +1,100 @@
 <template name="AdventureContext">
-  {{#unless adventureIsStill}}
-    <div style="height: 200px; position: absolute; width: 100%;">
-      {{> CustomSpinner }}
-    </div>
-  {{/unless}}
   {{#if getNode}}
     {{#with getNode}}
-      {{> AdventureEditNodeForm }}
+      <div class="node-edit-form {{#unless adventureIsStill ../adventure}}hide{{/unless}}">
+        <div class="btn btn-warning pull-right btn-wrong-node"
+             data-toggle="popover"
+             data-trigger="focus"
+             data-content="This is not the correct node"
+          >X</div>
+        <div>
+          {{#unless isMatch this ..}}
+            <div class="alert alert-warning">
+              The current node does <i>not</i> match the data below:
+              {{#with nodeComparison this ..}}
+                {{#unless title.match}}
+                  <div>
+                    <span class="dark-blue">title: </span>
+                    {{#each title.pieces}}
+                      <span
+                        class="inline-block node-search-result node-search-{{renderLookup "NodeSearchStatusLookup" status}}"
+                        data-toggle="popover"
+                        data-trigger="focus"
+                        data-content="{{renderLookup "NodeSearchStatusLookup" status}}: {{value}}"
+                        >{{value}}</span>
+                    {{/each}}
+                  </div>
+                {{/unless}}
+                {{#unless url.match}}
+                  <div>
+                    <span class="dark-blue">url: </span>
+                    <span>
+                      {{#each url.pieces}}
+                        <div class="inline-block">
+                          /<span
+                          class="node-search-result node-search-{{renderLookup "NodeSearchStatusLookup" status}}"
+                          data-toggle="popover"
+                          data-trigger="focus"
+                          data-content="{{renderLookup "NodeSearchStatusLookup" status}}: {{value}}"
+                          >{{value}}</span>
+                        </div>
+                      {{/each}}
+                    </span>
+                  </div>
+                {{/unless}}
+                {{#unless params.match}}
+                  <div>
+                    <span class="dark-blue align-top">parameters: </span>
+                    <div class="inline-block">
+                      {{#each params.pieces}}
+                        <div
+                          class="node-search-result node-search-{{renderLookup "NodeSearchStatusLookup" status}}"
+                          data-toggle="popover"
+                          data-trigger="focus"
+                          data-content="{{renderLookup "NodeSearchStatusLookup" status}}: {{value.param}}{{#if value.value}}={{value.value}}{{/if}}"
+                          >{{value.param}}{{#if value.value}}={{value.value}}{{/if}}</div>
+                      {{/each}}
+                    </div>
+                  </div>
+                {{/unless}}
+              {{/with}}
+            </div>
+          {{/unless}}
+        </div>
+        <table>
+          <tr>
+            <td class="field-label">Type: </td>
+            <td>{{> EditableNodeType cssClass="inline-block" pageView=true value=type dataKey="type" emptyText="Select a node type" }}</td>
+          </tr>
+          <tr>
+            <td class="field-label">Name: </td>
+            <td>{{> EditableTextField cssClass="inline-block" value=title dataKey="title" emptyText="none"}}</td>
+          </tr>
+          <tr>
+            <td class="field-label">Page Title: </td>
+            <td>{{> EditableTextField cssClass="inline-block" value=pageTitle dataKey="pageTitle" emptyText="none"}}</td>
+          </tr>
+          <tr>
+            <td class="field-label">Nav Menus: </td>
+            <td>
+              {{> EditableNavMenuList projectVersionId=projectVersionId value=navMenus dataKey="navMenus" }}
+            </td>
+          </tr>
+          <tr>
+            <td class="field-label">Base Url: </td>
+            <td>{{> EditableTextField cssClass="inline-block" value=url dataKey="url" emptyText="none"}}</td>
+          </tr>
+        </table>
+        <div>
+          {{> edit_node_url_parameters }}
+        </div>
+      </div>
     {{/with}}
   {{else}}
     <div class="{{#unless adventureIsStill}}hide{{/unless}}">
+      <div class="full-width align-center">
+        {{> EditableNodeSelector dataKey="currentNode" emptyText="Select Node" projectVersionId=adventure.projectVersionId}}
+      </div>
       <div class="full-width align-center">
         <button class="btn btn-primary btn-add-node" data-type="page">Add Node</button>
       </div>

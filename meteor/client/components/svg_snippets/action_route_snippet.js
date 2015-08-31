@@ -14,9 +14,7 @@ Template.ActionRouteSnippet.helpers({
     return Template.instance().scale.get();
   },
   xMargin: function () {
-    var scale = Template.instance().scale.get(),
-      width = DocTreeConfig.nodes.width * 3 * scale + DocTreeConfig.standalone.margin * 2;
-    return (width - DocTreeConfig.nodes.width * scale) / 2;
+    return DocTreeConfig.standalone.margin;
   },
   yMargin: function () {
     return DocTreeConfig.standalone.margin;

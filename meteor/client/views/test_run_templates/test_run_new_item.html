@@ -1,0 +1,14 @@
+<template name="TestRunNewItem">
+  <div class="test-run-new-item test-run-item-type-{{type}}" style="{{#if width}}width: {{width}};{{/if}}" data-type="{{type}}">
+    <div class="test-run-item-title no-select">
+      <span class="glyphicon glyphicon-plus"></span>
+    </div>
+    <div class="test-run-item-body-container">
+      <div class="test-run-item-body">
+        <div class="test-run-item-body-content">
+          Add {{ renderLookup "TestRunItemTypesLookup" type }}
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

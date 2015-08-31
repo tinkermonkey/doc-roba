@@ -6,15 +6,71 @@
 }
 
 /**
+ * Test run list
+ */
+.test-run-template-list-header {
+  padding: 10px 0 10px 10px;
+}
+
+.test-run-template-list {
+  padding: 15px 0 15px 15px;
+}
+
+.test-run-template-list-item {
+  width: 100%;
+  cursor: pointer;
+  padding: 5px;
+  margin: 0;
+  border-radius: 10px;
+  transition: background-color 0.1s;
+  -webkit-transition: background-color 0.1s;
+}
+
+.test-run-template-list-item:hover {
+  background-color: #dddddd;
+}
+
+.test-run-template-list-item.selected {
+  color: #fff;
+  background-color: #0A7BFF;
+  background-image: url('/roba_stripe.svg');
+  background-repeat: no-repeat;
+  background-position: 105% 0%;
+  background-size: contain;
+}
+
+.test-run-template-list-item.highlight {
+  background-color: #ffff00;
+}
+
+.test-run-template-list-item.in-drag {
+  color: #000 !important;
+  opacity: 0.75;
+  background-color: #ffffff !important;
+  background-image: none !important;
+}
+
+.test-run-template-list-title {
+  padding-left: 5px;
+}
+
+/**
  * Test run items
  */
 .test-run-item {
   padding: 2px;
-  min-height: 75px;
   border-radius: 10px;
   position: relative;
   width: 100%;
   margin-bottom: 5px;
+}
+
+.test-run-new-item {
+  padding: 2px;
+  border-radius: 10px;
+  position: relative;
+  margin-bottom: 5px;
+  cursor: pointer;
 }
 
 .test-run-item-error {
@@ -22,7 +78,7 @@
 }
 
 .test-run-item-type-0 {
-  background-color: #0A7BFF;
+  background-color: #9701ff;
 }
 
 .test-run-item-type-1 {
@@ -30,7 +86,7 @@
 }
 
 .test-run-item-type-2 {
-  background-color: #9701ff;
+  background-color: #0A7BFF;
 }
 
 .test-run-item-type-3 {
@@ -43,48 +99,54 @@
 
 .test-run-item-title {
   color: #fff;
-  transform: rotate(-90deg);
-  transform-origin: left bottom;
-  -webkit-transform: rotate(-90deg);
-  -webkit-transform-origin: left bottom;
-  float: left;
-  position: absolute;
-  height: 15px;
-  width: 68px;
-  bottom: 5px;
-  left: 15px;
   cursor: pointer;
+  display: table-cell;
+  height: 100%;
+  vertical-align: bottom;
+  padding: 3px;
+  padding-bottom: 0;
 }
 
 .test-run-item-body-container {
   width: 100%;
-  padding-left: 20px;
+  display: table-cell;
 }
 
 .test-run-item-body {
   background-color: #fff;
   border-radius: 8px;
   padding: 5px;
-  min-height: 71px;
   width: 100%;
   height: 100%;
+  text-align: left;
+}
+
+.test-run-item:hover > .test-run-item-body-container > .test-run-item-body {
+  background-color: #efefef;
+}
+
+.test-run-new-item .test-run-item-body {
+  width: auto;
+  min-height: 0;
 }
 
 .test-run-item-body-content {
   width: 100%;
   height: 100%;
-  text-align: center;
+  padding-left: 10px;
 }
 
 .test-run-item-delete {
   font-size: 10px;
-  float: right;
   background-color: inherit;
   color: #fff;
-  padding: 0 4px 2px 4px;
+  padding: 2px 4px;
   border-top-right-radius: 7px;
   border-bottom-left-radius: 8px;
   cursor: pointer;
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 .test-run-item-delete:hover {
@@ -95,4 +157,69 @@
   border-radius: 10px;
   border: 2px solid #dddddd;
   margin-bottom: 5px;
+}
+
+.test-run-add-item-list {
+  margin-bottom: 0px;
+}
+
+.test-run-item-list {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.test-run-item-list-placeholder {
+  background-color: #CCCCCC;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+/**
+ * Test run item details
+ */
+.test-run-item-stage-title {
+  display: block;
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+
+.test-run-item-test-case-breadcrumb {
+  margin: 0;
+  padding-left: 0px;
+  background-color: transparent;
+}
+
+.test-run-item-test-case-breadcrumb li {
+  vertical-align: top;
+}
+
+/**
+ * Test run item group
+ */
+.breadcrumb > li + li.test-group-info:before {
+  padding: 0;
+  content: " ";
+}
+
+.test-group-info {
+  color: #0A7BFF;
+}
+
+.test-group-expander {
+  display: inline-block;
+  vertical-align: top;
+  -webkit-transform: rotate(90deg);
+  transform: rotate(90deg);
+  -webkit-transition: -webkit-transform 0.2s;
+  transition: transform 0.2s;
+}
+
+.test-group-expander.rotate {
+  -webkit-transform: rotate(180deg);
+  transform: rotate(180deg);
+}
+
+.test-group-test-list {
+  display: none;
+  margin-top: 10px;
 }

@@ -27,6 +27,7 @@
         </div>
 
         {{> TestRunTemplateList }}
+        {{> TestCaseList project=project version=version connectToSortable=".test-run-item-list" }}
       </div>
       <div class="test-case-content auto-transition auto-slide-left intro-slide-left">
         {{#if hasTestRun}}

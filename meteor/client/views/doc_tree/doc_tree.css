@@ -46,6 +46,10 @@
   fill: #5bc0de;
 }
 
+.node-email {
+  fill: #fecbff;
+}
+
 .node-selected {
   stroke: #efff29;
   filter: url(#node-hover);

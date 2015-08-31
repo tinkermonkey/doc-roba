@@ -21,7 +21,6 @@ Template.layout.created = function () {
 Template.layout.rendered = function () {
   this.find('#page')._uihooks = {
     insertElement: function(node, next) {
-      console.log("insertElement");
       $(node)
         .hide()
         .insertBefore(next)

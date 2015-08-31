@@ -1,0 +1,72 @@
+.accordion {
+
+}
+
+.accordion-group {
+  background-color: #298cff;
+  border-radius: 10px;
+  padding: 0 10px 0 25px;
+  margin: 3px 0;
+}
+
+.accordion-icon {
+  color: #fff;
+  float: left;
+  margin-left: -18px;
+  margin-top: 7px;
+}
+
+.accordion-content {
+  width: 100%;
+  padding-bottom: 2px;
+}
+
+.accordion-heading {
+  padding: 5px;
+  cursor: pointer;
+  font-size: 1.2em;
+  color: #fff;
+}
+
+.accordion-heading:hover {
+  border-radius: 10px;
+}
+
+.accordion-inner {
+  display: none;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 10px;
+}
+
+.accordion-inner.display {
+  display: block;
+}
+
+.accordion-grey {
+  background-color: rgb(165, 165, 165);
+}
+
+.accordion-orange {
+  background-color: #ff8400;
+}
+
+.accordion-green {
+  background-color: #5cb85c;
+}
+
+.accordion-purple {
+  background-color: #ca80ff;
+}
+
+.accordion-light-blue {
+  background-color: #5bc0de;
+}
+
+.accordion-pink {
+  background-color: #fecbff;
+}
+
+.accordion-yellow {
+  background-color: #efff29;
+}

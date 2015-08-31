@@ -37,13 +37,11 @@ Template.AdventureMap.created = function () {
 
   // subscribe to all of the nodes for this project version
   instance.subscribe("nodes", [instance.data.adventure.projectId, instance.data.adventure.projectVersionId], function () {
-    console.log("Nodes loaded: ", Nodes.find().count());
     instance.nodesLoaded.set(true);
   });
 
   // subscribe to all of the actions for this project version
   instance.subscribe("actions", [instance.data.adventure.projectId, instance.data.adventure.projectVersionId], function () {
-    console.log("Actions loaded: ", Actions.find().count());
     instance.actionsLoaded.set(true);
   });
 };

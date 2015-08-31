@@ -230,7 +230,7 @@ Template.AdventureScreen.events({
    * @param e
    * @param instance
    */
-  "click .adventure-highlight-hierarchy .clickable": function (e, instance) {
+  "click .adventure-highlight-hierarchy .clickable, click .adventure-highlight-hierarchy-content .clickable": function (e, instance) {
     var context = this,
       el = $(e.target),
       selectorElements = instance.selectorElements.get();
@@ -242,7 +242,7 @@ Template.AdventureScreen.events({
       index: context.index,
       attributes: []
     };
-    el.closest(".adventure-highlight-hierarchy").find(".selected").each(function (i, d) {
+    el.closest(".adventure-highlight-detail").find(".selected").each(function (i, d) {
       if($(d).hasClass("tag")){
         element.tag = $(d).text().trim();
       } else {
@@ -348,7 +348,6 @@ Template.AdventureScreen.events({
     }
   },
   "mouseleave .adventure-highlight-hierarchy": function (e, instance) {
-    //top: -100px; left: -100px; width: 150%; height: 150%;
     instance.$(".adventure-hover-element-highlight")
       .css("top", "50%")
       .css("left", "50%")
@@ -360,10 +359,12 @@ Template.AdventureScreen.events({
     // check for a data command
     var selector = this,
       item = $(e.target),
-      command = item.attr("data-command"),
-      commandType = item.closest(".command-type").attr("data-command-type");
+      command = item.closest("[data-command]").attr("data-command"),
+      commandType = item.closest("[data-command-type]").attr("data-command-type"),
+      nodeId = item.closest("[data-node-id]").attr("data-node-id"),
+      targetId = item.closest("[data-target-id]").attr("data-target-id");
 
-    console.log("Select: ", commandType, command, selector);
+    console.log("Select: ", commandType, command, nodeId, targetId, selector);
   }
 });
 
@@ -381,7 +382,6 @@ Template.AdventureScreen.created = function () {
   instance.lastClickLocation  = new ReactiveVar();
 
   instance.updateViewport = function () {
-    console.log("Updating viewport");
     var viewport = {
       width: $(".remote-screen").width(),
       height: $(".remote-screen").height(),
@@ -414,7 +414,6 @@ Template.AdventureScreen.rendered = function () {
     "result.highlightElements": {$exists: true}
   }, {sort: {dateCreated: -1}, limit: 1}).observe({
     addedAt: function (command) {
-      console.log("Command added: ", command);
       if(command && command.result && command.result.highlightElements){
         _.each(command.result.highlightElements, function (d, i) {d.index = i;});
         if(command.result.preview){
@@ -427,7 +426,6 @@ Template.AdventureScreen.rendered = function () {
       }
     },
     changedAt: function (command) {
-      console.log("Command changed: ", command);
       if(command && command.result && command.result.highlightElements){
         _.each(command.result.highlightElements, function (d, i) {d.index = i;});
         if(command.result.preview){

@@ -1,0 +1,37 @@
+<template name="AdventureSelectorActionTargetMenu">
+  {{#if getNavMenus}}
+    <ul class="dropdown-menu">
+      <li class="dropdown-submenu">
+        <a>Node</a>
+        <ul class="dropdown-menu" data-node-id="{{_id}}">
+          {{#each getActions}}
+            <li><a data-target-id="{{_id}}">{{title}}</a></li>
+          {{/each}}
+          <li role="separator" class="divider"></li>
+          <li><a data-target-id="newAction">New Action</a></li>
+        </ul>
+      </li>
+      <li role="separator" class="divider"></li>
+      {{#each getNavMenus}}
+        <li class="dropdown-submenu">
+          <a>{{title}}</a>
+          <ul class="dropdown-menu" data-node-id="{{_id}}">
+            {{#each getActions}}
+              <li><a data-target-id="{{_id}}">{{title}}</a></li>
+            {{/each}}
+            <li role="separator" class="divider"></li>
+            <li><a data-target-id="newAction">New Action</a></li>
+          </ul>
+        </li>
+      {{/each}}
+    </ul>
+  {{else}}
+    <ul class="dropdown-menu" data-node-id="{{_id}}">
+      {{#each getActions}}
+        <li><a data-target-id="{{_id}}">{{title}}</a></li>
+      {{/each}}
+      <li role="separator" class="divider"></li>
+      <li><a data-target-id="newAction">New Action</a></li>
+    </ul>
+  {{/if}}
+</template>

@@ -1,21 +1,16 @@
 <template name="TestRunTemplateItem">
-  <div class="test-run-item test-run-item-type-{{type}} {{#if error}}test-run-item-error{{/if}}" data-pk="{{_id}}" data-order="{{order}}">
+  <div class="test-run-item test-run-item-type-{{type}}" data-pk="{{_id}}" data-order="{{order}}">
     <div class="test-run-item-title no-select">
-      {{renderLookup "TestCaseStepTypesLookup" type}}
+      {{renderLookup "TestRunTem" type}}
     </div>
     <div class="test-run-item-delete"><span class="glyphicon glyphicon-remove"></span></div>
     <div class="test-run-item-body-container">
       <div class="test-run-item-body">
-        <div class="test-run-item-body-content auto-transition {{#if error}}hide{{/if}}">
+        <div class="test-run-item-body-content auto-transition">
           {{#with stepContext}}
             {{> Template.dynamic template=getStepTemplate }}
           {{/with}}
         </div>
-        {{#if error}}
-          <div class="align-center">
-            {{error}}
-          </div>
-        {{/if}}
       </div>
     </div>
   </div>

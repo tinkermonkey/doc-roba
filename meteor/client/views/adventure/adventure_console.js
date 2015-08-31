@@ -11,6 +11,12 @@ Template.AdventureConsole.helpers({
     this.showSearch  = instance.showSearch;
     return this;
   },
+  getCurrentNode: function () {
+    var nodeId = Template.instance().currentNode.get();
+    if(nodeId){
+      return Nodes.findOne({ staticId: nodeId, projectVersionId: this.adventure.projectVersionId });
+    }
+  },
   showSearch: function () {
     return this.showSearch.get();
   }
@@ -66,7 +72,8 @@ Template.AdventureConsole.rendered = function () {
   var instance = Template.instance();
 
   // initialize the tabs
-  Tabs.init(instance);
+  //Tabs.init(instance);
+  Accordion.init(instance);
 
   // pick up any updates to the last known node
   Adventures.find({_id: instance.data.adventure._id}).observeChanges({

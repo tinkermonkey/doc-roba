@@ -18,13 +18,13 @@ Meteor.startup(function () {
     }
     return [];
   });
-  Meteor.publish('test_run_template_tests', function (projectId, projectVersionId, templateId) {
-    console.log("Publish: test_run_templates");
+  Meteor.publish('test_run_template_items', function (projectId, projectVersionId) {
+    console.log("Publish: test_run_template_items");
     // check that there is a project role for the current user
-    if(this.userId && projectId && projectVersionId && templateId){
+    if(this.userId && projectId && projectVersionId){
       var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
       if(role){
-        return TestRunTemplateTests.find({projectVersionId: projectVersionId, testRunTemplateId: templateId});
+        return TestRunTemplateItems.find({projectVersionId: projectVersionId});
       }
     }
     return [];

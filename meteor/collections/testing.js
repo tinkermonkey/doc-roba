@@ -380,6 +380,13 @@ TestRunTemplates.deny({
  * ============================================================================
  */
 Schemas.TestRunTemplateItem = new SimpleSchema({
+  // Static ID field that will be constant across versions of the project
+  staticId: {
+    type: String,
+    index: true,
+    autoValue: autoValueObjectId,
+    denyUpdate: true
+  },
   // Link to the project to which this test belongs
   projectId: {
     type: String,
@@ -390,19 +397,24 @@ Schemas.TestRunTemplateItem = new SimpleSchema({
     type: String,
     denyUpdate: true
   },
-  // Link to the parent structure (template, stage) by staticId
-  parentId: {
+  // Link to the template
+  templateId: {
     type: String,
     denyUpdate: true
+  },
+  // Link to the parent structure (template, stage) by staticId
+  parentId: {
+    type: String
   },
   // Bind to the static Type constant
   type: {
     type: Number,
-    allowedValues: _.map(TestRunTemplateItemTypes, function (d) { return d; })
+    allowedValues: _.map(TestRunItemTypes, function (d) { return d; })
   },
   // Item order
   order: {
-    type: Number
+    type: Number,
+    decimal: true
   },
   // Item config
   config: {

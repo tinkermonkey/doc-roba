@@ -66,6 +66,10 @@
   background-size: contain;
 }
 
+.test-case-list-selectable.highlight {
+  background-color: #ffff00;
+}
+
 .test-case-list-selectable.in-drag {
   color: #000 !important;
   opacity: 0.75;

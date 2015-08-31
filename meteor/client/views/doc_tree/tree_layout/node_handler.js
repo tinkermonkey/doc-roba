@@ -95,17 +95,21 @@ TreeNodeHandler.prototype.addNode = function(parent, dir){
       break;
     case NodeTypes.platform:
       if(parent.config && parent.config.type){
-
+        if(parent.config.type == PlatformTypes.email){
+          config.type = NodeTypes.email;
+          config.title = "New Email";
+          break;
+        }
       } else {
         config.type = NodeTypes.page;
         config.title = "New Login";
+        break;
       }
-      break;
     default:
       if(dir === "right"){
         config.type = NodeTypes.view;
         config.title = "New View";
-      }if(dir === "nav"){
+      } else if(dir === "nav"){
         config.type = NodeTypes.navMenu;
         config.title = "New Nav Menu";
       } else {

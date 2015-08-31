@@ -1,7 +1,6 @@
 /**
  * Simple system for enabling bootstrap tabs
  */
-
 Tabs = {
   /**
    * Initialize the tab functionality

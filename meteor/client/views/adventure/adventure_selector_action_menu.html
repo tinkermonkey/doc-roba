@@ -1,8 +1,8 @@
 <template name="AdventureSelectorCheckMenu">
-  <ul class="dropdown-menu">
+  <ul class="dropdown-menu adventure-selector-check-menu">
     <li class="dropdown-submenu command-type" data-command-type="ready">
       <a href="#">Ready</a>
-      <ul class="dropdown-menu adventure-selector-check-menu">
+      <ul class="dropdown-menu">
         <li class="dropdown-submenu">
           <a>Wait For</a>
           <ul class="dropdown-menu">
@@ -17,7 +17,7 @@
     </li>
     <li class="dropdown-submenu command-type" data-command-type="valid">
       <a href="#">Valid</a>
-      <ul class="dropdown-menu adventure-selector-check-menu">
+      <ul class="dropdown-menu">
         <li class="dropdown-submenu">
           <a>Is</a>
           <ul class="dropdown-menu">
@@ -54,5 +54,44 @@
         </li>
       </ul>
     </li>
+    {{#if node}}
+      <li class="dropdown-submenu" data-command-type="action">
+        <a href="#">Action</a>
+        <ul class="dropdown-menu">
+          <li class="dropdown-submenu" data-command="leftClick">
+            <a>Left Click</a>
+            {{> AdventureSelectorActionTargetMenu node }}
+          </li>
+          <li class="dropdown-submenu" data-command="middleClick">
+            <a>Middle Click</a>
+            {{> AdventureSelectorActionTargetMenu node }}
+          </li>
+          <li class="dropdown-submenu" data-command="rightClick">
+            <a>Right Click</a>
+            {{> AdventureSelectorActionTargetMenu node }}
+          </li>
+          <li class="dropdown-submenu" data-command="doDoubleClick">
+            <a>Double Click</a>
+            {{> AdventureSelectorActionTargetMenu node }}
+          </li>
+          <li class="dropdown-submenu" data-command="hover">
+            <a>Hover</a>
+            {{> AdventureSelectorActionTargetMenu node }}
+          </li>
+          <li class="dropdown-submenu" data-command="setValue">
+            <a>Set Value</a>
+            {{> AdventureSelectorActionTargetMenu node }}
+          </li>
+          <li class="dropdown-submenu" data-command="addValue">
+            <a>Add Value</a>
+            {{> AdventureSelectorActionTargetMenu node }}
+          </li>
+          <li class="dropdown-submenu" data-command="addValue">
+            <a>Add Value</a>
+            {{> AdventureSelectorActionTargetMenu node }}
+          </li>
+        </ul>
+      </li>
+    {{/if}}
   </ul>
 </template>

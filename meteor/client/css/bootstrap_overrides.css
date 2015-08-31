@@ -5,6 +5,10 @@
   background-color: #298cff;
 }
 
+.btn {
+  border: none !important;
+}
+
 .btn-primary {
   background-color: #298cff;
   border-color: #247cd4;

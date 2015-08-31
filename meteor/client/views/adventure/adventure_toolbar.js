@@ -47,6 +47,12 @@ Template.AdventureToolbar.helpers({
 
       return xPath;
     }
+  },
+  getCurrentNode: function () {
+    var nodeId = this.currentNode.get();
+    if(nodeId){
+      return Nodes.findOne({ staticId: nodeId, projectVersionId: this.adventure.projectVersionId });
+    }
   }
 });
 

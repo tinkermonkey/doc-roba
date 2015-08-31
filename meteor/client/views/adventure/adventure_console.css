@@ -2,28 +2,20 @@
  * main console layout
  */
 .adventure-main-view {
-  float: left;
-  position: relative;
+  display: inline-block;
+  vertical-align: top;
   width: 60%;
-  -webkit-transition: width 0.25s;
-  transition: width 0.25s;
-  z-index: 1;
+  -webkit-transition: width 0.25s, height 0.25s;
+  transition: width 0.25s, height 0.25s;
 }
 
 .adventure-sidebar {
-  float: right;
-  position: relative;
-  width: 40%;
-  height: 100%;
-  padding-right: 10px !important;
-  -webkit-transition: width 0.25s;
-  transition: width 0.25s;
-  z-index: 0;
-}
-
-.adventure-sidebar .tab-container {
-  height: 100%;
+  display: inline-block;
+  width: 39%;
   overflow-y: auto;
+  padding-right: 10px !important;
+  -webkit-transition: height 0.25s, width 0.25s;
+  transition: height 0.25s, width 0.25s;
 }
 
 .adventure-status-bar {
@@ -84,11 +76,8 @@
   right: 0;
   z-index: 10;
   display: block;
-  /*padding: 5px 8px;*/
   font-size: 12px;
-  /*color: #767676;*/
   cursor: pointer;
-  /*background-color: #fff;*/
   border: 1px solid #e1e1e8;
   border-radius: 0 4px 0 4px;
   border-top: none;
@@ -116,7 +105,6 @@
 .live-adventure-view {
   width: 100%;
   height: 100%;
-  position: absolute;
   padding: 10px;
 }
 
@@ -144,9 +132,6 @@
 .remote-screen-loading-log {
   height: 100%;
   width: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
   padding: 10px;
 }
 
@@ -155,7 +140,6 @@
 }
 
 .remote-screen-pointer {
-  position: absolute;
   width: 14px;
   height: 14px;
   margin-top: -7px;

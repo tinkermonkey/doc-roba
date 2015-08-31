@@ -4,23 +4,29 @@
     <div class="input-group input-group-sm add-item-form">
       <input type="text" class="form-control" placeholder="Enter a test or group name">
       <div class="input-group-btn">
-        <button type="button" class="btn btn-primary dropdown-toggle" disabled="disabled" data-toggle="dropdown">
-          Add <span class="caret"></span>
+        <span class="glyphicon glyphicon-remove-circle field-clear-btn"></span>
+        <button type="button" class="btn btn-primary btn-search" disabled="disabled">
+          <span class="glyphicon glyphicon-search"></span>
         </button>
-        <ul class="dropdown-menu dropdown-menu-right">
-          <li>
-            <a href="#" data-name="testcase">
-              <span class="glyphicon glyphicon-ok-circle"></span>
-              Test Case
-            </a>
-          </li>
-          <li>
-            <a href="#" data-name="testgroup">
-              <span class="glyphicon glyphicon-folder-open"></span>
-              Test Group
-            </a>
-          </li>
-        </ul>
+        {{#if editable}}
+          <button type="button" class="btn btn-primary dropdown-toggle btn-add-item" disabled="disabled" data-toggle="dropdown">
+            Add <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-right">
+            <li>
+              <a href="#" data-name="testcase">
+                <span class="glyphicon glyphicon-ok-circle"></span>
+                Test Case
+              </a>
+            </li>
+            <li>
+              <a href="#" data-name="testgroup">
+                <span class="glyphicon glyphicon-folder-open"></span>
+                Test Group
+              </a>
+            </li>
+          </ul>
+        {{/if}}
       </div>
     </div>
   </div>
@@ -31,5 +37,8 @@
     {{#each getTestCases}}
       {{> TestCaseListItem }}
     {{/each}}
+    <div class="search-no-results" style="display: none;">
+      <i>No results found</i>
+    </div>
   </div>
 </template>

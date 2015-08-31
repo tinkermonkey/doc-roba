@@ -1,5 +1,5 @@
 <template name="TestRunTemplateList">
-  <div class="test-case-list-header">
+  <div class="test-run-template-list-header">
     <h3>Test Run Templates</h3>
     <div class="input-group input-group-sm add-item-form">
       <input type="text" class="form-control" placeholder="Enter a run name">
@@ -18,7 +18,7 @@
       </div>
     </div>
   </div>
-  <div class="test-case-list">
+  <div class="test-run-template-list">
     {{#each testRunTemplates}}
       {{> TestRunTemplateListItem }}
     {{/each}}

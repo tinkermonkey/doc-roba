@@ -1,0 +1,10 @@
+<template name="TestRunItemTemplate">
+  {{#with getTemplate}}
+    <div class="test-run-item-template-title">{{title}}</div>
+    <div>
+      {{numberFormat itemCount "d"}} tests {{#if stageCount}}in {{numberFormat stageCount "d"}} stages{{/if}}
+    </div>
+  {{else}}
+    <div class="alert alert-danger">The linked template could not be found</div>
+  {{/with}}
+</template>

@@ -148,3 +148,17 @@ button {
 .capitalize {
   text-transform: capitalize;
 }
+
+.field-clear-btn {
+  position: absolute;
+  z-index: 10;
+  left: -18px;
+  top: 0;
+  bottom: 0;
+  height: 14px;
+  margin: auto;
+  font-size: 14px;
+  cursor: pointer;
+  color: #ccc;
+  display: none;
+}
