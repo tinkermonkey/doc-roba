@@ -1,0 +1,11 @@
+<template name="EditableCode">
+  <div class="{{cssClass}} editable editable-code"
+       data-key="{{dataKey}}">
+    <pre class="{{#unless value}}hide{{/unless}}">
+      <code class="language-javascript">
+      {{value}}
+      </code>
+    </pre>
+    <span class="{{#if value}}hide{{/if}}"><i>{{emptyText}}</i></span>
+  </div>
+</template>

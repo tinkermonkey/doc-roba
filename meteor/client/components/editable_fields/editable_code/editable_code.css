@@ -1,0 +1,15 @@
+.x-editable-ace .roba-ace {
+  min-width: 300px;
+  min-height: 200px;
+  width: 100%;
+  height: 100%;
+}
+
+.editable-code pre {
+  border-radius: inherit;
+  background-color: transparent;
+  border: none;
+  line-height: inherit;
+  padding: 0;
+  margin: 0;
+}
