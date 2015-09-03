@@ -1,5 +1,5 @@
 <template name="AdventureEditActionForm">
-  <div class="panel panel-default action-edit-form">
+  <div class="panel panel-default action-edit-form" data-action-id="{{_id}}">
     {{#with getActionRecord}}
       <div class="panel-heading">
         <span class="field-label">Title:</span>
@@ -8,7 +8,7 @@
       </div>
       <div class="panel-body">
         <h4>Action Code</h4>
-        {{> RobaAce cssClass="action-editable" minLines=6 maxLines=15 dataKey="code" value=code }}
+        {{> EditableCode dataKey="code" value=code }}
 
         <h4>Action Variables</h4>
         {{> action_edit_variables }}

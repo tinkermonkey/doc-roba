@@ -387,3 +387,11 @@ Template.registerHelper("getLogDataTemplate", function (data) {
 Template.registerHelper("stringify", function () {
   return JSON.stringify(this);
 });
+
+Template.registerHelper("btoa", function (value) {
+  return btoa(value);
+});
+
+Template.registerHelper("atob", function (value) {
+  return btoa(value);
+});

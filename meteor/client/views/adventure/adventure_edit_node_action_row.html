@@ -3,7 +3,7 @@
     <td>{{title}}</td>
     <td style="text-align: right;">{{> ActionRouteSnippet actionWithScale }}</td>
     <td style="width: 100px; text-align: right;">
-      <div class="btn-group" role="group">
+      <div class="btn-group action-control-buttons" role="group" data-action-id="{{_id}}">
         {{#unless adventureIsComplete getAdventureContext}}
           <button type="button" class="btn btn-xs btn-success btn-execute-action" disabled="{{#unless code}}disabled{{/unless}}">
             <span class="glyphicon glyphicon-play"></span>

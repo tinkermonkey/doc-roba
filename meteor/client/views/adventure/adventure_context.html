@@ -1,99 +1,103 @@
 <template name="AdventureContext">
-  {{#if getNode}}
-    {{#with getNode}}
-      <div class="node-edit-form {{#unless adventureIsStill ../adventure}}hide{{/unless}}">
-        <div class="btn btn-warning pull-right btn-wrong-node"
-             data-toggle="popover"
-             data-trigger="focus"
-             data-content="This is not the correct node"
-          >X</div>
-        <div>
-          {{#unless isMatch this ..}}
-            <div class="alert alert-warning">
-              The current node does <i>not</i> match the data below:
-              {{#with nodeComparison this ..}}
-                {{#unless title.match}}
-                  <div>
-                    <span class="dark-blue">title: </span>
-                    {{#each title.pieces}}
-                      <span
-                        class="inline-block node-search-result node-search-{{renderLookup "NodeSearchStatusLookup" status "dash"}}"
+  {{#with getNode}}
+    <div class="node-edit-form {{#unless adventureIsStill ../adventure}}hide{{/unless}}" data-node-id="{{_id}}">
+      <div class="btn btn-warning pull-right btn-wrong-node"
+           data-toggle="popover"
+           data-trigger="focus"
+           data-content="This is not the correct node"
+        >X</div>
+      <div>
+        {{#unless isMatch this ..}}
+          <div class="alert alert-warning">
+            The current node does <i>not</i> match the data below:
+            {{#with nodeComparison this ..}}
+              {{#unless title.match}}
+                <div>
+                  <span class="dark-blue">title: </span>
+                  {{#each title.pieces}}
+                    <span
+                      class="inline-block node-search-result node-search-{{renderLookup "NodeSearchStatusLookup" status "dash"}}"
+                      data-toggle="popover"
+                      data-trigger="focus"
+                      data-content="{{renderLookup "NodeSearchStatusLookup" status "dash"}}: {{value}}"
+                      >{{value}}</span>
+                  {{/each}}
+                </div>
+              {{/unless}}
+              {{#unless url.match}}
+                <div>
+                  <span class="dark-blue">url: </span>
+                  <span>
+                    {{#each url.pieces}}
+                      <div class="inline-block">
+                        /<span
+                        class="node-search-result node-search-{{renderLookup "NodeSearchStatusLookup" status "dash"}}"
                         data-toggle="popover"
                         data-trigger="focus"
                         data-content="{{renderLookup "NodeSearchStatusLookup" status "dash"}}: {{value}}"
                         >{{value}}</span>
+                      </div>
+                    {{/each}}
+                  </span>
+                </div>
+              {{/unless}}
+              {{#unless params.match}}
+                <div>
+                  <span class="dark-blue align-top">parameters: </span>
+                  <div class="inline-block">
+                    {{#each params.pieces}}
+                      <div
+                        class="node-search-result node-search-{{renderLookup "NodeSearchStatusLookup" status "dash"}}"
+                        data-toggle="popover"
+                        data-trigger="focus"
+                        data-content="{{renderLookup "NodeSearchStatusLookup" status "dash"}}: {{value.param}}{{#if value.value}}={{value.value}}{{/if}}"
+                        >{{value.param}}{{#if value.value}}={{value.value}}{{/if}}</div>
                     {{/each}}
                   </div>
-                {{/unless}}
-                {{#unless url.match}}
-                  <div>
-                    <span class="dark-blue">url: </span>
-                    <span>
-                      {{#each url.pieces}}
-                        <div class="inline-block">
-                          /<span
-                          class="node-search-result node-search-{{renderLookup "NodeSearchStatusLookup" status "dash"}}"
-                          data-toggle="popover"
-                          data-trigger="focus"
-                          data-content="{{renderLookup "NodeSearchStatusLookup" status "dash"}}: {{value}}"
-                          >{{value}}</span>
-                        </div>
-                      {{/each}}
-                    </span>
-                  </div>
-                {{/unless}}
-                {{#unless params.match}}
-                  <div>
-                    <span class="dark-blue align-top">parameters: </span>
-                    <div class="inline-block">
-                      {{#each params.pieces}}
-                        <div
-                          class="node-search-result node-search-{{renderLookup "NodeSearchStatusLookup" status "dash"}}"
-                          data-toggle="popover"
-                          data-trigger="focus"
-                          data-content="{{renderLookup "NodeSearchStatusLookup" status "dash"}}: {{value.param}}{{#if value.value}}={{value.value}}{{/if}}"
-                          >{{value.param}}{{#if value.value}}={{value.value}}{{/if}}</div>
-                      {{/each}}
-                    </div>
-                  </div>
-                {{/unless}}
-              {{/with}}
-            </div>
-          {{/unless}}
-        </div>
-        <table>
-          <tr>
-            <td class="field-label">Type: </td>
-            <td>{{> EditableNodeType cssClass="inline-block" pageView=true value=type dataKey="type" emptyText="Select a node type" }}</td>
-          </tr>
-          <tr>
-            <td class="field-label">Name: </td>
-            <td>{{> EditableTextField cssClass="inline-block" value=title dataKey="title" emptyText="none"}}</td>
-          </tr>
-          <tr>
-            <td class="field-label">Page Title: </td>
-            <td>{{> EditableTextField cssClass="inline-block" value=pageTitle dataKey="pageTitle" emptyText="none"}}</td>
-          </tr>
-          <tr>
-            <td class="field-label">Nav Menus: </td>
-            <td>
-              {{> EditableNavMenuList projectVersionId=projectVersionId value=navMenus dataKey="navMenus" }}
-            </td>
-          </tr>
-          <tr>
-            <td class="field-label">Base Url: </td>
-            <td>{{> EditableTextField cssClass="inline-block" value=url dataKey="url" emptyText="none"}}</td>
-          </tr>
-        </table>
-        <div>
-          {{> edit_node_url_parameters }}
-        </div>
+                </div>
+              {{/unless}}
+            {{/with}}
+          </div>
+        {{/unless}}
       </div>
-    {{/with}}
+      <table>
+        <tr>
+          <td class="field-label">Type: </td>
+          <td>{{> EditableNodeType cssClass="inline-block" pageView=true value=type dataKey="type" emptyText="Select a node type" }}</td>
+        </tr>
+        <tr>
+          <td class="field-label">Name: </td>
+          <td>{{> EditableTextField cssClass="inline-block" value=title dataKey="title" emptyText="none"}}</td>
+        </tr>
+        <tr>
+          <td class="field-label">Page Title: </td>
+          <td>{{> EditableTextField cssClass="inline-block" value=pageTitle dataKey="pageTitle" emptyText="none"}}</td>
+        </tr>
+        <tr>
+          <td class="field-label">Nav Menus: </td>
+          <td>
+            {{> EditableNavMenuList projectVersionId=projectVersionId value=navMenus dataKey="navMenus" }}
+          </td>
+        </tr>
+        <tr>
+          <td class="field-label">Base Url: </td>
+          <td>{{> EditableTextField cssClass="inline-block" value=url dataKey="url" emptyText="none"}}</td>
+        </tr>
+      </table>
+      <div>
+        {{> edit_node_url_parameters }}
+      </div>
+
+      <h4>Node Ready Code</h4>
+      {{> EditableCode value=readyCode dataKey="readyCode" emptyText="Code to validate that the node is ready" }}
+
+      <h4>Node Valid Code</h4>
+      {{> EditableCode value=validationCode dataKey="validationCode" emptyText="Code to validate that the node" }}
+    </div>
   {{else}}
     <div class="{{#unless adventureIsStill}}hide{{/unless}}">
       <div class="full-width align-center">
-        {{> EditableNodeSelector dataKey="currentNode" emptyText="Select Node" projectVersionId=adventure.projectVersionId}}
+        {{> EditableNodeSelector cssClass="current-node-selector" dataKey="currentNode" emptyText="Select Node" projectVersionId=adventure.projectVersionId}}
       </div>
       <div class="full-width align-center">
         <button class="btn btn-primary btn-add-node" data-type="page">Add Node</button>
@@ -106,5 +110,5 @@
         {{> NodeUrlSearchResults searchNodes}}
       </div>
     </div>
-  {{/if}}
+  {{/with}}
 </template>

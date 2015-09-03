@@ -9,22 +9,22 @@
                  placeholder="Enter a selector to highlight matched elements"
                  value="{{getXPath}}">
           <div class="input-group-btn">
-            <button type="button" class="btn btn-primary btn-clear">
+            <button type="button" class="btn btn-primary btn-clear" disabled="disabled">
               <span class="glyphicon glyphicon-remove"></span>
             </button>
             {{#unless adventureIsComplete adventure}}
-              <button type="button" class="btn btn-primary btn-refine">
+              <button type="button" class="btn btn-primary btn-refine" disabled="disabled">
                 <span class="glyphicon glyphicon-ok-circle"></span>
               </button>
-              <button type="button" class="btn btn-primary btn-highlight">
+              <button type="button" class="btn btn-primary btn-highlight" disabled="disabled">
                 <span class="glyphicon glyphicon-search"></span>
               </button>
             {{/unless}}
-            <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+            <button class="btn btn-primary dropdown-toggle btn-selector-dropdown" data-toggle="dropdown" disabled="disabled">
               <span class="glyphicon glyphicon-plus"></span>
               <span class="caret"></span>
             </button>
-            {{> AdventureSelectorActionMenu node=getCurrentNode }}
+            {{> AdventureSelectorActionMenu selector=getSelector node=getCurrentNode }}
           </div>
         </div>
       </td>

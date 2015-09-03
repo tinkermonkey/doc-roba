@@ -10,6 +10,7 @@
 }
 
 .adventure-sidebar {
+  position: fixed;
   display: inline-block;
   width: 39%;
   overflow-y: auto;

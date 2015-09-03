@@ -63,12 +63,6 @@ Template.AdventureContext.helpers({
  * Template Event Handlers
  */
 Template.AdventureContext.events({
-  "edited .editable-node-selector": function (e, instance, newValue) {
-    if(newValue){
-      console.log("Node Selected: ", newValue);
-      instance.data.currentNode.set(newValue)
-    }
-  },
   "click .btn-add-node": function (e, instance) {
     // Transition the page layout
     $(".adventure-main-view, .adventure-sidebar").addClass("adventure-focus-form");
@@ -166,28 +160,18 @@ Template.AdventureContext.events({
       Meteor.log.error("Failed to load new record: " + e.message);
     }
   },
-  "click .node-search-icon": function (e, instance) {
-    var staticId = $(e.target).closest(".node-search-icon").attr("data-node-staticId");
-    if(staticId){
-      try {
-        instance.data.currentNode.set(staticId);
-      } catch(e) {
-        Meteor.log.error("Failed to find console from adventure context: " + e.message);
-        Dialog.error("Failed to find console from adventure context: " + e.message);
-      }
-    }
-  },
   "edited .node-edit-form .editable": function (e, instance, newValue) {
     e.stopImmediatePropagation();
-    var target = $(e.target),
+    var nodeId = $(e.target).closest(".node-edit-form").attr("data-node-id"),
+      target = $(e.target),
       dataKey = target.attr("data-key"),
       update = {$set: {}};
 
-    console.log("update: ", dataKey, instance.data._id);
+    console.log("update: ", dataKey, nodeId);
     if(dataKey){
       update["$set"][dataKey] = newValue;
       //console.log("Edited: ", dataKey, newValue, node);
-      Nodes.update(instance.data._id, update, function (error) {
+      Nodes.update(nodeId, update, function (error) {
         if(error){
           Meteor.log.error("Failed to update node value: " + error.message);
           Dialog.error("Failed to update node value: " + error.message);
@@ -196,6 +180,12 @@ Template.AdventureContext.events({
     } else {
       Meteor.log.error("Failed to update node value: data-key not found");
       Dialog.error("Failed to update node value: data-key not found");
+    }
+  },
+  "edited .current-node-selector": function (e, instance, newValue) {
+    if(newValue){
+      console.log("Node Selected: ", newValue);
+      instance.data.currentNode.set(newValue)
     }
   },
   "click .btn-preview": function (e, instance) {

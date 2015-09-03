@@ -20,5 +20,11 @@ Accordion = {
     });
 
     return this;
+  },
+  activate: function (name) {
+    var inner = $(".accordion-group[data-accordion-name='" + name + "'] .accordion-inner");
+    if(!inner.is(":visible")){
+      $(".accordion-group[data-accordion-name='" + name + "'] .accordion-heading").first().trigger("click");
+    }
   }
 };

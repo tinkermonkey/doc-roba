@@ -357,14 +357,71 @@ Template.AdventureScreen.events({
   },
   "click .adventure-selector-action-menu a": function (e, instance) {
     // check for a data command
-    var selector = this,
-      item = $(e.target),
+    var item = $(e.target),
+      selector = atob(item.closest("[data-selector]").attr("data-selector")),
       command = item.closest("[data-command]").attr("data-command"),
       commandType = item.closest("[data-command-type]").attr("data-command-type"),
       nodeId = item.closest("[data-node-id]").attr("data-node-id"),
       targetId = item.closest("[data-target-id]").attr("data-target-id");
 
     console.log("Select: ", commandType, command, nodeId, targetId, selector);
+
+    // make sure the change we'll make is visible
+    switch (commandType) {
+      case "ready":
+      case "valid":
+        Accordion.activate("current-node");
+        setTimeout(function () {
+          var targetTop = $(".node-edit-form").offset().top,
+            currentScroll = $(".adventure-sidebar").scrollTop(),
+            sidebarTop = $(".adventure-sidebar").offset().top;
+          $(".adventure-sidebar").animate({scrollTop: targetTop + currentScroll - 10 - sidebarTop}, 200, function () {
+            var field = commandType == "ready" ? "readyCode" : "validationCode",
+              update = {$set: {}},
+              node = Nodes.findOne(nodeId);
+            if(node[field] && node[field].length){
+              update.$set[field] = node[field] + "\n" + commandType + "." + command + "('" + selector + "');";
+            } else {
+              update.$set[field] = commandType + "." + command + "('" + selector + "');";
+            }
+            Nodes.update(nodeId, update, function (error, result) {
+              if(error){
+                Meteor.log.error("Failed to update node value: " + error.message);
+                Dialog.error("Failed to update node value: " + error.message);
+                console.log("Attempted update:", update);
+              }
+            });
+          });
+        }, 250);
+        break;
+      case "action":
+        Accordion.activate("current-node-actions");
+        if(targetId){
+          $(".action-control-buttons[data-action-id='" + targetId + "'] .btn-edit-action").trigger("click");
+          setTimeout(function () {
+            var targetTop = $(".action-edit-form[data-action-id='" + targetId + "']").offset().top,
+              currentScroll = $(".adventure-sidebar").scrollTop(),
+              sidebarTop = $(".adventure-sidebar").offset().top;
+            $(".adventure-sidebar").animate({scrollTop: targetTop + currentScroll - 10 - sidebarTop}, 200, function () {
+              var action = Actions.findOne(targetId),
+                update = {$set: {}};
+              if(action.code && action.code.length){
+                update.$set.code = action.code + "\n" + "driver." + command + "('" + selector + "');";
+              } else {
+                update.$set.code  = "driver." + command + "('" + selector + "');";
+              }
+              Actions.update(targetId, update, function (error, result) {
+                if(error){
+                  Meteor.log.error("Failed to update action value: " + error.message);
+                  Dialog.error("Failed to update action value: " + error.message);
+                  console.log("Attempted update:", update);
+                }
+              });
+            });
+          }, 250);
+        }
+        break;
+    }
   }
 });
 

@@ -53,6 +53,9 @@ Template.AdventureToolbar.helpers({
     if(nodeId){
       return Nodes.findOne({ staticId: nodeId, projectVersionId: this.adventure.projectVersionId });
     }
+  },
+  getSelector: function () {
+    return {selector: Template.instance().selector.get()};
   }
 });
 
@@ -126,19 +129,25 @@ Template.AdventureToolbar.events({
   "keyup input.selector-value, change input.selector-value": function (e, instance) {
     var selector = instance.$(".selector-value").val(),
       lastLocation = this.lastClickLocation.get();
-
-    console.log("key: ", selector.length > 0, lastLocation);
+    console.log("Selector: ", selector);
 
     if(selector.length && lastLocation) {
+      instance.$(".btn-clear").removeAttr("disabled");
       instance.$(".btn-refine").removeAttr("disabled");
       instance.$(".btn-highlight").removeAttr("disabled");
+      instance.$(".btn-selector-dropdown").removeAttr("disabled");
     } else if (selector.length){
+      instance.$(".btn-clear").removeAttr("disabled");
       instance.$(".btn-refine").attr("disabled", "disabled");
       instance.$(".btn-highlight").removeAttr("disabled");
+      instance.$(".btn-selector-dropdown").removeAttr("disabled");
     } else {
+      instance.$(".btn-clear").attr("disabled", "disabled");
       instance.$(".btn-refine").attr("disabled", "disabled");
       instance.$(".btn-highlight").attr("disabled", "disabled");
+      instance.$(".btn-selector-dropdown").attr("disabled", "disabled");
     }
+    instance.selector.set(selector);
   },
   /**
    * Click event for the refresh button
@@ -191,6 +200,14 @@ Template.AdventureToolbar.events({
     });
   }
 });
+
+/**
+ * Template Rendered
+ */
+Template.AdventureToolbar.created = function () {
+  var instance = this;
+  instance.selector = new ReactiveVar("");
+};
 
 /**
  * Template Rendered
