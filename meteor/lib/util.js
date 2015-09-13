@@ -264,5 +264,53 @@ Util = {
         Meteor.log.error("findParentData failed: " + e.toString);
       }
     }
+  },
+
+  /**
+   * Get a full measure of an elements scoll top and left
+   */
+  getAbsoluteScroll: function (rawEl) {
+    var el = $(rawEl),
+      fixedPositionFound = false,
+      scroll = {top: 0, left: 0};
+    while(el && !fixedPositionFound){
+      scroll.top += el.scrollTop();
+      scroll.left += el.scrollLeft();
+      if(el.css("position") && el.css("position").toLowerCase() == "fixed"){
+        //console.log("fixedPositionFound: ", el);
+        fixedPositionFound = true;
+        scroll = {
+          top: $("body").scrollTop(),
+          left: $("body").scrollLeft()
+        };
+      } else {
+        el = el.parent();
+      }
+    }
+    return scroll;
+  },
+
+  /**
+   * Get the screen bounds of an element
+   */
+  getScreenBounds: function (rawEl) {
+    var el = $(rawEl),
+      offset  = el.offset(),
+      scroll  = Util.getAbsoluteScroll(rawEl),
+      bounds  = {
+        width: el.outerWidth(),
+        height: el.outerHeight(),
+        top: offset.top - scroll.top,
+        left: offset.left - scroll.left
+      };
+    //console.log("getScreenBounds: ", offset, scroll);
+
+    // if the source element is an SVG element we need to get the width differently
+    if(el.closest("svg").length){
+      bounds.width  = el[0].getBoundingClientRect().width;
+      bounds.height = el[0].getBoundingClientRect().height;
+    }
+
+    return bounds;
   }
 };

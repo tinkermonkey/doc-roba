@@ -2,7 +2,16 @@
   {{#if modal}}
     <div class="dialog-screen"></div>
   {{/if}}
-  <div class="dr-popover" style="{{ getPosition }}" >
-    <div class="content">{{> Template.dynamic template=contentTemplate data=contentData}}</div>
+  <div class="dr-popover-envelope" style="{{ getEnvelope }}">
+    <div class="dr-popover" style="{{ getPosition }}" >
+      <div class="content {{#if buttons}}content-with-buttons{{/if}}">{{> Template.dynamic template=contentTemplate data=contentData}}</div>
+      {{#if buttons}}
+        <div class="button-bar">
+          {{#each buttons}}
+            <button>{{ text }}</button>
+          {{/each}}
+        </div>
+      {{/if}}
+    </div>
   </div>
 </template>

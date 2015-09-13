@@ -1,8 +1,5 @@
 <template name="TestCaseStepCustom">
-  <div class="click-to-edit {{#if hasCode}}hide{{/if}}">
-    Click to add code
-  </div>
-  <div class="custom-editor-container {{#unless hasCode}}hide{{/unless}}">
-    {{> RobaAce minLines=4 maxLines=10 cssClass=editorClass dataKey="code" value=data.code }}
+  <div class="custom-editor-container">
+    {{> EditableCode dataKey="code" value=data.code emptyText="Click to add code"}}
   </div>
 </template>

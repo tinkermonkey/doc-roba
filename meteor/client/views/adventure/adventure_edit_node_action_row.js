@@ -23,11 +23,14 @@ Template.AdventureEditNodeActionRow.helpers({
 Template.AdventureEditNodeActionRow.events({
   "click .btn-edit-action": function (e, instance) {
     var action = this,
-      formRow = $(e.target).closest("tr").next();
+      actionRow = $(e.target).closest(".edit-node-action-row"),
+      formRow = actionRow.next();
+
     if(formRow.hasClass("hide")){
+      actionRow.addClass("hide");
       formRow.removeClass("hide");
-      Blaze.renderWithData(Template.AdventureEditActionForm, action, formRow.find("td").get(0));
-      $(e.target).attr("disabled", "disabled");
+      Blaze.renderWithData(Template.AdventureEditActionForm, action, formRow.get(0));
+      $(e.target).closest("button").attr("disabled", "disabled");
     }
   },
   "click .btn-execute-action": function (e, instance) {

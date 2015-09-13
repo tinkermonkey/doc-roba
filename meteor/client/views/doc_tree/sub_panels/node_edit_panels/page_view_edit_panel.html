@@ -32,7 +32,7 @@
     <div class="tab-container full-height">
       <div class="tab" data-tab-name="ready">
         <div class="simple-col simple-col-9">
-          {{> RobaAce fullHeight=true dataKey="readyCode" value=readyCode}}
+          {{> EditableCode dataKey="readyCode" value=readyCode emptyText="Click to define ready code for this node."}}
         </div>
         <div class="simple-col simple-col-3">
           <div class="sub-heading">Code to determine if this {{renderLookup "NodeTypesLookup" type}} is ready:</div>
@@ -40,7 +40,7 @@
       </div>
       <div class="tab" data-tab-name="validations">
         <div class="simple-col simple-col-9">
-          {{> RobaAce fullHeight=true dataKey="validationCode" value=validationCode}}
+          {{> EditableCode dataKey="validationCode" value=validationCode  emptyText="Click to define validation code for this node."}}
         </div>
         <div class="simple-col simple-col-3">
           <div class="sub-heading">Code to determine if this {{renderLookup "NodeTypesLookup" type}} is valid:</div>

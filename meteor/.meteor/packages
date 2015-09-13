@@ -14,7 +14,6 @@ momentjs:moment
 mrt:trail
 accounts-base
 accounts-password
-williamledoux:static-server
 aldeed:collection2
 matb33:collection-hooks
 natestrauser:x-editable-bootstrap
@@ -25,5 +24,5 @@ cfs:standard-packages
 cfs:filesystem
 numeral:numeral
 cfs:ui
-gadicohen:prism
 cfs:graphicsmagick
+simple:highlight.js

@@ -39,6 +39,10 @@
   border-radius: 10px;
 }
 
+.accordion-inner.full-width {
+  padding: 10px 0;
+}
+
 .accordion-inner.display {
   display: block;
 }

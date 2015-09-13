@@ -2,32 +2,108 @@
  * Template Helpers
  */
 Template.popover.helpers({
-  getPosition: function () {
-    var position;
+  /**
+   * Get the envelope in which to place the popover
+   */
+  getEnvelope: function () {
+    var screenSize = Session.get("resize"),
+      margin = this.margin || 20;
 
-    // get the position of the source element
+    // otherwise use the full screen
+    this.envelope = {
+      top: margin,
+      left: margin,
+      width: screenSize.width - 2 * margin,
+      height: screenSize.height - 2 * margin
+    };
+
+    // autoposition if there is a source-element
     if (this.sourceElement) {
-      var source = $(this.sourceElement),
-        offset = source.offset(),
-        width = source.outerWidth(),
-        margin = 20;
+      var bounds  = Util.getScreenBounds(this.sourceElement),
+        placement = this.placement || "right";
 
-      if(source.closest("svg").length){
-        width = source[0].getBoundingClientRect().width;
+      // if the placement is auto, figure out the real placement
+      if(placement == "auto"){
+        var options = [
+          {
+            placement: "top",
+            area: screenSize.width * bounds.top
+          },{
+            placement: "right",
+            area: screenSize.height * (screenSize.width - (bounds.left + bounds.width))
+          },{
+            placement: "bottom",
+            area: screenSize.width * (screenSize.height - (bounds.top + bounds.height))
+          },{
+            placement: "left",
+            area: screenSize.height * bounds.left
+          }
+        ];
+        placement = _.sortBy(options, function (option) {return -1 * option.area })[0].placement;
       }
 
-      position = "top: " + parseInt(offset.top - margin) + "px; left: " + parseInt(offset.left + width - margin + 20) + "px;";
+      // calculate the placement
+      switch(placement){
+        case "top":
+          this.envelope.height = bounds.top - 2 * margin;
+          break;
+        case "right":
+          this.envelope.left = parseInt(bounds.left + bounds.width) + margin;
+          this.envelope.width = screenSize.width - 2 * margin - parseInt(bounds.left + bounds.width);
+          break;
+        case "bottom":
+          this.envelope.top = parseInt(bounds.top + bounds.height) + margin;
+          this.envelope.height = screenSize.height - 2 * margin - parseInt(bounds.top + bounds.height);
+          break;
+        case "left":
+          this.envelope.width = bounds.left - 2 * margin;
+          break;
+      }
+    }
+
+    return _.map(this.envelope, function (value, key) { return key + ": " + parseInt(value) + "px;" });
+  },
+  /**
+   * Get the position of the popover within the envelope
+   */
+  getPosition: function () {
+    // autoposition if there is a source-element
+    if (this.sourceElement) {
+      var position = {
+        width: this.width,
+        height: this.height
+      }, margin   = this.margin || 20,
+        bounds    = Util.getScreenBounds(this.sourceElement),
+        placement = this.placement || "right";
+
+      if(this.size == "maximize"){
+        position.height = this.envelope.height;
+        position.width  = this.envelope.width;
+      } else {
+        // calculate the placement
+        switch(placement){
+          case "top":
+            position.bottom = 0;
+            position.left = bounds.left - margin;
+            break;
+          case "right":
+            position.top = bounds.top - margin;
+            break;
+          case "bottom":
+            position.left = bounds.left - margin;
+            break;
+          case "left":
+            position.top = bounds.top - margin;
+            position.right = 0;
+            break;
+        }
+      }
     } else {
       // otherwise center it
-      position = "top:50%; left:50%; margin-left:-" + (this.width / 2) + "px; margin-top:-150px;";
+      return "top:50%; left:50%; margin-left:-" + (this.width / 2) + "px; margin-top:-150px;";
     }
 
-    // if width is specified, use it
-    if (this.width) {
-      position += "width:" + parseInt(this.width) + "px;";
-    }
-
-    return position;
+    return _.map(position, function (value, key) { return key + ": " + parseInt(value) + "px;" });
   }
 });
 
@@ -35,8 +111,21 @@ Template.popover.helpers({
  * Template Helpers
  */
 Template.popover.events({
+  "click .button-bar button": function (e, instance) {
+    var btn = $(e.target).text();
 
+    Meteor.log.debug("Popover button clicked: " + btn, instance);
+    if (instance.data.callback) {
+      instance.data.callback(btn, instance);
+    }
+  }
 });
+
+/**
+ * Template Destroyed
+ */
+Template.popover.created = function () {
+};
 
 /**
  * Template Rendered
@@ -60,7 +149,6 @@ Template.popover.destroyed = function () {
 
 };
 
-
 /**
  * Create a singleton for interacting with the popover
  * There will only be one visible at a time
@@ -73,19 +161,27 @@ Popover = {
    * @param options
    */
   show: function (options) {
+
     // Combine the options with the defaults
     _.defaults(options, {
       width: 400,
       maxWidth: 1000,
+      envelope: {},
       callback: function () {
         console.log("Popover closed");
       }.bind(this)
     });
 
-    Blaze.renderWithData(Template.popover, options, $("body")[0]);
-
-    // add a click handler to hide the popover
-    $(document).bind("mouseup", Popover.clickHandler);
+    // hide the existing popover if it exists
+    if(Popover.currentInstance){
+      Popover.hide(function () {
+        Blaze.renderWithData(Template.popover, options, $("body")[0]);
+        $(document).bind("mouseup", Popover.clickHandler);
+      });
+    } else {
+      Blaze.renderWithData(Template.popover, options, $("body")[0]);
+      $(document).bind("mouseup", Popover.clickHandler);
+    }
   },
 
   /**

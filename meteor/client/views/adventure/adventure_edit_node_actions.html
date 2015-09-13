@@ -1,42 +1,30 @@
 <template name="AdventureEditNodeActions">
   {{#if this}}
-    <h4>Actions for this <span class="dark-blue">{{renderLookup "NodeTypesLookup" type}}</span></h4>
+    <h3>Actions for this <span class="dark-blue">{{renderLookup "NodeTypesLookup" type}}</span></h3>
 
-    <table class="table">
-      <tbody>
-        {{#each getActions}}
-          {{> AdventureEditNodeActionRow }}
-        {{/each}}
-        <tr>
-          <td colspan="3">
-            <button class="btn btn-warning btn-xs btn-add-action">
-              <span class="glyphicon glyphicon-plus"></span>
-              Add an Action to {{title}}
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    {{#each getActions}}
+      {{> AdventureEditNodeActionRow }}
+    {{/each}}
+    <div>
+      <button class="btn btn-warning btn-xs btn-add-action">
+        <span class="glyphicon glyphicon-plus"></span>
+        Add an Action to {{title}}
+      </button>
+    </div>
 
 
     {{#each getNavMenus}}
-      <h4>Actions from <span class="dark-blue">{{title}}</span></h4>
+      <h3>Actions from <span class="dark-blue">{{title}}</span></h3>
 
-      <table class="table">
-        <tbody>
-          {{#each actions}}
-            {{> AdventureEditNodeActionRow }}
-          {{/each}}
-          <tr>
-            <td colspan="3">
-              <button class="btn btn-warning btn-xs btn-add-action">
-                <span class="glyphicon glyphicon-plus"></span>
-                Add an Action to {{title}}
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      {{#each actions}}
+        {{> AdventureEditNodeActionRow }}
+      {{/each}}
+      <div>
+        <button class="btn btn-warning btn-xs btn-add-action">
+          <span class="glyphicon glyphicon-plus"></span>
+          Add an Action to {{title}}
+        </button>
+      </div>
     {{/each}}
   {{/if}}
 </template>

@@ -12,7 +12,7 @@ Template.AdventureEditActionForm.helpers({
  * Template Event Handlers
  */
 Template.AdventureEditActionForm.events({
-  "edited .action-editable": function (e, instance, newValue) {
+  "edited .editable": function (e, instance, newValue) {
     e.stopImmediatePropagation();
     var target = $(e.target),
       dataKey = target.attr("data-key"),

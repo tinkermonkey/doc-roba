@@ -19,10 +19,9 @@ Template.EditableCodeEditor.created = function () {
  * Template Rendered
  */
 Template.EditableCodeEditor.rendered = function () {
-  console.log("EditableCodeEditor render: ", this.data, this._elementId);
   var instance = this;
   if(!instance.editor) {
-    console.log("Creating editor...");
+    console.log("Creating editor:", instance.data);
     var editor = instance.editor = ace.edit(instance._elementId);
     editor.setTheme("ace/theme/chrome");
     editor.getSession().setMode("ace/mode/javascript");

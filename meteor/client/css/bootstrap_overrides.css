@@ -62,3 +62,21 @@
   color: #fff;
   background-color: #9701ff;
 }
+
+/**
+ * Undo the pre=well irritation
+ */
+pre {
+  display: block;
+  padding: 0;
+  margin: 0;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+  word-break: normal;
+  word-wrap: normal;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  font-family: inherit;
+}

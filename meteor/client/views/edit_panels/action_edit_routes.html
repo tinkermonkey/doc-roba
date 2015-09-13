@@ -13,27 +13,18 @@
     {{#each indexedRoutes}}
       <tr class="sortable-table-row action-route-row" data-pk="{{../_id}}" data-nodeId="{{nodeId}}" data-route-index="{{index}}" data-route-order="{{order}}">
         <td class="drag-handle"><span class="glyphicon glyphicon-record"></span></td>
-        <td><div style="padding-left: 10px;">{{logic ..}}</div></td>
+        <td><div class="no-wrap" style="padding-left: 10px;">{{logic}}</div></td>
         <td class="code-editor-cell">
-          <div class="{{editorClass}}">
-            {{> RobaAce minLines=3 maxLines=10 cssClass=editorClass dataKey=routeCodeDataKey value=routeCode }}
-          </div>
-          {{#unless routeCode.length}}
-              <div class="click-to-edit">
-              {{#if isLast ..}}
-                <span class="label label-primary">Optional</span>
-                If you chose to not add code for this action,
-                it will be the default action when no other actions are selected.
-              {{else}}
-                <span class="label label-warning">Logic Required</span> Click to edit
-              {{/if}}
-              </div>
-          {{/unless}}
+          {{> EditableCode dataKey=codeDataKey value=routeCode emptyText=emptyText}}
         </td>
         <td>
-          {{> EditableNodeSelector mode="popup" cssClass="action-editable" dataKey=routeNodeDataKey value=nodeId projectVersionId=../projectVersionId scale=0.5 }}
+          {{> EditableNodeSelector mode="popup" cssClass="action-editable" dataKey=nodeDataKey value=nodeId projectVersionId=../projectVersionId scale=0.5 }}
         </td>
-        <td class="btn-delete"><span class="glyphicon glyphicon-remove"></span></td>
+        {{#if canDelete}}
+          <td class="btn-delete"><span class="glyphicon glyphicon-remove"></span></td>
+        {{else}}
+          <td></td>
+        {{/if}}
       </tr>
     {{/each}}
     <tr class="sortable-table-divider">

@@ -1,15 +1,65 @@
-.x-editable-ace .roba-ace {
-  min-width: 300px;
-  min-height: 200px;
+/**
+ * Editor Styling
+ */
+
+.editable-code-editor {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+}
+
+.editable-code-editor > .ace-editor-container {
   width: 100%;
   height: 100%;
 }
 
-.editable-code pre {
-  border-radius: inherit;
+/**
+ * Highlight.js styling
+ */
+.hljs {
   background-color: transparent;
-  border: none;
-  line-height: inherit;
-  padding: 0;
-  margin: 0;
+}
+
+.keyword {
+
+}
+
+.comment {
+
+}
+
+.number {
+
+}
+
+.literal {
+
+}
+
+.built_in {
+
+}
+
+.string {
+
+}
+
+.regexp {
+
+}
+
+.function {
+
+}
+
+.title {
+
+}
+
+.params {
+
+}
+
+.pi {
+
 }

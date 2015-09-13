@@ -162,3 +162,43 @@ button {
   color: #ccc;
   display: none;
 }
+
+/**
+ * Header styles
+ */
+h4.section {
+  padding: 10px 20px;
+  color: #fff;
+}
+
+h4.blue {
+  background-color: #298cff;
+}
+
+h4.grey {
+  background-color: #A5A5A5;
+}
+
+h4.orange {
+  background-color: #ff8400;
+}
+
+h4.green {
+  background-color: #5cb85c;
+}
+
+h4.purple {
+  background-color: #ca80ff;
+}
+
+h4.light-blue {
+  background-color: #5bc0de;
+}
+
+h4.pink {
+  background-color: #fecbff;
+}
+
+h4.yellow {
+  background-color: #efff29;
+}

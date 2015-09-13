@@ -1,21 +1,27 @@
 <template name="AdventureEditActionForm">
-  <div class="panel panel-default action-edit-form" data-action-id="{{_id}}">
+  <div class="action-edit-form" data-action-id="{{_id}}">
     {{#with getActionRecord}}
-      <div class="panel-heading">
+      <div class="action-edit-form-section">
         <span class="field-label">Title:</span>
-        {{> EditableTextField cssClass="action-editable inline" value=title dataKey="title" }}
-        <button class="btn btn-warning btn-xs btn-close-action-edit-form pull-right">X</button>
+        {{> EditableTextField cssClass="inline" value=title dataKey="title" }}
+        <button class="btn btn-warning btn-xs btn-close-action-edit-form pull-right">Done Editing</button>
       </div>
-      <div class="panel-body">
-        <h4>Action Code</h4>
-        {{> EditableCode dataKey="code" value=code }}
 
-        <h4>Action Variables</h4>
+      <h4 class="section blue">Action Code</h4>
+      <div class="action-edit-form-section">
+        {{> EditableCode dataKey="code" value=code emptyText="Click to add code for this action." }}
+      </div>
+
+      <h4 class="section blue">Action Variables</h4>
+      <div class="action-edit-form-section">
         {{> action_edit_variables }}
+      </div>
 
-        <h4>Action Routes</h4>
+      <h4 class="section blue">Action Routes</h4>
+      <div class="action-edit-form-section">
         {{> action_edit_routes }}
       </div>
+
     {{/with}}
   </div>
 </template>

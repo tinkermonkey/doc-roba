@@ -3,32 +3,25 @@
  */
 Template.action_edit_routes.helpers({
   indexedRoutes: function () {
-    var indexedRoutes = _.map(this.routes, function (r, i) {r.index = i; return r; });
+    var routes = this.routes,
+      indexedRoutes = _.map(routes, function (r, i) {
+        r.canDelete = routes.length - 1 > 0;
+        r.index = i;
+        r.codeDataKey = "routes." + r.index + ".routeCode";
+        r.nodeDataKey = "routes." + r.index + ".nodeId";
+        r.logic = "else if";
+        r.emptyText = '<span class="label label-warning">Logic Required</span> Click to edit';
+
+        if(i == routes.length - 1){
+          r.logic = "else";
+          r.emptyText = '<span class="label label-primary">Optional</span> If you chose to not add code for this action, it will be the default action when no other actions are selected.';
+        }
+        if(i == 0) {
+          r.logic = "if";
+        }
+        return r;
+    });
     return _.sortBy(indexedRoutes, function (r) { return r.order });
-  },
-  logic: function (action) {
-    console.log("action: ", action);
-    var logic = "else if";
-    if(this.order == 0){
-      logic = "if";
-    } else if(this.order == action.routes.length - 1 && (this.routeCode && this.routeCode.length == 0)) {
-      logic = "else";
-    }
-    //console.log("Logic: ", this.order, action.routes.length, this.order == action.routes.length - 1, logic, this);
-    return logic;
-  },
-  isLast: function (action) {
-    //console.log("isLast: ", this.order == action.routes.length - 1, this);
-    return this.order == action.routes.length - 1;
-  },
-  editorClass: function () {
-    return "action-editable" + ((this.routeCode && this.routeCode.length) ? "" : " hide")
-  },
-  routeCodeDataKey: function () {
-    return "routes." + this.index + ".routeCode";
-  },
-  routeNodeDataKey: function () {
-    return "routes." + this.index + ".nodeId";
   }
 });
 

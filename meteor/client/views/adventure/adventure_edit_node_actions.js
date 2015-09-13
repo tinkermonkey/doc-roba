@@ -26,9 +26,14 @@ Template.AdventureEditNodeActions.helpers({
  */
 Template.AdventureEditNodeActions.events({
   "click .btn-close-action-edit-form": function (e, instance) {
-    var view = Blaze.getView($(e.target).closest(".action-edit-form").get(0));
-    $(e.target).closest("tr").addClass("hide");
-    $(e.target).closest("tr").prev().find(".btn-edit-action").removeAttr("disabled");
+    var view = Blaze.getView($(e.target).closest(".action-edit-form").get(0)),
+      formContainer = $(e.target).closest(".action-edit-form-container"),
+      actionRow = formContainer.prev();
+
+    formContainer.addClass("hide");
+    actionRow.find(".btn-edit-action").removeAttr("disabled");
+    actionRow.removeClass("hide");
+
     Blaze.remove(view);
   },
   "click .btn-add-action": function (e, instance) {

@@ -1,13 +1,10 @@
 /**
- * set the default setup for x-editable
- */
-$.fn.editable.defaults.mode = "inline";
-
-/**
  * Listen for resize events
  */
 Meteor.startup(function(){
   var self = {};
+
+  // setup a resize event for redraw actions
   Session.set("resize", { timestamp: Date.now(), width: window.innerWidth, height: window.innerHeight });
   $(window).resize(function(event) {
     if(this.resizeTimeout){
@@ -17,6 +14,9 @@ Meteor.startup(function(){
       Session.set("resize", { timestamp: Date.now(), width: window.innerWidth, height: window.innerHeight });
     }.bind(self), 250);
   });
+
+  // set the default setup for x-editable
+  $.fn.editable.defaults.mode = "inline";
 });
 
 /**
