@@ -474,9 +474,11 @@ Schemas.Action = new SimpleSchema({
     type: [ Schemas.ActionRoute ]
   },
   // The code to execute the action
+  // Not really optional, but it needs to be nullable
   code: {
     type: String,
-    defaultValue: ""
+    defaultValue: "",
+    optional: true
   },
   // Standard tracking fields
   dateCreated: {

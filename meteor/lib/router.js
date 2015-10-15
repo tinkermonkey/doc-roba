@@ -173,8 +173,7 @@ Router.map(function () {
     path: "/adventure_log/:adventureId",
     data: function () { return Adventures.findOne(this.params.adventureId); },
     waitOn: function () { return [
-      Meteor.subscribe("adventure", this.params.adventureId),
-      Meteor.subscribe("adventure_log", this.params.adventureId)
+      Meteor.subscribe("adventure", this.params.adventureId)
     ]; }
   });
   this.route("test_result", {

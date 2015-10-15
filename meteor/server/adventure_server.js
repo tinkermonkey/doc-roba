@@ -23,8 +23,16 @@ Meteor.startup(function () {
   Meteor.publish('adventures', function () {
     return Adventures.find({});
   });
-  Meteor.publish('adventure_log', function (adventureId) {
-    return LogMessages.find({"context.adventureId": adventureId});
+  Meteor.publish('adventure_log', function (adventureId, limit) {
+    limit = limit || 100;
+    var options = {sort: { timestamp: -1 }};
+    if(limit > 0){
+      options.limit = limit;
+    }
+    console.log('adventure_log:', adventureId, limit, options);
+    return LogMessages.find({
+      "context.adventureId": adventureId
+    }, options);
   });
   Meteor.publish('adventure_actions', function (adventureId) {
     return AdventureSteps.find({adventureId: adventureId}, {sort: {order: 1}});
