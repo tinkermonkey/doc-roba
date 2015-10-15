@@ -221,7 +221,7 @@ TreeNodeControls.prototype.create = function () {
         tree.lock();
         setTimeout(function () {
           Popover.show({
-            width: window.innerWidth - insetX - tree.config.highlightSurroundMargin - self.shield.attr("r") * 2 * scale,
+            width: 700,
             contentTemplate: 'roba_launcher',
             contentData: new RobaContext({
               route: RobaRouter.routeFromStart(self.node._id)
