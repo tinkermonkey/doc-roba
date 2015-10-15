@@ -3,11 +3,14 @@
  */
 Template.AdventureSelectorActionTargetMenu.helpers({
   getActions: function () {
-    return Actions.find({nodeId: this.node.staticId, projectVersionId: this.node.projectVersionId}, {sort: {title: 1}});
+    var node = (this.type && this.type == NodeTypes.navMenu) ? this : this.node;
+    if(node){
+      return Actions.find({nodeId: node.staticId, projectVersionId: node.projectVersionId}, {sort: {title: 1}});
+    }
   },
   getNavMenus: function () {
     if(this.node && this.node.navMenus){
-      return Nodes.find({nodeId: {$in: this.node.navMenus }, projectVersionId: this.node.projectVersionId}, {sort: {title: 1}});
+      return Nodes.find({staticId: {$in: this.node.navMenus }, projectVersionId: this.node.projectVersionId}, {sort: {title: 1}});
     }
   }
 });

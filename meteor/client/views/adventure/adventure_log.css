@@ -1,25 +1,61 @@
-/*
-ALL: "grey",
-TRACE: "blue",
-DEBUG: "cyan",
-INFO: "green",
-WARN: "yellow",
-ERROR: "red",
-FATAL: "magenta",
-OFF: "grey"
-*/
+
 .adventure-log-table {
   width: 100%;
 }
 
+.adventure-log-table > tbody > tr:hover {
+  background-color: #f5f5f5;
+}
+
+.adventure-log-table .adventure-load-more {
+  padding: 5px;
+  background-color: #f5f5f5;
+}
+
+.adventure-log-table .adventure-loading, .adventure-log-table .adventure-loading:hover {
+  padding: 5px;
+  background-color: transparent;
+  width: 100%;
+  text-align: center;
+}
+
+/**
+ * Header
+ */
+.adventure-log-table th {
+  height: 40px;
+}
+
+.adventure-log-table th > div {
+  position: fixed;
+  top: 0px;
+  padding: 5px;
+  padding-top: 10px;
+  border-bottom: 1px solid #dddddd;
+  background-color: #f5f5f5;
+  height: 35px;
+  width: 100%;
+}
+
+/**
+ * Messages
+ */
+
 .adventure-log-table > tbody > tr > td {
   padding: 0 3px;
+}
+
+.adventure-log-message > div {
+  width: 100%;
 }
 
 .adventure-log-time {
   text-align: right;
 }
 
+/**
+ * Log Levels
+ */
 .log-level-TRACE, .log-level-trace {
   color: #bfbfbf;
 }
@@ -43,6 +79,10 @@ OFF: "grey"
 .log-level-FATAL, .log-level-fatal {
   color: #990099;
 }
+
+/**
+ * Log Senders
+ */
 
 .log-message-sender {
   font-family: "Helvetic Neue", Helvetica, Arial;

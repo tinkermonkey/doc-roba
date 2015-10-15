@@ -35,19 +35,19 @@ Template.AdventureEditNodeActionRow.events({
   },
   "click .btn-execute-action": function (e, instance) {
     // make sure there's an adventure to work with
-    var adventureContext = Template.parentData(2),
+    var adventure = Util.findParentData("adventure"),
       code = this.code;
 
     // make sure the adventure is operating
-    if(adventureContext.adventure.status == AdventureStatus.complete){
+    if(adventure.status == AdventureStatus.complete){
       return;
     }
 
     console.log("Execute Action: ", code);
     if(code.length){
       AdventureCommands.insert({
-        projectId: adventureContext.adventure.projectId,
-        adventureId: adventureContext.adventure._id,
+        projectId: adventure.projectId,
+        adventureId: adventure._id,
         code: code
       }, function (error) {
         if(error){

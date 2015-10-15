@@ -48,6 +48,11 @@ Template.EditableCodeEditor.rendered = function () {
 
       langTools.addCompleter(futureDriverCompleter);
     });
+
+    // give the editor focus
+    setTimeout(function () {
+      editor.focus();
+    }, 100);
   }
 };
 

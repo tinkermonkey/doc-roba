@@ -1,13 +1,21 @@
 <template name="AdventureLogTable">
   <table class="adventure-log-table">
+    <thead>
+      <tr>
+        <th><div>Time</div></th>
+        <th><div>Level</div></th>
+        <th><div>Source</div></th>
+        <th><div>Message</div></th>
+      </tr>
+    </thead>
     <tbody>
 		{{#each messages}}
       <tr>
         <td class="adventure-log-time">{{renderLogTime time}}</td>
         <td class="adventure-log-level log-level-{{level}}">{{level}}</td>
-        <td class="adventure-log-sender  no-wrap">{{sender}}</td>
-        <td>
-          <div style="width: 100%;">
+        <td class="adventure-log-sender no-wrap">{{sender}}</td>
+        <td class="adventure-log-message">
+          <div>
 						{{#with data}}
 							{{> Template.dynamic template=getLogDataTemplate}}
 						{{/with}}
@@ -15,6 +23,28 @@
         </td>
       </tr>
 		{{/each}}
+    {{#if Template.subscriptionsReady}}
+      {{#if hasMoreMessages}}
+        <tr>
+          <td colspan="4" class="adventure-load-more">
+            <button class="btn btn-primary btn-load-more">
+              <span class="glyphicon glyphicon-forward"></span>
+              Load More
+            </button>
+            <button class="btn btn-primary btn-load-all">
+              <span class="glyphicon glyphicon-fast-forward"></span>
+              Load All
+            </button>
+          </td>
+        </tr>
+      {{/if}}
+    {{else}}
+      <tr>
+        <td colspan="4" class="adventure-loading">
+          {{> inline_spinner }}
+        </td>
+      </tr>
+    {{/if}}
     </tbody>
   </table>
 </template>
