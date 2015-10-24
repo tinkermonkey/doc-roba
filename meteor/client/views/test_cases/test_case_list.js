@@ -118,11 +118,7 @@ Template.TestCaseList.events({
       selectable.addClass("selected");
 
       if(instance.data.testCaseId){
-        $(".test-case-content").addClass("intro-slide-left");
-        setTimeout(function () {
-          instance.data.testCaseId.set(selectable.attr("data-pk"));
-          $(".test-case-content").removeClass("intro-slide-left");
-        }, 500);
+        instance.data.testCaseId.set(selectable.attr("data-pk"));
       }
     }
   },
