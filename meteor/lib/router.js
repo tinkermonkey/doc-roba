@@ -125,7 +125,10 @@ Router.map(function () {
       Meteor.subscribe("test_groups", this.params.projectId, this.params._id),
       Meteor.subscribe("test_cases", this.params.projectId, this.params._id),
       Meteor.subscribe("nodes", this.params.projectId, this.params._id),
-      Meteor.subscribe("actions", this.params.projectId, this.params._id)
+      Meteor.subscribe("actions", this.params.projectId, this.params._id),
+      Meteor.subscribe("servers", this.params.projectId, this.params._id),
+      Meteor.subscribe("test_systems", this.params.projectId, this.params._id),
+      Meteor.subscribe("test_agents", this.params.projectId, this.params._id)
     ]; }
   });
   this.route("test_run_template_dashboard", {

@@ -12,6 +12,7 @@
 .test-case-nav {
   display: inline-block;
   width: 25%;
+  max-width: 400px;
   padding: 0;
 }
 
@@ -87,6 +88,7 @@
 .test-case-form {
   padding-left: 20px;
   width: 100%;
+  padding-bottom: 40px;
 }
 
 .test-case-title {
@@ -108,6 +110,7 @@
   display: inline-block;
   padding: 10px;
   border-right: 1px dashed #dddddd;
+  max-width: 400px;
 }
 
 .add-role-container {
@@ -242,4 +245,21 @@
 .removable-wait {
   display: inline-block;
   cursor: pointer;
+}
+
+.test-case-recent-result-container {
+  vertical-align: top;
+  display: inline-block;
+  padding: 10px;
+  width: 60%;
+  max-width: 1200px;
+  border-right: 1px dashed #dddddd;
+}
+
+.test-case-launcher-container {
+  vertical-align: top;
+  display: inline-block;
+  padding: 10px;
+  width: 39%;
+  width: 400px;
 }

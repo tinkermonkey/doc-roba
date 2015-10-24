@@ -10,7 +10,7 @@ Template.TestCase.helpers({
   },
   getRoleWidth: function (testCase) {
     var roleCount = TestCaseRoles.find({testCaseId: testCase.staticId, projectVersionId: this.projectVersionId }).count();
-    console.log("getRoleWidth: ", roleCount);
+    //console.log("getRoleWidth: ", roleCount);
     switch(roleCount){
       case 1:
         return "width: 60%;";
@@ -125,13 +125,13 @@ Template.TestCase.created = function () {
       clearTimeout(instance.updateTimeout);
     }
     instance.updateTimeout = setTimeout(function () {
-      console.log("updateAlignment");
+      //console.log("updateAlignment");
       var waitIds = _.uniq(TestCaseSteps.find({
         testCaseId: instance.data.staticId,
         type: TestCaseStepTypes.wait,
         "data.waitId": {$exists: true }
       }).map(function (step) { return step.data.waitId}));
-      console.log("waitIds: ", waitIds)
+      //console.log("waitIds: ", waitIds)
 
       // clean up the inflation of steps without waitIds
       instance.$(".wait-inflator:not([data-wait-id])").height("0px");
@@ -152,7 +152,7 @@ Template.TestCase.rendered = function () {
 
   // monitor test case step changes to maintain wait alignment
   instance.autorun(function () {
-    console.log("Test Case autorun");
+    //console.log("Test Case autorun");
     var data = Template.currentData();
 
     if(instance.testCaseObserver){
@@ -161,15 +161,15 @@ Template.TestCase.rendered = function () {
 
     instance.testCaseObserver = TestCaseSteps.find({testCaseId: data.staticId}).observe({
       added: function (doc) {
-        console.log("Test case step added: ", doc._id);
+        //console.log("Test case step added: ", doc._id);
         instance.updateAlignment();
       },
       removed: function () {
-        console.log("Test case step removed");
+        //console.log("Test case step removed");
         instance.updateAlignment();
       },
       changed: function () {
-        console.log("Test case step changed");
+        //console.log("Test case step changed");
         instance.updateAlignment();
       }
     });

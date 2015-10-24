@@ -96,6 +96,24 @@ Meteor.startup(function () {
    * Test Result Publications
    * ============================================================================
    */
+  Meteor.publish('test_case_results', function (projectId, testCaseId, limit) {
+    console.log("Publish: test_case_results", testCaseId, limit);
+    // check that there is a project role for the current user
+    if(this.userId && projectId && testCaseId){
+      var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
+      if(role){
+        limit = limit || 10;
+        var options = {sort: { dateCreated: -1 }};
+        if(limit > 0){
+          options.limit = limit;
+        }
+        return TestResults.find({
+          testCaseId: testCaseId
+        }, options);
+      }
+    }
+    return [];
+  });
   Meteor.publish('test_result', function (projectId, testResultId) {
     console.log("Publish: test_result");
     // check that there is a project role for the current user
