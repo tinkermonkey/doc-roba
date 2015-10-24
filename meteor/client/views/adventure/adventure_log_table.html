@@ -9,21 +9,21 @@
       </tr>
     </thead>
     <tbody>
-		{{#each messages}}
-      <tr>
-        <td class="adventure-log-time">{{renderLogTime time}}</td>
-        <td class="adventure-log-level log-level-{{level}}">{{level}}</td>
-        <td class="adventure-log-sender no-wrap">{{sender}}</td>
-        <td class="adventure-log-message">
-          <div>
-						{{#with data}}
-							{{> Template.dynamic template=getLogDataTemplate}}
-						{{/with}}
-          </div>
-        </td>
-      </tr>
-		{{/each}}
     {{#if Template.subscriptionsReady}}
+      {{#each messages}}
+        <tr>
+          <td class="adventure-log-time">{{renderLogTime time}}</td>
+          <td class="adventure-log-level log-level-{{level}}">{{level}}</td>
+          <td class="adventure-log-sender no-wrap">{{sender}}</td>
+          <td class="adventure-log-message">
+            <div>
+              {{#with data}}
+                {{> Template.dynamic template=getLogDataTemplate}}
+              {{/with}}
+            </div>
+          </td>
+        </tr>
+      {{/each}}
       {{#if hasMoreMessages}}
         <tr>
           <td colspan="4" class="adventure-load-more">

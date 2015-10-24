@@ -29,7 +29,7 @@ Meteor.startup(function () {
     if(limit > 0){
       options.limit = limit;
     }
-    console.log('adventure_log:', adventureId, limit, options);
+    //console.log('adventure_log:', adventureId, limit, options);
     return LogMessages.find({
       "context.adventureId": adventureId
     }, options);

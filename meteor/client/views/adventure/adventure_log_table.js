@@ -34,8 +34,6 @@ Template.AdventureLogTable.created = function () {
   var instance = this,
     params = Router.current().params.query;
 
-  console.log("Params: ", params);
-
   // initialize the reactive variables
   instance.loaded = new ReactiveVar(0);
   instance.limit = new ReactiveVar(params.limit ? parseInt(params.limit) : 100);
@@ -55,7 +53,7 @@ Template.AdventureLogTable.created = function () {
   instance.autorun(function () {
     // grab the limit
     var limit = instance.limit.get();
-    console.log("Loading [", limit, "] messages");
+    //console.log("Loading [", limit, "] messages");
 
     // Update the subscription
     var subscription = instance.subscribe("adventure_log", instance.data._id, limit);
@@ -65,7 +63,7 @@ Template.AdventureLogTable.created = function () {
         instance.loaded.set(limit);
       } else {
         var count = LogMessages.find({"context.adventureId": instance.data._id}).count();
-        console.log("Limit:", limit, "Count:", count);
+        //console.log("Limit:", limit, "Count:", count);
         instance.loaded.set(count);
       }
     }
