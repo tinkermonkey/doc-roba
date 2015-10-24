@@ -11,7 +11,7 @@
 
   {{#with getFullContext}}
     <div class="test-case-container">
-      <div class="test-case-nav auto-transition auto-slide-right intro-slide-right">
+      <div class="test-case-nav">
         <div class="home-nav-item active">
           <h4 class="home-top-nav">
             {{#with project}}
@@ -29,7 +29,7 @@
         {{> TestRunTemplateList }}
         {{> TestCaseList project=project version=version connectToSortable=".test-run-item-list" }}
       </div>
-      <div class="test-case-content auto-transition auto-slide-left intro-slide-left">
+      <div class="test-case-content">
         {{#if hasTestRun}}
           {{> TestRunTemplate getTestRunTemplate}}
         {{else}}

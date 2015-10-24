@@ -49,11 +49,7 @@ Template.TestRunTemplateList.events({
     instance.$(".test-run-template-list-item.selected").removeClass("selected");
     selectable.addClass("selected");
 
-    $(".test-case-content").addClass("intro-slide-left");
-    setTimeout(function () {
-      instance.data.testRunTemplateId.set(selectable.attr("data-pk"));
-      $(".test-case-content").removeClass("intro-slide-left");
-    }, 500);
+    instance.data.testRunTemplateId.set(selectable.attr("data-pk"));
   }
 });
 

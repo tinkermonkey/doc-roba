@@ -36,10 +36,7 @@ Template.TestCaseDashboard.created = function () {
  * Template Rendered
  */
 Template.TestCaseDashboard.rendered = function () {
-  setTimeout(function () {
-    $(".auto-slide-right").removeClass("intro-slide-right");
-    $(".auto-slide-left").removeClass("intro-slide-left");
-  }, 500);
+
 };
 
 /**

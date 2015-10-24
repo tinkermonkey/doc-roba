@@ -6,7 +6,7 @@
   {{/contentFor}}
 
   <div class="home-container full-height">
-    <div class="home-nav full-height auto-transition auto-slide-right intro-slide-right">
+    <div class="home-nav full-height">
       <div class="home-nav-item {{#if isActiveDashboard}}active{{/if}}">
         <h3 class="home-top-nav">
           <a href="{{pathFor 'home'}}">Personal Dashboard</a>
@@ -38,7 +38,7 @@
         {{/each}}
       {{/each}}
     </div>
-    <div class="home-content auto-transition auto-slide-left intro-slide-left">
+    <div class="home-content">
       {{#if project}}
         {{#if version}}
           {{> version_dashboard }}
