@@ -6,9 +6,6 @@ Template.DocTree.helpers({
     if(Meteor.user()) {
       return Meteor.user().profile.name;
     }
-  },
-  focusNodes: function () {
-    return FocusNodes.find();
   }
 });
 
