@@ -187,3 +187,20 @@ if(Meteor.isServer) {
     }
   });
 }
+
+/**
+ * Helpers
+ */
+Nodes.helpers({
+  platform: function () {
+    if(this.platformId){
+      return Nodes.findOne({staticId: this.platformId, projectVersionId: this.projectVersionId});
+    }
+  },
+  userType: function () {
+    if(this.userTypeId){
+      return Nodes.findOne({staticId: this.userTypeId, projectVersionId: this.projectVersionId});
+    }
+  }
+});
+
