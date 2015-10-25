@@ -39,3 +39,4 @@ ejson
 spacebars
 check
 twbs:bootstrap
+dburles:collection-helpers
