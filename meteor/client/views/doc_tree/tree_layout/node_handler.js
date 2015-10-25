@@ -462,18 +462,6 @@ TreeNodeHandler.prototype.calcNodeSize = function(d){
 
   // clone this for the bounds of the overall node
   d.bounds = _.clone(d.icon);
-
-  // check for a focus state
-  if(d.focus){
-    d.bounds = {
-      top: -1.5 * this.config.height,
-      bottom: 1.5 * this.config.height,
-      left: -3 * this.config.width,
-      right: 1 * this.config.width
-    };
-    d.bounds.width = d.bounds.right - d.bounds.left;
-    d.bounds.height = d.bounds.bottom - d.bounds.top;
-  }
 };
 
 /**

@@ -12,7 +12,6 @@ TreeLayout = function (elementId, context, config) {
   _.defaults(self.config, DocTreeConfig.tree);
 
   // initialize the master node list and link list
-  self.focusNodeList = []; // List of nodes which should have focus
   self.scale = 1; // Default scale for the main tree view
   self.translation = [0, 0]; // Default translation for the main tree view
   self.nodeStateCache = {}; // Cache for storing node state information between template views
@@ -21,7 +20,6 @@ TreeLayout = function (elementId, context, config) {
   self.state = {
     locked: false,
     initialized: false,
-    focusedNodes: [],
     selectedNodes: [],
     edit: {},
     inDrag: false
@@ -66,7 +64,6 @@ TreeLayout = function (elementId, context, config) {
     .attr("width", self.width)
     .attr("height", self.height);
 
-  self.focusLayer     = self.layoutRoot.select("#focus-layer");
   self.highlightLayer = self.layoutRoot.select("#highlight-layer");
 
   // Setup the svg defs section
@@ -784,8 +781,6 @@ TreeLayout.prototype.scaleAndTranslate = function (scale, translation, callback,
     translation: this.translation.slice()
   });
 
-  //this.updateFocusedNodes();
-
   if (duration !== undefined) {
     self.layoutRoot.selectAll(".global-layer, #highlight-layer")
       .transition()
@@ -857,9 +852,6 @@ TreeLayout.prototype.baseClickHandler = function(e){
 
     // hide the node controls
     self.nodeControls.hide();
-
-    // clear any focus from nodes
-    this.clearFocusedNodes();
   }
 };
 
@@ -913,9 +905,6 @@ TreeLayout.prototype.nodeClickHandler = function(e, d){
     // toggle select the node clicked
     var selected = nodeSelect.classed("node-selected");
     nodeSelect.classed("node-selected", !selected);
-  } else if(e.altKey) {
-    // toggle the focus state
-    self.toggleNodeFocus(node);
   } else {
     // clear any selection
     self.layoutRoot.selectAll('.node-selected').classed("node-selected", false);
@@ -1102,9 +1091,6 @@ TreeLayout.prototype.update = function(duration){
   // Update the inset view
   self.insetLayout.update(duration);
 
-  // update any focused nodes
-  //self.updateFocusedNodes(duration);
-
   // update the controls
   setTimeout(function () {
     self.nodeControls.update();
@@ -1128,8 +1114,7 @@ TreeLayout.prototype.cacheNodeState = function(){
   _.each(self.nodeHandler.getNodes(), function (node) {
     self.nodeStateCache[ node._id ] = {
       visExpanded: node.visExpanded,
-      logExpanded: node.logExpanded,
-      focus: node.focus
+      logExpanded: node.logExpanded
     };
   });
 
@@ -1147,7 +1132,6 @@ TreeLayout.prototype.restoreCachedNodeState = function(){
     if(self.nodeStateCache[ node._id ] !== undefined){
       node.visExpanded = self.nodeStateCache[ node._id ].visExpanded;
       node.logExpanded = self.nodeStateCache[ node._id ].logExpanded;
-      node.focus = self.nodeStateCache[ node._id ].focus;
     }
   });
 };

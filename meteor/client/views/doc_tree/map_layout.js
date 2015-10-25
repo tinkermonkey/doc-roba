@@ -20,7 +20,6 @@ MapLayout = function (elementId, context, config) {
 
   // New state storage structure
   self.state = {
-    focusedNodes: [],
     selectedNodes: [],
     edit: {},
     inDrag: false
@@ -318,8 +317,6 @@ MapLayout.prototype.scaleAndTranslate = function (scale, translation, duration, 
     scale: self.scale,
     translation: self.translation.slice()
   });
-
-  //this.updateFocusedNodes();
 
   if (duration !== undefined) {
     self.layoutRoot.select(".global-layer")

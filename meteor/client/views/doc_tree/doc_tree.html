@@ -32,14 +32,10 @@
     <svg id="doc-tree-base" class="doc-tree-svg">
       <g class="global-layer">
         <g class="link-layer"></g>
-        <g id="focus-layer"></g>
       </g>
     </svg>
     <div style="position: fixed; top:0px; left: 0px;">
       <div id="tree-html-layer">
-        {{#each focusNodes}}
-          {{> focus_node }}
-        {{/each}}
       </div>
     </div>
     <svg class="doc-tree-svg no-mouse">

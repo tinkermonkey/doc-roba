@@ -59,9 +59,6 @@ Template.DocTree.rendered = function () {
       // restore the cached node state
       self.treeLayout.restoreCachedNodeState();
 
-      // restore the focused node list
-      self.treeLayout.restoreFocusedNodeList();
-
       // set up the base
       self.treeLayout.update();
 
