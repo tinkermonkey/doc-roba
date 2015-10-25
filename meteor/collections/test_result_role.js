@@ -3,7 +3,7 @@
  * Test role result - the result for a single user
  * ============================================================================
  */
-Schemas.TestRoleResult = new SimpleSchema({
+Schemas.TestResultRole = new SimpleSchema({
   // Link to the project to which this test belongs
   projectId: {
     type: String,
@@ -64,14 +64,14 @@ Schemas.TestRoleResult = new SimpleSchema({
     optional: true
   }
 });
-TestRoleResults = new Mongo.Collection("test_role_results");
-TestRoleResults.attachSchema(Schemas.TestRoleResult);
-TestRoleResults.allow({
+TestResultRoles = new Mongo.Collection("test_result_roles");
+TestResultRoles.attachSchema(Schemas.TestResultRole);
+TestResultRoles.allow({
   insert: allowIfAuthenticated,
   update: allowIfAuthenticated,
   remove: allowIfAuthenticated
 });
-TestRoleResults.deny({
+TestResultRoles.deny({
   insert: allowIfTester,
   update: allowIfTester,
   remove: allowIfTester,

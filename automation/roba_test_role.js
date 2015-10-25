@@ -15,11 +15,11 @@ var Future      = require("fibers/future"),
   RobaReady     = require("./roba_ready"),
   RobaContext   = require("./roba_context"),
   argv          = require("minimist")(process.argv.slice(2)),
-  testRoleResultId = argv.roleId,
+  testResultRoleId = argv.roleId,
   singleUseToken   = argv.token,
   timestamp     = moment().format("YYYY-MM-DD_HH-mm-ss"),
   logger        = log4js.getLogger("test_role"),
-  logPath       = fs.realpathSync(__dirname + '/..') + '/logs/test_role_results/' + timestamp + '_' + testRoleResultId + '/',
+  logPath       = fs.realpathSync(__dirname + '/..') + '/logs/test_result_roles/' + timestamp + '_' + testResultRoleId + '/',
   logFile       = logPath + 'role_result.log',
   driverEnded   = false,
   endIntentional= false,
@@ -28,10 +28,10 @@ var Future      = require("fibers/future"),
   test, resultLink,
   TestResultStatus, TestResultCodes, TestCaseStepTypes, ScreenshotKeys;
 
-// Need a testRoleResultId to do anything
+// Need a testResultRoleId to do anything
 //console.log("roba_test_role arguments: ", argv);
 //console.log("roba_test_role raw: ", process.argv);
-if(!testRoleResultId){
+if(!testResultRoleId){
   throw new Error("No roleId specified");
   process.exit(1);
 } else if(!singleUseToken){
@@ -77,7 +77,7 @@ Future.task(function(){
     logger.error("Fatal error during test role execution: ", e);
     logger.error(new Error(e.toString()).trace);
     if(ddpLink){
-      ddpLink.setTestRoleResultStatus(testRoleResultId, 0);
+      ddpLink.setTestResultRoleStatus(testResultRoleId, 0);
       Exit(1);
     }
   }
@@ -89,10 +89,10 @@ Future.task(function(){
  */
 function ExecuteTestRole () {
   //create the context
-  context = new RobaContext({testRoleResultId: testRoleResultId});
+  context = new RobaContext({testResultRoleId: testResultRoleId});
 
   // Create the ddp link
-  logger.info("TestRole " + testRoleResultId + " launched");
+  logger.info("TestRole " + testResultRoleId + " launched");
   ddpLink = new DDPLink({}, context);
 
   // Connect to the server
@@ -115,7 +115,7 @@ function ExecuteTestRole () {
 
   // load the data bundle
   logger.debug("Loading the TestRole Manifest");
-  test = ddpLink.call("loadTestRoleManifest", [testRoleResultId]);
+  test = ddpLink.call("loadTestRoleManifest", [testResultRoleId]);
   logger.trace("Manifest: ", test);
   context.update({
     projectId:        test.role.projectId,
@@ -125,8 +125,8 @@ function ExecuteTestRole () {
     testRunId:        test.role.testRunId,
     testResultId:     test.role.testResultId
   });
-  ddpLink.setTestRoleResultStatus(test.role._id, TestResultStatus.launched);
-  context.milestone({ type: "test_role_result", data: test.role });
+  ddpLink.setTestResultRoleStatus(test.role._id, TestResultStatus.launched);
+  context.milestone({ type: "test_result_role", data: test.role });
 
   // load a live record so that we can know when to abort
   resultLink = ddpLink.liveRecord("test_run_result", test.result._id, "test_results");
@@ -146,7 +146,7 @@ function ExecuteTestRole () {
       driverEnded = true;
       if(!endIntentional){
         logger.error("Driver end doesn't look intentional:", event);
-        ddpLink.setTestRoleResultStatus(this._id, TestResultStatus.failed);
+        ddpLink.setTestResultRoleStatus(this._id, TestResultStatus.failed);
 
         // exit
         Exit(1);
@@ -175,27 +175,27 @@ function ExecuteTestRole () {
   // update the steps status' to queued
   logger.trace("Setting steps to queued status");
   _.each(test.steps, function (step) {
-    ddpLink.setTestStepResultStatus(step._id, TestResultStatus.queued);
+    ddpLink.setTestResultStepStatus(step._id, TestResultStatus.queued);
   });
 
   // get the route
   context.backup(); //backup the context so we can restore it after each step
   driver.getClientLogs();
-  ddpLink.setTestRoleResultStatus(test.role._id, TestResultStatus.executing);
+  ddpLink.setTestResultRoleStatus(test.role._id, TestResultStatus.executing);
   var i = 0, step, pass = true;
   while(i < test.steps.length && !resultLink.abort && !driverEnded && pass){
     step = test.steps[i];
     context.restore(); // erase any context from a previous step
-    context.update({testStepResultId: step._id}); // each step handler should further update the context
+    context.update({testResultStepId: step._id}); // each step handler should further update the context
 
     // if the role is failed, skip over the rest of the steps
     if(!pass){
-      ddpLink.setTestStepResultStatus(step._id, TestResultStatus.skipped);
+      ddpLink.setTestResultStepStatus(step._id, TestResultStatus.skipped);
       i++;
       continue;
     }
 
-    ddpLink.setTestStepResultStatus(step._id, TestResultStatus.launched);
+    ddpLink.setTestResultStepStatus(step._id, TestResultStatus.launched);
     logger.info("Executing Test Step " + (i + 1) + " of " + test.steps.length);
     context.milestone({ type: "step", data: step });
 
@@ -221,12 +221,12 @@ function ExecuteTestRole () {
           throw new Error("Test Role Execution failed: Unknown step type [" + step.type + "]");
       }
       // done
-      ddpLink.setTestStepResultStatus(step._id, TestResultStatus.complete);
+      ddpLink.setTestResultStepStatus(step._id, TestResultStatus.complete);
     } catch (error) {
       logger.error("Step execution failed: ", error);
       pass = false;
-      ddpLink.setTestStepResultStatus(step._id, TestResultStatus.error);
-      ddpLink.setTestStepResultCode(step._id, TestResultCodes.fail);
+      ddpLink.setTestResultStepStatus(step._id, TestResultStatus.error);
+      ddpLink.setTestResultStepCode(step._id, TestResultCodes.fail);
     }
 
     i++;
@@ -244,8 +244,8 @@ function ExecuteTestRole () {
     });
   }
 
-  ddpLink.setTestRoleResultStatus(test.role._id, TestResultStatus.complete);
-  ddpLink.setTestRoleResultCode(test.role._id, pass ? TestResultCodes.pass : TestResultCodes.fail);
+  ddpLink.setTestResultRoleStatus(test.role._id, TestResultStatus.complete);
+  ddpLink.setTestResultRoleCode(test.role._id, pass ? TestResultCodes.pass : TestResultCodes.fail);
 
   // Exit out
   Exit(0);
@@ -257,7 +257,7 @@ function ExecuteTestRole () {
  */
 function ExecuteNodeStep (step) {
   logger.debug("Executing node step: ", step.order);
-  ddpLink.setTestStepResultStatus(step._id, TestResultStatus.executing);
+  ddpLink.setTestResultStepStatus(step._id, TestResultStatus.executing);
 
   // Update the context
   context.update({nodeId: step.data.node.staticId});
@@ -281,10 +281,10 @@ function ExecuteNodeStep (step) {
   ddpLink.saveImage(driver.getScreenshot(), ScreenshotKeys.afterLoad);
 
   // Save the validation checks
-  ddpLink.saveTestStepResultChecks(step._id, result.checks);
+  ddpLink.saveTestResultStepChecks(step._id, result.checks);
 
   // Set the result code
-  ddpLink.setTestStepResultCode(step._id, pass ? TestResultCodes.pass : TestResultCodes.fail);
+  ddpLink.setTestResultStepCode(step._id, pass ? TestResultCodes.pass : TestResultCodes.fail);
   return pass;
 }
 
@@ -293,7 +293,7 @@ function ExecuteNodeStep (step) {
  * @param step
  */
 function ExecuteActionStep (step) {
-  ddpLink.setTestStepResultStatus(step._id, TestResultStatus.executing);
+  ddpLink.setTestResultStepStatus(step._id, TestResultStatus.executing);
 
   // Update the context
   context.update({ actionId: step.data.action.staticId});
@@ -331,10 +331,10 @@ function ExecuteActionStep (step) {
 
   // Save the validation checks
   // TODO: splice in the action result & checks
-  ddpLink.saveTestStepResultChecks(step._id, result.checks);
+  ddpLink.saveTestResultStepChecks(step._id, result.checks);
 
   // Set the result code
-  ddpLink.setTestStepResultCode(step._id, pass ? TestResultCodes.pass : TestResultCodes.fail);
+  ddpLink.setTestResultStepCode(step._id, pass ? TestResultCodes.pass : TestResultCodes.fail);
   return pass;
 }
 
@@ -343,7 +343,7 @@ function ExecuteActionStep (step) {
  * @param step
  */
 function ExecuteNavigationStep (step) {
-  ddpLink.setTestStepResultStatus(step._id, TestResultStatus.executing);
+  ddpLink.setTestResultStepStatus(step._id, TestResultStatus.executing);
 
   // fetch the route from the server
   var route = ddpLink.call("loadNavigationRoute", [step.data.destinationId, step.data.sourceId, step.projectVersionId]);
@@ -415,10 +415,10 @@ function ExecuteNavigationStep (step) {
   }
 
   // Save the validation checks
-  ddpLink.saveTestStepResultChecks(step._id, checks);
+  ddpLink.saveTestResultStepChecks(step._id, checks);
 
   // Set the result code
-  ddpLink.setTestStepResultCode(step._id, pass ? TestResultCodes.pass : TestResultCodes.fail);
+  ddpLink.setTestResultStepCode(step._id, pass ? TestResultCodes.pass : TestResultCodes.fail);
   return pass;
 }
 

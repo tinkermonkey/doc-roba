@@ -1,7 +1,7 @@
 /**
  * Template Helpers
  */
-Template.TestRoleResultMap.helpers({
+Template.TestResultRoleMap.helpers({
   height: function () {
     var height = 0;
     var steps = this.steps;
@@ -41,12 +41,12 @@ Template.TestRoleResultMap.helpers({
 /**
  * Template Event Handlers
  */
-Template.TestRoleResultMap.events({});
+Template.TestResultRoleMap.events({});
 
 /**
  * Template Created
  */
-Template.TestRoleResultMap.created = function () {
+Template.TestResultRoleMap.created = function () {
   var instance = this;
   //instance.steps = new ReactiveVar([]);
 };
@@ -54,7 +54,7 @@ Template.TestRoleResultMap.created = function () {
 /**
  * Template Rendered
  */
-Template.TestRoleResultMap.rendered = function () {
+Template.TestResultRoleMap.rendered = function () {
   var instance = this;
 
   // for the data binding we just need to setup an update call
@@ -62,7 +62,7 @@ Template.TestRoleResultMap.rendered = function () {
   instance.autorun(function () {
     var data = Template.currentData(),
       startTime = Date.now();
-    Meteor.log.debug("Auto-run executing ResultMap: ", data.testRoleResult._id);
+    Meteor.log.debug("Auto-run executing ResultMap: ", data.testResultRole._id);
 
     // Get the log messages and scrub nodes and actions from them
     var nodes = [],
@@ -72,7 +72,7 @@ Template.TestRoleResultMap.rendered = function () {
     LogMessages.find({
       "sender": "context",
       "data.type": {$in: ["node", "action"]},
-      "context.testRoleResultId": data.testRoleResult._id
+      "context.testResultRoleId": data.testResultRole._id
     }, {sort: {time: 1}}).forEach(function (message, i) {
       console.log("RoleResultMap: ", message);
       if(message.data[0].type == "node"){
@@ -102,6 +102,6 @@ Template.TestRoleResultMap.rendered = function () {
 /**
  * Template Destroyed
  */
-Template.TestRoleResultMap.destroyed = function () {
+Template.TestResultRoleMap.destroyed = function () {
   
 };

@@ -69,3 +69,12 @@ TestCases.deny({
   fetch: ['projectId']
 });
 trackChanges(TestCases, "test_cases");
+
+/**
+ * Helpers
+ */
+TestCases.helpers({
+  roles: function () {
+    return TestCaseRoles.find({testCaseId: this.staticId, projectVersionId: this.projectVersionId}, {sort: {order: 1}});
+  }
+});

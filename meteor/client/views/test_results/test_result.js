@@ -7,7 +7,7 @@ Template.TestResult.helpers({
     return this;
   },
   roleResults: function () {
-    return TestRoleResults.find({testResultId: this._id});
+    return TestResultRoles.find({testResultId: this._id});
   }
 });
 

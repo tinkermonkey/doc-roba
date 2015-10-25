@@ -7,9 +7,9 @@
     <h2>Test Roles</h2>
 
     <div class="no-wrap">
-      {{#if hasRoles}}
-        {{#each testCaseRoles}}
-          <div class="test-case-role-container" style="{{getRoleWidth ..}}">
+      {{#if roles.count}}
+        {{#each roles}}
+          <div class="test-case-role-container">
             {{> TestCaseRole }}
           </div>
         {{/each}}

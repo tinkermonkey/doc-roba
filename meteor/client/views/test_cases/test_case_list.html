@@ -31,10 +31,10 @@
     </div>
   </div>
   <div class="test-case-list">
-    {{#each getGroups}}
+    {{#each baseGroups}}
       {{> TestCaseListGroup }}
     {{/each}}
-    {{#each getTestCases}}
+    {{#each baseTestCases}}
       {{> TestCaseListItem }}
     {{/each}}
     <div class="search-no-results" style="display: none;">

@@ -1,13 +1,13 @@
-<template name="TestStepResult">
-  <tr class="test-step-result">
-    <td class="test-step-result-body {{getStepClass}}" data-step-id="{{step._id}}">
-      <div class="test-step-result-body-content">
-        <div class="test-step-result-title-rotate">
-          <div class="test-step-result-title-text">{{renderLookup "TestCaseStepTypesLookup" step.type}}</div>
+<template name="TestResultStep">
+  <tr class="test-result-step">
+    <td class="test-result-step-body {{getStepClass}}" data-step-id="{{step._id}}">
+      <div class="test-result-step-body-content">
+        <div class="test-result-step-title-rotate">
+          <div class="test-result-step-title-text">{{renderLookup "TestCaseStepTypesLookup" step.type}}</div>
         </div>
         <div>
-          <div class="test-role-result-map-spacer">
-            {{> TestRoleResultMap steps=getResultSteps testRoleResult=../..}}
+          <div class="test-result-role-map-spacer">
+            {{> TestResultRoleMap steps=getResultSteps testResultRole=../..}}
           </div>
         </div>
         <div><!-- needed to isolate the block display screenshots container -->
@@ -34,7 +34,7 @@
           <span class="glyphicon glyphicon-arrow-right"></span>
         </div>
         <div class="test-result-detail-2" style="display: none;">
-          {{> TestStepResultLog getStepLogMessages }}
+          {{> TestResultStepLog getStepLogMessages }}
         </div>
         <div class="test-result-body-sponge"></div>
       </div>

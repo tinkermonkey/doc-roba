@@ -2,25 +2,25 @@
   padding: 5px;
 }
 
-.test-role-result-container {
+.test-result-role-container {
   display: inline-block;
   vertical-align: top;
   padding: 10px;
   border-right: 1px dashed #dddddd;
 }
 
-.test-role-result-table {
+.test-result-role-table {
   border-collapse: separate;
   border-spacing: 2px;
 }
 
-.test-role-result-table td {
+.test-result-role-table td {
   padding: 2px;
   vertical-align: top;
   height: 100%;
 }
 
-.test-step-result-title-rotate {
+.test-result-step-title-rotate {
   transform: rotate(-90deg);
   transform-origin: right bottom;
   -webkit-transform: rotate(-90deg);
@@ -30,7 +30,7 @@
   margin-left: -10px;
 }
 
-.test-step-result-title-text {
+.test-result-step-title-text {
   color: #fff;
   text-align: right;
   width: 75px;
@@ -38,27 +38,27 @@
   margin-left: -55px;
 }
 
-.test-step-result-0 {
+.test-result-step-0 {
   background-color: #0A7BFF !important;
 }
 
-.test-step-result-1 {
+.test-result-step-1 {
   background-color: #5cb85c !important;
 }
 
-.test-step-result-2 {
+.test-result-step-2 {
   background-color: #9701ff !important;
 }
 
-.test-step-result-3 {
+.test-result-step-3 {
   background-color: #5bc0de !important;
 }
 
-.test-step-result-4 {
+.test-result-step-4 {
   background-color: #ff8400 !important;
 }
 
-.test-step-result-executing {
+.test-result-step-executing {
   background-color: #0A7BFF !important;
   background-image: url('/roba_stripe.svg');
   background-repeat: no-repeat;
@@ -66,17 +66,17 @@
   background-size: contain;
 }
 
-.test-step-result-error {
+.test-result-step-error {
   background-color: #ff0000 !important;
 }
 
-.test-step-result-body {
+.test-result-step-body {
   border-radius: 10px;
   background-color: #CCCCCC;
   padding: 0px 10px 0px 25px !important;
 }
 
-.test-step-result-body-content {
+.test-result-step-body-content {
   border-radius: 8px;
   background-color: #fff;
   padding: 5px;
@@ -85,16 +85,16 @@
   height: 100%;
 }
 
-.test-step-result-body-content > div {
+.test-result-step-body-content > div {
   display: table-cell;
   vertical-align: top;
 }
 
-.test-role-result-map-spacer {
+.test-result-role-map-spacer {
   width: 200px;
 }
 
-.test-role-result-map-container {
+.test-result-role-map-container {
   /*position: absolute;*/
 }
 

@@ -4,9 +4,9 @@ var screenshotPitch = 23;
 /**
  * Template Helpers
  */
-Template.TestStepResult.helpers({
+Template.TestResultStep.helpers({
   screenshots: function () {
-    return ScreenShots.find({ testStepResultId: this.step._id }, {sort: {uploadedAt: -1}}).map(function (image, i) {image.index = i; return image});
+    return ScreenShots.find({ testResultStepId: this.step._id }, {sort: {uploadedAt: -1}}).map(function (image, i) {image.index = i; return image});
   },
   getScreenshotBottom: function () {
     return this.index * screenshotPitch;
@@ -15,32 +15,32 @@ Template.TestStepResult.helpers({
     switch (this.step.status) {
       case TestResultStatus.executing:
       case TestResultStatus.launched:
-        return "test-step-result-executing";
+        return "test-result-step-executing";
       case TestResultStatus.complete:
-        return "test-step-result-" + this.step.type;
+        return "test-result-step-" + this.step.type;
       case TestResultStatus.error:
-        return "test-step-result-error";
+        return "test-result-step-error";
     }
   },
   getStepTemplate: function () {
     switch (this.step.type) {
       case TestCaseStepTypes.node:
-        return "TestStepResultNode";
+        return "TestResultStepNode";
       case TestCaseStepTypes.action:
-        return "TestStepResultAction";
+        return "TestResultStepAction";
       case TestCaseStepTypes.navigate:
-        return "TestStepResultNavigate";
+        return "TestResultStepNavigate";
       case TestCaseStepTypes.wait:
-        return "TestStepResultWait";
+        return "TestResultStepWait";
       case TestCaseStepTypes.custom:
-        return "TestStepResultCustom";
+        return "TestResultStepCustom";
     }
   },
   getStepLogMessages: function () {
     if(this.stepMap[this.step._id].order < this.stepMap.list.length - 1){
       // for most steps grab all of the messages after the context start and before the next start
       return LogMessages.find({
-        "context.testRoleResultId": this.step.testRoleResultId,
+        "context.testResultRoleId": this.step.testResultRoleId,
         $and: [
           { time: { $gte: this.stepMap[this.step._id].startTime } },
           { time: { $lt: this.stepMap[this.step._id].endTime } }
@@ -49,7 +49,7 @@ Template.TestStepResult.helpers({
     } else {
       // for the last step grab everything
       return LogMessages.find({
-        "context.testRoleResultId": this.step.testRoleResultId,
+        "context.testResultRoleId": this.step.testResultRoleId,
         time: { $gte: this.stepMap[this.step._id].startTime }
       }, {sort: {time: 1}});
     }
@@ -64,7 +64,7 @@ Template.TestStepResult.helpers({
 /**
  * Template Event Handlers
  */
-Template.TestStepResult.events({
+Template.TestResultStep.events({
   "click .test-result-detail-1-reveal": function (e, instance) {
     var reveal = $(e.target).closest(".test-result-detail-reveal"),
       detail1 = instance.$(".test-result-detail-1"),
@@ -122,21 +122,21 @@ Template.TestStepResult.events({
 /**
  * Template Created
  */
-Template.TestStepResult.created = function () {
+Template.TestResultStep.created = function () {
   this.timeCreated = Date.now();
-  //console.log("TestStepResult.created: ", Date.now());
+  //console.log("TestResultStep.created: ", Date.now());
 };
 
 /**
  * Template Rendered
  */
-Template.TestStepResult.rendered = function () {
-  //console.log("TestStepResult.rendered: ", Date.now() - this.timeCreated);
+Template.TestResultStep.rendered = function () {
+  //console.log("TestResultStep.rendered: ", Date.now() - this.timeCreated);
 };
 
 /**
  * Template Destroyed
  */
-Template.TestStepResult.destroyed = function () {
+Template.TestResultStep.destroyed = function () {
   
 };

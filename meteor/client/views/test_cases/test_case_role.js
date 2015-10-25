@@ -2,12 +2,6 @@
  * Template Helpers
  */
 Template.TestCaseRole.helpers({
-  testCaseSteps: function () {
-    return TestCaseSteps.find({testCaseRoleId: this.staticId}, {sort: {order: 1}});
-  },
-  hasSteps: function () {
-    return TestCaseSteps.find({testCaseRoleId: this.staticId}, {sort: {order: 1}}).count() > 0;
-  },
   TestCaseStepTypes: function () {
     return TestCaseStepTypes;
   }

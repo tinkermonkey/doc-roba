@@ -1,6 +1,6 @@
-<template name="TestStepResultNode">
+<template name="TestResultStepNode">
   {{debug "checks" checks}}
   {{#with nodeContext}}
-    {{> TestStepResultNodeMilestone node=this checks=../checks}}
+    {{> TestResultStepNodeMilestone node=this checks=../checks}}
   {{/with}}
 </template>

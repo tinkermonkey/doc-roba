@@ -77,3 +77,12 @@ TestResults.deny({
   remove: allowIfTester,
   fetch: ['projectId']
 });
+
+/**
+ * Helpers
+ */
+TestResults.helpers({
+  roleResults: function () {
+    return Nodes.findOne({staticId: this.platformId, projectVersionId: this.projectVersionId});
+  }
+});

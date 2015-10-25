@@ -2,10 +2,10 @@
  * Template Helpers
  */
 Template.TestCaseList.helpers({
-  getGroups: function () {
+  baseGroups: function () {
     return TestGroups.find({ parentGroupId: null, projectVersionId: this.version._id }, { sort: { title: 1 } });
   },
-  getTestCases: function () {
+  baseTestCases: function () {
     return TestCases.find({ testGroupId: null, projectVersionId: this.version._id }, { sort: { title: 1 } });
   }
 });

@@ -1,30 +1,30 @@
 /**
  * Template Helpers
  */
-Template.TestStepResultWait.helpers({});
+Template.TestResultStepWait.helpers({});
 
 /**
  * Template Event Handlers
  */
-Template.TestStepResultWait.events({});
+Template.TestResultStepWait.events({});
 
 /**
  * Template Created
  */
-Template.TestStepResultWait.created = function () {
+Template.TestResultStepWait.created = function () {
   
 };
 
 /**
  * Template Rendered
  */
-Template.TestStepResultWait.rendered = function () {
+Template.TestResultStepWait.rendered = function () {
   
 };
 
 /**
  * Template Destroyed
  */
-Template.TestStepResultWait.destroyed = function () {
+Template.TestResultStepWait.destroyed = function () {
   
 };

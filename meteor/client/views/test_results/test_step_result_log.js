@@ -1,7 +1,7 @@
 /**
  * Template Helpers
  */
-Template.TestStepResultLog.helpers({
+Template.TestResultStepLog.helpers({
   maxLogWidth: function () {
     return Template.instance().maxLogWidth.get()
   }
@@ -10,12 +10,12 @@ Template.TestStepResultLog.helpers({
 /**
  * Template Event Handlers
  */
-Template.TestStepResultLog.events({});
+Template.TestResultStepLog.events({});
 
 /**
  * Template Created
  */
-Template.TestStepResultLog.created = function () {
+Template.TestResultStepLog.created = function () {
   this.startTime = Date.now();
   this.maxLogWidth = new ReactiveVar(parseInt(window.innerWidth / 3));
 };
@@ -23,8 +23,8 @@ Template.TestStepResultLog.created = function () {
 /**
  * Template Rendered
  */
-Template.TestStepResultLog.rendered = function () {
-  console.log("TestStepResultLog.rendered: ", Date.now() - this.startTime);
+Template.TestResultStepLog.rendered = function () {
+  console.log("TestResultStepLog.rendered: ", Date.now() - this.startTime);
   var instance = this;
   instance.autorun(function () {
     var resize = Session.get("resize");
@@ -37,6 +37,6 @@ Template.TestStepResultLog.rendered = function () {
 /**
  * Template Destroyed
  */
-Template.TestStepResultLog.destroyed = function () {
+Template.TestResultStepLog.destroyed = function () {
   
 };

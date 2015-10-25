@@ -73,3 +73,21 @@ TestCaseRoles.deny({
   fetch: ['projectId']
 });
 trackChanges(TestCaseRoles, "test_case_roles");
+
+/**
+ * Helpers
+ */
+TestCaseRoles.helpers({
+  steps: function () {
+    return TestCaseSteps.find({testCaseRoleId: this.staticId, projectVersionId: this.projectVersionId}, {sort: {order: 1}});
+  },
+  step: function (order) {
+    return TestCaseSteps.findOne({testCaseRoleId: this.staticId, projectVersionId: this.projectVersionId, order: order});
+  },
+  platform: function () {
+    var firstStep = this.step(0);
+    if(firstStep && firstStep.firstNode()){
+      return firstStep.firstNode().platform();
+    }
+  }
+});

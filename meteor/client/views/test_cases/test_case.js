@@ -2,24 +2,6 @@
  * Template Helpers
  */
 Template.TestCase.helpers({
-  testCaseRoles: function () {
-    return TestCaseRoles.find({testCaseId: this.staticId, projectVersionId: this.projectVersionId });
-  },
-  hasRoles: function () {
-    return TestCaseRoles.find({testCaseId: this.staticId, projectVersionId: this.projectVersionId }).count() > 0;
-  },
-  getRoleWidth: function (testCase) {
-    var roleCount = TestCaseRoles.find({testCaseId: testCase.staticId, projectVersionId: this.projectVersionId }).count();
-    //console.log("getRoleWidth: ", roleCount);
-    switch(roleCount){
-      case 1:
-        return "width: 60%;";
-      case 2:
-        return "width: 45%;";
-      default:
-        return "";
-    }
-  }
 });
 
 /**
@@ -54,13 +36,13 @@ Template.TestCase.events({
   },
   "click .btn-add-role": function (e, instance) {
     var testCase = instance.data,
-      order = TestCaseRoles.find({testCaseId: testCase.staticId }).count();
+      order = testCase.roles().count();
     TestCaseRoles.insert({
       projectId: testCase.projectId,
       projectVersionId: testCase.projectVersionId,
       testCaseId: testCase.staticId,
       order: order,
-      title: "Test Role"
+      title: "New Role"
     });
   }
 });

@@ -212,8 +212,8 @@ function ExecuteAdventure () {
     } catch (error) {
       logger.error("Step execution failed: ", error);
       pass = false;
-      ddpLink.setTestStepResultStatus(step._id, TestResultStatus.error);
-      ddpLink.setTestStepResultCode(step._id, TestResultCodes.fail);
+      ddpLink.setTestResultStepStatus(step._id, TestResultStatus.error);
+      ddpLink.setTestResultStepCode(step._id, TestResultCodes.fail);
     }
 
     // done

@@ -1,3 +1,6 @@
 <template name="TestCaseLauncher">
   <h2><span class="glyphicon glyphicon-send"></span> Launcher</h2>
+  {{#each roles}}
+    <div>{{title}} ({{platform.title}})</div>
+  {{/each}}
 </template>

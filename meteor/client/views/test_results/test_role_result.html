@@ -1,11 +1,11 @@
-<template name="TestRoleResult">
+<template name="TestResultRole">
   {{#if Template.subscriptionsReady}}
     {{#with resultWithRole}}
       <h3>{{testCaseRole.title}}</h3>
     {{/with}}
-    <table class="test-role-result-table">
+    <table class="test-result-role-table">
       {{#each stepResults}}
-        {{> TestStepResult step=this stepMap=getStepMap }}
+        {{> TestResultStep step=this stepMap=getStepMap }}
       {{/each}}
     </table>
   {{/if}}

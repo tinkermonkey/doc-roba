@@ -3,7 +3,7 @@
  * Test step result - the result for a single user
  * ============================================================================
  */
-Schemas.TestStepResult = new SimpleSchema({
+Schemas.TestResultStep = new SimpleSchema({
   // Link to the project to which this test belongs
   projectId: {
     type: String,
@@ -26,7 +26,7 @@ Schemas.TestStepResult = new SimpleSchema({
     denyUpdate: true
   },
   // Link to the test role result
-  testRoleResultId: {
+  testResultRoleId: {
     type: String,
     denyUpdate: true
   },
@@ -79,14 +79,14 @@ Schemas.TestStepResult = new SimpleSchema({
     optional: true
   }
 });
-TestStepResults = new Mongo.Collection("test_step_results");
-TestStepResults.attachSchema(Schemas.TestStepResult);
-TestStepResults.allow({
+TestResultSteps = new Mongo.Collection("test_result_steps");
+TestResultSteps.attachSchema(Schemas.TestResultStep);
+TestResultSteps.allow({
   insert: allowIfAuthenticated,
   update: allowIfAuthenticated,
   remove: allowIfAuthenticated
 });
-TestStepResults.deny({
+TestResultSteps.deny({
   insert: allowIfTester,
   update: allowIfTester,
   remove: allowIfTester,

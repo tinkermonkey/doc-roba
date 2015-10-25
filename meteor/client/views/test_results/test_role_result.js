@@ -1,13 +1,13 @@
 /**
  * Template Helpers
  */
-Template.TestRoleResult.helpers({
+Template.TestResultRole.helpers({
   resultWithRole: function () {
     this.testCaseRole = TestCaseRoles.findOne({staticId: this.testCaseRoleId, projectVersionId: this.projectVersionId});
     return this;
   },
   stepResults: function () {
-    return TestStepResults.find({testRoleResultId: this._id}, {sort: {order: 1}});
+    return TestResultSteps.find({testResultRoleId: this._id}, {sort: {order: 1}});
   },
   getStepMap: function () {
     return Template.instance().stepMap.get()
@@ -17,12 +17,12 @@ Template.TestRoleResult.helpers({
 /**
  * Template Event Handlers
  */
-Template.TestRoleResult.events({});
+Template.TestResultRole.events({});
 
 /**
  * Template Created
  */
-Template.TestRoleResult.created = function () {
+Template.TestResultRole.created = function () {
   var instance = this;
   instance.subscribe("test_system", instance.data.projectId, instance.data.projectVersionId, instance.data.testSystemId);
   instance.subscribe("test_agent", instance.data.projectId, instance.data.projectVersionId, instance.data.testAgentId);
@@ -35,7 +35,7 @@ Template.TestRoleResult.created = function () {
 /**
  * Template Rendered
  */
-Template.TestRoleResult.rendered = function () {
+Template.TestResultRole.rendered = function () {
   var instance = this;
   instance.autorun(function () {
     var data = Template.currentData(),
@@ -45,7 +45,7 @@ Template.TestRoleResult.rendered = function () {
     LogMessages.find({
       "sender": "context",
       "data.type": "step",
-      "context.testRoleResultId": data._id
+      "context.testResultRoleId": data._id
     }, {sort: {time: 1}}).forEach(function (stepContext, i) {
       if(stepContext.data[0].data){
         // update the previous step end time to this step's start time
@@ -68,7 +68,7 @@ Template.TestRoleResult.rendered = function () {
     // get the time of the last message
     /*
     stepMap.list[stepMap.list.length - 1].endTime = LogMessages.findOne({
-      "context.testRoleResultId": data._id
+      "context.testResultRoleId": data._id
     }, {sort: {time: -1}}).time;
     */
 
@@ -85,12 +85,12 @@ Template.TestRoleResult.rendered = function () {
     LogMessages.find({
       "sender": "context",
       "data.type": {$in: ["node", "action"]},
-      "context.testRoleResultId": data._id
+      "context.testResultRoleId": data._id
     }, {sort: {time: 1}}).forEach(function (message, i) {
       if(message.data[0].type == "node"){
         // use a fake parentId (the previous node's id) to build of the hierarchy
         var node = message.data[0].data;
-        node.stepId = message.context.testStepResultId;
+        node.stepId = message.context.testResultStepId;
         nodes.push(node);
       } else {
         // catalog the actions
@@ -114,6 +114,6 @@ Template.TestRoleResult.rendered = function () {
 /**
  * Template Destroyed
  */
-Template.TestRoleResult.destroyed = function () {
+Template.TestResultRole.destroyed = function () {
   
 };

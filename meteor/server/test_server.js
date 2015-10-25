@@ -131,7 +131,7 @@ Meteor.startup(function () {
     if(this.userId && projectId){
       var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
       if(role){
-        return TestRoleResults.find({testResultId: testResultId});
+        return TestResultRoles.find({testResultId: testResultId});
       }
     }
     return [];
@@ -142,7 +142,7 @@ Meteor.startup(function () {
     if(this.userId && projectId){
       var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
       if(role){
-        return TestStepResults.find({testResultId: testResultId});
+        return TestResultSteps.find({testResultId: testResultId});
       }
     }
     return [];
@@ -201,11 +201,11 @@ Meteor.startup(function () {
     },
     /**
      * Load the context for a test role execution
-     * @param testRoleResultId
+     * @param testResultRoleId
      */
-    loadTestRoleManifest: function (testRoleResultId) {
-      check(testRoleResultId, String);
-      Meteor.log.debug("loadTestRoleManifest: ", testRoleResultId);
+    loadTestRoleManifest: function (testResultRoleId) {
+      check(testResultRoleId, String);
+      Meteor.log.debug("loadTestRoleManifest: ", testResultRoleId);
 
       // Require authentication
       if(!this.userId){
@@ -214,8 +214,8 @@ Meteor.startup(function () {
 
       // load the role and the steps
       var result = {
-        role: TestRoleResults.findOne(testRoleResultId),
-        steps: TestStepResults.find({testRoleResultId: testRoleResultId}, {sort: {order: 1}}).fetch()
+        role: TestResultRoles.findOne(testResultRoleId),
+        steps: TestResultSteps.find({testResultRoleId: testResultRoleId}, {sort: {order: 1}}).fetch()
       };
 
       // load the result
@@ -230,58 +230,58 @@ Meteor.startup(function () {
     },
 
     /**
-     * Set the status of a testRoleResult record
-     * @param testRoleResultId
+     * Set the status of a testResultRole record
+     * @param testResultRoleId
      * @param status
      */
-    setTestRoleResultStatus: function (testRoleResultId, status) {
-      check(testRoleResultId, String);
+    setTestResultRoleStatus: function (testResultRoleId, status) {
+      check(testResultRoleId, String);
       check(status, Number);
-      TestRoleResults.update({_id: testRoleResultId}, {$set:{status: status}});
+      TestResultRoles.update({_id: testResultRoleId}, {$set:{status: status}});
     },
 
     /**
-     * Set the status of a testStepResult record
-     * @param testStepResultId
+     * Set the status of a testResultStep record
+     * @param testResultStepId
      * @param status
      */
-    setTestStepResultStatus: function (testStepResultId, status) {
-      check(testStepResultId, String);
+    setTestResultStepStatus: function (testResultStepId, status) {
+      check(testResultStepId, String);
       check(status, Number);
-      TestStepResults.update({_id: testStepResultId}, {$set:{status: status}});
+      TestResultSteps.update({_id: testResultStepId}, {$set:{status: status}});
     },
 
     /**
-     * Set the result code of a testRoleResult record
-     * @param testRoleResultId
+     * Set the result code of a testResultRole record
+     * @param testResultRoleId
      * @param code
      */
-    setTestRoleResultCode: function (testRoleResultId, code) {
-      check(testRoleResultId, String);
+    setTestResultRoleCode: function (testResultRoleId, code) {
+      check(testResultRoleId, String);
       check(code, Number);
-      TestRoleResults.update({_id: testRoleResultId}, {$set:{result: code}});
+      TestResultRoles.update({_id: testResultRoleId}, {$set:{result: code}});
     },
 
     /**
-     * Set the result code of a testStepResult record
-     * @param testStepResultId
+     * Set the result code of a testResultStep record
+     * @param testResultStepId
      * @param code
      */
-    setTestStepResultCode: function (testStepResultId, code) {
-      check(testStepResultId, String);
+    setTestResultStepCode: function (testResultStepId, code) {
+      check(testResultStepId, String);
       check(code, Number);
-      TestStepResults.update({_id: testStepResultId}, {$set:{result: code}});
+      TestResultSteps.update({_id: testResultStepId}, {$set:{result: code}});
     },
 
     /**
      * Save a check for done during a test
-     * @param testStepResultId
+     * @param testResultStepId
      * @param status
      */
-    saveTestStepResultChecks: function (testStepResultId, checks) {
-      check(testStepResultId, String);
+    saveTestResultStepChecks: function (testResultStepId, checks) {
+      check(testResultStepId, String);
       if(checks){
-        TestStepResults.update({_id: testStepResultId}, {$set:{checks: checks}});
+        TestResultSteps.update({_id: testResultStepId}, {$set:{checks: checks}});
       }
     },
 
@@ -413,9 +413,9 @@ Meteor.startup(function () {
       });
 
       // Create the testResult Roles
-      var testRoleResultIds = [];
+      var testResultRoleIds = [];
       _.each(testCaseRoles, function (testCaseRole) {
-        console.log("Creating TestRoleResult for testCaseRole: ", testCaseRole.title, testCaseRole.staticId);
+        console.log("Creating TestResultRole for testCaseRole: ", testCaseRole.title, testCaseRole.staticId);
 
         // identify the usertype(s) for this role
         var nodeStep = TestCaseSteps.findOne({
@@ -455,7 +455,7 @@ Meteor.startup(function () {
         }, {sort: {order: 1}}).fetch();
 
         // create the role result
-        var roleResultId = TestRoleResults.insert({
+        var roleResultId = TestResultRoles.insert({
           projectId: testCase.projectId,
           projectVersionId: testCase.projectVersionId,
           testResultId: testResultId,
@@ -466,7 +466,7 @@ Meteor.startup(function () {
             account: account
           }
         });
-        testRoleResultIds.push(roleResultId);
+        testResultRoleIds.push(roleResultId);
 
         // create the step results
         _.each(testCaseSteps, function (step) {
@@ -487,11 +487,11 @@ Meteor.startup(function () {
               break;
           }
 
-          TestStepResults.insert({
+          TestResultSteps.insert({
             projectId: testCase.projectId,
             projectVersionId: testCase.projectVersionId,
             testResultId: testResultId,
-            testRoleResultId: roleResultId,
+            testResultRoleId: roleResultId,
             testCaseStepId: step.staticId,
             order: step.order,
             type: step.type,
@@ -515,18 +515,18 @@ Meteor.startup(function () {
       LogMessages.remove({"context.testResultId": testResultId});
       ScreenShots.remove({testResultId: testResultId});
       TestResults.update({_id: testResultId}, {$set: {status: TestResultStatus.staged, abort: false}, $unset: {result: ""}});
-      TestRoleResults.update({testResultId: testResultId}, {$set: {status: TestResultStatus.staged}, $unset: {result: "", pid: ""}});
-      TestStepResults.update({testResultId: testResultId}, {$set: {status: TestResultStatus.staged}, $unset: {result: "", checks: ""}});
+      TestResultRoles.update({testResultId: testResultId}, {$set: {status: TestResultStatus.staged}, $unset: {result: "", pid: ""}});
+      TestResultSteps.update({testResultId: testResultId}, {$set: {status: TestResultStatus.staged}, $unset: {result: "", checks: ""}});
 
       // get the list of roles, create a launch token and fire away
-      TestRoleResults.find({testResultId: testResultId}).forEach(function (role) {
+      TestResultRoles.find({testResultId: testResultId}).forEach(function (role) {
         Meteor.log.info("launchTestResult launching role: " + role._id);
         var token = Accounts.singleUseAuth.generate({ expires: { seconds: 5 } }),
           command = [ProcessLauncher.testRoleScript, "--roleId", role._id, "--token", token].join(" "),
-          logFile = ["test_role_result_", role._id, ".log"].join(""),
+          logFile = ["test_result_role_", role._id, ".log"].join(""),
           proc = ProcessLauncher.launchAutomation(command, logFile);
 
-        TestRoleResults.update(role._id, {$set: {pid: proc.pid}});
+        TestResultRoles.update(role._id, {$set: {pid: proc.pid}});
         Meteor.log.info("launchTestResult launched: " + role._id + " as " + proc.pid + " > " + logFile);
       });
     }

@@ -69,3 +69,15 @@ TestGroups.deny({
   fetch: ['projectId']
 });
 trackChanges(TestGroups, "test_groups");
+
+/**
+ * Helpers
+ */
+TestGroups.helpers({
+  groups: function () {
+    return TestGroups.find({ parentGroupId: this.staticId, projectVersionId: this.projectVersionId }, { sort: { title: 1 } })
+  },
+  testCases: function () {
+    return TestCases.find({ testGroupId: this.staticId, projectVersionId: this.projectVersionId }, { sort: { title: 1 } })
+  }
+});

@@ -1,8 +1,10 @@
-<template name="TestStepResultNodeMilestone">
+<template name="TestResultStepNodeMilestone">
   {{node.title}}
   {{debug checks}}
   {{#each checks.ready.checks}}
+    <div>Ready Check Here</div>
   {{/each}}
   {{#each checks.validation.checks}}
+    <div>Validation Check Here</div>
   {{/each}}
 </template>

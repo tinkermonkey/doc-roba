@@ -1,30 +1,30 @@
 /**
  * Template Helpers
  */
-Template.TestStepResultCustom.helpers({});
+Template.TestResultStepCustom.helpers({});
 
 /**
  * Template Event Handlers
  */
-Template.TestStepResultCustom.events({});
+Template.TestResultStepCustom.events({});
 
 /**
  * Template Created
  */
-Template.TestStepResultCustom.created = function () {
+Template.TestResultStepCustom.created = function () {
   
 };
 
 /**
  * Template Rendered
  */
-Template.TestStepResultCustom.rendered = function () {
+Template.TestResultStepCustom.rendered = function () {
   
 };
 
 /**
  * Template Destroyed
  */
-Template.TestStepResultCustom.destroyed = function () {
+Template.TestResultStepCustom.destroyed = function () {
   
 };

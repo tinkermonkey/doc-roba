@@ -80,3 +80,14 @@ TestCaseSteps.deny({
   fetch: ['projectId']
 });
 trackChanges(TestCaseSteps, "test_case_steps");
+
+/**
+ * Helpers
+ */
+TestCaseSteps.helpers({
+  firstNode: function () {
+    if(this.data.nodeId || this.data.sourceId){
+      return Nodes.findOne({staticId: this.data.nodeId || this.data.sourceId, projectVersionId: this.projectVersionId});
+    }
+  }
+});

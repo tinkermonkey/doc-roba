@@ -1,9 +1,9 @@
 /**
  * Template Helpers
  */
-Template.TestStepResultNode.helpers({
+Template.TestResultStepNode.helpers({
   nodeContext: function () {
-    var logContext = LogMessages.findOne({"context.testStepResultId": this.step._id, sender:"context", "data.type": "node"});
+    var logContext = LogMessages.findOne({"context.testResultStepId": this.step._id, sender:"context", "data.type": "node"});
     if(logContext && logContext.data.length){
       return logContext.data[0].data
     }
@@ -13,25 +13,25 @@ Template.TestStepResultNode.helpers({
 /**
  * Template Event Handlers
  */
-Template.TestStepResultNode.events({});
+Template.TestResultStepNode.events({});
 
 /**
  * Template Created
  */
-Template.TestStepResultNode.created = function () {
+Template.TestResultStepNode.created = function () {
   
 };
 
 /**
  * Template Rendered
  */
-Template.TestStepResultNode.rendered = function () {
+Template.TestResultStepNode.rendered = function () {
   
 };
 
 /**
  * Template Destroyed
  */
-Template.TestStepResultNode.destroyed = function () {
+Template.TestResultStepNode.destroyed = function () {
   
 };
