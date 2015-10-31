@@ -89,5 +89,11 @@ TestCaseRoles.helpers({
     if(firstStep && firstStep.firstNode()){
       return firstStep.firstNode().platform();
     }
+  },
+  userType: function () {
+    var firstStep = TestCaseSteps.findOne({testCaseRoleId: this.staticId, projectVersionId: this.projectVersionId, order: 0});
+    if(firstStep && firstStep.firstNode()){
+      return firstStep.firstNode().userType();
+    }
   }
 });

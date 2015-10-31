@@ -1,6 +1,23 @@
 <template name="TestCaseLauncher">
   <h2><span class="glyphicon glyphicon-send"></span> Launcher</h2>
+  <div>
+    <span class="field-label">Server: </span>
+    {{> EditableServerSelector value=getServer projectVersionId=projectVersionId dataKey="server" }}
+  </div>
   {{#each roles}}
-    <div>{{title}} ({{platform.title}})</div>
+    <h3>{{title}} <small>({{platform.title}})</small></h3>
+
+    <div>
+      <span class="field-label">Credentials: </span>
+      {{> EditableUserAccount value=getAccount projectVersionId=projectVersionId userType=userType dataKey="account" }}
+    </div>
+    <div>
+      <span class="field-label">System: </span>
+      {{> EditableTestSystemSelector value=getTestSystem testAgent=getTestAgent projectVersionId=projectVersionId dataKey="testSystem" }}
+    </div>
+    <div>
+      <span class="field-label">Agent: </span>
+      {{> EditableTestAgentSelector value=getTestAgent projectVersionId=projectVersionId dataKey="testAgent" }}
+    </div>
   {{/each}}
 </template>

@@ -126,6 +126,9 @@ Router.map(function () {
       Meteor.subscribe("test_cases", this.params.projectId, this.params._id),
       Meteor.subscribe("nodes", this.params.projectId, this.params._id),
       Meteor.subscribe("actions", this.params.projectId, this.params._id),
+      Meteor.subscribe("data_stores", this.params.projectId, this.params._id),
+      Meteor.subscribe("all_data_store_fields", this.params.projectId, this.params._id),
+      Meteor.subscribe("all_data_store_rows", this.params.projectId, this.params._id),
       Meteor.subscribe("servers", this.params.projectId, this.params._id),
       Meteor.subscribe("test_systems", this.params.projectId, this.params._id),
       Meteor.subscribe("test_agents", this.params.projectId, this.params._id)

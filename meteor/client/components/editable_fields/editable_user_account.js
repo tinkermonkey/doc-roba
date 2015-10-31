@@ -1,25 +1,20 @@
 /**
- * EditableUserAccount
- *
- * Created by austinsand on 5/17/15
- *
- */
-
-/**
  * Template Helpers
  */
-Template.EditableUserAccount.helpers({});
+Template.EditableUserAccount.helpers({
+});
 
 /**
  * Template Event Handlers
  */
-Template.EditableUserAccount.events({});
+Template.EditableUserAccount.events({
+  
+});
 
 /**
  * Template Created
  */
 Template.EditableUserAccount.created = function () {
-
 };
 
 /**

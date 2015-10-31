@@ -118,14 +118,17 @@ DSUtil = {
    * @param rowId The _id of the row to render
    */
   renderRow: function (rowId) {
-    var row = DataStoreRows.findOne(rowId),
-      dataStore = DataStores.findOne(row.dataStoreId);
-    if(dataStore && row){
-      var renderer = DSUtil.rowRenderer(dataStore);
-      return renderer(row);
-    } else {
-      return '';
+    if(rowId){
+      var row = DataStoreRows.findOne(rowId);
+      if(row){
+        var dataStore = DataStores.findOne(row.dataStoreId);
+        if(dataStore && row){
+          var renderer = DSUtil.rowRenderer(dataStore);
+          return renderer(row);
+        }
+      }
     }
+    return '';
   },
 
   /**
@@ -133,23 +136,26 @@ DSUtil = {
    * @param dataKey The key that identifies the datastore
    */
   getRenderedDataStoreRows: function (dataKey, query) {
-    var dataStore = DataStores.findOne({dataKey: dataKey});
-    if(dataStore){
-      // assemble the query
-      query = query || {};
-      query.dataStoreId = dataStore._id;
+    if(dataKey) {
+      var dataStore = DataStores.findOne({dataKey: dataKey});
+      if (dataStore) {
+        // assemble the query
+        query = query || {};
+        query.dataStoreId = dataStore._id;
 
-      // Get the rows and the renderer
-      var renderer = DSUtil.rowRenderer(dataStore);
-      return DataStoreRows.find(query).map(function (row) {
-        var text = renderer(row);
-        return {
-          value: row._id,
-          text: text
-        };
-      }).sort(function (row) { return row.text; })
-    } else {
-      return [];
+        // Get the rows and the renderer
+        var renderer = DSUtil.rowRenderer(dataStore);
+        return DataStoreRows.find(query).map(function (row) {
+          var text = renderer(row);
+          return {
+            value: row._id,
+            text: text
+          };
+        }).sort(function (row) {
+          return row.text;
+        })
+      }
     }
+    return [];
   }
 };

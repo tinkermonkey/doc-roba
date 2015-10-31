@@ -201,6 +201,12 @@ Nodes.helpers({
     if(this.userTypeId){
       return Nodes.findOne({staticId: this.userTypeId, projectVersionId: this.projectVersionId});
     }
+  },
+  getAccount: function () {
+    if(this.userTypeId){
+      var dataStore = DataStores.findOne({ dataKey: this.userTypeId });
+      return DataStoreRows.findOne({dataStoreId: dataStore._id}, {sort: {dateCreated: 1}});
+    }
   }
 });
 
