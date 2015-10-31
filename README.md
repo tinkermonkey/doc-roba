@@ -21,7 +21,6 @@ The goal of DocRoba is to condense the human input into the test ecosystem to a 
 * If you keep a versioned history with links to reference documentation then you can quickly allow members of your team to understand the implementation history, documentation history, and evolution of the product
 * If you collate all of your test logs (selenium, browser console, test scripts, analysis, and server) in an easy to filter interface then you can quickly separate test script problems from real bugs and also allow developers to begin bug fixes with a complete picture
 
-
 ## Structure & Navigation
 
 ### Nodes
@@ -38,6 +37,7 @@ There are 1,000,000 options and opinions regarding the ideal scripting language 
 
 ### Automation Workflow
 At the end of the day automation comes down to:
+
 1. Do something
 2. Wait for a result
 3. Validate the result
