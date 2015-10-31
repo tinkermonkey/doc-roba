@@ -12,7 +12,7 @@ DocRoba is intended to smooth over some of the more cumbersome aspects of test a
 I'm sure there are plenty of proprietary products out there which also solve this problem with varying degrees of success. I wanted an open source solution to accent the amazing Selenium platform and didn't find anything comprehensive. I also wanted to make something pretty with a focus on analytics and UX, so depending on your taste that may or may not be a feature.
 
 ## The Concept
-The goal of DocRoba is to condense the amount of human input into the test ecosystem to a minimum.
+The goal of DocRoba is to condense the human input into the test ecosystem to a minimum.
 
 * If you map the logical structure of your product as a series of *Nodes* connected by discrete *Actions* then your test scripts can do some basic navigation on their own
 * If you connect it to a set of *Accounts* which represent test users then it can help determine if an error is has data dependencies
