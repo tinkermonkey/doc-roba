@@ -94,6 +94,10 @@
   padding-bottom: 40px;
 }
 
+.test-case-header {
+  max-width: 800px;
+}
+
 .test-case-title {
   font-size: 36px;
   margin-top: 20px;
@@ -108,11 +112,15 @@
   color: #000;
 }
 
+.test-case-roles {
+}
+
 .test-case-role-container {
   vertical-align: top;
   display: inline-block;
   padding: 10px;
   border-right: 1px dashed #dddddd;
+  min-height: 100px;
   max-width: 400px;
   min-width: 300px;
   width: 30%;
@@ -254,16 +262,16 @@
 
 .test-case-recent-result-container {
   vertical-align: top;
-  display: inline-block;
+  /*display: inline-block;*/
   padding: 10px;
   width: 60%;
   max-width: 1200px;
-  border-right: 1px dashed #dddddd;
+  /*border-right: 1px dashed #dddddd;*/
 }
 
 .test-case-launcher-container {
   vertical-align: top;
-  display: inline-block;
+  /*display: inline-block;*/
   padding: 10px;
   width: 39%;
   width: 400px;

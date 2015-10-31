@@ -5,7 +5,7 @@
     {{> EditableServerSelector value=getServer projectVersionId=projectVersionId dataKey="server" }}
   </div>
   {{#each roles}}
-    <h3>{{title}} <small>({{platform.title}})</small></h3>
+    <h3>{{title}} <small>({{platform.title}}, {{userType.title}})</small></h3>
 
     <div>
       <span class="field-label">Credentials: </span>

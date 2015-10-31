@@ -55,22 +55,21 @@ Template.TestCaseLauncher.events({});
  * Template Created
  */
 Template.TestCaseLauncher.created = function () {
-  var instance = this,
-    serverId = Servers.findOne({projectVersionId: this.data.projectVersionId, active: true}).staticId;
-  instance.config = new ReactiveVar({ server: serverId });
+  var instance = this;
+  instance.config = new ReactiveVar({
+    server: Servers.findOne({projectVersionId: this.data.projectVersionId, active: true}).staticId
+  });
 };
 
 /**
  * Template Rendered
  */
 Template.TestCaseLauncher.rendered = function () {
-  /*
   var instance = this;
   instance.autorun(function () {
     var config = instance.config.get();
     console.log("config: ", config);
   });
-  */
 };
 
 /**

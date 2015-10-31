@@ -203,9 +203,12 @@ Nodes.helpers({
     }
   },
   getAccount: function () {
-    if(this.userTypeId){
-      var dataStore = DataStores.findOne({ dataKey: this.userTypeId });
-      return DataStoreRows.findOne({dataStoreId: dataStore._id}, {sort: {dateCreated: 1}});
+    if(this.userTypeId || this.type == NodeTypes.userType){
+      var userTypeId = this.userTypeId || this._id,
+        dataStore = DataStores.findOne({ dataKey: userTypeId });
+      if(dataStore){
+        return DataStoreRows.findOne({dataStoreId: dataStore._id}, {sort: {dateCreated: 1}});
+      }
     }
   }
 });

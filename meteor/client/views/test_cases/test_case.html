@@ -1,12 +1,12 @@
 <template name="TestCase">
   <div class="test-case-form">
-    <div style="width: 50%;">
+    <div class="test-case-header">
       {{> EditableTitleDescription value=this dataKey="title-description" titleClass="test-case-title"}}
     </div>
     {{#if Template.subscriptionsReady}}
       <h2>Test Roles</h2>
 
-      <div class="no-wrap">
+      <div class="test-case-roles no-wrap">
         {{#if roles.count}}
           {{#each roles}}
             <div class="test-case-role-container">
