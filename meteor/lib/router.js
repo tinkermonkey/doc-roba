@@ -118,7 +118,8 @@ Router.map(function () {
     data: function () {
       return {
         project: Projects.findOne({_id: this.params.projectId}),
-        version: ProjectVersions.findOne({_id: this.params._id})
+        version: ProjectVersions.findOne({_id: this.params._id}),
+        query: this.params.query
       };
     },
     waitOn: function () { return [
@@ -201,3 +202,13 @@ Router.map(function () {
     ]; }
   });
 });
+
+/**
+ * Handy helper function for updating the current query params
+ */
+Router.query = function (queryUpdate) {
+  var currentRoute = this.current();
+  this.go(currentRoute.route.getName(), currentRoute.params, {
+    query: _.extend(currentRoute.params.query, queryUpdate)
+  });
+};

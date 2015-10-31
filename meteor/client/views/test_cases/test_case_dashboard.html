@@ -9,7 +9,6 @@
     {{> svg_def "action-arrow" }}
   {{/contentFor}}
 
-  {{#with getFullContext}}
   <div class="test-case-container">
     <div class="test-case-nav">
       <div class="home-nav-item active">
@@ -29,14 +28,13 @@
       {{> TestCaseList project=project version=version testCaseId=testCaseId editable=true }}
     </div>
     <div class="test-case-content">
-      {{#if hasTestCase}}
-        {{> TestCase getTestCase}}
+      {{#if testCaseId}}
+        {{> TestCase testCase}}
       {{else}}
-        <div class="align-center">
+        <div class="align-center" style="max-width: 1200px; margin-top: 200px;">
           <h2>Select a Test Case</h2>
         </div>
       {{/if}}
     </div>
   </div>
-  {{/with}}
 </template>

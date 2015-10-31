@@ -116,10 +116,7 @@ Template.TestCaseList.events({
       var selectable = $(e.target).closest(".test-case-list-item");
       instance.$(".test-case-list-item.selected").removeClass("selected");
       selectable.addClass("selected");
-
-      if(instance.data.testCaseId){
-        instance.data.testCaseId.set(selectable.attr("data-pk"));
-      }
+      Router.query({testCaseId: selectable.attr("data-pk")});
     }
   },
   "click .test-case-list-group": function (e, instance) {
@@ -221,6 +218,15 @@ Template.TestCaseList.rendered = function () {
 
     // make the groups droppable
     instance.$(".test-case-list-group").droppable(instance.droppableOptions);
+
+    // Select the selected item if there is one defined
+    if(instance.data.testCaseId){
+      var testCaseItem = instance.$(".test-case-list-item[data-pk='" + instance.data.testCaseId + "']");
+      testCaseItem.addClass("selected");
+      testCaseItem.parentsUntil(".test-case-list", ".test-case-list-group-items.hide").each(function (i, el) {
+        Blaze.getView(el).templateInstance().expanded.set(true);
+      });
+    }
   }
 };
 

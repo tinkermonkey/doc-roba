@@ -56,8 +56,11 @@ Template.TestCase.created = function () {
 
   // subscribe to the data
   if(testCase){
-    instance.subscribe("test_case_roles", testCase.projectId, testCase.projectVersionId, testCase.staticId);
-    instance.subscribe("test_case_steps", testCase.projectId, testCase.projectVersionId, testCase.staticId);
+    instance.testCaseId = testCase.staticId;
+    instance.subscriptions = {
+      roles: instance.subscribe("test_case_roles", testCase.projectId, testCase.projectVersionId, testCase.staticId),
+      steps: instance.subscribe("test_case_steps", testCase.projectId, testCase.projectVersionId, testCase.staticId)
+    };
   }
 
   // setup a function to align the wait steps
@@ -136,6 +139,18 @@ Template.TestCase.rendered = function () {
   instance.autorun(function () {
     //console.log("Test Case autorun");
     var data = Template.currentData();
+
+    // check for a new testCaseId
+    if(data.staticId !== instance.testCaseId){
+      //console.log("TestCaseId changed, updating subscriptions");
+      instance.testCaseId = data.staticId;
+      instance.subscriptions.roles.stop();
+      instance.subscriptions.steps.stop();
+      instance.subscriptions = {
+        roles: instance.subscribe("test_case_roles", data.projectId, data.projectVersionId, data.staticId),
+        steps: instance.subscribe("test_case_steps", data.projectId, data.projectVersionId, data.staticId)
+      };
+    }
 
     if(instance.testCaseObserver){
       instance.testCaseObserver.stop();

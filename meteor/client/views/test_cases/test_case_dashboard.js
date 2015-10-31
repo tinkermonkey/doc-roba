@@ -2,18 +2,14 @@
  * Template Helpers
  */
 Template.TestCaseDashboard.helpers({
-  getFullContext: function () {
-    var instance = Template.instance();
-    this.testCaseId = instance.testCaseId;
-    return this;
+  testCaseId: function () {
+    if(this.query && this.query.testCaseId){
+      return this.query.testCaseId;
+    }
   },
-  hasTestCase: function () {
-    return this.testCaseId.get();
-  },
-  getTestCase: function () {
-    var testCaseId = this.testCaseId.get();
-    if(testCaseId){
-      return TestCases.findOne(testCaseId);
+  testCase: function () {
+    if(this.query && this.query.testCaseId){
+      return TestCases.findOne(this.query.testCaseId);
     }
   }
 });
@@ -27,9 +23,6 @@ Template.TestCaseDashboard.events({});
  * Template Created
  */
 Template.TestCaseDashboard.created = function () {
-  var instance = Template.instance();
-  instance.testCaseId = new ReactiveVar();
-
 };
 
 /**
