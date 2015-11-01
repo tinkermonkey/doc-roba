@@ -1,41 +1,48 @@
 <template name="TestCase">
-  <div class="test-case-form">
-    <div class="test-case-header">
-      {{> EditableTitleDescription value=this dataKey="title-description" titleClass="test-case-title"}}
-    </div>
-    {{#if Template.subscriptionsReady}}
-      <h2>Test Roles</h2>
-
-      <div class="test-case-roles no-wrap">
-        {{#if roles.count}}
-          {{#each roles}}
-            <div class="test-case-role-container">
-              {{> TestCaseRole }}
-            </div>
-          {{/each}}
-        {{else}}
-          <div class="test-case-role-container">
-            <h4>This Test Case has no roles</h4>
-          </div>
-        {{/if}}
-
-        <div class="add-role-container">
-          <button class="btn btn-xs btn-primary btn-add-role">
-            <span class="glyphicon glyphicon-user"></span>
-            Add Role
-          </button>
-        </div>
-      </div>
-      <div class="test-case-recent-result-container">
-        {{> TestCaseRecentResultList }}
-      </div>
-      <div class="test-case-launcher-container">
-        {{> TestCaseLauncher }}
-      </div>
-    {{else}}
-      <div class="loading">
-        {{> inline_spinner }}
-      </div>
-    {{/if}}
+  <div class="test-case-header">
+    {{> EditableTitleDescription value=this dataKey="title-description" titleClass="test-case-title"}}
   </div>
+  {{#if Template.subscriptionsReady}}
+    {{#CenterPoleSectionHeader}}
+      <h2>Test Roles</h2>
+    {{/CenterPoleSectionHeader}}
+
+
+    <div class="test-case-roles">
+      {{#if roles.count}}
+        {{#each roles}}
+          <div class="test-case-role-container">
+            {{> TestCaseRole }}
+          </div>
+        {{/each}}
+      {{else}}
+        <div class="test-case-role-container">
+          <h4>This Test Case has no roles</h4>
+        </div>
+      {{/if}}
+
+      <div class="add-role-container">
+        <button class="btn btn-xs btn-primary btn-add-role">
+          <span class="glyphicon glyphicon-user"></span>
+          Add Role
+        </button>
+      </div>
+    </div>
+
+    {{#CenterPoleSectionHeader}}
+      <h2>Recent Results</h2>
+    {{/CenterPoleSectionHeader}}
+    <div class="test-case-recent-result-container">
+      {{> TestCaseRecentResultList }}
+    </div>
+
+    {{#CenterPoleSectionHeader}}
+      <h2><span class="glyphicon glyphicon-send"></span> Launcher</h2>
+    {{/CenterPoleSectionHeader}}
+    <div class="test-case-launcher-container">
+      {{> TestCaseLauncher }}
+    </div>
+  {{else}}
+    {{> CustomSpinner }}
+  {{/if}}
 </template>

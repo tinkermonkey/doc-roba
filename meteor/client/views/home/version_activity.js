@@ -1,7 +1,7 @@
 /**
  * Template Helpers
  */
-Template.version_activity.helpers({
+Template.VersionActivity.helpers({
   hasChanges: function () {
     return RecordChanges.find({ projectId: this.project._id }).count();
   },
@@ -13,18 +13,18 @@ Template.version_activity.helpers({
 /**
  * Template Helpers
  */
-Template.version_activity.events({});
+Template.VersionActivity.events({});
 
 /**
  * Template Rendered
  */
-Template.version_activity.rendered = function () {
+Template.VersionActivity.rendered = function () {
 
 };
 
 /**
  * Template Destroyed
  */
-Template.version_activity.destroyed = function () {
+Template.VersionActivity.destroyed = function () {
 
 };

@@ -3,10 +3,10 @@
     xmlns:svg="http://www.w3.org/2000/svg"
     xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink"
+    version="1.1"
     viewBox="0 0 535 512"
     height="512"
-    width="535"
-    version="1.1">
+    width="535">
     <defs>
         <linearGradient id="logo-stripe-orange-gradient" x1="25%" y1="0%" x2="75%" y2="100%">
             <stop offset="0%"   style="stop-color:#ff7d42;" />

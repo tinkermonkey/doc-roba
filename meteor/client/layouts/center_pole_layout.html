@@ -1,0 +1,29 @@
+<template name="CenterPoleLayout">
+  {{> nav_menu }}
+
+  <svg id="global-defs-svg">
+    <defs>
+      {{> yield "svgDefs"}}
+    </defs>
+  </svg>
+
+  <div class="center-pole-container">
+    <div class="center-pole-nav">
+      <div class="pole-nav-header">
+        {{> yield "header"}}
+      </div>
+
+      <div class="pole-nav-wrapper">
+        <div class="pole-nav-outer">
+          <div class="pole-nav-inner">
+            {{> yield "nav"}}
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="center-pole-content">
+      {{> yield }}
+    </div>
+  </div>
+</template>

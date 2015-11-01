@@ -9,32 +9,27 @@
     {{> svg_def "action-arrow" }}
   {{/contentFor}}
 
-  <div class="test-case-container">
-    <div class="test-case-nav">
-      <div class="home-nav-item active">
-        <h4 class="home-top-nav">
-          {{#with project}}
-            <a href="{{pathFor 'home_project'}}">{{title}}</a>
-          {{/with}}
-          {{#with version}}
-            <small><a href="{{pathFor 'home_version'}}">v {{version}}</a></small>
-          {{/with}}
-          {{#with project}}
-            <small>{{renderLookup "RoleTypesLookup" userRole}}</small>
-          {{/with}}
-        </h4>
-      </div>
+  {{#contentFor "header"}}
+    {{#with project}}
+      <a href="{{pathFor 'home_project'}}">{{title}}</a>
+    {{/with}}
+    {{#with version}}
+      <small><a href="{{pathFor 'home_version'}}">v {{version}}</a></small>
+    {{/with}}
+    {{#with project}}
+      <small>{{renderLookup "RoleTypesLookup" userRole}}</small>
+    {{/with}}
+  {{/contentFor}}
 
-      {{> TestCaseList project=project version=version testCaseId=testCaseId editable=true }}
+  {{#contentFor "nav"}}
+    {{> TestCaseList project=project version=version testCaseId=testCaseId editable=true }}
+  {{/contentFor}}
+
+  {{#if testCaseId}}
+    {{> TestCase testCase}}
+  {{else}}
+    <div class="align-center" style="max-width: 1200px; margin-top: 200px;">
+      <h2>Select a Test Case</h2>
     </div>
-    <div class="test-case-content">
-      {{#if testCaseId}}
-        {{> TestCase testCase}}
-      {{else}}
-        <div class="align-center" style="max-width: 1200px; margin-top: 200px;">
-          <h2>Select a Test Case</h2>
-        </div>
-      {{/if}}
-    </div>
-  </div>
+  {{/if}}
 </template>

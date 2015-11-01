@@ -1,5 +1,4 @@
 <template name="TestCaseRecentResultList">
-  <h2>Recent Results</h2>
   {{#if Template.subscriptionsReady}}
     {{#if results.count}}
       <table class="sortable-table">
@@ -52,7 +51,7 @@
     {{/if}}
   {{else}}
     <div class="loading">
-      {{> inline_spinner }}
+      {{> InlineSpinner }}
     </div>
   {{/if}}
 </template>

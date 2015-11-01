@@ -1,19 +1,25 @@
-<template name="version_servers">
-  <ul class="nav nav-tabs">
-    <li role="presentation" class="active"><a data-tab-name="server-list">Server List</a></li>
-    <li role="presentation"><a data-tab-name="server-config-vars">Server Configuration Variables</a></li>
-    <li role="presentation"><a data-tab-name="user-data-sets">Server Data Sets</a></li>
-  </ul>
+<template name="VersionServers">
+  {{#CenterPoleSectionHeader}}
+    <h2>Servers</h2>
+  {{/CenterPoleSectionHeader}}
 
-  <div class="tab-container">
-    <div class="tab" data-tab-name="server-list">
-      {{> VersionServerList }}
-    </div>
-    <div class="tab" data-tab-name="server-config-vars">
-      {{> VersionServerConfig }}
-    </div>
-    <div class="tab" data-tab-name="user-data-sets">
-      Credentials Data Sets
-    </div>
+  <div class="pole-content-indent">
+    {{> VersionServerList }}
+  </div>
+
+  {{#CenterPoleSectionHeader}}
+    <h2>Configuration Variables</h2>
+  {{/CenterPoleSectionHeader}}
+
+  <div class="pole-content-indent">
+    {{> VersionServerConfig }}
+  </div>
+
+  {{#CenterPoleSectionHeader}}
+    <h2>Server Credentials Sets</h2>
+  {{/CenterPoleSectionHeader}}
+
+  <div class="pole-content-indent">
+    Credentials Data Sets
   </div>
 </template>

@@ -1,40 +1,16 @@
 /**
- * Main test case container
- */
-.test-case-container {
-  width: 100%;
-  height: 100%;
-}
-
-/**
  * Main test case navigation pane
  */
-.test-case-nav {
-  display: inline-block;
-  width: 25%;
-  max-width: 400px;
-  padding: 0;
-}
-
 .test-case-list-container {
-  padding: 10px;
+
 }
 
 .test-case-list-header {
-  padding: 10px 0 10px 10px;
+ padding-bottom: 20px;
 }
 
 .test-case-list {
-  padding: 15px 0 15px 15px;
-}
 
-/**
- * Main test case content pane
- */
-.test-case-content {
-  display: inline-block;
-  width: 74%;
-  vertical-align: top;
 }
 
 /**
@@ -88,14 +64,7 @@
 /**
  * Test Case form
  */
-.test-case-form {
-  padding-left: 20px;
-  width: 100%;
-  padding-bottom: 40px;
-}
-
 .test-case-header {
-  max-width: 800px;
 }
 
 .test-case-title {
@@ -113,17 +82,17 @@
 }
 
 .test-case-roles {
+  white-space: nowrap;
 }
 
 .test-case-role-container {
+  white-space: normal;
   vertical-align: top;
   display: inline-block;
   padding: 10px;
   border-right: 1px dashed #dddddd;
   min-height: 100px;
-  max-width: 400px;
   min-width: 300px;
-  width: 30%;
 }
 
 .add-role-container {
@@ -135,6 +104,9 @@
   width: 20px;
 }
 
+/**
+ * Test Case List items
+ **/
 .test-case-step {
   padding: 2px;
   min-height: 75px;
@@ -260,19 +232,12 @@
   cursor: pointer;
 }
 
+/**
+ * Other page content
+ **/
+
 .test-case-recent-result-container {
-  vertical-align: top;
-  /*display: inline-block;*/
-  padding: 10px;
-  width: 60%;
-  max-width: 1200px;
-  /*border-right: 1px dashed #dddddd;*/
 }
 
 .test-case-launcher-container {
-  vertical-align: top;
-  /*display: inline-block;*/
-  padding: 10px;
-  width: 39%;
-  width: 400px;
 }

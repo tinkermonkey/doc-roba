@@ -1,7 +1,7 @@
 /**
  * Template Helpers
  */
-Template.project_versions.helpers({
+Template.ProjectVersions.helpers({
   projectVersions: function () {
     if(this.project){
       return ProjectVersions.find({ projectId: this.project._id }, { sort: { version: -1 } });
@@ -12,7 +12,7 @@ Template.project_versions.helpers({
 /**
  * Template Helpers
  */
-Template.project_versions.events({
+Template.ProjectVersions.events({
   "click .btn-add-version": function (event) {
 
   }
@@ -21,13 +21,13 @@ Template.project_versions.events({
 /**
  * Template Rendered
  */
-Template.project_versions.rendered = function () {
+Template.ProjectVersions.rendered = function () {
 
 };
 
 /**
  * Template Destroyed
  */
-Template.project_versions.destroyed = function () {
+Template.ProjectVersions.destroyed = function () {
 
 };

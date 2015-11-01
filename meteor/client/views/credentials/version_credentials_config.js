@@ -21,10 +21,6 @@ Template.VersionCredentialsConfig.events({});
  * Template Rendered
  */
 Template.VersionCredentialsConfig.rendered = function () {
-  var instance = Template.instance();
-
-  // Initialize the tabs
-  Tabs.init(instance).activateFirst(instance);
 };
 
 /**

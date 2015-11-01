@@ -1,15 +1,17 @@
 <template name="VersionTestSystems">
-  <ul class="nav nav-tabs">
-    <li role="presentation" class="active"><a data-tab-name="test-system-list">Test System List</a></li>
-    <li role="presentation"><a data-tab-name="test-agents">Test Agent Configurations</a></li>
-  </ul>
+  {{#CenterPoleSectionHeader}}
+    <h2>Test Systems</h2>
+  {{/CenterPoleSectionHeader}}
 
-  <div class="tab-container">
-    <div class="tab" data-tab-name="test-system-list">
-      {{> VersionTestSystemList }}
-    </div>
-    <div class="tab" data-tab-name="test-agents">
-      {{> VersionTestAgentList }}
-    </div>
+  <div class="pole-content-indent">
+    {{> VersionTestSystemList }}
+  </div>
+
+  {{#CenterPoleSectionHeader}}
+    <h2>Test Agent Configurations</h2>
+  {{/CenterPoleSectionHeader}}
+
+  <div class="pole-content-indent">
+    {{> VersionTestAgentList }}
   </div>
 </template>

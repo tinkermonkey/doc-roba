@@ -1,12 +1,14 @@
-<template name="project_versions">
-  <h4>Project Versions</h4>
-  <div>Versions of the Software Under Test currently documented</div>
-  <hr>
-  {{#each projectVersions}}
-    <div>Version {{version}} created {{dateFormat dateCreated}} by {{renderNameByRole createdBy}}</div>
-  {{/each}}
-  <hr>
-  <div>
-    <button class="btn btn-warning btn-add-version">Add Version</button>
+<template name="ProjectVersions">
+  <div class="pole-content-indent">
+    <h4>Project Versions</h4>
+    <div>Versions of the Software Under Test currently documented</div>
+    <hr>
+    {{#each projectVersions}}
+      <div>Version {{version}} created {{dateFormat dateCreated}} by {{renderNameByRole createdBy}}</div>
+    {{/each}}
+    <hr>
+    <div>
+      <button class="btn btn-warning btn-add-version">Add Version</button>
+    </div>
   </div>
 </template>

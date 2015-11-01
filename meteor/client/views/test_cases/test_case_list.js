@@ -119,15 +119,6 @@ Template.TestCaseList.events({
       Router.query({testCaseId: selectable.attr("data-pk")});
     }
   },
-  "click .test-case-list-group": function (e, instance) {
-    var selectable = $(e.target).closest(".test-case-list-group"),
-      wasSelected = selectable.hasClass("selected");
-
-    instance.$(".test-case-list-group.selected").removeClass("selected");
-    if(!wasSelected){
-      selectable.addClass("selected");
-    }
-  },
   // make sure the draggable and droppable items stay up to date
   "mouseover .test-case-list-selectable:not(.ui-draggable)": function (e, instance) {
     $(e.target).closest(instance.draggableSelector).draggable(instance.draggableOptions);

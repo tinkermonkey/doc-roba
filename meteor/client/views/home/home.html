@@ -5,52 +5,76 @@
     {{/with}}
   {{/contentFor}}
 
-  <div class="home-container full-height">
-    <div class="home-nav full-height">
-      <div class="home-nav-item {{#if isActiveDashboard}}active{{/if}}">
-        <h3 class="home-top-nav">
-          <a href="{{pathFor 'home'}}">Personal Dashboard</a>
-        </h3>
+  {{#contentFor "header"}}
+    <a href="{{pathFor 'home'}}">Personal Dashboard</a>
+  {{/contentFor}}
+
+  {{#contentFor "nav"}}
+    {{#each userProjects}}
+      <div class="home-nav-item {{#if isActiveProject}}active{{/if}}">
+        <a href="{{pathFor 'home_project'}}">{{title}}</a>
+        <small>{{renderLookup "RoleTypesLookup" role}}</small>
       </div>
-      {{#each userProjects}}
-        <div class="home-nav-item {{#if isActiveProject}}active{{/if}}">
-          <h3 class="home-top-nav">
-            <a href="{{pathFor 'home_project'}}">{{title}}</a>
-            <small>{{renderLookup "RoleTypesLookup" role}}</small>
-          </h3>
-        </div>
-        {{#each projectVersions}}
+      {{#each projectVersions}}
         <div class="home-nav-item {{#if isActiveVersion}}active{{/if}}">
-          <h4 class="home-sub-nav">
-            <a href="{{pathFor 'home_version'}}">v {{version}}</a>
-            <small>{{dateFormat dateCreated}}</small>
-            <a href="{{pathFor 'doc_tree'}}">
-              <span class="glyphicon glyphicon-map-marker"></span>
-            </a>
-            <a href="{{pathFor 'test_case_dashboard'}}">
-              <span class="glyphicon glyphicon-ok-circle"></span>
-            </a>
-            <a href="{{pathFor 'test_run_template_dashboard'}}">
-              <span class="glyphicon glyphicon-list-alt"></span>
-            </a>
-          </h4>
+          <a href="{{pathFor 'home_version'}}">v {{version}}</a>
+          <small>{{dateFormat dateCreated}}</small>
+          <a href="{{pathFor 'doc_tree'}}">
+            <span class="glyphicon glyphicon-map-marker"></span>
+          </a>
+          <a href="{{pathFor 'test_case_dashboard'}}">
+            <span class="glyphicon glyphicon-ok-circle"></span>
+          </a>
+          <a href="{{pathFor 'test_run_template_dashboard'}}">
+            <span class="glyphicon glyphicon-list-alt"></span>
+          </a>
         </div>
-        {{/each}}
       {{/each}}
-    </div>
-    <div class="home-content">
-      {{#if project}}
-        {{#if version}}
-          {{> version_dashboard }}
-          {{setTitle "Home :: " project.title "v" version.version}}
-        {{else}}
-          {{> project_dashboard }}
-          {{setTitle "Home :: " project.title}}
+    {{/each}}
+  {{/contentFor}}
+
+  {{#if project}}
+    {{#if version}}
+      {{setTitle "Home :: " project.title "v" version.version}}
+      <h1>{{project.title}} v {{version.version}}</h1>
+
+      <ul class="nav nav-pills">
+        <li role="presentation" class="active"><a data-tab-name="activity">Activity</a></li>
+        <li role="presentation"><a data-tab-name="credentials">Credentials</a></li>
+        <li role="presentation"><a data-tab-name="credentials_config">Credential Configuration</a></li>
+        <li role="presentation"><a data-tab-name="servers">Server Configuration</a></li>
+        <li role="presentation"><a data-tab-name="test-systems">Test Systems & Agents</a></li>
+      </ul>
+
+      <div class="tab-container">
+        <div class="tab" data-tab-name="activity">{{> VersionActivity }}</div>
+        <div class="tab" data-tab-name="credentials">{{> VersionCredentials }}</div>
+        <div class="tab" data-tab-name="credentials_config">{{> VersionCredentialsConfig }}</div>
+        <div class="tab" data-tab-name="servers">{{> VersionServers }}</div>
+        <div class="tab" data-tab-name="test-systems">{{> VersionTestSystems }}</div>
+      </div>
+    {{else}}
+      {{setTitle "Home :: " project.title}}
+      <h1>{{project.title}}</h1>
+
+      <ul class="nav nav-pills">
+        <li role="presentation" class="active"><a data-tab-name="activity">Activity</a></li>
+        <li role="presentation"><a data-tab-name="versions">Versions</a></li>
+        {{#if hasRole 'admin' project._id}}
+          <li role="presentation"><a data-tab-name="team">Team</a></li>
         {{/if}}
-      {{else}}
-        {{> user_dashboard }}
-        {{setTitle "Home"}}
-      {{/if}}
-    </div>
-  </div>
+      </ul>
+
+      <div class="tab-container">
+        <div class="tab" data-tab-name="activity">{{> ProjectActivity }}</div>
+        <div class="tab" data-tab-name="versions">{{> ProjectVersions }}</div>
+        {{#if hasRole 'admin' project._id}}
+          <div class="tab" data-tab-name="team">{{> ProjectTeam }}</div>
+        {{/if}}
+      </div>
+    {{/if}}
+  {{else}}
+    {{setTitle "Home"}}
+    <h1>Personal Dashboard</h1>
+  {{/if}}
 </template>
