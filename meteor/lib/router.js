@@ -152,10 +152,12 @@ Router.map(function () {
   });
   this.route("test_run_template_dashboard", {
     path: "/test_run_template_dashboard/:projectId/:_id",
+    layoutTemplate: "CenterPoleLayout",
     data: function () {
       return {
         project: Projects.findOne({_id: this.params.projectId}),
-        version: ProjectVersions.findOne({_id: this.params._id})
+        version: ProjectVersions.findOne({_id: this.params._id}),
+        query: this.params.query
       };
     },
     waitOn: function () { return [
@@ -206,6 +208,7 @@ Router.map(function () {
   });
   this.route("test_result", {
     path: "/test_result/:projectId/:_id",
+    layoutTemplate: "CenterPoleLayout",
     data: function () { return TestResults.findOne(this.params._id); },
     waitOn: function () { return [
       Meteor.subscribe("projects"),

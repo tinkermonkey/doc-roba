@@ -40,6 +40,11 @@ Schemas.TestResultRole = new SimpleSchema({
     type: String,
     denyUpdate: true
   },
+  // Link to the account to use
+  accountId: {
+    type: String,
+    denyUpdate: true
+  },
   // The data context to operate in
   dataContext: {
     type: Object,
@@ -76,4 +81,19 @@ TestResultRoles.deny({
   update: allowIfTester,
   remove: allowIfTester,
   fetch: ['projectId']
+});
+
+/**
+ * Helpers
+ */
+TestResultRoles.helpers({
+  role: function () {
+    return TestCaseRoles.findOne({staticId: this.testCaseRoleId, projectVersionId: this.projectVersionId});
+  },
+  testSystem: function () {
+    return TestSystems.findOne({staticId: this.testSystemId, projectVersionId: this.projectVersionId});
+  },
+  testAgent: function () {
+    return TestAgents.findOne({staticId: this.testAgentId, projectVersionId: this.projectVersionId});
+  }
 });

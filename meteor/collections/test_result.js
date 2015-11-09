@@ -83,6 +83,55 @@ TestResults.deny({
  */
 TestResults.helpers({
   roleResults: function () {
-    return Nodes.findOne({staticId: this.platformId, projectVersionId: this.projectVersionId});
+    return TestResultRoles.find({testResultId: this._id});
+  },
+  project: function () {
+    return Projects.findOne({_id: this.projectId});
+  },
+  projectVersion: function () {
+    return ProjectVersions.findOne({_id: this.projectVersionId});
+  },
+  testCase: function () {
+    return TestCases.findOne({staticId: this.testCaseId, projectVersionId: this.projectVersionId});
+  },
+  server: function () {
+    return Servers.findOne({staticId: this.serverId, projectVersionId: this.projectVersionId});
+  },
+  testRun: function () {
+    return TestRuns.findOne({staticId: this.testRunId, projectVersionId: this.projectVersionId});
+  },
+  isDone: function () {
+    return _.contains([
+      TestResultStatus.complete,
+      TestResultStatus.error,
+      TestResultStatus.skipped
+    ], this.status)
+  },
+  /**
+   * Launch a staged test result
+   */
+  launch: function () {
+    Meteor.log.debug("TestResult.launch: " + this._id);
+    if(!Meteor.isServer) throw new Meteor.Error("server-only", "This method can only be executed on the server");
+
+    // do some quick cleanup in case this is a re-run
+    var result = this;
+    LogMessages.remove({"context.testResultId": result._id});
+    ScreenShots.remove({testResultId: result._id});
+    TestResults.update({_id: result._id}, {$set: {status: TestResultStatus.staged, abort: false}, $unset: {result: ""}});
+    TestResultRoles.update({testResultId: result._id}, {$set: {status: TestResultStatus.staged}, $unset: {result: "", pid: ""}});
+    TestResultSteps.update({testResultId: result._id}, {$set: {status: TestResultStatus.staged}, $unset: {result: "", checks: ""}});
+
+    // get the list of roles, create a launch token and fire away
+    TestResultRoles.find({testResultId: result._id}).forEach(function (role) {
+      Meteor.log.info("launchTestResult launching role: " + role._id);
+      var token = Accounts.singleUseAuth.generate({ expires: { seconds: 5 } }),
+        command = [ProcessLauncher.testRoleScript, "--roleId", role._id, "--token", token].join(" "),
+        logFile = ["test_result_role_", role._id, ".log"].join(""),
+        proc = ProcessLauncher.launchAutomation(command, logFile);
+
+      TestResultRoles.update(role._id, {$set: {pid: proc.pid}});
+      Meteor.log.info("launchTestResult launched: " + role._id + " as " + proc.pid + " > " + logFile);
+    });
   }
 });

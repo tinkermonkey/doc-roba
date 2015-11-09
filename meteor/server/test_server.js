@@ -97,7 +97,7 @@ Meteor.startup(function () {
    * ============================================================================
    */
   Meteor.publish('test_case_results', function (projectId, testCaseId, limit) {
-    console.log("Publish: test_case_results", testCaseId, limit);
+    console.log("Publish: test_case_results:", testCaseId, limit);
     // check that there is a project role for the current user
     if(this.userId && projectId && testCaseId){
       var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
@@ -115,7 +115,7 @@ Meteor.startup(function () {
     return [];
   });
   Meteor.publish('test_result', function (projectId, testResultId) {
-    console.log("Publish: test_result");
+    console.log("Publish: test_result:", projectId, testResultId);
     // check that there is a project role for the current user
     if(this.userId && projectId){
       var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
@@ -126,18 +126,19 @@ Meteor.startup(function () {
     return [];
   });
   Meteor.publish('test_result_roles', function (projectId, testResultId) {
-    console.log("Publish: test_result_roles");
+    console.log("Publish: test_result_roles:", projectId, testResultId);
     // check that there is a project role for the current user
     if(this.userId && projectId){
       var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
       if(role){
+        console.log("TestResultRoles:", TestResultRoles.find({testResultId: testResultId}).count());
         return TestResultRoles.find({testResultId: testResultId});
       }
     }
     return [];
   });
   Meteor.publish('test_result_steps', function (projectId, testResultId) {
-    console.log("Publish: test_result_steps");
+    console.log("Publish: test_result_steps:", projectId, testResultId);
     // check that there is a project role for the current user
     if(this.userId && projectId){
       var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
@@ -148,7 +149,7 @@ Meteor.startup(function () {
     return [];
   });
   Meteor.publish('test_result_log', function (projectId, testResultId) {
-    console.log("Publish: test_result_log");
+    console.log("Publish: test_result_log:", projectId, testResultId);
     // check that there is a project role for the current user
     if(this.userId && projectId){
       var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
@@ -159,7 +160,7 @@ Meteor.startup(function () {
     return [];
   });
   Meteor.publish('test_result_screenshots', function (projectId, testResultId) {
-    console.log("Publish: test_result_screenshots");
+    console.log("Publish: test_result_screenshots:", projectId, testResultId);
     // check that there is a project role for the current user
     if(this.userId && projectId){
       var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
@@ -170,7 +171,7 @@ Meteor.startup(function () {
     return [];
   });
   Meteor.publish('test_run_result', function (testResultId) {
-    console.log("Publish: test_run_result");
+    console.log("Publish: test_run_result:", testResultId);
     // check that there is a project role for the current user
     if(this.userId){
       return TestResults.find(testResultId);
@@ -192,6 +193,7 @@ Meteor.startup(function () {
      * @returns {TestResultStatus}
      */
     loadTestEnums: function () {
+      check(Meteor.user(), Object);
       return {
         resultStatus: TestResultStatus,
         resultCodes: TestResultCodes,
@@ -204,6 +206,7 @@ Meteor.startup(function () {
      * @param testResultRoleId
      */
     loadTestRoleManifest: function (testResultRoleId) {
+      check(Meteor.user(), Object);
       check(testResultRoleId, String);
       Meteor.log.debug("loadTestRoleManifest: ", testResultRoleId);
 
@@ -235,6 +238,7 @@ Meteor.startup(function () {
      * @param status
      */
     setTestResultRoleStatus: function (testResultRoleId, status) {
+      check(Meteor.user(), Object);
       check(testResultRoleId, String);
       check(status, Number);
       TestResultRoles.update({_id: testResultRoleId}, {$set:{status: status}});
@@ -246,6 +250,7 @@ Meteor.startup(function () {
      * @param status
      */
     setTestResultStepStatus: function (testResultStepId, status) {
+      check(Meteor.user(), Object);
       check(testResultStepId, String);
       check(status, Number);
       TestResultSteps.update({_id: testResultStepId}, {$set:{status: status}});
@@ -257,6 +262,7 @@ Meteor.startup(function () {
      * @param code
      */
     setTestResultRoleCode: function (testResultRoleId, code) {
+      check(Meteor.user(), Object);
       check(testResultRoleId, String);
       check(code, Number);
       TestResultRoles.update({_id: testResultRoleId}, {$set:{result: code}});
@@ -268,6 +274,7 @@ Meteor.startup(function () {
      * @param code
      */
     setTestResultStepCode: function (testResultStepId, code) {
+      check(Meteor.user(), Object);
       check(testResultStepId, String);
       check(code, Number);
       TestResultSteps.update({_id: testResultStepId}, {$set:{result: code}});
@@ -279,6 +286,7 @@ Meteor.startup(function () {
      * @param status
      */
     saveTestResultStepChecks: function (testResultStepId, checks) {
+      check(Meteor.user(), Object);
       check(testResultStepId, String);
       if(checks){
         TestResultSteps.update({_id: testResultStepId}, {$set:{checks: checks}});
@@ -291,6 +299,7 @@ Meteor.startup(function () {
      * @param context
      */
     saveScreenshotContext: function (imageId, context) {
+      check(Meteor.user(), Object);
       check(imageId, String);
       check(context, Object);
       ScreenShots.update(imageId, {$set: context});
@@ -304,6 +313,7 @@ Meteor.startup(function () {
      * @param status
      */
     loadNavigationRoute: function (destinationId, sourceId, projectVersionId) {
+      check(Meteor.user(), Object);
       check(destinationId, String);
       check(sourceId, String);
       check(projectVersionId, String);
@@ -330,6 +340,7 @@ Meteor.startup(function () {
      * @param testCase
      */
     deleteTestCase: function (testCase) {
+      check(Meteor.user(), Object);
       check(testCase, Object);
       check(testCase.projectId, String);
       check(testCase.projectVersionId, String);
@@ -358,10 +369,8 @@ Meteor.startup(function () {
      * @param role
      */
     deleteTestCaseRole: function (role) {
+      check(Meteor.user(), Object);
       check(role, Object);
-      check(role.projectId, String);
-      check(role.projectVersionId, String);
-      check(role.testCaseId, String);
       check(role._id, String);
 
       Meteor.log.debug("deleteTestCaseRole: " + role._id);
@@ -374,11 +383,51 @@ Meteor.startup(function () {
     },
 
     /**
-     * Launch a test case run
+     * Validate a test case run config
      * @param testCaseId
+     * @param config Must pass Schemas.TestCaseRun validation
      */
-    quickLaunchTestCase: function (testCaseId) {
+    validateTestCaseRunConfig: function (testCaseId, config) {
+      check(Meteor.user(), Object);
+      check(testCaseId, String);
+      check(config, Object);
+      Meteor.log.info("validateTestCaseRunConfig: " + testCaseId);
 
+      var testCase = TestCases.findOne(testCaseId);
+
+      // validate user permissions
+
+      if(!testCase && testCase._id){
+        throw new Meteor.Error("unknown-testCase", "A testCase with id [" + testCaseId + "] was not found");
+      }
+
+      // check that the config has data for all of the roles
+      return testCase.validateRunConfig(config);
+    },
+
+    /**
+     * Prepare a test case run
+     * @param testCaseId
+     * @param config Must pass Schemas.TestCaseRun validation
+     */
+    prepareTestCaseRun: function (testCaseId, config) {
+      check(Meteor.user(), Object);
+      check(testCaseId, String);
+      check(config, Object);
+      Meteor.log.info("prepareTestCaseRun: " + testCaseId);
+
+      var testCase = TestCases.findOne(testCaseId);
+
+      // validate user permissions
+
+      if(!testCase && testCase._id){
+        throw new Meteor.Error("unknown-testCase", "A testCase with id [" + testCaseId + "] was not found");
+      }
+
+      // check that the config has data for all of the roles
+      var testResultId = testCase.prepareTestResult(config);
+      Meteor.log.info("prepareTestCaseRun.testResultId: " + testResultId);
+      return testResultId;
     },
 
     /**
@@ -507,10 +556,21 @@ Meteor.startup(function () {
      * Launch a test result run
      */
     launchTestResult: function (testResultId) {
-      check(testResultId, String);
       check(Meteor.user(), Object);
+      check(testResultId, String);
       Meteor.log.info("launchTestResult: " + testResultId);
 
+      var testResult = TestResults.findOne(testResultId);
+
+      // validate user permissions
+
+      if(testResult){
+        testResult.launch();
+      } else {
+        throw new Meteor.Error("invalid-testResult", "launchTestResult failed because the result could not be found", testResultId);
+      }
+      return;
+      /*
       // do some quick cleanup in case this is a re-run
       LogMessages.remove({"context.testResultId": testResultId});
       ScreenShots.remove({testResultId: testResultId});
@@ -529,6 +589,7 @@ Meteor.startup(function () {
         TestResultRoles.update(role._id, {$set: {pid: proc.pid}});
         Meteor.log.info("launchTestResult launched: " + role._id + " as " + proc.pid + " > " + logFile);
       });
+      */
     }
   });
 });

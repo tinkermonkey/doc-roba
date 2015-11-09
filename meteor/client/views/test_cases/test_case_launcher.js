@@ -2,54 +2,92 @@
  * Template Helpers
  */
 Template.TestCaseLauncher.helpers({
-  getAccount: function () {
+  accountId: function () {
     var config = Template.instance().config.get(),
       role = this;
-    if(!config.account){
+    if(!(config.roles[role.staticId] && config.roles[role.staticId].accountId)){
       var userType = role.userType();
       if(userType){
         var account = userType.getAccount();
         if(account){
-          config.account = account._id;
+          config.roles[role.staticId] = config.roles[role.staticId] || {};
+          config.roles[role.staticId].accountId = account._id;
           Template.instance().config.set(config);
         }
       }
     }
-    return config.account;
+    if(role && role.staticId && config && config.roles[role.staticId]){
+      return config.roles[role.staticId].accountId;
+    }
   },
-  getServer: function () {
-    return Template.instance().config.get().server;
+  serverId: function () {
+    return Template.instance().config.get().serverId;
   },
-  getTestSystem: function () {
+  testSystemId: function () {
     var config = Template.instance().config.get(),
       role = this;
-    if(!config.testSystem){
+    if(!(config.roles[role.staticId] && config.roles[role.staticId].testSystemId)){
       var testSystem = TestSystems.findOne({ projectVersionId: role.projectVersionId, active: true });
       if(testSystem){
-        config.testSystem = testSystem.staticId;
+        config.roles[role.staticId] = config.roles[role.staticId] || {};
+        config.roles[role.staticId].testSystemId = testSystem.staticId;
         Template.instance().config.set(config);
       }
     }
-    return config.testSystem;
+    if(role && role.staticId && config && config.roles[role.staticId]){
+      return config.roles[role.staticId].testSystemId;
+    }
   },
-  getTestAgent: function () {
+  testAgentId: function () {
     var config = Template.instance().config.get(),
       role = this;
-    if(!config.testAgent && config.testSystem){
-      var testSystem = TestSystems.findOne({ projectVersionId: role.projectVersionId, staticId: config.testSystem});
+    if(!(config.roles[role.staticId] && config.roles[role.staticId].testAgentId && config.roles[role.staticId].testSystemId)){
+      var testSystem = TestSystems.findOne({ projectVersionId: role.projectVersionId, staticId: config.roles[role.staticId].testSystemId});
       if(testSystem && testSystem.testAgents && testSystem.testAgents.length){
-        config.testAgent = testSystem.testAgents[0];
+        config.roles[role.staticId] = config.roles[role.staticId] || {};
+        config.roles[role.staticId].testAgentId = testSystem.testAgents[0];
         Template.instance().config.set(config);
       }
     }
-    return config.testAgent;
+    if(role && role.staticId && config && config.roles[role.staticId]){
+      return config.roles[role.staticId].testAgentId;
+    }
   }
 });
 
 /**
  * Template Event Handlers
  */
-Template.TestCaseLauncher.events({});
+Template.TestCaseLauncher.events({
+  "click .btn-launch": function (e, instance) {
+    console.log("Launch: ", instance.config.get());
+
+    // prepare the run and make sure it works
+    Meteor.call("validateTestCaseRunConfig", instance.data._id, instance.config.get(), function (error, result) {
+      console.log("validateTestCaseRunConfig: ", error, result);
+      if(error){
+        Dialog.error("Invalid test config: " + error.toString());
+      } else {
+        Meteor.call("prepareTestCaseRun", instance.data._id, instance.config.get(), function (error, testResultId) {
+          if(error){
+            Dialog.error("prepareTestCaseRun failed: " + error.toString());
+          } else if(testResultId) {
+            Meteor.call("launchTestResult", testResultId, function (error, result) {
+              if(error){
+                Dialog.error("Launching test failed: " + error.toString());
+              } else {
+                // Open the test result
+                Router.go("test_result", { projectId: instance.data.projectId, _id: testResultId });
+              }
+            });
+          } else {
+            Dialog.error("prepareTestCaseRun failed: null testResultId");
+          }
+        });
+      }
+    });
+  }
+});
 
 /**
  * Template Created
@@ -57,7 +95,8 @@ Template.TestCaseLauncher.events({});
 Template.TestCaseLauncher.created = function () {
   var instance = this;
   instance.config = new ReactiveVar({
-    server: Servers.findOne({projectVersionId: this.data.projectVersionId, active: true}).staticId
+    serverId: Servers.findOne({projectVersionId: this.data.projectVersionId, active: true}).staticId,
+    roles: {}
   });
 };
 

@@ -89,5 +89,10 @@ TestCaseSteps.helpers({
     if(this.data.nodeId || this.data.sourceId){
       return Nodes.findOne({staticId: this.data.nodeId || this.data.sourceId, projectVersionId: this.projectVersionId});
     }
+  },
+  action: function () {
+    if(this.data.actionId){
+      return Actions.findOne({staticId: this.data.actionId, projectVersionId: this.projectVersionId});
+    }
   }
 });

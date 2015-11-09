@@ -35,7 +35,7 @@ ProcessLauncher = {
    * @param exitListener
    */
   launchAutomation: function (command, logFileName, exitListener) {
-    Meteor.log.info("launchAutomation: " + command);
+    Meteor.log.info("ProcessLauncher.launchAutomation: " + command);
 
     // create a log file path
     var logFilePath = baseLogPath + logFileName,
@@ -53,7 +53,7 @@ ProcessLauncher = {
 
     // Catch the exit
     proc.on("exit", Meteor.bindEnvironment(exitListener || function (code) {
-        Meteor.log.debug("Process Exit: " + proc.pid + ", " + code);
+        Meteor.log.debug("ProcessLauncher Process Exit: " + proc.pid + ", " + code);
       }));
 
     return proc;
