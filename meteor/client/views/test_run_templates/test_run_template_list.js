@@ -49,7 +49,7 @@ Template.TestRunTemplateList.events({
     instance.$(".test-run-template-list-item.selected").removeClass("selected");
     selectable.addClass("selected");
 
-    instance.data.testRunTemplateId.set(selectable.attr("data-pk"));
+    Router.query({testRunTemplateId: selectable.attr("data-pk")});
   }
 });
 
@@ -65,6 +65,7 @@ Template.TestRunTemplateList.created = function () {
  */
 Template.TestRunTemplateList.rendered = function () {
   var instance = Template.instance();
+  console.log("Selected template: ", instance.data);
 
   // make all of the test case list elements draggable
   instance.$(".test-run-template-list-item").draggable({
@@ -79,6 +80,14 @@ Template.TestRunTemplateList.rendered = function () {
       ui.helper.removeClass("in-drag");
     }
   });
+
+  // Select the selected item if there is one defined
+  if(instance.data.testRunTemplateId){
+    console.log("Selected template: ", instance.data.testRunTemplateId);
+    var testRunItem = instance.$(".test-run-template-list-item[data-pk='" + instance.data.testRunTemplateId + "']");
+    testRunItem.addClass("selected");
+  }
+
 };
 
 /**

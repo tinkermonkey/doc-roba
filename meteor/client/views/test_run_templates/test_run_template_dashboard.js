@@ -2,18 +2,14 @@
  * Template Helpers
  */
 Template.TestRunTemplateDashboard.helpers({
-  getFullContext: function () {
-    var instance = Template.instance();
-    this.testRunTemplateId = instance.testRunTemplateId;
-    return this;
+  testRunTemplateId: function () {
+    if(this.query && this.query.testRunTemplateId){
+      return this.query.testRunTemplateId;
+    }
   },
-  hasTestRun: function () {
-    return this.testRunTemplateId.get();
-  },
-  getTestRunTemplate: function () {
-    var testRunTemplateId = this.testRunTemplateId.get();
-    if(testRunTemplateId){
-      return TestRunTemplates.findOne(testRunTemplateId);
+  testRunTemplate: function () {
+    if(this.query && this.query.testRunTemplateId){
+      return TestRunTemplates.findOne(this.query.testRunTemplateId);
     }
   }
 });
@@ -27,9 +23,6 @@ Template.TestRunTemplateDashboard.events({});
  * Template Created
  */
 Template.TestRunTemplateDashboard.created = function () {
-  var instance = Template.instance();
-  instance.testRunTemplateId = new ReactiveVar();
-
 };
 
 /**

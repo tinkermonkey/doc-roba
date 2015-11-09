@@ -13,7 +13,7 @@
         </thead>
         <tbody>
           {{#each results}}
-            <tr>
+            <tr class="sortable-table-row test-result-row">
               <td>
                 <div>{{dateFormat dateCreated}}</div>
               </td>
@@ -21,7 +21,13 @@
                 <div>{{renderServerNameFromStaticId serverId projectVersionId}}</div>
               </td>
               <td>
-                <div></div>
+                {{#each roleResults}}
+                  <div class="inline-block">
+                    <div>{{role.title}}</div>
+                    <div>{{testSystem.title}}</div>
+                    <div>{{testAgent.title}}</div>
+                  </div>
+                {{/each}}
               </td>
               <td>
                 <div>{{renderLookup "TestResultStatusLookup" status}}</div>

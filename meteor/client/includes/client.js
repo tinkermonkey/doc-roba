@@ -81,8 +81,14 @@ Template.registerHelper("renderLookup", function (lookupName, key, style) {
         } else {
           return Util.camelToTitle(name);
         }
+      } else {
+        Meteor.log.error("renderLookup failed: no key [" + key + "] in " + lookupName);
       }
+    } else {
+      Meteor.log.error("renderLookup failed: lookup not found " + lookupName);
     }
+  } else {
+    Meteor.log.error("renderLookup failed: insufficient data [" + lookupName + "," + key + "]");
   }
 });
 

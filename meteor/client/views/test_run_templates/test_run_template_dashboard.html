@@ -9,35 +9,20 @@
     {{> svg_def "action-arrow" }}
   {{/contentFor}}
 
-  {{#with getFullContext}}
-    <div class="test-case-container">
-      <div class="test-case-nav">
-        <div class="home-nav-item active">
-          <h4 class="home-top-nav">
-            {{#with project}}
-              <a href="{{pathFor 'home_project'}}">{{title}}</a>
-            {{/with}}
-            {{#with version}}
-              <small><a href="{{pathFor 'home_version'}}">v {{version}}</a></small>
-            {{/with}}
-            {{#with project}}
-              <small>{{renderLookup "RoleTypesLookup" userRole}}</small>
-            {{/with}}
-          </h4>
-        </div>
+  {{#contentFor "header"}}
+    {{> ProjectNav }}
+  {{/contentFor}}
 
-        {{> TestRunTemplateList }}
-        {{> TestCaseList project=project version=version connectToSortable=".test-run-item-list" }}
-      </div>
-      <div class="test-case-content">
-        {{#if hasTestRun}}
-          {{> TestRunTemplate getTestRunTemplate}}
-        {{else}}
-          <div class="align-center">
-            <h2>Select a Test Run Template</h2>
-          </div>
-        {{/if}}
-      </div>
+  {{#contentFor "nav"}}
+    {{> TestRunTemplateList version=version testRunTemplateId=testRunTemplateId }}
+    {{> TestCaseList project=project version=version connectToSortable=".test-run-item-list" }}
+  {{/contentFor}}
+
+  {{#if testRunTemplateId}}
+    {{> TestRunTemplate testRunTemplate }}
+  {{else}}
+    <div class="align-center" style="margin-top: 200px;">
+      <h2>Select a Test Run Template</h2>
     </div>
-  {{/with}}
+  {{/if}}
 </template>

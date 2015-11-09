@@ -9,11 +9,10 @@
  * Test run list
  */
 .test-run-template-list-header {
-  padding: 10px 0 10px 10px;
 }
 
 .test-run-template-list {
-  padding: 15px 0 15px 15px;
+  padding: 10px 0;
 }
 
 .test-run-template-list-item {

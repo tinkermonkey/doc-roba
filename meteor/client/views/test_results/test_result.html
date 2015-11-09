@@ -1,4 +1,8 @@
 <template name="TestResult">
+  {{#contentFor "title"}}
+    Test Result: {{testCase.title}}
+  {{/contentFor}}
+
   {{#contentFor "svgDefs"}}
     {{> svg_def "outer-glow" }}
     {{> svg_def "shadow" }}
@@ -9,18 +13,35 @@
     {{> svg_def "action-arrow-hover" }}
   {{/contentFor}}
 
+  {{#contentFor "header"}}
+    {{> ProjectNav }}
+  {{/contentFor}}
+
+  {{#contentFor "nav"}}
+    {{> TestResultNav }}
+  {{/contentFor}}
+
   {{#if Template.subscriptionsReady}}
-    <div class="test-result-container">
-      {{#with resultWithCase}}
-        <h2>Test Result: <span class="dark-blue">{{testCase.title}}</span><br><small>{{dateFormat dateCreated "ddd MMM do, YY h:mm:ss A"}}</small></h2>
-      {{/with}}
-      <div class="no-wrap">
-        {{#each roleResults}}
-          <div class="test-result-role-container">
-            {{> TestResultRole }}
-          </div>
-        {{/each}}
-      </div>
+    <h2>
+      Test Result: <span class="dark-blue">{{testCase.title}}</span><br>
+      <small>
+        {{dateFormat dateCreated "ddd MMM Do, YYYY @ h:mm:ss A"}}
+        against {{server.title}},
+        {{#unless isDone}}currently{{/unless}} {{renderLookup "TestResultStatusLookup" status}}
+        {{#if abort}}(aborted){{/if}}
+      </small>
+    </h2>
+
+    {{#CenterPoleSectionHeader}}<h2>Test Log</h2>{{/CenterPoleSectionHeader}}
+
+    <div class="no-wrap">
+      {{#each roleResults}}
+        <div class="test-result-role-container">
+          {{> TestResultRole }}
+        </div>
+      {{/each}}
     </div>
+
+    {{#CenterPoleSectionHeader}}<h2>Analysis</h2>{{/CenterPoleSectionHeader}}
   {{/if}}
 </template>

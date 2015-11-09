@@ -10,15 +10,7 @@
   {{/contentFor}}
 
   {{#contentFor "header"}}
-    {{#with project}}
-      <a href="{{pathFor 'home_project'}}">{{title}}</a>
-    {{/with}}
-    {{#with version}}
-      <small><a href="{{pathFor 'home_version'}}">v {{version}}</a></small>
-    {{/with}}
-    {{#with project}}
-      <small>{{renderLookup "RoleTypesLookup" userRole}}</small>
-    {{/with}}
+    {{> ProjectNav }}
   {{/contentFor}}
 
   {{#contentFor "nav"}}
@@ -28,7 +20,7 @@
   {{#if testCaseId}}
     {{> TestCase testCase}}
   {{else}}
-    <div class="align-center" style="max-width: 1200px; margin-top: 200px;">
+    <div class="align-center" style="margin-top: 200px;">
       <h2>Select a Test Case</h2>
     </div>
   {{/if}}

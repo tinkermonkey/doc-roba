@@ -31,7 +31,10 @@ Template.TestRunItemList.created = function () {
   var instance = this;
 
   // Setup the collection based on whether this is a template or not
-  instance.collection = instance.data.isTemplate ? TestRunTemplateItems : TestRunTemplateItems;
+  instance.collection = TestRunTemplateItems;
+  if(instance.data && instance.data.isTemplate){
+
+  }
 
   // Reorder items in this immediate list
   instance.reorderItems = function () {

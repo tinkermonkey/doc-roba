@@ -6,14 +6,16 @@
   {{/contentFor}}
 
   {{#contentFor "header"}}
-    <a href="{{pathFor 'home'}}">Personal Dashboard</a>
+    {{> ProjectNav }}
   {{/contentFor}}
 
   {{#contentFor "nav"}}
     {{#each userProjects}}
       <div class="home-nav-item {{#if isActiveProject}}active{{/if}}">
-        <a href="{{pathFor 'home_project'}}">{{title}}</a>
-        <small>{{renderLookup "RoleTypesLookup" role}}</small>
+        <h4>
+          <a href="{{pathFor 'home_project'}}">{{title}}</a>
+          <small>{{renderLookup "RoleTypesLookup" role}}</small>
+        </h4>
       </div>
       {{#each projectVersions}}
         <div class="home-nav-item {{#if isActiveVersion}}active{{/if}}">
