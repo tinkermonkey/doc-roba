@@ -175,21 +175,29 @@ DDPLink.prototype.setTestSystemStatus = function (testSystemId, status) {
 };
 
 /**
+ * Signal a failure of a test role
+ */
+DDPLink.prototype.testRoleFailed = function (resultRoleId, data) {
+  assert(resultRoleId, "testRoleFailed: resultRoleId must not be null");
+  this.call("testRoleFailed", [resultRoleId, data]);
+};
+
+/**
  * Set the status of a testResultRole
  */
-DDPLink.prototype.setTestResultRoleStatus = function (roleResultId, status) {
-  assert(roleResultId, "setTestResultRoleStatus: roleResultId must not be null");
+DDPLink.prototype.setTestResultRoleStatus = function (resultRoleId, status) {
+  assert(resultRoleId, "setTestResultRoleStatus: resultRoleId must not be null");
   assert(status !== undefined, "setTestResultRoleStatus: status must not be null");
-  this.call("setTestResultRoleStatus", [roleResultId, status]);
+  this.call("setTestResultRoleStatus", [resultRoleId, status]);
 };
 
 /**
  * Set the result code of a testResultRole
  */
-DDPLink.prototype.setTestResultRoleCode = function (roleResultId, code) {
-  assert(roleResultId, "setTestResultRoleCode: roleResultId must not be null");
-  assert(code !== undefined, "setTestResultRoleCode: code must not be null");
-  this.call("setTestResultRoleCode", [roleResultId, code]);
+DDPLink.prototype.setTestResultRoleResult = function (resultRoleId, code, resultData) {
+  assert(resultRoleId, "setTestResultRoleResult: resultRoleId must not be null");
+  assert(code !== undefined, "setTestResultRoleResult: code must not be null");
+  this.call("setTestResultRoleResult", [resultRoleId, code, resultData]);
 };
 
 /**
@@ -213,10 +221,10 @@ DDPLink.prototype.saveTestResultStepChecks = function (stepResultId, checks) {
 /**
  * Set the result code of a testResultStep
  */
-DDPLink.prototype.setTestResultStepCode = function (stepResultId, code) {
-  assert(stepResultId, "setTestResultStepCode: stepResultId must not be null");
-  assert(code !== undefined, "setTestResultStepCode: code must not be null");
-  this.call("setTestResultStepCode", [stepResultId, code]);
+DDPLink.prototype.setTestResultStepResult = function (stepResultId, code, resultData) {
+  assert(stepResultId, "setTestResultStepResult: stepResultId must not be null");
+  assert(code !== undefined, "setTestResultStepResult: code must not be null");
+  this.call("setTestResultStepResult", [stepResultId, code, resultData]);
 };
 
 /**
