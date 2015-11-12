@@ -174,8 +174,7 @@ TestResultStatus = {
   executing: 3,
   paused: 4,
   complete: 5,
-  error: 6,
-  skipped: 7
+  skipped: 6
 };
 TestResultStatusLookup = _.invert(TestResultStatus);
 
@@ -185,7 +184,8 @@ TestResultStatusLookup = _.invert(TestResultStatus);
 TestResultCodes = {
   fail: 0,
   pass: 1,
-  warn: 2
+  warn: 2,
+  abort: 3
 };
 TestResultCodesLookup = _.invert(TestResultCodes);
 
