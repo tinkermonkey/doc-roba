@@ -397,6 +397,13 @@ Template.registerHelper("getLogDataTemplate", function (data) {
   }
 });
 
+Template.registerHelper("join", function (list, joint) {
+  joint = joint ? joint : ", ";
+  if(list){
+    return _.filter(list, function (d) {return d != null;}).join(", ");
+  }
+});
+
 Template.registerHelper("stringify", function () {
   return JSON.stringify(this);
 });

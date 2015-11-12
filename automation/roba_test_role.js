@@ -298,7 +298,7 @@ function ExecuteNodeStep (step) {
   ddpLink.saveImage(driver.getScreenshot(), ScreenshotKeys.afterLoad);
 
   // Save the validation checks
-  ddpLink.saveTestResultStepChecks(step._id, result.checks);
+  ddpLink.saveTestResultStepChecks(step._id, [result.checks]);
 
   return error;
 }
@@ -353,7 +353,7 @@ function ExecuteActionStep (step) {
 
   // Save the validation checks
   // TODO: splice together the action result & checks
-  ddpLink.saveTestResultStepChecks(step._id, result.checks);
+  ddpLink.saveTestResultStepChecks(step._id, [result.checks]);
 
   return error;
 }
@@ -435,7 +435,7 @@ function ExecuteNavigationStep (step) {
       checks: result.checks,
       actionExecuted: actionExecuted,
       actionResult: actionResult,
-      actionError: error
+      error: error
     });
 
     i++;
@@ -509,6 +509,7 @@ function ValidateNode(node) {
     isReady: true,
     isValid: true,
     checks: {
+      node: node,
       ready: {},
       validation: {}
     }

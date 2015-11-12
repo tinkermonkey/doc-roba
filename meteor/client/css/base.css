@@ -50,6 +50,11 @@ button {
   white-space: nowrap;
 }
 
+.force-wrap {
+  word-break: break-all;
+  overflow-wrap: break-word;
+}
+
 .full-page {
   margin: 0px;
   padding: 0px;

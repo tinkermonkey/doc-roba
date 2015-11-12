@@ -1,10 +1,60 @@
 <template name="TestResultStepNodeMilestone">
-  {{node.title}}
-  {{debug checks}}
-  {{#each checks.ready.checks}}
-    <div>Ready Check Here</div>
-  {{/each}}
-  {{#each checks.validation.checks}}
-    <div>Validation Check Here</div>
+  {{#each step.checks}}
+    {{debug}}
+    <h3>{{node.title}}</h3>
+
+    {{#if ready.checks.length}}
+      <h4>Ready</h4>
+      <small>
+        <table>
+          {{#each ready.checks}}
+            <tr>
+              <td>
+                <div class="test-result-check-command">{{command}}( {{join args}} )</div>
+              </td>
+              <td>
+                {{#if result.pass}}
+                  <span class="test-result-1">Pass</span>
+                {{else}}
+                  <span class="test-result-0">Fail</span>
+                {{/if}}
+              </td>
+              <td>
+                {{#if result.time}}
+                  {{result.time}} ms
+                {{/if}}
+              </td>
+            </tr>
+          {{/each}}
+        </table>
+      </small>
+    {{/if}}
+
+    {{#if validation.checks.length}}
+      <h4>Valid</h4>
+      <small>
+        <table>
+          {{#each validation.checks}}
+            <tr>
+              <td>
+                <div class="test-result-check-command">{{command}}( {{join args}} )</div>
+              </td>
+              <td>
+                {{#if result.pass}}
+                  <span class="test-result-1">Pass</span>
+                {{else}}
+                  <span class="test-result-0">Fail</span>
+                {{/if}}
+              </td>
+              <td>
+                {{#if result.time}}
+                  {{time}} ms
+                {{/if}}
+              </td>
+            </tr>
+          {{/each}}
+        </table>
+      </small>
+    {{/if}}
   {{/each}}
 </template>

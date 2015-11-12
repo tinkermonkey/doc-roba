@@ -177,6 +177,15 @@
   background-color: #ddd;
 }
 
+.test-result-check-command  {
+  max-width: 300px;
+  display: inline-block;
+  word-break: break-all;
+  overflow-wrap: break-word;
+  overflow: hidden;
+  vertical-align: top;
+}
+
 .test-result-detail-2 {
   max-width: 80em;
 }
