@@ -2,13 +2,6 @@
  * Template Helpers
  */
 Template.TestResultRole.helpers({
-  resultWithRole: function () {
-    this.testCaseRole = TestCaseRoles.findOne({staticId: this.testCaseRoleId, projectVersionId: this.projectVersionId});
-    return this;
-  },
-  stepResults: function () {
-    return TestResultSteps.find({testResultRoleId: this._id}, {sort: {order: 1}});
-  },
   getStepMap: function () {
     return Template.instance().stepMap.get()
   }

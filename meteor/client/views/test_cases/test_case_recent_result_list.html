@@ -23,7 +23,7 @@
               <td>
                 {{#each roleResults}}
                   <div class="inline-block">
-                    <div>{{role.title}}</div>
+                    <i>{{role.title}}</i>:
                     <div>{{testSystem.title}}</div>
                     <div>{{testAgent.title}}</div>
                   </div>
@@ -33,7 +33,8 @@
                 <div>{{renderLookup "TestResultStatusLookup" status}}</div>
               </td>
               <td>
-                <div>{{renderLookup "TestResultCodesLookup" result}}</div>
+                {{debug}}
+                <div>{{renderLookup "TestResultCodesLookup" resultCode}}</div>
               </td>
             </tr>
           {{/each}}

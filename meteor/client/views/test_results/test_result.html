@@ -23,7 +23,12 @@
 
   {{#if Template.subscriptionsReady}}
     <h2>
-      Test Result: <span class="dark-blue">{{testCase.title}}</span><br>
+      <div>
+        Test Result: <a href="/test_case_dashboard/{{projectId}}/{{projectVersionId}}/?testCaseId={{testCase._id}}">{{testCase.title}}</a>
+        {{#if notNull resultCode}}
+          ( <span class="test-result-{{resultCode}}">{{renderLookup "TestResultCodesLookup" resultCode}}</span> )
+        {{/if}}
+      </div>
       <small>
         {{dateFormat dateCreated "ddd MMM Do, YYYY @ h:mm:ss A"}}
         against {{server.title}},
@@ -34,14 +39,14 @@
 
     {{#CenterPoleSectionHeader}}<h2>Test Log</h2>{{/CenterPoleSectionHeader}}
 
-    <div class="no-wrap">
+    <div class="no-wrap flex">
       {{#each roleResults}}
-        <div class="test-result-role-container">
-          {{> TestResultRole }}
-        </div>
+        {{> TestResultRole }}
       {{/each}}
     </div>
 
     {{#CenterPoleSectionHeader}}<h2>Analysis</h2>{{/CenterPoleSectionHeader}}
+  {{else}}
+    {{> CustomSpinner }}
   {{/if}}
 </template>

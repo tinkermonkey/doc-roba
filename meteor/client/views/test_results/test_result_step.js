@@ -17,9 +17,7 @@ Template.TestResultStep.helpers({
       case TestResultStatus.launched:
         return "test-result-step-executing";
       case TestResultStatus.complete:
-        return "test-result-step-" + this.step.type;
-      case TestResultStatus.error:
-        return "test-result-step-error";
+        return "test-result-step-type-" + this.step.type + " test-step-result-" + this.step.resultCode;
     }
   },
   getStepTemplate: function () {

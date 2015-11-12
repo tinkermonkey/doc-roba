@@ -1,12 +1,27 @@
-.test-result-container {
-  padding: 5px;
+/**
+ * Header styling
+ */
+.test-result-0 { /** fail **/
+  color: #FF0000;
 }
 
-.test-result-role-container {
-  display: inline-block;
-  vertical-align: top;
+.test-result-1 { /** pass **/
+  color: #00d801;
+}
+
+.test-result-2 { /** warn **/
+  color: #ffc100;
+}
+
+.test-result-2 { /** abort **/
+  color: #b8b8b8;
+}
+
+/**
+ * Report styling
+ */
+.test-result-role {
   padding: 10px;
-  border-right: 1px dashed #dddddd;
 }
 
 .test-result-role-table {
@@ -38,26 +53,32 @@
   margin-left: -55px;
 }
 
-.test-result-step-0 {
+/**
+ * Test Result Step Types
+ */
+.test-result-step-type-0 {
   background-color: #0A7BFF !important;
 }
 
-.test-result-step-1 {
+.test-result-step-type-1 {
   background-color: #5cb85c !important;
 }
 
-.test-result-step-2 {
+.test-result-step-type-2 {
   background-color: #9701ff !important;
 }
 
-.test-result-step-3 {
+.test-result-step-type-3 {
   background-color: #5bc0de !important;
 }
 
-.test-result-step-4 {
+.test-result-step-type-4 {
   background-color: #ff8400 !important;
 }
 
+/**
+ * Test Result Step Status
+ */
 .test-result-step-executing {
   background-color: #0A7BFF !important;
   background-image: url('/roba_stripe.svg');
@@ -66,8 +87,17 @@
   background-size: contain;
 }
 
-.test-result-step-error {
+/**
+ * Test Result Step Result Codes
+ */
+.test-step-result-0 { /** Fail **/
   background-color: #ff0000 !important;
+}
+.test-step-result-2 { /** Warn **/
+  background-color: #ffc100 !important;
+}
+.test-step-result-3 { /** Abort **/
+  background-color: #b8b8b8 !important;
 }
 
 .test-result-step-body {

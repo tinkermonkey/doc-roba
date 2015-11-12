@@ -1,0 +1,45 @@
+<template name="TestResultRole">
+  {{#if Template.subscriptionsReady}}
+    <div class="test-result-role">
+      <h3>
+        <div>
+          {{role.title}}
+          {{#if notNull resultCode}}
+            - <span class="test-result-{{resultCode}}">{{renderLookup "TestResultCodesLookup" resultCode}}</span>
+          {{/if}}
+        </div>
+        <small>
+          {{testAgent.title}} {{testAgent.version}} on {{testSystem.title}},
+          {{#unless isDone}}currently{{/unless}} {{renderLookup "TestResultStatusLookup" status}}
+          {{#if abort}}(aborted){{/if}}
+        </small>
+      </h3>
+      {{#if result}}
+        {{#with result.error}}
+          <div>
+            <h4>Error</h4>
+            {{#if stack}}
+              <div>{{{stack}}}</div>
+            {{else}}
+              {{#if message}}
+                <div class="log-data-value">{{{message}}}</div>
+              {{/if}}
+            {{/if}}
+          </div>
+        {{else}}
+          <div class="flex">
+            <div>Result: </div>
+            {{> TestResultLogDataObject result}}
+          </div>
+        {{/with}}
+      {{/if}}
+      <table class="test-result-role-table">
+        {{#each resultSteps}}
+          {{> TestResultStep step=this stepMap=getStepMap }}
+        {{/each}}
+      </table>
+    </div>
+  {{else}}
+    {{> InlineSpinner }}
+  {{/if}}
+</template>

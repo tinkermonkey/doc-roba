@@ -233,6 +233,53 @@ Meteor.startup(function () {
     },
 
     /**
+     * Signal the failure of a test result role
+     * Abort the other roles (if any) and exit
+     * @param testResultRoleId
+     */
+    testRoleFailed: function (testResultRoleId, result) {
+      Meteor.log.info("testRoleFailed: " + testResultRoleId + ", " + result);
+      check(Meteor.user(), Object);
+      check(testResultRoleId, String);
+      var testResultRole = TestResultRoles.findOne({_id: testResultRoleId});
+      if(testResultRole && testResultRole.testResultId){
+        TestResultRoles.update({_id: testResultRoleId}, {$set:{
+          status: TestResultStatus.complete,
+          resultCode: TestResultCodes.fail,
+          result: result
+        }});
+
+        // Mark the result as a failure
+        TestResults.update({
+          _id: testResultRole.testResultId,
+          status: {$ne: TestResultStatus.complete}
+        }, {
+          $set: {
+            status: TestResultStatus.complete,
+            resultCode: TestResultCodes.fail,
+            result: result
+          }
+        });
+
+        // Abort all other roles for this test (unless they've already error'd out)
+        TestResultRoles.update({
+          testResultId: testResultRole.testResultId,
+          status: {$ne: TestResultStatus.complete},
+          _id: {$ne: testResultRoleId}
+        }, {
+          $set: {
+            abort: true,
+            status: TestResultStatus.complete,
+            resultCode: TestResultCodes.abort,
+            result: result
+          }
+        }, {multi: true});
+      } else {
+        throw new Meteor.error("unknown-test-result-role", "Failed to find testResultRole with _id " + testResultRoleId);
+      }
+    },
+
+    /**
      * Set the status of a testResultRole record
      * @param testResultRoleId
      * @param status
@@ -241,7 +288,15 @@ Meteor.startup(function () {
       check(Meteor.user(), Object);
       check(testResultRoleId, String);
       check(status, Number);
-      TestResultRoles.update({_id: testResultRoleId}, {$set:{status: status}});
+      var testResultRole = TestResultRoles.findOne();
+      if(testResultRole){
+        TestResultRoles.update({_id: testResultRoleId}, {$set:{status: status}});
+
+        // update the test result status with the highest ranking status
+        if(testResultRole.testResult().status < status){
+          TestResults.update({_id: testResultRole.testResultId}, {$set: {status: status}});
+        }
+      }
     },
 
     /**
@@ -261,11 +316,19 @@ Meteor.startup(function () {
      * @param testResultRoleId
      * @param code
      */
-    setTestResultRoleCode: function (testResultRoleId, code) {
+    setTestResultRoleResult: function (testResultRoleId, code, resultData) {
       check(Meteor.user(), Object);
       check(testResultRoleId, String);
       check(code, Number);
-      TestResultRoles.update({_id: testResultRoleId}, {$set:{result: code}});
+      var testResultRole = TestResultRoles.findOne({_id: testResultRoleId});
+      TestResultRoles.update({_id: testResultRoleId}, {$set:{resultCode: code, result: resultData}});
+      if(code == TestResultCodes.fail){
+        TestResults.update({_id: testResultRole.testResultId}, {$set:{resultCode: code, result: resultData}});
+      } else if(testResultRole.testResult().resultCode == null) {
+        TestResults.update({_id: testResultRole.testResultId}, {$set:{resultCode: code}});
+      } else if(code !== TestResultCodes.pass) {
+        TestResults.update({_id: testResultRole.testResultId}, {$set:{resultCode: code}});
+      }
     },
 
     /**
@@ -273,11 +336,11 @@ Meteor.startup(function () {
      * @param testResultStepId
      * @param code
      */
-    setTestResultStepCode: function (testResultStepId, code) {
+    setTestResultStepResult: function (testResultStepId, code, resultData) {
       check(Meteor.user(), Object);
       check(testResultStepId, String);
       check(code, Number);
-      TestResultSteps.update({_id: testResultStepId}, {$set:{result: code}});
+      TestResultSteps.update({_id: testResultStepId}, {$set:{resultCode: code, result: resultData}});
     },
 
     /**

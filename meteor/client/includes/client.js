@@ -1,5 +1,5 @@
 /**
- * Listen for resize events
+ * Listen for page resize events
  */
 Meteor.startup(function(){
   var self = {};
@@ -30,6 +30,13 @@ Template.registerHelper("debug", function(){
   } else {
     console.log("Debug: ", this);
   }
+});
+
+/**
+ * Not Null helper
+ */
+Template.registerHelper("notNull", function(value){
+  return value != null;
 });
 
 /**
