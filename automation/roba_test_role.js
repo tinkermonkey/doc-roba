@@ -12,6 +12,7 @@ var Future      = require("fibers/future"),
   ddpAppender   = require("./ddp_appender"),
   DDPLink       = require("./ddp_link"),
   RobaDriver    = require("./roba_driver"),
+  RobaError     = require("./roba_error"),
   RobaReady     = require("./roba_ready"),
   RobaContext   = require("./roba_context"),
   argv          = require("minimist")(process.argv.slice(2)),
@@ -75,9 +76,11 @@ Future.task(function(){
     ExecuteTestRole();
   } catch (e) {
     logger.error("Fatal error during test role execution: ", e);
-    logger.error(new Error(e.toString()).trace);
+    //logger.error(new Error(e.toString()).trace);
     if(ddpLink){
-      ddpLink.setTestResultRoleStatus(testResultRoleId, 0);
+      var error = new RobaError(e);
+      logger.info("Signaling test role failure", error);
+      ddpLink.testRoleFailed(testResultRoleId, {error: error});
       Exit(1);
     }
   }
@@ -125,7 +128,7 @@ function ExecuteTestRole () {
     testRunId:        test.role.testRunId,
     testResultId:     test.role.testResultId
   });
-  ddpLink.setTestResultRoleStatus(test.role._id, TestResultStatus.launched);
+  ddpLink.setTestResultRoleStatus(test.role._id, TestResultStatus.executing);
   context.milestone({ type: "test_result_role", data: test.role });
 
   // load a live record so that we can know when to abort
@@ -201,32 +204,43 @@ function ExecuteTestRole () {
 
     // Execute the step
     try{
+      var error;
       switch(step.type){
+        //TODO: Return error instead of pass
         case TestCaseStepTypes.node:
-          pass = ExecuteNodeStep(step);
+          error = ExecuteNodeStep(step);
           break;
         case TestCaseStepTypes.action:
-          pass = ExecuteActionStep(step);
+          error = ExecuteActionStep(step);
           break;
         case TestCaseStepTypes.navigate:
-          pass = ExecuteNavigationStep(step);
+          error = ExecuteNavigationStep(step);
           break;
         case TestCaseStepTypes.wait:
-          pass = ExecuteWaitStep(step);
+          error = ExecuteWaitStep(step);
           break;
         case TestCaseStepTypes.custom:
-          pass = ExecuteCustomStep(step);
+          error = ExecuteCustomStep(step);
           break;
         default:
-          throw new Error("Test Role Execution failed: Unknown step type [" + step.type + "]");
+          throw new Error("test-step-failure", "Test Role Execution failed: Unknown step type [" + step.type + "]", step);
       }
       // done
       ddpLink.setTestResultStepStatus(step._id, TestResultStatus.complete);
-    } catch (error) {
+      if(error){
+        logger.error("Step execution returned an error: ", error);
+        pass = false;
+        ddpLink.setTestResultStepResult(step._id, TestResultCodes.fail, {error: error});
+        ddpLink.setTestResultRoleResult(testResultRoleId, TestResultCodes.fail, {error: error});
+      } else {
+        ddpLink.setTestResultStepResult(step._id, TestResultCodes.pass);
+      }
+    } catch (e) {
+      var error = new RobaError(e);
       logger.error("Step execution failed: ", error);
       pass = false;
-      ddpLink.setTestResultStepStatus(step._id, TestResultStatus.error);
-      ddpLink.setTestResultStepCode(step._id, TestResultCodes.fail);
+      ddpLink.setTestResultStepStatus(step._id, TestResultStatus.complete);
+      ddpLink.setTestResultStepResult(step._id, TestResultCodes.fail, {error: error});
     }
 
     i++;
@@ -245,7 +259,9 @@ function ExecuteTestRole () {
   }
 
   ddpLink.setTestResultRoleStatus(test.role._id, TestResultStatus.complete);
-  ddpLink.setTestResultRoleCode(test.role._id, pass ? TestResultCodes.pass : TestResultCodes.fail);
+  if(pass){
+    ddpLink.setTestResultRoleResult(test.role._id, TestResultCodes.pass);
+  }
 
   // Exit out
   Exit(0);
@@ -258,6 +274,7 @@ function ExecuteTestRole () {
 function ExecuteNodeStep (step) {
   logger.debug("Executing node step: ", step.order);
   ddpLink.setTestResultStepStatus(step._id, TestResultStatus.executing);
+  var error;
 
   // Update the context
   context.update({nodeId: step.data.node.staticId});
@@ -273,9 +290,9 @@ function ExecuteNodeStep (step) {
   }
 
   // Validate the current node
-  var result = ValidateNode(step.data.node),
-    pass = result.isReady && result.isValid;
-  context.update({ pass: pass });
+  var result = ValidateNode(step.data.node);
+  context.update({ pass: result.isReady && result.isValid });
+  error = result.error;
 
   // save a screenshot of the page
   ddpLink.saveImage(driver.getScreenshot(), ScreenshotKeys.afterLoad);
@@ -283,9 +300,7 @@ function ExecuteNodeStep (step) {
   // Save the validation checks
   ddpLink.saveTestResultStepChecks(step._id, result.checks);
 
-  // Set the result code
-  ddpLink.setTestResultStepCode(step._id, pass ? TestResultCodes.pass : TestResultCodes.fail);
-  return pass;
+  return error;
 }
 
 /**
@@ -302,12 +317,16 @@ function ExecuteActionStep (step) {
   // take the action
   var pass = true,
     result = {},
-    actionResult, actionError;
+    actionResult, error;
   try{
     actionResult = TakeAction(step.data.action, step.data.context);
-  } catch(error) {
-    logger.error("Action execution failed: ", error.toString);
-    actionError = error.toString();
+    if(actionResult.error){
+      error = actionResult.error;
+      pass = false;
+    }
+  } catch(e) {
+    error = new RobaError(e);
+    logger.error("Action execution failed: ", error);
     pass = false;
   }
 
@@ -322,20 +341,21 @@ function ExecuteActionStep (step) {
 
     // Validate the current node
     result = ValidateNode(step.data.node);
-    pass = result.isReady && result.isValid;
+    pass = result.isReady && result.isValid && !result.error;
     context.update({ pass: pass });
+    if(result.error){
+      error = result.error;
+    }
 
     // save a screenshot
     ddpLink.saveImage(driver.getScreenshot(), ScreenshotKeys.afterLoad);
   }
 
   // Save the validation checks
-  // TODO: splice in the action result & checks
+  // TODO: splice together the action result & checks
   ddpLink.saveTestResultStepChecks(step._id, result.checks);
 
-  // Set the result code
-  ddpLink.setTestResultStepCode(step._id, pass ? TestResultCodes.pass : TestResultCodes.fail);
-  return pass;
+  return error;
 }
 
 /**
@@ -352,10 +372,10 @@ function ExecuteNavigationStep (step) {
   context.milestone({ type: "route", data: route });
 
   // Execute the route steps, but skip the last one because another step will validate that
-  var i = 0, pass = true, routeStep, checks = [];
+  var i = 0, pass = true, routeStep, checks = [], error;
   while(i < route.steps.length - 1 && !resultLink.abort && !driverEnded && pass ){
-    var actionExecuted = false, result = {},
-      actionError, actionResult;
+    //TODO: This needs sorting out with the error handling
+    var actionExecuted = false, result = {}, actionResult;
 
     routeStep = route.steps[i];
 
@@ -375,8 +395,11 @@ function ExecuteNavigationStep (step) {
 
       // Validate the node we just landed on
       result = ValidateNode(routeStep.node);
-      pass = result.isReady && result.isValid;
+      pass = result.isReady && result.isValid && !result.error;
       context.update({ pass: pass });
+      if(result.error){
+        error = result.error;
+      }
 
       // save a screenshot of the page
       ddpLink.saveImage(driver.getScreenshot(), ScreenshotKeys.afterLoad);
@@ -389,10 +412,14 @@ function ExecuteNavigationStep (step) {
       actionExecuted = true;
       try {
         actionResult = TakeAction(routeStep.action, routeStep.context);
-      } catch(error){
+        if(actionResult.error){
+          error = actionResult.error;
+          pass = false;
+        }
+      } catch(e){
+        error = new RobaError(e);
         logger.error("Action failed: ", error);
         pass = false;
-        actionError = error.toString();
       }
 
       // update the context and grab a screenshot
@@ -408,7 +435,7 @@ function ExecuteNavigationStep (step) {
       checks: result.checks,
       actionExecuted: actionExecuted,
       actionResult: actionResult,
-      actionError: actionError
+      actionError: error
     });
 
     i++;
@@ -417,9 +444,7 @@ function ExecuteNavigationStep (step) {
   // Save the validation checks
   ddpLink.saveTestResultStepChecks(step._id, checks);
 
-  // Set the result code
-  ddpLink.setTestResultStepCode(step._id, pass ? TestResultCodes.pass : TestResultCodes.fail);
-  return pass;
+  return error;
 }
 
 /**
@@ -466,9 +491,9 @@ function TakeAction(action, context) {
   logger.debug("Action Variable Code: ", variableCode);
   try {
     result.value = eval(variableCode + debugCode + action.code);
-  } catch (error) {
-    logger.error("Action failed: ", error.toString());
-    result.error = error.toString();
+  } catch (e) {
+    result.error = new RobaError(e);
+    logger.error("Action failed: ", result.error);
   }
 
   return result;
@@ -502,8 +527,9 @@ function ValidateNode(node) {
       result.isReady = ready.check();
       logger.debug("Ready Code result: ", result.isReady);
     } catch (e) {
-      logger.error("Ready code failed: ", e.toString());
-      result.checks.ready.error = e.toString();
+      result.checks.ready.error = new RobaError(e);
+      result.error = result.checks.ready.error;
+      logger.error("Ready code failed: ", result.checks.ready.error);
       result.isReady = false;
     }
     result.checks.ready.checks = ready.checks;
@@ -518,8 +544,11 @@ function ValidateNode(node) {
       result.isValid = eval(node.validationCode);
       logger.debug("Validation Code result: ", result.isValid);
     } catch (e) {
-      logger.error("Validation code failed: ", e.toString());
-      result.checks.validation.error = e.toString();
+      result.checks.validation.error = new RobaError(e);
+      if(!result.error){
+        result.error = result.checks.validation.error;
+      }
+      logger.error("Validation code failed: ", result.checks.validation.error);
       result.isValid = false;
     }
     //result.checks.validation.checks = ready.checks;

@@ -401,8 +401,8 @@ RobaDriver.prototype.injectHelpers = function () {
 
           return info;
         } catch (e) {
+          console.error("roba_driver.element_info failed: ", e);
           return;
-          //console.error("roba_driver.element_info failed: ", e);
           //return { message: "roba_driver.element_info failed", error: e }
         }
       };
@@ -419,7 +419,7 @@ RobaDriver.prototype.injectHelpers = function () {
             thisNode = iterator.iterateNext();
           }
         } catch (e) {
-          console.log("roba_driver.getElementsByXPath failed: ", e);
+          console.error("roba_driver.getElementsByXPath failed: ", e);
           return { message: "roba_driver.getElementsByXPath failed", error: e }
         }
         return elements;
