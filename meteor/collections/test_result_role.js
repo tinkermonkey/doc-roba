@@ -62,10 +62,21 @@ Schemas.TestResultRole = new SimpleSchema({
     allowedValues: _.map(TestResultStatus, function (d) { return d; }),
     defaultValue: TestResultStatus.staged
   },
-  // The result
-  result: {
+  // Abort the test
+  abort: {
+    type: Boolean,
+    optional: true
+  },
+  // The result code
+  resultCode: {
     type: Number,
     allowedValues: _.map(TestResultCodes, function (d) { return d; }),
+    optional: true
+  },
+  // The result detail
+  result: {
+    type: Object,
+    blackbox: true,
     optional: true
   }
 });
@@ -90,10 +101,31 @@ TestResultRoles.helpers({
   role: function () {
     return TestCaseRoles.findOne({staticId: this.testCaseRoleId, projectVersionId: this.projectVersionId});
   },
+  resultSteps: function () {
+    return TestResultSteps.find({testResultRoleId: this._id}, {sort: {order: 1}});
+  },
+  testResult: function () {
+    return TestResults.findOne({_id: this.testResultId});
+  },
   testSystem: function () {
     return TestSystems.findOne({staticId: this.testSystemId, projectVersionId: this.projectVersionId});
   },
   testAgent: function () {
     return TestAgents.findOne({staticId: this.testAgentId, projectVersionId: this.projectVersionId});
+  },
+  isStaged: function () {
+    return this.status = TestResultStatus.staged
+  },
+  isLaunching: function () {
+    return this.status = TestResultStatus.launched
+  },
+  isRunning: function () {
+    return this.status = TestResultStatus.executing
+  },
+  isDone: function () {
+    return _.contains([
+      TestResultStatus.complete,
+      TestResultStatus.skipped
+    ], this.status)
   }
 });

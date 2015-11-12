@@ -44,12 +44,18 @@ Schemas.TestResult = new SimpleSchema({
   // Abort the test
   abort: {
     type: Boolean,
-    defaultValue: false
+    optional: true
   },
-  // The result
-  result: {
+  // The result code
+  resultCode: {
     type: Number,
     allowedValues: _.map(TestResultCodes, function (d) { return d; }),
+    optional: true
+  },
+  // The result detail
+  result: {
+    type: Object,
+    blackbox: true,
     optional: true
   },
   // Standard tracking fields
@@ -100,10 +106,18 @@ TestResults.helpers({
   testRun: function () {
     return TestRuns.findOne({staticId: this.testRunId, projectVersionId: this.projectVersionId});
   },
+  isStaged: function () {
+    return this.status = TestResultStatus.staged
+  },
+  isLaunching: function () {
+    return this.status = TestResultStatus.launched
+  },
+  isRunning: function () {
+    return this.status = TestResultStatus.executing
+  },
   isDone: function () {
     return _.contains([
       TestResultStatus.complete,
-      TestResultStatus.error,
       TestResultStatus.skipped
     ], this.status)
   },
@@ -118,9 +132,9 @@ TestResults.helpers({
     var result = this;
     LogMessages.remove({"context.testResultId": result._id});
     ScreenShots.remove({testResultId: result._id});
-    TestResults.update({_id: result._id}, {$set: {status: TestResultStatus.staged, abort: false}, $unset: {result: ""}});
-    TestResultRoles.update({testResultId: result._id}, {$set: {status: TestResultStatus.staged}, $unset: {result: "", pid: ""}});
-    TestResultSteps.update({testResultId: result._id}, {$set: {status: TestResultStatus.staged}, $unset: {result: "", checks: ""}});
+    TestResults.update({_id: result._id}, {$set: {status: TestResultStatus.launched, abort: false}, $unset: {resultCode: "", result: ""}});
+    TestResultRoles.update({testResultId: result._id}, {$set: {status: TestResultStatus.staged}, $unset: {resultCode: "", result: "", pid: ""}}, {multi: true});
+    TestResultSteps.update({testResultId: result._id}, {$set: {status: TestResultStatus.staged}, $unset: {resultCode: "", result: "", checks: ""}}, {multi: true});
 
     // get the list of roles, create a launch token and fire away
     TestResultRoles.find({testResultId: result._id}).forEach(function (role) {
@@ -130,7 +144,7 @@ TestResults.helpers({
         logFile = ["test_result_role_", role._id, ".log"].join(""),
         proc = ProcessLauncher.launchAutomation(command, logFile);
 
-      TestResultRoles.update(role._id, {$set: {pid: proc.pid}});
+      TestResultRoles.update(role._id, {$set: {pid: proc.pid, status: TestResultStatus.launched}});
       Meteor.log.info("launchTestResult launched: " + role._id + " as " + proc.pid + " > " + logFile);
     });
   }

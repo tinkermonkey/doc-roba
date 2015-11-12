@@ -72,10 +72,16 @@ Schemas.TestResultStep = new SimpleSchema({
     blackbox: true,
     optional: true
   },
-  // The result
-  result: {
+  // The result code
+  resultCode: {
     type: Number,
     allowedValues: _.map(TestResultCodes, function (d) { return d; }),
+    optional: true
+  },
+  // The result detail
+  result: {
+    type: Object,
+    blackbox: true,
     optional: true
   }
 });
