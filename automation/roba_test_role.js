@@ -76,7 +76,6 @@ Future.task(function(){
     ExecuteTestRole();
   } catch (e) {
     logger.error("Fatal error during test role execution: ", e);
-    //logger.error(new Error(e.toString()).trace);
     if(ddpLink){
       var error = new RobaError(e);
       logger.info("Signaling test role failure", error);
@@ -206,7 +205,6 @@ function ExecuteTestRole () {
     try{
       var error;
       switch(step.type){
-        //TODO: Return error instead of pass
         case TestCaseStepTypes.node:
           error = ExecuteNodeStep(step);
           break;
@@ -291,8 +289,9 @@ function ExecuteNodeStep (step) {
 
   // Validate the current node
   var result = ValidateNode(step.data.node);
+
+  // Check the result
   context.update({ pass: result.isReady && result.isValid });
-  error = result.error;
 
   // save a screenshot of the page
   ddpLink.saveImage(driver.getScreenshot(), ScreenshotKeys.afterLoad);
@@ -316,14 +315,13 @@ function ExecuteActionStep (step) {
 
   // take the action
   var pass = true,
-    result = {},
-    actionResult, error;
+    result = {}, error;
   try{
-    actionResult = TakeAction(step.data.action, step.data.context);
-    if(actionResult.error){
-      error = actionResult.error;
-      pass = false;
-    }
+    TakeAction(step.data.action, step.data.context);
+    //if(actionResult.error){
+    //  error = actionResult.error;
+    //  pass = false;
+   // }
   } catch(e) {
     error = new RobaError(e);
     logger.error("Action execution failed: ", error);
@@ -374,8 +372,7 @@ function ExecuteNavigationStep (step) {
   // Execute the route steps, but skip the last one because another step will validate that
   var i = 0, pass = true, routeStep, checks = [], error;
   while(i < route.steps.length - 1 && !resultLink.abort && !driverEnded && pass ){
-    //TODO: This needs sorting out with the error handling
-    var actionExecuted = false, result = {}, actionResult;
+    var actionExecuted = false, result = {};
 
     routeStep = route.steps[i];
 
@@ -411,11 +408,11 @@ function ExecuteNavigationStep (step) {
       context.milestone({ type: "action", data: { action: routeStep.action, context: step.data.context } });
       actionExecuted = true;
       try {
-        actionResult = TakeAction(routeStep.action, routeStep.context);
-        if(actionResult.error){
-          error = actionResult.error;
-          pass = false;
-        }
+        TakeAction(routeStep.action, routeStep.context);
+        //if(actionResult.error){
+        //  error = actionResult.error;
+        //  pass = false;
+        //}
       } catch(e){
         error = new RobaError(e);
         logger.error("Action failed: ", error);
@@ -434,7 +431,6 @@ function ExecuteNavigationStep (step) {
       routeStep: routeStep,
       checks: result.checks,
       actionExecuted: actionExecuted,
-      actionResult: actionResult,
       error: error
     });
 
@@ -489,12 +485,12 @@ function TakeAction(action, context) {
 
   // try the action
   logger.debug("Action Variable Code: ", variableCode);
-  try {
+  //try {
     result.value = eval(variableCode + debugCode + action.code);
-  } catch (e) {
-    result.error = new RobaError(e);
-    logger.error("Action failed: ", result.error);
-  }
+  //} catch (e) {
+  //  result.error = new RobaError(e);
+  //  logger.error("Action failed: ", result.error);
+  //}
 
   return result;
 }
@@ -523,6 +519,8 @@ function ValidateNode(node) {
   if(node.readyCode){
     var ready = new RobaReady(driver);
     logger.debug("Waiting for node to be ready: ", node.readyCode);
+    //result.isReady = ready.check();
+    //logger.debug("Ready Code result: ", result.isReady);
     try {
       eval(node.readyCode);
       result.isReady = ready.check();
@@ -534,13 +532,20 @@ function ValidateNode(node) {
       result.isReady = false;
     }
     result.checks.ready.checks = ready.checks;
+
+    // if it's not ready and there's no error, that's an error
+    if(!result.isReady && !result.error){
+      result.error = new RobaError(new Error("node-not-ready", "Node not ready in the specified time", {node: node, checks: ready.checks }));
+    }
   } else {
     logger.debug("Node has no ready code");
   }
 
   // validate the starting point
-  if(node.validationCode){
+  if(node.validationCode && result.isReady){
     logger.debug("Validating node: ", node.isValid);
+    //result.isValid = eval(node.validationCode);
+    //logger.debug("Validation Code result: ", result.isValid);
     try {
       result.isValid = eval(node.validationCode);
       logger.debug("Validation Code result: ", result.isValid);
@@ -552,7 +557,12 @@ function ValidateNode(node) {
       logger.error("Validation code failed: ", result.checks.validation.error);
       result.isValid = false;
     }
-    //result.checks.validation.checks = ready.checks;
+    result.checks.validation.checks = ready.checks;
+
+    // if it's not valid and there's no error, that's an error
+    if(!result.isValid && !result.error){
+      result.error = new RobaError(new Error("node-not-valid", "Node failed validation check", {node: node, checks: ready.checks }));
+    }
   } else {
     logger.debug("Node had no validation code");
   }
