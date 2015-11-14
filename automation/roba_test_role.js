@@ -14,6 +14,7 @@ var Future      = require("fibers/future"),
   RobaDriver    = require("./roba_driver"),
   RobaError     = require("./roba_error"),
   RobaReady     = require("./roba_ready"),
+  RobaValid     = require("./roba_valid"),
   RobaContext   = require("./roba_context"),
   argv          = require("minimist")(process.argv.slice(2)),
   testResultRoleId = argv.roleId,
@@ -485,12 +486,7 @@ function TakeAction(action, context) {
 
   // try the action
   logger.debug("Action Variable Code: ", variableCode);
-  //try {
-    result.value = eval(variableCode + debugCode + action.code);
-  //} catch (e) {
-  //  result.error = new RobaError(e);
-  //  logger.error("Action failed: ", result.error);
-  //}
+  result.value = eval(variableCode + debugCode + action.code);
 
   return result;
 }
@@ -519,8 +515,6 @@ function ValidateNode(node) {
   if(node.readyCode){
     var ready = new RobaReady(driver);
     logger.debug("Waiting for node to be ready: ", node.readyCode);
-    //result.isReady = ready.check();
-    //logger.debug("Ready Code result: ", result.isReady);
     try {
       eval(node.readyCode);
       result.isReady = ready.check();
@@ -535,7 +529,8 @@ function ValidateNode(node) {
 
     // if it's not ready and there's no error, that's an error
     if(!result.isReady && !result.error){
-      result.error = new RobaError(new Error("node-not-ready", "Node not ready in the specified time", {node: node, checks: ready.checks }));
+      logger.error("Ready check failed: ", {node: node, checks: ready.checks});
+      result.error = new RobaError(new Error("node-not-ready"));
     }
   } else {
     logger.debug("Node has no ready code");
@@ -543,11 +538,11 @@ function ValidateNode(node) {
 
   // validate the starting point
   if(node.validationCode && result.isReady){
+    var valid = new RobaValid(driver);
     logger.debug("Validating node: ", node.isValid);
-    //result.isValid = eval(node.validationCode);
-    //logger.debug("Validation Code result: ", result.isValid);
     try {
-      result.isValid = eval(node.validationCode);
+      eval(node.validationCode);
+      result.isValid = valid.check();
       logger.debug("Validation Code result: ", result.isValid);
     } catch (e) {
       result.checks.validation.error = new RobaError(e);
@@ -557,11 +552,12 @@ function ValidateNode(node) {
       logger.error("Validation code failed: ", result.checks.validation.error);
       result.isValid = false;
     }
-    result.checks.validation.checks = ready.checks;
+    result.checks.validation.checks = valid.checks;
 
     // if it's not valid and there's no error, that's an error
     if(!result.isValid && !result.error){
-      result.error = new RobaError(new Error("node-not-valid", "Node failed validation check", {node: node, checks: ready.checks }));
+      logger.error("Validation failed: ", {node: node, checks: valid.checks});
+      result.error = new RobaError(new Error("node-not-valid"));
     }
   } else {
     logger.debug("Node had no validation code");
