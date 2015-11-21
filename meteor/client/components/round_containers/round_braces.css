@@ -1,0 +1,33 @@
+.round-braces-container {
+  width: 100%;
+  display: flex;
+  align-content: stretch;
+  background-color: #0A7BFF;
+  border-radius: 10px;
+  padding-left: 5px;
+  padding-right: 10px;
+  margin-top: 5px;
+}
+
+.round-braces-title {
+  width: 20px;
+  color: #ffffff;
+  overflow: hidden;
+  justify-content: flex-end;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 5px;
+}
+
+.round-braces-title-rotate {
+  transform: rotate(-90deg);
+  -webkit-transform: rotate(-90deg);
+}
+
+.round-braces-body {
+  background-color: #ffffff;
+  border-radius: 8px;
+  min-height: 30px;
+  min-width: 30px;
+  width: 100%;
+}
