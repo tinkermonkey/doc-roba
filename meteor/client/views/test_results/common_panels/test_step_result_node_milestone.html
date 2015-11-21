@@ -1,6 +1,5 @@
 <template name="TestResultStepNodeMilestone">
-  {{#each step.checks}}
-    {{debug}}
+  {{#each checks}}
     <h3>{{node.title}}</h3>
 
     {{#if ready.checks.length}}

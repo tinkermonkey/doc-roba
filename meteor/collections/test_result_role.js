@@ -101,7 +101,7 @@ TestResultRoles.helpers({
   role: function () {
     return TestCaseRoles.findOne({staticId: this.testCaseRoleId, projectVersionId: this.projectVersionId});
   },
-  resultSteps: function () {
+  steps: function () {
     return TestResultSteps.find({testResultRoleId: this._id}, {sort: {order: 1}});
   },
   testResult: function () {

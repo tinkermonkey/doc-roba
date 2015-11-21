@@ -27,6 +27,7 @@
 .test-result-role-table {
   border-collapse: separate;
   border-spacing: 2px;
+  margin-top: 10px;
 }
 
 .test-result-role-table td {
@@ -120,12 +121,12 @@
   vertical-align: top;
 }
 
-.test-result-role-map-spacer {
-  width: 200px;
+.test-result-role-map-container {
+  width: 125px;
 }
 
-.test-result-role-map-container {
-  /*position: absolute;*/
+.test-result-role-map > svg {
+  display: block;
 }
 
 .test-result-body-sponge {

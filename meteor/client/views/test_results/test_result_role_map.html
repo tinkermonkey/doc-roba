@@ -1,22 +1,16 @@
 <template name="TestResultRoleMap">
-  <div class="test-result-role-map-container">
-    <svg class="action-snippet auto-transition" width="100%" height="{{height}}">
-      <g transform="translate({{xMargin}}, {{yMargin}})">
-        {{#each getSteps }}
-          <g transform="translate(0,{{startY}})">
-            {{#if node}}
-              <g>
-                {{> NodeSnippet node}}
-              </g>
-            {{/if}}
-            {{#if action}}
-              <g transform="translate(0,{{actionY}})">
-                {{> ActionSnippet action}}
-              </g>
-            {{/if}}
-          </g>
-        {{/each}}
-      </g>
-    </svg>
+  <div class="test-result-role-map">
+    {{debug "testMapContexts: " testMapContexts }}
+    {{#each testMapContexts }}
+      <svg class="action-snippet auto-transition" width="100%" height="{{height}}">
+        <g transform="translate({{xMargin}}, {{yMargin}})">
+          {{#if isAction}}
+            {{> ActionSnippet data.action}}
+          {{else}}
+            {{> NodeSnippet data}}
+          {{/if}}
+        </g>
+      </svg>
+    {{/each}}
   </div>
 </template>

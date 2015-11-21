@@ -33,9 +33,10 @@
           </div>
         {{/with}}
       {{/if}}
+
       <table class="test-result-role-table">
-        {{#each resultSteps}}
-          {{> TestResultStep step=this stepMap=getStepMap }}
+        {{#each steps}}
+          {{> TestResultStep }}
         {{/each}}
       </table>
     </div>

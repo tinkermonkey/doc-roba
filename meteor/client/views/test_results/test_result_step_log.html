@@ -1,7 +1,7 @@
 <template name="TestResultStepLog">
   <table class="adventure-log-table">
     <tbody>
-    {{#each this}}
+    {{#each logMessages}}
       <tr>
         <td class="adventure-log-time">{{renderLogTime time}}</td>
         <td class="adventure-log-level log-level-{{level}}">{{level}}</td>

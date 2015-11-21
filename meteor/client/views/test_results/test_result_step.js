@@ -5,23 +5,20 @@ var screenshotPitch = 23;
  * Template Helpers
  */
 Template.TestResultStep.helpers({
-  screenshots: function () {
-    return ScreenShots.find({ testResultStepId: this.step._id }, {sort: {uploadedAt: -1}}).map(function (image, i) {image.index = i; return image});
-  },
   getScreenshotBottom: function () {
     return this.index * screenshotPitch;
   },
   getStepClass: function () {
-    switch (this.step.status) {
+    switch (this.status) {
       case TestResultStatus.executing:
       case TestResultStatus.launched:
         return "test-result-step-executing";
       case TestResultStatus.complete:
-        return "test-result-step-type-" + this.step.type + " test-step-result-" + this.step.resultCode;
+        return "test-result-step-type-" + this.type + " test-step-result-" + this.resultCode;
     }
   },
   getStepTemplate: function () {
-    switch (this.step.type) {
+    switch (this.type) {
       case TestCaseStepTypes.node:
         return "TestResultStepNode";
       case TestCaseStepTypes.action:
@@ -34,28 +31,8 @@ Template.TestResultStep.helpers({
         return "TestResultStepCustom";
     }
   },
-  getStepLogMessages: function () {
-    if(this.stepMap[this.step._id].order < this.stepMap.list.length - 1){
-      // for most steps grab all of the messages after the context start and before the next start
-      return LogMessages.find({
-        "context.testResultRoleId": this.step.testResultRoleId,
-        $and: [
-          { time: { $gte: this.stepMap[this.step._id].startTime } },
-          { time: { $lt: this.stepMap[this.step._id].endTime } }
-        ]
-      }, {sort: {time: 1}});
-    } else {
-      // for the last step grab everything
-      return LogMessages.find({
-        "context.testResultRoleId": this.step.testResultRoleId,
-        time: { $gte: this.stepMap[this.step._id].startTime }
-      }, {sort: {time: 1}});
-    }
-  },
-  getResultSteps: function () {
-    if(this.stepMap && this.step && this.step._id && this.stepMap[this.step._id]){
-      return this.stepMap[this.step._id].navigationSteps;
-    }
+  getStepTitle: function () {
+    return TestCaseStepTypesLookup[this.type]
   }
 });
 
@@ -71,12 +48,12 @@ Template.TestResultStep.events({
 
     // show the detail-1 content
     if(detail1.is(":visible")){
-      detail2.fadeOut();
-      reveal2.fadeOut();
-      detail1.fadeOut();
+      detail2.hide();
+      reveal2.hide();
+      detail1.hide();
     } else {
-      detail1.fadeIn();
-      reveal2.fadeIn();
+      detail1.show();
+      reveal2.show();
     }
 
     reveal.find(".glyphicon").toggleClass("glyphicon-arrow-left");
@@ -121,15 +98,12 @@ Template.TestResultStep.events({
  * Template Created
  */
 Template.TestResultStep.created = function () {
-  this.timeCreated = Date.now();
-  //console.log("TestResultStep.created: ", Date.now());
 };
 
 /**
  * Template Rendered
  */
 Template.TestResultStep.rendered = function () {
-  //console.log("TestResultStep.rendered: ", Date.now() - this.timeCreated);
 };
 
 /**
