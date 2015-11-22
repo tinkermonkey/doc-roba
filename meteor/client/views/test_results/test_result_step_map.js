@@ -1,7 +1,7 @@
 /**
  * Template Helpers
  */
-Template.TestResultRoleMap.helpers({
+Template.TestResultStepMap.helpers({
   height: function () {
     var height = DocTreeConfig.nodes.height;
     if(this.data && this.type && this.type == "action"){
@@ -23,23 +23,23 @@ Template.TestResultRoleMap.helpers({
 /**
  * Template Event Handlers
  */
-Template.TestResultRoleMap.events({});
+Template.TestResultStepMap.events({});
 
 /**
  * Template Created
  */
-Template.TestResultRoleMap.created = function () {
+Template.TestResultStepMap.created = function () {
 };
 
 /**
  * Template Rendered
  */
-Template.TestResultRoleMap.rendered = function () {
+Template.TestResultStepMap.rendered = function () {
 };
 
 /**
  * Template Destroyed
  */
-Template.TestResultRoleMap.destroyed = function () {
+Template.TestResultStepMap.destroyed = function () {
   
 };

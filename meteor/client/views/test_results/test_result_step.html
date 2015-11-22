@@ -1,39 +1,32 @@
 <template name="TestResultStep">
-  <tr class="test-result-step">
-    {{debug "TestResultStep" this}}
-    <td class="test-result-step-body {{getStepClass}}" data-step-id="{{_id}}">
-      <div class="test-result-step-body-content">
-        <div class="test-result-step-title-rotate">
-          <div class="test-result-step-title-text">{{renderLookup "TestCaseStepTypesLookup" type}}</div>
-        </div>
-        <div>
-          <div class="test-result-role-map-container">
-            {{> TestResultRoleMap }}
-          </div>
-        </div>
-        <div><!-- needed to isolate the block display screenshots container -->
-          <div class="test-result-screenshots">
-            <div style="position: absolute">
+    {{#RoundBrace title=getStepTitle cssClass=getStepClass data-step-id=_id }}
+      <div class="test-result-step-map-col">
+        {{> TestResultStepMap }}
+      </div>
+      <div class="test-result-step-screenshot-col">
+        <div class="test-result-screenshot-list">
+          <div style="position: absolute;">
             {{#each screenshots}}
               {{#if isImage store='thumbs'}}
-                <div class="test-result-screenshot-container" style="bottom: {{getScreenshotBottom}}px;">
+                <div class="test-result-screenshot-container" style="top: {{getScreenshotTop this ../screenshots}}px;">
                   <img src="{{url store='thumbs'}}" class="test-result-screenshot">
                   <div class="test-result-screenshot-title">{{renderCamelCaseAsWords key}}</div>
                 </div>
               {{/if}}
             {{/each}}
-            </div>
           </div>
         </div>
-        <div>{{> Template.dynamic template=getStepTemplate }}</div>
-        <div class="test-result-detail-reveal test-result-detail-1-reveal">
+      </div>
+      <div class="test-result-step-check-col">
+        {{> Template.dynamic template=getStepTemplate }}
+      </div>
+      <div class="test-result-step-log-col">
+        <div class="test-result-log-reveal">
           <span class="glyphicon glyphicon-arrow-right"></span>
         </div>
-        <div class="test-result-detail-1" style="display: none;">
+        <div class="test-result-step-log" style="display: none;">
           {{> TestResultStepLog }}
         </div>
-        <div class="test-result-body-sponge"></div>
       </div>
-    </td>
-  </tr>
+    {{/RoundBrace}}
 </template>

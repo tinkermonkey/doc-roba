@@ -1,4 +1,4 @@
-// TODO: This sucks, find a better way to figure out the pitch
+// TODO: This sucks, create a better way to define the pitch
 var screenshotPitch = 23;
 
 /**
@@ -7,6 +7,9 @@ var screenshotPitch = 23;
 Template.TestResultStep.helpers({
   getScreenshotBottom: function () {
     return this.index * screenshotPitch;
+  },
+  getScreenshotTop: function (screenshot, list) {
+    return (list.length - screenshot.index - 1) * screenshotPitch;
   },
   getStepClass: function () {
     switch (this.status) {
@@ -40,36 +43,17 @@ Template.TestResultStep.helpers({
  * Template Event Handlers
  */
 Template.TestResultStep.events({
-  "click .test-result-detail-1-reveal": function (e, instance) {
-    var reveal = $(e.target).closest(".test-result-detail-reveal"),
-      detail1 = instance.$(".test-result-detail-1"),
-      detail2 = instance.$(".test-result-detail-2"),
-      reveal2 = instance.$(".test-result-detail-2-reveal");
+  "click .test-result-log-reveal": function (e, instance) {
+    var reveal = $(e.target).closest(".test-result-log-reveal"),
+      detail = instance.$(".test-result-step-log");
 
-    // show the detail-1 content
-    if(detail1.is(":visible")){
-      detail2.hide();
-      reveal2.hide();
-      detail1.hide();
+    if(detail.is(":visible")){
+      detail.hide();
     } else {
-      detail1.show();
-      reveal2.show();
+      detail.show();
     }
-
     reveal.find(".glyphicon").toggleClass("glyphicon-arrow-left");
     reveal.find(".glyphicon").toggleClass("glyphicon-arrow-right");
-  },
-  "click .test-result-detail-2-reveal": function (e, instance) {
-    var reveal2 = $(e.target).closest(".test-result-detail-reveal"),
-      detail2 = instance.$(".test-result-detail-2");
-
-    if(detail2.is(":visible")){
-      detail2.fadeOut();
-    } else {
-      detail2.fadeIn();
-    }
-    reveal2.find(".glyphicon").toggleClass("glyphicon-arrow-left");
-    reveal2.find(".glyphicon").toggleClass("glyphicon-arrow-right");
   },
   "load .test-result-screenshot": function (e, instance) {
     var maxHeight = 0,
@@ -82,14 +66,18 @@ Template.TestResultStep.events({
       height = parseInt($(el).outerHeight());
       maxWidth = width > maxWidth ? width : maxWidth;
       maxHeight = height > maxHeight ? height : maxHeight;
-      totalHeight += screenshotPitch;
+      if(i > 0){
+        totalHeight += screenshotPitch;
+      }
+      console.log("image loop: ", i, maxHeight, totalHeight);
     });
-    totalHeight += maxHeight - screenshotPitch;
+    totalHeight += maxHeight;
+    console.log("image loop complete: ", maxHeight, totalHeight);
 
     if(maxWidth && totalHeight){
       //console.log("onload: ", instance.data._id, maxWidth, totalHeight);
-      instance.$(".test-result-screenshots > div").height(totalHeight).width(maxWidth);
-      instance.$(".test-result-screenshots").height(totalHeight).width(maxWidth).show();
+      instance.$(".test-result-screenshot-list > div").height(totalHeight).width(maxWidth);
+      instance.$(".test-result-screenshot-list").height(totalHeight).width(maxWidth).show();
     }
   }
 });
