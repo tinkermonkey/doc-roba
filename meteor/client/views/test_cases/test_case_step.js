@@ -16,6 +16,9 @@ Template.TestCaseStep.helpers({
         return "TestCaseStepCustom";
     }
   },
+  getStepClass: function () {
+    return Util.testStepContainerClass(this.type, Template.instance().error.get());
+  },
   stepContext: function () {
     this.error = Template.instance().error;
     return this;
@@ -29,10 +32,10 @@ Template.TestCaseStep.helpers({
  * Template Event Handlers
  */
 Template.TestCaseStep.events({
-  "click .test-case-step-delete": function (e, instance) {
-    var step = this;
-
-    if(step){
+  "click .round-container-delete": function (e, instance) {
+    var step = instance.data;
+    if(step && step._id){
+      e.stopImmediatePropagation();
       TestCaseSteps.remove(step._id, function (error) {
         if(error){
           Meteor.log.error("Failed to delete test step: " + error.message);

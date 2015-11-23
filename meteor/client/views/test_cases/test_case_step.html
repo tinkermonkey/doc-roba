@@ -1,22 +1,14 @@
 <template name="TestCaseStep">
-  <div class="test-case-step test-case-step-type-{{type}} {{#if error}}test-case-step-error{{/if}}" data-pk="{{_id}}" data-order="{{order}}">
-    <div class="test-case-step-title no-select">
-      {{renderLookup "TestCaseStepTypesLookup" type}}
+  {{#RoundContainer title=testStepType cssClass=getStepClass icon=testStepTypeIcon removable=true dataPk=_id dataOrder=order}}
+    <div class="test-case-step-body auto-transition {{#if error}}hide{{/if}}">
+      {{#with stepContext}}
+        {{> Template.dynamic template=getStepTemplate }}
+      {{/with}}
     </div>
-    <div class="test-case-step-delete"><span class="glyphicon glyphicon-remove"></span></div>
-    <div class="test-case-step-body-container">
+    {{#if error}}
       <div class="test-case-step-body">
-        <div class="test-case-step-body-content auto-transition {{#if error}}hide{{/if}}">
-          {{#with stepContext}}
-            {{> Template.dynamic template=getStepTemplate }}
-          {{/with}}
-        </div>
-        {{#if error}}
-          <div class="align-center">
-            {{error}}
-          </div>
-        {{/if}}
+        {{error}}
       </div>
-    </div>
-  </div>
+    {{/if}}
+  {{/RoundContainer}}
 </template>

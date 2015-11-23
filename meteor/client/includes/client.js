@@ -397,6 +397,24 @@ Template.registerHelper("getLogDataTemplate", function (data) {
   }
 });
 
+/**
+ * Get an name of a test step type
+ */
+Template.registerHelper("testStepType", function (type) {
+  type = type || this.type;
+  if(type != null){
+    return TestCaseStepTypesLookup[type];
+  }
+});
+
+/**
+ * Get an icon for a test step type
+ */
+Template.registerHelper("testStepTypeIcon", function (type) {
+  type = type || this.type;
+  return Util.testStepTypeIcon(type);
+});
+
 Template.registerHelper("join", function (list, joint) {
   joint = joint ? joint : ", ";
   if(list){

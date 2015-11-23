@@ -1,32 +1,34 @@
 <template name="TestResultStep">
-    {{#RoundBrace title=getStepTitle cssClass=getStepClass data-step-id=_id }}
-      <div class="test-result-step-map-col">
-        {{> TestResultStepMap }}
-      </div>
-      <div class="test-result-step-screenshot-col">
-        <div class="test-result-screenshot-list">
-          <div style="position: absolute;">
-            {{#each screenshots}}
-              {{#if isImage store='thumbs'}}
-                <div class="test-result-screenshot-container" style="top: {{getScreenshotTop this ../screenshots}}px;">
-                  <img src="{{url store='thumbs'}}" class="test-result-screenshot">
-                  <div class="test-result-screenshot-title">{{renderCamelCaseAsWords key}}</div>
-                </div>
-              {{/if}}
-            {{/each}}
-          </div>
+  {{#RoundContainer brace=true title=testStepType cssClass=getStepClass icon=testStepTypeIcon dataPk=_id }}
+    <div class="test-result-step-map-col">
+      {{> TestResultStepMap }}
+    </div>
+    <div class="test-result-step-screenshot-col">
+      <div class="test-result-screenshot-list">
+        <div style="position: absolute;">
+          {{#each screenshots}}
+            {{#if isImage store='thumbs'}}
+              <div class="test-result-screenshot-container" style="top: {{getScreenshotTop this ../screenshots}}px;">
+                <img src="{{url store='thumbs'}}" class="test-result-screenshot">
+                <div class="test-result-screenshot-title">{{renderCamelCaseAsWords key}}</div>
+              </div>
+            {{/if}}
+          {{/each}}
         </div>
       </div>
-      <div class="test-result-step-check-col">
-        {{> Template.dynamic template=getStepTemplate }}
+    </div>
+    <div class="test-result-step-check-col">
+      {{> Template.dynamic template=getStepTemplate }}
+    </div>
+    <div class="test-result-step-log-col">
+      <div class="test-result-log-reveal">
+        <span class="glyphicon glyphicon-arrow-right"></span>
       </div>
-      <div class="test-result-step-log-col">
-        <div class="test-result-log-reveal">
-          <span class="glyphicon glyphicon-arrow-right"></span>
-        </div>
-        <div class="test-result-step-log" style="display: none;">
+      <div class="test-result-step-log" style="display: none;">
+        {{#if logRendered}}
           {{> TestResultStepLog }}
-        </div>
+        {{/if}}
       </div>
-    {{/RoundBrace}}
+    </div>
+  {{/RoundContainer}}
 </template>

@@ -312,5 +312,59 @@ Util = {
     }
 
     return bounds;
+  },
+
+  /**
+   * Return the container class for a test case step type
+   * @param type
+   */
+  testStepContainerClass: function (type, error) {
+    var cssClass = "";
+    if(error){
+      cssClass = "round-container-error";
+    } else {
+      if(type != null){
+        switch (type) {
+          case TestCaseStepTypes.node:
+            cssClass = "round-container-blue";
+            break;
+          case TestCaseStepTypes.action:
+            cssClass = "round-container-green";
+            break;
+          case TestCaseStepTypes.navigate:
+            cssClass = "round-container-purple";
+            break;
+          case TestCaseStepTypes.wait:
+            cssClass = "round-container-light-blue";
+            break;
+          case TestCaseStepTypes.custom:
+            cssClass = "round-container-orange";
+            break;
+        }
+      }
+    }
+
+    return cssClass
+  },
+
+  /**
+   * Return the icon class for a test case step type
+   * @param type
+   */
+  testStepTypeIcon: function (type) {
+    if(type != null){
+      switch (type) {
+        case TestCaseStepTypes.node:
+          return "glyphicon-unchecked";
+        case TestCaseStepTypes.action:
+          return "glyphicon-random";
+        case TestCaseStepTypes.navigate:
+          return "glyphicon-random";
+        case TestCaseStepTypes.wait:
+          return "glyphicon-link";
+        case TestCaseStepTypes.custom:
+          return "glyphicon-ok-circle";
+      }
+    }
   }
 };

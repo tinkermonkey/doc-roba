@@ -79,15 +79,15 @@
 }
 
 .test-result-step-screenshot-col {
-  flex: 1 0 220px;
+  flex: 0 0 220px;
 }
 
 .test-result-step-check-col {
-  flex: 2 0 auto;
+  flex: 1 0 auto;
 }
 
 .test-result-step-log-col {
-  flex: 10 0 60em;
+  flex: 1 0 auto;
   display: flex;
 }
 
