@@ -7,14 +7,7 @@ var Future  = require("fibers/future"),
   log4js    = require("log4js"),
   logger    = log4js.getLogger("valid"),
   commands  = [
-    "waitFor",
-    "waitForChecked",
-    "waitForEnabled",
-    "waitForExist",
-    "waitForSelected",
-    "waitForText",
-    "waitForValue",
-    "waitForVisible"
+    "isVisible"
   ];
 
 logger.setLevel("DEBUG");
