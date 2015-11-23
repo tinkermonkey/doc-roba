@@ -1,0 +1,15 @@
+<template name="RoundContainer">
+  <div class="round-container {{#if brace}}brace{{/if}} {{cssClass}}" data-pk="{{dataPk}}" data-order="{{dataOrder}}">
+    <div class="round-container-title">
+      <div class="round-container-title-rotate">
+        {{#if icon}}<span class="glyphicon {{icon}}"></span>{{/if}} {{title}}
+      </div>
+    </div>
+    <div class="round-container-body flex {{bodyClass}}">
+      {{> Template.contentBlock}}
+    </div>
+    {{#if removable}}
+      <div class="round-container-delete"><span class="glyphicon glyphicon-remove"></span></div>
+    {{/if}}
+  </div>
+</template>

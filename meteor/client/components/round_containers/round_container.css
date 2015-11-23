@@ -1,0 +1,105 @@
+/**
+ * Standard round container
+ */
+.round-container {
+  width: 100%;
+  display: flex;
+  align-content: stretch;
+  background-color: #0A7BFF;
+  border-radius: 10px;
+  padding: 2px 2px 2px 5px;
+  margin: 2px 0;
+}
+
+.round-container-title {
+  width: 1em;
+  color: #ffffff;
+  overflow: hidden;
+  justify-content: flex-end;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 0.5em;
+  margin-right: 0.25em;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.round-container-title-rotate {
+  transform: rotate(-90deg);
+  -webkit-transform: rotate(-90deg);
+}
+
+.round-container-body {
+  background-color: #ffffff;
+  border-radius: 8px;
+  min-height: 30px;
+  min-width: 30px;
+  width: 100%;
+}
+
+/**
+ * Round Brace
+ */
+.round-container.brace {
+  padding: 0 10px 0 5px;
+}
+
+/**
+ * Color Options
+ */
+.round-container-error {
+  background-color: #FF0000 !important;
+}
+
+.round-container-red {
+  background-color: #FF0000;
+}
+
+.round-container-blue {
+  background-color: #0A7BFF;
+}
+
+.round-container-green {
+  background-color: #5cb85c;
+}
+
+.round-container-purple {
+  background-color: #9701ff;
+}
+
+.round-container-light-blue {
+  background-color: #5bc0de;
+}
+
+.round-container-orange {
+  background-color: #ff8400;
+}
+
+.round-container-grey {
+  background-color: #dddddd;
+}
+
+.round-container-yellow {
+  background-color: #e6e600;
+}
+
+/**
+ * Delete link
+ */
+.round-container-delete {
+  font-size: 10px;
+  float: right;
+  background-color: inherit;
+  color: #fff;
+  padding: 0 4px 2px 4px;
+  border-top-right-radius: 7px;
+  border-bottom-left-radius: 8px;
+  cursor: pointer;
+  align-self: flex-start;
+  width: 1.8em;
+  margin-left: -1.8em;
+}
+
+.round-container-delete:hover {
+  color: #ffff00;
+}
