@@ -1,0 +1,68 @@
+<template name="TestResultScreenshot">
+  <div class="test-result-screenshot-container">
+    <div class="test-result-screenshot-spinner">
+      {{> InlineSpinner }}
+    </div>
+    {{#with screenshot}}
+      <div class="test-result-screenshot-wrapper hide" style="opacity: 0;">
+        <div class="flex">
+          <div>
+            <img class="test-result-screenshot" src="{{url store='screenshots'}}">
+          </div>
+          <div>
+            <h3>Context</h3>
+            {{#with ../testResultStep}}
+              {{#if data.node}}
+                <div><label>Node:</label></div>
+                <div>{{> StandaloneNodeSnippet node=data.node}}</div>
+              {{/if}}
+              <div><label>State:</label> {{renderCamelCaseAsWords ../key}}</div>
+              {{#if data.action}}
+                <div><label>Action:</label> {{data.action.title}}</div>
+              {{/if}}
+            {{/with}}
+
+            <h3>Platform</h3>
+            <div><label>Browser:</label></div>
+            <div><label>Viewport:</label></div>
+            <div>
+              <label>Dimensions:</label>
+              {{{getScreenshotDimensions}}}
+            </div>
+            {{#if isScaled}}
+              <div>
+                <label>View Dimensions:</label>
+                {{{getScaledDimensions}}}
+              </div>
+            {{/if}}
+            <div><label></label></div>
+          </div>
+        </div>
+        <div class="flex">
+          <div style="flex: 1 1 auto;">
+            <h3>Similar Results</h3>
+            <div class="flex">
+              {{#each getSimilarScreenshots}}
+                <div class="test-result-comparison-thumb-wrapper">
+                  <img class="test-result-comparison-thumb" src="{{url store='thumbs'}}">
+                  <div>{{dateFormat uploadedAt}}</div>
+                </div>
+              {{/each}}
+            </div>
+          </div>
+          <div style="flex: 1 1 auto;">
+            <h3>Previous Versions</h3>
+            <div class="flex">
+              {{#each getPreviousVersionScreenshots}}
+                <div class="test-result-comparison-thumb-wrapper">
+                  <img class="test-result-comparison-thumb" src="{{url store='thumbs'}}">
+                  <div>{{dateFormat uploadedAt}}</div>
+                </div>
+              {{/each}}
+            </div>
+          </div>
+        </div>
+      </div>
+    {{/with}}
+  </div>
+</template>

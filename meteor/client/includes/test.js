@@ -3,7 +3,7 @@
  */
 Template.test.helpers({
   screenShots: function () {
-    return ScreenShots.find();
+    return Screenshots.find();
   }
 });
 
@@ -18,7 +18,7 @@ Template.test.events({
       var newFile = new FS.File(files[i]);
       newFile.owner = Meteor.user().username;
 
-      ScreenShots.insert(newFile, function (error, fileObj) {
+      Screenshots.insert(newFile, function (error, fileObj) {
         if(error){
           console.error("Upload failed: ", error);
         }

@@ -74,13 +74,13 @@ Template.TestResultStep.events({
    * @param e
    * @param instance
    */
-  "load .test-result-screenshot": function (e, instance) {
+  "load .test-result-screenshot-thumb": function (e, instance) {
     var maxHeight = 0,
       maxWidth = 0,
       totalHeight = 0,
       width, height;
 
-    instance.$(".test-result-screenshot-container").each(function (i, el) {
+    instance.$(".test-result-screenshot-thumb-container").each(function (i, el) {
       width = parseInt($(el).outerWidth());
       height = parseInt($(el).outerHeight());
       maxWidth = width > maxWidth ? width : maxWidth;
@@ -95,9 +95,27 @@ Template.TestResultStep.events({
 
     if(maxWidth && totalHeight){
       //console.log("onload: ", instance.data._id, maxWidth, totalHeight);
-      instance.$(".test-result-screenshot-list > div").height(totalHeight).width(maxWidth);
-      instance.$(".test-result-screenshot-list").height(totalHeight).width(maxWidth).show();
+      instance.$(".test-result-screenshot-thumb-list > div").height(totalHeight).width(maxWidth);
+      instance.$(".test-result-screenshot-thumb-list").height(totalHeight).width(maxWidth).show();
     }
+  },
+  /**
+   * Handle screenshot clicks
+   * @param e
+   * @param instance
+   */
+  "click .test-result-screenshot-thumb-container": function (e, instance) {
+    var screenshot = this,
+      testResultStep = instance.data;
+
+    console.log("Screenshot click: ", screenshot, testResultStep);
+    FullscreenViewer.show({
+      contentTemplate: "TestResultScreenshot",
+      contentData: {
+        screenshot: screenshot,
+        testResultStep: testResultStep
+      }
+    });
   }
 });
 

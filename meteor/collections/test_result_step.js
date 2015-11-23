@@ -148,7 +148,7 @@ TestResultSteps.helpers({
    * Get all of the screenshots for this step
    */
   screenshots: function () {
-    return ScreenShots.find({ testResultStepId: this._id }, {sort: {uploadedAt: -1}}).map(function (image, i) {image.index = i; return image});
+    return Screenshots.find({ testResultStepId: this._id }, {sort: {uploadedAt: -1}}).map(function (image, i) {image.index = i; return image});
   },
   isFirst: function () {
     return this.order == 0;

@@ -131,7 +131,7 @@ TestResults.helpers({
     // do some quick cleanup in case this is a re-run
     var result = this;
     LogMessages.remove({"context.testResultId": result._id});
-    ScreenShots.remove({testResultId: result._id});
+    Screenshots.remove({testResultId: result._id});
     TestResults.update({_id: result._id}, {$set: {status: TestResultStatus.launched, abort: false}, $unset: {resultCode: "", result: ""}});
     TestResultRoles.update({testResultId: result._id}, {$set: {status: TestResultStatus.staged}, $unset: {resultCode: "", result: "", pid: ""}}, {multi: true});
     TestResultSteps.update({testResultId: result._id}, {$set: {status: TestResultStatus.staged}, $unset: {resultCode: "", result: "", checks: ""}}, {multi: true});

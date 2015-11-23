@@ -4,13 +4,13 @@
       {{> TestResultStepMap }}
     </div>
     <div class="test-result-step-screenshot-col">
-      <div class="test-result-screenshot-list">
+      <div class="test-result-screenshot-thumb-list">
         <div style="position: absolute;">
           {{#each screenshots}}
             {{#if isImage store='thumbs'}}
-              <div class="test-result-screenshot-container" style="top: {{getScreenshotTop this ../screenshots}}px;">
-                <img src="{{url store='thumbs'}}" class="test-result-screenshot">
-                <div class="test-result-screenshot-title">{{renderCamelCaseAsWords key}}</div>
+              <div class="test-result-screenshot-thumb-container" style="top: {{getScreenshotTop this ../screenshots}}px;">
+                <img src="{{url store='thumbs'}}" class="test-result-screenshot-thumb">
+                <div class="test-result-screenshot-thumb-title">{{renderCamelCaseAsWords key}}</div>
               </div>
             {{/if}}
           {{/each}}

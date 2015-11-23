@@ -165,7 +165,7 @@ Meteor.startup(function () {
     if(this.userId && projectId){
       var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
       if(role){
-        return ScreenShots.find({testResultId: testResultId});
+        return Screenshots.find({testResultId: testResultId});
       }
     }
     return [];
@@ -179,13 +179,39 @@ Meteor.startup(function () {
     return [];
   });
 
-  //TODO: remove this publication once testing is complete
-  Meteor.publish('screenshots', function (testResultId) {
-    return ScreenShots.find();
+  /**
+   * ============================================================================
+   * Screenshot Publications
+   * ============================================================================
+   */
+  Meteor.publish('similar_screenshots', function (screenshotId) {
+    check(screenshotId, String);
+    var screenshot = Screenshots.findOne(screenshotId);
+    if(screenshot){
+      return Screenshots.similarScreenshots(screenshot);
+    }
+    return [];
   });
 
+  Meteor.publish('previous_version_screenshots', function (screenshotId) {
+    check(screenshotId, String);
+    var screenshot = Screenshots.findOne(screenshotId);
+    if(screenshot){
+      return Screenshots.similarScreenshots(screenshot);
+    }
+    return [];
+  });
+
+  //TODO: remove this publication once testing is complete
+  Meteor.publish('screenshots', function (testResultId) {
+    return Screenshots.find();
+  });
+
+
   /**
-   * Expose these for the client to call
+   * ============================================================================
+   * Methods
+   * ============================================================================
    */
   Meteor.methods({
     /**
@@ -365,7 +391,7 @@ Meteor.startup(function () {
       check(Meteor.user(), Object);
       check(imageId, String);
       check(context, Object);
-      ScreenShots.update(imageId, {$set: context});
+      Screenshots.update(imageId, {$set: context});
     },
 
     /**
@@ -427,6 +453,7 @@ Meteor.startup(function () {
       // Delete the testCase
       TestCases.remove({_id: testCase._id});
     },
+
     /**
      * Delete a role from a test case
      * @param role
@@ -494,128 +521,6 @@ Meteor.startup(function () {
     },
 
     /**
-     * Create a test test case result to run
-     * @param testCaseId
-     */
-    createDemoTestResult: function (testCaseId) {
-      var testCase = TestCases.findOne(testCaseId || "FbcpXNeHvrDToZXu6"),
-        testCaseRoles = TestCaseRoles.find({
-          testCaseId: testCase.staticId,
-          projectVersionId: testCase.projectVersionId
-        }).fetch(),
-        server = Servers.findOne({
-          projectVersionId: testCase.projectVersionId,
-          active: true
-        }),
-        testSystem = TestSystems.findOne({
-          projectVersionId: testCase.projectVersionId,
-          active: true
-        }),
-        testAgent = TestAgents.findOne({
-          projectVersionId: testCase.projectVersionId,
-          staticId: {$in: testSystem.testAgents }
-        });
-
-      // Create a testResult record
-      var testResultId = TestResults.insert({
-        projectId: testCase.projectId,
-        projectVersionId: testCase.projectVersionId,
-        testCaseId: testCase.staticId,
-        serverId: server.staticId
-      });
-
-      // Create the testResult Roles
-      var testResultRoleIds = [];
-      _.each(testCaseRoles, function (testCaseRole) {
-        console.log("Creating TestResultRole for testCaseRole: ", testCaseRole.title, testCaseRole.staticId);
-
-        // identify the usertype(s) for this role
-        var nodeStep = TestCaseSteps.findOne({
-            projectVersionId: testCase.projectVersionId,
-            testCaseRoleId: testCaseRole.staticId,
-            type: TestCaseStepTypes.node,
-            "data.nodeId": { $exists: true }
-          }),
-          userTypeNode = Nodes.findOne({
-            projectVersionId: testCase.projectVersionId,
-            staticId: nodeStep.data.nodeId
-          }),
-          userType = Util.getNodePlatformUserType(userTypeNode).userType;
-        console.log("Using node step to determine userType: ", nodeStep);
-        console.log("Using node to determine userType: ", userType);
-
-        if(!userType){
-          Meteor.log.error("Could not get userType for node: ", userTypeNode, nodeStep);
-          return;
-        }
-
-        // get the account for this role
-        var userStore = DataStores.findOne({
-          dataKey: userType
-        });
-        if(!userStore){
-          Meteor.log.error("Could not get userStore for userType: " + userType);
-          return;
-        }
-
-        var account = DataStoreRows.findOne({dataStoreId: userStore._id}, {sort: {dateCreated: 1}});
-
-        // get the steps
-        var testCaseSteps = TestCaseSteps.find({
-          projectVersionId: testCase.projectVersionId,
-          testCaseRoleId: testCaseRole.staticId
-        }, {sort: {order: 1}}).fetch();
-
-        // create the role result
-        var roleResultId = TestResultRoles.insert({
-          projectId: testCase.projectId,
-          projectVersionId: testCase.projectVersionId,
-          testResultId: testResultId,
-          testCaseRoleId: testCaseRole.staticId,
-          testSystemId: testSystem.staticId,
-          testAgentId: testAgent.staticId,
-          dataContext: {
-            account: account
-          }
-        });
-        testResultRoleIds.push(roleResultId);
-
-        // create the step results
-        _.each(testCaseSteps, function (step) {
-          // fetch the data needed for this step
-          var data = step.data;
-
-          // this only applies to node and action steps
-          // - route steps are done live to be nimble
-          // - wait doesn't need data ahead of time
-          // - custom is just custom
-          switch(step.type){
-            case TestCaseStepTypes.node:
-              data.node = Nodes.findOne({staticId: step.data.nodeId, projectVersionId: testCase.projectVersionId});
-              break;
-            case TestCaseStepTypes.action:
-              data.action = Actions.findOne({staticId: step.data.actionId, projectVersionId: testCase.projectVersionId});
-              data.node = Nodes.findOne({staticId: step.data.nodeId, projectVersionId: testCase.projectVersionId});
-              break;
-          }
-
-          TestResultSteps.insert({
-            projectId: testCase.projectId,
-            projectVersionId: testCase.projectVersionId,
-            testResultId: testResultId,
-            testResultRoleId: roleResultId,
-            testCaseStepId: step.staticId,
-            order: step.order,
-            type: step.type,
-            data: data,
-            dataContext: {}
-          });
-        })
-      });
-      return testResultId;
-    },
-
-    /**
      * Launch a test result run
      */
     launchTestResult: function (testResultId) {
@@ -632,27 +537,6 @@ Meteor.startup(function () {
       } else {
         throw new Meteor.Error("invalid-testResult", "launchTestResult failed because the result could not be found", testResultId);
       }
-      return;
-      /*
-      // do some quick cleanup in case this is a re-run
-      LogMessages.remove({"context.testResultId": testResultId});
-      ScreenShots.remove({testResultId: testResultId});
-      TestResults.update({_id: testResultId}, {$set: {status: TestResultStatus.staged, abort: false}, $unset: {result: ""}});
-      TestResultRoles.update({testResultId: testResultId}, {$set: {status: TestResultStatus.staged}, $unset: {result: "", pid: ""}});
-      TestResultSteps.update({testResultId: testResultId}, {$set: {status: TestResultStatus.staged}, $unset: {result: "", checks: ""}});
-
-      // get the list of roles, create a launch token and fire away
-      TestResultRoles.find({testResultId: testResultId}).forEach(function (role) {
-        Meteor.log.info("launchTestResult launching role: " + role._id);
-        var token = Accounts.singleUseAuth.generate({ expires: { seconds: 5 } }),
-          command = [ProcessLauncher.testRoleScript, "--roleId", role._id, "--token", token].join(" "),
-          logFile = ["test_result_role_", role._id, ".log"].join(""),
-          proc = ProcessLauncher.launchAutomation(command, logFile);
-
-        TestResultRoles.update(role._id, {$set: {pid: proc.pid}});
-        Meteor.log.info("launchTestResult launched: " + role._id + " as " + proc.pid + " > " + logFile);
-      });
-      */
     }
   });
 });
