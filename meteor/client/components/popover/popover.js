@@ -152,12 +152,10 @@ Template.popover.destroyed = function () {
 /**
  * Create a singleton for interacting with the popover
  * There will only be one visible at a time
- * @type {{}}
  */
 Popover = {
   /**
    * Show a popover
-   * @param template The template showing the content
    * @param options
    */
   show: function (options) {

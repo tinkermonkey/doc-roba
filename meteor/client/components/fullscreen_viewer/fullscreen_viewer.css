@@ -1,0 +1,15 @@
+/**
+ * Base class
+ */
+.dr-fullscreen-viewer {
+  background-color: #ffffff;
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
