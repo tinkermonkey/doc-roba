@@ -66,9 +66,9 @@ Template.TestCaseRecentResultList.created = function () {
       // subscribe to the role results for each of the results
       TestResults.find({testCaseId: instance.data.staticId, projectVersionId: instance.data.projectVersionId})
         .forEach(function (result) {
-          console.log("Found test result: ", result);
+          //console.log("Found test result: ", result);
           if(!instance.roleSubs[result._id]){
-            console.log("Subscribing to test result roles: ", result._id);
+            //console.log("Subscribing to test result roles: ", result._id);
             instance.roleSubs[result._id] = instance.subscribe("test_result_roles", instance.data.projectId, result._id);
           }
         });
