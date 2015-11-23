@@ -21,7 +21,7 @@ The goal of DocRoba is to condense the human input into the test ecosystem to a 
 * If you keep a versioned history with links to reference documentation then you can quickly allow members of your team to understand the implementation history, documentation history, and evolution of the product
 * If you collate all of your test logs (selenium, browser console, test scripts, analysis, and server) in an easy to filter interface then you can quickly separate test script problems from real bugs and also allow developers to begin bug fixes with a complete picture
 
-## Structure & Navigation
+## Application Under Test - Modelling & Navigation
 
 ### Nodes
 DocRoba models pages, screens, and views as *Nodes* within a logical structure with a navigational structure layered on top. The reason for this is to provide a stabile base structure that is similar to a human's mental map of a product. Navigational data is then layered on top and the logical structure can be independently maintained.
@@ -32,8 +32,8 @@ Each *Node* has a set of discrete *Actions* which lead to other nodes. A single 
 ### Navigation Menus
 Navigational elements that appear throughout a product can be modeled as special *Nodes* (called *Nav Menus*). The *Actions* for the *Nav Menu* are mapped out like standard *Actions*. Normal *Nodes* can then include the *Nav Menu* (or multiple menus). All of the *Nav Menu* *Actions* and the logic that goes with them is then accessible from that node.
 
-## Automation
-There are 1,000,000 options and opinions regarding the ideal scripting language or framework and all of them are fine. DocRoba's initial implementation is to use javascript for test scripting because it's simple, runs everywhere, and if you're testing a web app you have to at least having a passing familiarity with it. There's some nice synergy with having the same language everywhere. Eventually you will be able to choose which language to work in. Specifically it runs on [Node.js](https://nodejs.org) and interfaces with selenium servers/grids using [webdriver.io](http://webdriver.io/). The scripts use [fibers](https://github.com/laverdet/node-fibers) to keep the logic flow synchronous.
+## Automation Framework
+There are 1,000,000 options and opinions regarding scripting languages and frameworks and all of them are fine. DocRoba's initial implementation is to use javascript for test scripting because it's simple, runs everywhere, and if you're testing a web app you have to at least having a passing familiarity with it. There's some nice synergy with having the same language everywhere. Eventually I would expect you to be able to choose which language to work in. Specifically, DocRoba automation runs on [Node.js](https://nodejs.org) and interfaces with selenium servers/grids using [webdriver.io](http://webdriver.io/). The scripts use [fibers](https://github.com/laverdet/node-fibers) to keep the logic flow synchronous.
 
 ### Automation Workflow
 At the end of the day automation comes down to:
