@@ -25,53 +25,6 @@
 }
 
 /**
- * Test Result Step Types
- */
-.test-result-step-type-0 {
-  background-color: #0A7BFF !important;
-}
-
-.test-result-step-type-1 {
-  background-color: #5cb85c !important;
-}
-
-.test-result-step-type-2 {
-  background-color: #9701ff !important;
-}
-
-.test-result-step-type-3 {
-  background-color: #5bc0de !important;
-}
-
-.test-result-step-type-4 {
-  background-color: #ff8400 !important;
-}
-
-/**
- * Test Result Step Status'
- */
-.test-result-step-executing {
-  background-color: #0A7BFF !important;
-  background-image: url('/roba_stripe.svg');
-  background-repeat: no-repeat;
-  background-position: 10px 0%;
-  background-size: contain;
-}
-
-/**
- * Test Result Step Result Codes
- */
-.test-step-result-0 { /** Fail **/
-  background-color: #ff0000 !important;
-}
-.test-step-result-2 { /** Warn **/
-  background-color: #ffc100 !important;
-}
-.test-step-result-3 { /** Abort **/
-  background-color: #b8b8b8 !important;
-}
-
-/**
  * Test result step "columns"
  */
 .test-result-step-map-col {
@@ -148,6 +101,10 @@
 /**
  * Test result check styling
  */
+.test-result-check-table td {
+  padding-right: 2px;
+}
+
 .test-result-check-command  {
   max-width: 300px;
   display: inline-block;

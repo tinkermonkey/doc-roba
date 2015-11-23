@@ -5,7 +5,7 @@
     {{#if ready.checks.length}}
       <h4>Ready</h4>
       <small>
-        <table>
+        <table class="test-result-check-table">
           {{#each ready.checks}}
             <tr>
               <td>
@@ -32,7 +32,7 @@
     {{#if validation.checks.length}}
       <h4>Valid</h4>
       <small>
-        <table>
+        <table class="test-result-check-table">
           {{#each validation.checks}}
             <tr>
               <td>
