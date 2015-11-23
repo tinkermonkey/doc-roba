@@ -33,7 +33,7 @@ From those three ideas we can dive into a bit of detail:
 ## Application Under Test Modelling & Navigation
 
 ### Nodes
-DocRoba models pages, screens, and views as *Nodes* within a logical structure with a navigational structure layered on top. The reason for this is to provide a stabile base structure that is similar to a human's mental map of a product. Navigational data is then layered on top and the logical structure can be independently maintained.
+DocRoba models pages, screens, and views as *Nodes* as a logical structure with a navigational structure layered on top. The reason for this is to provide a stable structure (the logical structure) that is similar to a human's mental map of a product that serves as a simple relatable model of the product. The navigational data is then layered on top and the logical structure can be maintained independently.
 
 ### Actions
 Each *Node* has a set of discrete *Actions* which lead to other nodes. A single *Action* (such as a button click) can have varied results (destination nodes) and those are modeled as different *Routes* for the action. The expected *Route* is specified by basic logic based that has access the full context (test setup, server configuration, account data) within which the *Action* is being executed. When a user clicks the checkout button, if they have items in their shopping cart they go to checkout, otherwise they get a message saying they have nothing in their shopping cart, etc.
