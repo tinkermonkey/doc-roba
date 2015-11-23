@@ -3,14 +3,16 @@
     <input type="text" class="form-control input-search" placeholder="Filter actions...">
   </div>
   <div style="margin: 5px;">
-    {{#if getValue}}
+    {{#if getValue.actionId}}
       Current Value:
-      <div class="align-center">
+      <div>
         {{#with getAction getValue.actionId projectVersionId}}
           <div>{{title}}</div>
         {{/with}}
         {{> SingleRouteSnippet sourceId=nodeId destinationId=getValue.nodeId projectVersionId=projectVersionId }}
       </div>
+    {{else}}
+      <i>No action selected</i>
     {{/if}}
   </div>
   <div class="search-results">
