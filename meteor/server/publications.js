@@ -72,13 +72,14 @@ Meteor.startup(function () {
     }
     return [];
   });
-  Meteor.publish('changes', function () {
+  Meteor.publish('changes', function (limit) {
     if(this.userId){
-      var projectIds = [];
+      var projectIds = [],
+        limit = limit || 25;
       ProjectRoles.find({userId: this.userId}).forEach(function (role) {
         projectIds.push(role.projectId);
       });
-      return RecordChanges.find({projectId: {$in: projectIds}}, {limit: 100});
+      return RecordChanges.find({projectId: {$in: projectIds}}, {limit: limit});
     }
     return [];
   });
