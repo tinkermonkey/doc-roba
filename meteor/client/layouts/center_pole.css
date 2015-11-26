@@ -1,5 +1,5 @@
 /**
- * Main test case container
+ * Main page container
  */
 .center-pole-container {
   position: absolute;
@@ -12,117 +12,74 @@
 }
 
 /**
- * Main test case navigation pane
+ * Left pane
  */
+.center-pole-left {
+  flex: 0 0 250px;
+  padding-right: 20px;
+}
+
+.center-pole-left-inner {
+  position: fixed;
+  width: 250px;
+  padding-right: inherit;
+}
+
+.center-pole-page-title {
+  text-align: right;
+  font-family: "Helvetica Neue Light", "HelveticaNeue-Light", "Helvetica Neue", Calibri, Helvetica, Arial, sans-serif;
+  margin-bottom: 100px;
+}
+
+.center-pole-page-title a {
+  color: inherit;
+}
+
 .center-pole-nav {
-  width: 350px;
-  margin-top: 60px;
-}
 
-.pole-nav-header {
-  margin: 25px;
-  margin-right: 45px;
-}
-
-.pole-nav-outer {
-  background-color: #0A7BFF;
-  border-top-left-radius: 35px;
-  border-bottom-left-radius: 35px;
-  padding: 8px 0 16px 25px;
-}
-
-.pole-nav-wrapper {
-
-}
-
-.pole-nav-wrapper::before {
-  content: " ";
-  background-image: url(/white_circle.svg);
-  background-size: 200% 200%;
-  background-position: right bottom;
-  float: right;
-  width: 45px;
-  height: 45px;
-  background-color: #0A7BFF;
-  position: relative;
-  top: -45px;
-}
-
-.pole-nav-wrapper::after {
-  content: " ";
-  background-image: url(/white_circle.svg);
-  background-size: 200% 200%;
-  background-position: right top;
-  float: right;
-  width: 45px;
-  height: 45px;
-  background-color: #0A7BFF;
-}
-
-.pole-nav-inner {
-  background-color: #ffffff;
-  border-radius: 25px;
-  padding: 20px 10px 40px;
-  position: relative;
-  right: -2px;
 }
 
 /**
- * Main test case content pane
+ * Content pane
  */
 .center-pole-content {
-  width: 790px;
+  flex: 0 0 950px;
   border-left: 10px solid #0A7BFF;
-  border-top-left-radius: 45px;
-  border-bottom-left-radius: 45px;
-  padding-bottom: 40px;
-  width: 100%;
-}
-
-.center-pole-content > *, .pole-content-indent {
   padding-left: 20px;
+  padding-bottom: 20px;
 }
 
-.center-pole-content > .tab-container {
-  padding-left: 0;
+.center-pole-content h1,
+.center-pole-content h2 {
+  text-transform: uppercase;
+  font-weight: bold;
+  color: #333333;
 }
 
-.pole-section-header {
-  padding-left: 0;
-  margin-bottom: 20px;
+.center-pole-content h1 a,
+.center-pole-content h2 a {
+  color: inherit;
 }
 
-.pole-section-header > h2 {
-  padding-left: 20px;
+.center-pole-content h2 {
+  margin-top: 30px;
 }
 
-.pole-section-header-divider {
-  border-bottom: 3px solid #0A7BFF;
-  width: 100%;
+.center-pole-content h3 {
+  margin-top: 0;
 }
 
-.pole-section-header-divider::after {
-  content: " ";
-  background-image: url(/white_circle.svg);
-  background-size: 200% 200%;
-  background-position: left bottom;
-  float: left;
-  width: 20px;
-  height: 20px;
-  background-color: #0A7BFF;
-  position: relative;
-  top: -20px;
+.center-pole-content h4 {
+  color: #6b6b6b;
 }
 
-.pole-section-header::after {
-  content: " ";
-  background-image: url(/white_circle.svg);
-  background-size: 200% 200%;
-  background-position: left top;
-  float: left;
-  width: 20px;
-  height: 20px;
-  background-color: #0A7BFF;
-  position: relative;
-  left: -20px;
+.center-pole-content small {
+  font-size: inherit;
+  font-weight: lighter;
+  color: #6b6b6b;
+  text-transform: none;
+}
+
+.content-header {
+  margin-top: 20px;
 }

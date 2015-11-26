@@ -22,22 +22,23 @@
   {{/contentFor}}
 
   {{#if Template.subscriptionsReady}}
-    <h2>
-      <div>
-        Test Result: <a href="/test_case_dashboard/{{projectId}}/{{projectVersionId}}/?testCaseId={{testCase._id}}">{{testCase.title}}</a>
-        {{#if notNull resultCode}}
-          ( <span class="test-result-{{resultCode}}">{{renderLookup "TestResultCodesLookup" resultCode}}</span> )
-        {{/if}}
-      </div>
+    <h1>
+      Test Result
       <small>
-        {{dateFormat dateCreated "ddd MMM Do, YYYY @ h:mm:ss A"}}
-        against {{server.title}},
-        {{#unless isDone}}currently{{/unless}} {{renderLookup "TestResultStatusLookup" status}}
-        {{#if abort}}(aborted){{/if}}
+        <a href="/test_case_dashboard/{{projectId}}/{{projectVersionId}}/?testCaseId={{testCase._id}}">{{testCase.title}}</a>
+        {{#if notNull resultCode}}
+          ({{renderLookup "TestResultCodesLookup" resultCode}})
+        {{/if}}
       </small>
-    </h2>
+    </h1>
+    <h4>
+      {{dateFormat dateCreated "ddd MMM Do, YYYY @ h:mm:ss A"}}
+      against {{server.title}},
+      {{#unless isDone}}currently{{/unless}} {{renderLookup "TestResultStatusLookup" status}}
+      {{#if abort}}(aborted){{/if}}
+    </h4>
 
-    {{#CenterPoleSectionHeader}}<h2>Test Log</h2>{{/CenterPoleSectionHeader}}
+    <h2>Test Log</h2>
 
     <div class="no-wrap flex">
       {{#each roleResults}}
@@ -45,7 +46,7 @@
       {{/each}}
     </div>
 
-    {{#CenterPoleSectionHeader}}<h2>Analysis</h2>{{/CenterPoleSectionHeader}}
+    <h2>Test Analysis</h2>
   {{else}}
     {{> CustomSpinner }}
   {{/if}}

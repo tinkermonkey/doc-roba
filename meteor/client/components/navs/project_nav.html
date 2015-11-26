@@ -1,9 +1,9 @@
 <template name="ProjectNav">
-  <h2>
+  <h1>
     {{#with project}}
       <a href="{{pathFor 'home_project'}}">{{title}}</a>
     {{/with}}
-  </h2>
+  </h1>
   <div>
     {{#with version}}
       <a href="{{pathFor 'home_version'}}">v {{version}}</a>

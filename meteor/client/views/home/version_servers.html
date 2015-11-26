@@ -1,25 +1,10 @@
 <template name="VersionServers">
-  {{#CenterPoleSectionHeader}}
-    <h2>Servers</h2>
-  {{/CenterPoleSectionHeader}}
+  <h2>Servers</h2>
+  {{> VersionServerList }}
 
-  <div class="pole-content-indent">
-    {{> VersionServerList }}
-  </div>
+  <h2>Server Config Variables</h2>
+  {{> VersionServerConfig }}
 
-  {{#CenterPoleSectionHeader}}
-    <h2>Configuration Variables</h2>
-  {{/CenterPoleSectionHeader}}
-
-  <div class="pole-content-indent">
-    {{> VersionServerConfig }}
-  </div>
-
-  {{#CenterPoleSectionHeader}}
-    <h2>Server Credentials Sets</h2>
-  {{/CenterPoleSectionHeader}}
-
-  <div class="pole-content-indent">
-    Credentials Data Sets
-  </div>
+  <h2>Server Credentials Sets</h2>
+  Credentials Data Sets
 </template>

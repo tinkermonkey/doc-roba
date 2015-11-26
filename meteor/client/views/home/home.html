@@ -38,9 +38,8 @@
   {{#if project}}
     {{#if version}}
       {{setTitle "Home :: " project.title "v" version.version}}
-      <h1>{{project.title}} v {{version.version}}</h1>
 
-      <ul class="nav nav-pills">
+      <ul class="nav nav-pills content-header">
         <li role="presentation" class="active"><a data-tab-name="activity">Activity</a></li>
         <li role="presentation"><a data-tab-name="credentials">Credentials</a></li>
         <li role="presentation"><a data-tab-name="credentials_config">Credential Configuration</a></li>
@@ -57,9 +56,8 @@
       </div>
     {{else}}
       {{setTitle "Home :: " project.title}}
-      <h1>{{project.title}}</h1>
 
-      <ul class="nav nav-pills">
+      <ul class="nav nav-pills content-header">
         <li role="presentation" class="active"><a data-tab-name="activity">Activity</a></li>
         <li role="presentation"><a data-tab-name="versions">Versions</a></li>
         {{#if hasRole 'admin' project._id}}

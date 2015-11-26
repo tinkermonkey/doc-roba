@@ -8,16 +8,15 @@
             - <span class="test-result-{{resultCode}}">{{renderLookup "TestResultCodesLookup" resultCode}}</span>
           {{/if}}
         </div>
-        <small>
-          {{testAgent.title}} {{testAgent.version}} on {{testSystem.title}},
-          {{#unless isDone}}currently{{/unless}} {{renderLookup "TestResultStatusLookup" status}}
-          {{#if abort}}(aborted){{/if}}
-        </small>
       </h3>
+      <h4>
+        {{testAgent.title}} {{testAgent.version}} on {{testSystem.title}},
+        {{#unless isDone}}currently{{/unless}} {{renderLookup "TestResultStatusLookup" status}}
+        {{#if abort}}(aborted){{/if}}
+      </h4>
       {{#if result}}
         {{#with result.error}}
-          <div>
-            <h4>Error</h4>
+          <div class="test-result-role-error">
             {{#if stack}}
               <div>{{{stack}}}</div>
             {{else}}

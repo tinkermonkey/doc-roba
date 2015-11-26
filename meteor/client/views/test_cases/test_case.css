@@ -64,23 +64,6 @@
 /**
  * Test Case form
  */
-.test-case-header {
-}
-
-.test-case-title {
-  font-size: 36px;
-  margin-top: 20px;
-  margin-bottom: 10px;
-  color: #000;
-}
-
-.test-case-role-title {
-  font-size: 30px;
-  margin-top: 20px;
-  margin-bottom: 10px;
-  color: #000;
-}
-
 .test-case-roles {
   white-space: nowrap;
 }
@@ -89,8 +72,7 @@
   white-space: normal;
   vertical-align: top;
   display: inline-block;
-  padding: 10px;
-  border-right: 1px dashed #dddddd;
+  padding-right: 10px;
   min-height: 100px;
   min-width: 300px;
 }

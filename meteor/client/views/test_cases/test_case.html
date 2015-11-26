@@ -1,11 +1,14 @@
 <template name="TestCase">
-  <div class="test-case-header">
-    {{> EditableTitleDescription value=this dataKey="title-description" titleClass="test-case-title"}}
-  </div>
   {{#if Template.subscriptionsReady}}
-    {{#CenterPoleSectionHeader}}
-      <h2>Test Roles</h2>
-    {{/CenterPoleSectionHeader}}
+    <h1>
+      Test Case
+      <small>
+        {{> EditableTextField value=title dataKey="title" emptyText="Enter Title" cssClass="inline"}}
+      </small>
+    </h1>
+    <h4>{{> EditableTextArea value=description dataKey="description" emptyText="No Description"}}</h4>
+
+    <h2>Test Roles</h2>
 
 
     <div class="test-case-roles">
@@ -29,16 +32,12 @@
       </div>
     </div>
 
-    {{#CenterPoleSectionHeader}}
-      <h2>Recent Results</h2>
-    {{/CenterPoleSectionHeader}}
+    <h2>Recent Results</h2>
     <div class="test-case-recent-result-container">
       {{> TestCaseRecentResultList }}
     </div>
 
-    {{#CenterPoleSectionHeader}}
-      <h2><span class="glyphicon glyphicon-send"></span> Launcher</h2>
-    {{/CenterPoleSectionHeader}}
+    <h2><span class="glyphicon glyphicon-send"></span> Launcher</h2>
     <div class="test-case-launcher-container">
       {{> TestCaseLauncher }}
     </div>

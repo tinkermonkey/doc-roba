@@ -21,7 +21,11 @@
  * Report styling
  */
 .test-result-role {
-  padding: 10px;
+  padding-right: 10px;
+}
+
+.test-result-role-error {
+  margin-bottom: 10px;
 }
 
 /**

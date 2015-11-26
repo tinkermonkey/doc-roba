@@ -1,14 +1,18 @@
 <template name="TestRunTemplate">
-  <div class="test-run-template-container" data-template-id="{{staticId}}">
-    {{> EditableTitleDescription value=this dataKey="title-description" titleClass="test-case-title"}}
+  <h1>
+    Test Run Template
+    <small>
+      {{> EditableTextField value=title dataKey="title" emptyText="Enter Title" cssClass="inline"}}
+    </small>
+  </h1>
+  <h4>{{> EditableTextArea value=description dataKey="description" emptyText="No Description"}}</h4>
 
-    <h4 style="margin-top: 20px;">Test Run Steps</h4>
-    <div class="test-run-item-container">
-      <div class="test-run-add-item-list">
-        {{> TestRunNewItem type=1 width="150px"}}
-      </div>
-      <hr>
-      {{> TestRunItemList this isTemplate=true}}
+  <h2>Test Run Steps</h2>
+  <div class="test-run-item-container">
+    <div class="test-run-add-item-list">
+      {{> TestRunNewItem type=1 width="150px"}}
     </div>
+    <hr>
+    {{> TestRunItemList this isTemplate=true}}
   </div>
 </template>

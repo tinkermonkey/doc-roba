@@ -1,10 +1,8 @@
 <template name="ProjectActivity">
-  <div class="pole-content-indent">
-    <h4>Project Activity</h4>
-    {{#if hasChanges}}
-      {{> change_list projectChanges }}
-    {{else}}
-      <div style="font-style: italic;">No recent changes</div>
-    {{/if}}
-  </div>
+  <h2>Project Activity</h2>
+  {{#if hasChanges}}
+    {{> change_list projectChanges }}
+  {{else}}
+    <div style="font-style: italic;">No recent changes</div>
+  {{/if}}
 </template>

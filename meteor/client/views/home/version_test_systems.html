@@ -1,17 +1,7 @@
 <template name="VersionTestSystems">
-  {{#CenterPoleSectionHeader}}
-    <h2>Test Systems</h2>
-  {{/CenterPoleSectionHeader}}
+  <h2>Test Systems</h2>
+  {{> VersionTestSystemList }}
 
-  <div class="pole-content-indent">
-    {{> VersionTestSystemList }}
-  </div>
-
-  {{#CenterPoleSectionHeader}}
-    <h2>Test Agent Configurations</h2>
-  {{/CenterPoleSectionHeader}}
-
-  <div class="pole-content-indent">
-    {{> VersionTestAgentList }}
-  </div>
+  <h2>Test Agent Configurations</h2>
+  {{> VersionTestAgentList }}
 </template>
