@@ -4,18 +4,12 @@
       <a href="{{pathFor 'home_project'}}">{{title}}</a>
     {{/with}}
   </h1>
-  <div>
+  <h4>
     {{#with version}}
       <a href="{{pathFor 'home_version'}}">v {{version}}</a>
-      <a href="{{pathFor 'doc_tree'}}">
-        <span class="glyphicon glyphicon-map-marker"></span>
-      </a>
-      <a href="{{pathFor 'test_case_dashboard'}}">
-        <span class="glyphicon glyphicon-ok-circle"></span>
-      </a>
-      <a href="{{pathFor 'test_run_template_dashboard'}}">
-        <span class="glyphicon glyphicon-list-alt"></span>
-      </a>
+      <a href="{{pathFor 'doc_tree'}}"><span class="glyphicon glyphicon-map-marker"></span></a>
+      <a href="{{pathFor 'test_case_dashboard'}}"><span class="glyphicon glyphicon-ok-circle"></span></a>
+      <a href="{{pathFor 'test_run_template_dashboard'}}"><span class="glyphicon glyphicon-list-alt"></span></a>
     {{/with}}
-  </div>
+  </h4>
 </template>
