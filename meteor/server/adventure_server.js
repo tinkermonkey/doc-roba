@@ -260,50 +260,6 @@ Meteor.startup(function () {
 });
 
 /**
- * Get an adventure ready to launch
- * @param adventure
- */
-launchAdventure = function (adventureId) {
-  Meteor.log.debug("launchAdventure: " + adventureId);
-  var adventure = Adventures.findOne(adventureId);
-  if(adventure) {
-    // Set the adventure to ready
-    Adventures.update({_id: adventureId}, {$set: {status: AdventureStatus.queued}});
-
-    // create a log file path
-    var logFilePath = baseLogPath + "launch_" + adventure._id + ".log",
-      out = fs.openSync(logFilePath, "a"),
-      err = fs.openSync(logFilePath, "a");
-
-    // if the helper is not running, launch locally
-    var proc = spawn("node", [automationPath + "roba_adventure.js", adventure._id], {
-      stdio: [ 'ignore', out, err ]
-    });
-
-    Adventures.update({_id: adventure._id}, {$set: {pid: proc.pid}});
-    Meteor.log.debug("Adventure Launched: " + adventure._id + " as process " + proc.pid + "\n");
-
-    // Catch the exit
-    proc.on("exit", Meteor.bindEnvironment(function (code) {
-      Meteor.log.debug("Adventure Exit: " + adventureId + ", " + code);
-      Adventures.update(adventureId, {$unset: {pid: ""}});
-      if(code){
-        Adventures.update(adventureId, {$set: {status: AdventureStatus.failed}});
-        LogMessages.insert({
-          adventureId: adventureId,
-          timestamp: moment().valueOf(),
-          level: "ERROR",
-          sender: "server",
-          data: { error: "Adventure process exited with code " + code }
-        });
-      }
-    }));
-  } else {
-    Meteor.log.error("Adventure not found: " + adventureId);
-  }
-};
-
-/**
  * Abort an adventure
  * @param adventureId
  */

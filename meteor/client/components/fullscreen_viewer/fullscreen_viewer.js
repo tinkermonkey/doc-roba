@@ -8,7 +8,7 @@ Template.FullscreenViewer.helpers({});
  */
 Template.FullscreenViewer.events({
   "click .dr-fullscreen-viewer": function (e, instance) {
-    console.log("Click: ", e.target);
+    //console.log("Click: ", e.target);
     if($(e.target).hasClass("dr-fullscreen-viewer")){
       FullscreenViewer.hide();
     }

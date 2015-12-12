@@ -1,7 +1,8 @@
 {
   "paths": {
     "automation_logs": "../logs",
-    "automation": "../automation"
+    "automation": "../automation",
+    "image_analysis": "../image-analysis/scripts"
   },
   "trail": {
     "transports": [

@@ -9,6 +9,7 @@ Meteor.startup(function () {
    */
   Meteor.publish('test_run_templates', function (projectId, projectVersionId) {
     console.log("Publish: test_run_templates");
+    check(this.userId, String);
     // check that there is a project role for the current user
     if(this.userId && projectId && projectVersionId){
       var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
@@ -20,6 +21,7 @@ Meteor.startup(function () {
   });
   Meteor.publish('test_run_template_items', function (projectId, projectVersionId) {
     console.log("Publish: test_run_template_items");
+    check(this.userId, String);
     // check that there is a project role for the current user
     if(this.userId && projectId && projectVersionId){
       var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
@@ -37,6 +39,7 @@ Meteor.startup(function () {
    */
   Meteor.publish('test_groups', function (projectId, projectVersionId) {
     console.log("Publish: test_groups");
+    check(this.userId, String);
     // check that there is a project role for the current user
     if(this.userId && projectId && projectVersionId){
       var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
@@ -48,6 +51,7 @@ Meteor.startup(function () {
   });
   Meteor.publish('test_cases', function (projectId, projectVersionId) {
     console.log("Publish: test_cases");
+    check(this.userId, String);
     // check that there is a project role for the current user
     if(this.userId && projectId && projectVersionId){
       var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
@@ -59,6 +63,7 @@ Meteor.startup(function () {
   });
   Meteor.publish('test_case', function (projectId, projectVersionId, testCaseId) {
     console.log("Publish: test_case");
+    check(this.userId, String);
     // check that there is a project role for the current user
     if(this.userId && projectId && projectVersionId){
       var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
@@ -70,6 +75,7 @@ Meteor.startup(function () {
   });
   Meteor.publish('test_case_roles', function (projectId, projectVersionId, testCaseId) {
     console.log("Publish: test_cases");
+    check(this.userId, String);
     // check that there is a project role for the current user
     if(this.userId && projectId && projectVersionId){
       var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
@@ -81,6 +87,7 @@ Meteor.startup(function () {
   });
   Meteor.publish('test_case_steps', function (projectId, projectVersionId, testCaseId) {
     console.log("Publish: test_cases");
+    check(this.userId, String);
     // check that there is a project role for the current user
     if(this.userId && projectId && projectVersionId){
       var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
@@ -98,6 +105,7 @@ Meteor.startup(function () {
    */
   Meteor.publish('test_case_results', function (projectId, testCaseId, limit) {
     console.log("Publish: test_case_results:", testCaseId, limit);
+    check(this.userId, String);
     // check that there is a project role for the current user
     if(this.userId && projectId && testCaseId){
       var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
@@ -116,6 +124,7 @@ Meteor.startup(function () {
   });
   Meteor.publish('test_result', function (projectId, testResultId) {
     console.log("Publish: test_result:", projectId, testResultId);
+    check(this.userId, String);
     // check that there is a project role for the current user
     if(this.userId && projectId){
       var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
@@ -127,6 +136,7 @@ Meteor.startup(function () {
   });
   Meteor.publish('test_result_roles', function (projectId, testResultId) {
     console.log("Publish: test_result_roles:", projectId, testResultId);
+    check(this.userId, String);
     // check that there is a project role for the current user
     if(this.userId && projectId){
       var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
@@ -139,6 +149,7 @@ Meteor.startup(function () {
   });
   Meteor.publish('test_result_steps', function (projectId, testResultId) {
     console.log("Publish: test_result_steps:", projectId, testResultId);
+    check(this.userId, String);
     // check that there is a project role for the current user
     if(this.userId && projectId){
       var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
@@ -150,6 +161,7 @@ Meteor.startup(function () {
   });
   Meteor.publish('test_result_log', function (projectId, testResultId) {
     console.log("Publish: test_result_log:", projectId, testResultId);
+    check(this.userId, String);
     // check that there is a project role for the current user
     if(this.userId && projectId){
       var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
@@ -161,6 +173,7 @@ Meteor.startup(function () {
   });
   Meteor.publish('test_result_screenshots', function (projectId, testResultId) {
     console.log("Publish: test_result_screenshots:", projectId, testResultId);
+    check(this.userId, String);
     // check that there is a project role for the current user
     if(this.userId && projectId){
       var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
@@ -172,6 +185,7 @@ Meteor.startup(function () {
   });
   Meteor.publish('test_run_result', function (testResultId) {
     console.log("Publish: test_run_result:", testResultId);
+    check(this.userId, String);
     // check that there is a project role for the current user
     if(this.userId){
       return TestResults.find(testResultId);
@@ -185,6 +199,8 @@ Meteor.startup(function () {
    * ============================================================================
    */
   Meteor.publish('similar_screenshots', function (screenshotId) {
+    console.log("Publish: similar_screenshots:", screenshotId);
+    check(this.userId, String);
     check(screenshotId, String);
     var screenshot = Screenshots.findOne(screenshotId);
     if(screenshot){
@@ -194,6 +210,8 @@ Meteor.startup(function () {
   });
 
   Meteor.publish('previous_version_screenshots', function (screenshotId) {
+    console.log("Publish: previous_version_screenshots:", screenshotId);
+    check(this.userId, String);
     check(screenshotId, String);
     var screenshot = Screenshots.findOne(screenshotId);
     if(screenshot){
@@ -202,8 +220,18 @@ Meteor.startup(function () {
     return [];
   });
 
+  Meteor.publish('screenshot_comparison', function (baseScreenshotId, compareScreenshotId) {
+    console.log("Publish: screenshot_comparison:", baseScreenshotId, compareScreenshotId);
+    check(this.userId, String);
+    check(baseScreenshotId, String);
+    check(compareScreenshotId, String);
+    return ScreenshotComparisons.find({baseScreenshot: baseScreenshotId, compareScreenshot: compareScreenshotId});
+  });
+
   //TODO: remove this publication once testing is complete
-  Meteor.publish('screenshots', function (testResultId) {
+  Meteor.publish('screenshots', function () {
+    console.log("Publish: screenshots");
+    check(this.userId, String);
     return Screenshots.find();
   });
 
@@ -384,14 +412,14 @@ Meteor.startup(function () {
 
     /**
      * Save the context for a screenshot
-     * @param imageId
+     * @param screenshotId
      * @param context
      */
-    saveScreenshotContext: function (imageId, context) {
+    saveScreenshotContext: function (screenshotId, context) {
       check(Meteor.user(), Object);
-      check(imageId, String);
+      check(screenshotId, String);
       check(context, Object);
-      Screenshots.update(imageId, {$set: context});
+      Screenshots.update(screenshotId, {$set: context});
     },
 
     /**
@@ -536,6 +564,59 @@ Meteor.startup(function () {
         testResult.launch();
       } else {
         throw new Meteor.Error("invalid-testResult", "launchTestResult failed because the result could not be found", testResultId);
+      }
+    },
+
+    /**
+     * Run a quick comparison of two screenshots
+     * @param baseScreenshotId
+     * @param compareScreenshotId
+     */
+    templateCompareScreenshots: function (baseScreenshotId, compareScreenshotId, forceUpdate) {
+      console.log("templateCompareScreenshots:", baseScreenshotId, compareScreenshotId);
+      check(Meteor.user(), Object);
+      check(baseScreenshotId, String);
+      check(compareScreenshotId, String);
+
+      // check for an cached comparison
+      var comparison = ScreenshotComparisons.findOne({baseScreenshot: baseScreenshotId, compareScreenshot: compareScreenshotId});
+      if(comparison){
+        // check for project permissions
+
+        if(forceUpdate){
+          ScreenshotComparisons.remove(comparison._id);
+        } else {
+          return comparison;
+        }
+      }
+
+      // grab the screenshots
+      var baseScreenshot = Screenshots.findOne(baseScreenshotId),
+        comparisonScreenshot = Screenshots.findOne(compareScreenshotId);
+
+      check(baseScreenshot, FS.File);
+      check(comparisonScreenshot, FS.File);
+
+      // check project permissions
+
+      if(baseScreenshot.hasStored("screenshots") && comparisonScreenshot.hasStored("screenshots")){
+        var basePath = FS.basePath + "screenshots/" + baseScreenshot.getCopyInfo("screenshots").key,
+          comparisonPath = FS.basePath + "screenshots/" + comparisonScreenshot.getCopyInfo("screenshots").key,
+          command = "template_align.py " + basePath + " " + comparisonPath,
+          logFile = "template_align_" + baseScreenshotId + "_" + compareScreenshotId + ".log";
+
+        ProcessLauncher.launchImageTask(command, logFile, Meteor.bindEnvironment(function (output) {
+          try {
+            var result = JSON.parse(output);
+          } catch (e) {
+            Meteor.log.debug("templateCompareScreenshots JSON parse failed: \n" + output + "\n");
+            throw new Meteor.Error("templateCompareScreenshots failed: result could not be parsed, " + e.toString());
+          }
+
+          ScreenshotComparisons.insert({projectId: baseScreenshot.projectId, baseScreenshot: baseScreenshotId, compareScreenshot: compareScreenshotId, result: result});
+        }));
+      } else {
+        throw new Meteor.Error("templateCompareScreenshots failed: one or more screenshots could not be found");
       }
     }
   });

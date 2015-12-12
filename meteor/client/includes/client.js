@@ -422,6 +422,12 @@ Template.registerHelper("join", function (list, joint) {
   }
 });
 
+Template.registerHelper("scale", function (number, scale) {
+  if( number != null && scale != null){
+    return number * scale;
+  }
+});
+
 Template.registerHelper("stringify", function () {
   return JSON.stringify(this);
 });
