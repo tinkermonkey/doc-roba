@@ -38,5 +38,5 @@ random
 ejson
 spacebars
 check
-twbs:bootstrap
 dburles:collection-helpers
+twbs:bootstrap
