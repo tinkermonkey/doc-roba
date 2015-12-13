@@ -41,14 +41,14 @@ Schemas.TestRun = new SimpleSchema({
     denyUpdate: true
   }
 });
-TestRuns = new Mongo.Collection("test_runs");
-TestRuns.attachSchema(Schemas.TestRun);
-TestRuns.allow({
+Collections.TestRuns = new Mongo.Collection("test_runs");
+Collections.TestRuns.attachSchema(Schemas.TestRun);
+Collections.TestRuns.allow({
   insert: allowIfAuthenticated,
   update: allowIfAuthenticated,
   remove: allowIfAuthenticated
 });
-TestRuns.deny({
+Collections.TestRuns.deny({
   insert: allowIfTester,
   update: allowIfTester,
   remove: allowIfTester,

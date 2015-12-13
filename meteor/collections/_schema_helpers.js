@@ -2,6 +2,7 @@
  * Top level object to capture all of the schemas
  */
 Schemas = {};
+Collections = {};
 
 /**
  * Enable debug for the moment
@@ -103,11 +104,11 @@ allowIfAuthenticated = function (userId, doc) {
   return userId !== null;
 };
 allowIfAdmin = function (userId, doc) {
-  var pr = ProjectRoles.findOne({userId: userId, projectId: doc.projectId});
+  var pr = Collections.ProjectRoles.findOne({userId: userId, projectId: doc.projectId});
   return !(userId && pr && (pr.role === RoleTypes.admin || pr.role === RoleTypes.owner));
 };
 allowIfTester = function (userId, doc) {
-  var pr = ProjectRoles.findOne({userId: userId, projectId: doc.projectId});
+  var pr = Collections.ProjectRoles.findOne({userId: userId, projectId: doc.projectId});
   return !(userId && pr && (pr.role === RoleTypes.admin || pr.role === RoleTypes.owner || pr.role === RoleTypes.tester));
 };
 denyIfNotAuthenticated = function (userId, doc) {

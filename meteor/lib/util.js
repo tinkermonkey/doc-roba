@@ -239,7 +239,7 @@ Util = {
       } else if(node.type == NodeTypes.userType){
         userType = node._id;
       }
-      node = Nodes.findOne({staticId: node.parentId, projectVersionId: node.projectVersionId});
+      node = Collections.Nodes.findOne({staticId: node.parentId, projectVersionId: node.projectVersionId});
     }
 
     console.log("getNodePlatformUserType: ", platform, userType);

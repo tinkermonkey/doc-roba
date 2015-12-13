@@ -66,33 +66,33 @@ Schemas.TestCaseStep = new SimpleSchema({
     autoValue: autoValueModifiedBy
   }
 });
-TestCaseSteps = new Mongo.Collection("test_case_steps");
-TestCaseSteps.attachSchema(Schemas.TestCaseStep);
-TestCaseSteps.allow({
+Collections.TestCaseSteps = new Mongo.Collection("test_case_steps");
+Collections.TestCaseSteps.attachSchema(Schemas.TestCaseStep);
+Collections.TestCaseSteps.allow({
   insert: allowIfAuthenticated,
   update: allowIfAuthenticated,
   remove: allowIfAuthenticated
 });
-TestCaseSteps.deny({
+Collections.TestCaseSteps.deny({
   insert: allowIfTester,
   update: allowIfTester,
   remove: allowIfTester,
   fetch: ['projectId']
 });
-trackChanges(TestCaseSteps, "test_case_steps");
+trackChanges(Collections.TestCaseSteps, "test_case_steps");
 
 /**
  * Helpers
  */
-TestCaseSteps.helpers({
+Collections.TestCaseSteps.helpers({
   firstNode: function () {
     if(this.data.nodeId || this.data.sourceId){
-      return Nodes.findOne({staticId: this.data.nodeId || this.data.sourceId, projectVersionId: this.projectVersionId});
+      return Collections.Nodes.findOne({staticId: this.data.nodeId || this.data.sourceId, projectVersionId: this.projectVersionId});
     }
   },
   action: function () {
     if(this.data.actionId){
-      return Actions.findOne({staticId: this.data.actionId, projectVersionId: this.projectVersionId});
+      return Collections.Actions.findOne({staticId: this.data.actionId, projectVersionId: this.projectVersionId});
     }
   }
 });

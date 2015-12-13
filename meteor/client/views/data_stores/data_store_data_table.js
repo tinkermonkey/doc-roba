@@ -16,7 +16,7 @@ Template.data_store_data_table.helpers({
     return _.filter(this.fields, function(field){return field.type !== FieldTypes.custom}).length + 1;
   },
   getRows: function () {
-    return DataStoreRows.find({dataStoreId: this._id}, {sort: {dateCreated: 1}});
+    return Collections.DataStoreRows.find({dataStoreId: this._id}, {sort: {dateCreated: 1}});
   },
   getFieldValue: function (field, row) {
     if(field && row){
@@ -80,7 +80,7 @@ Template.data_store_data_table.events({
             //console.log("Saving form ", initialData, AutoForm.getFormValues(formId), updateDoc);
 
             // Create a straw record without most of the data
-            DataStoreRows.insert(initialData, function (error, recordId) {
+            Collections.DataStoreRows.insert(initialData, function (error, recordId) {
               if(error){
                 console.error("DataStoreRow initial insert failed: ", error);
               } else {

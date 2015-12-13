@@ -85,14 +85,14 @@ Schemas.TestResultStep = new SimpleSchema({
     optional: true
   }
 });
-TestResultSteps = new Mongo.Collection("test_result_steps");
-TestResultSteps.attachSchema(Schemas.TestResultStep);
-TestResultSteps.allow({
+Collections.TestResultSteps = new Mongo.Collection("test_result_steps");
+Collections.TestResultSteps.attachSchema(Schemas.TestResultStep);
+Collections.TestResultSteps.allow({
   insert: allowIfAuthenticated,
   update: allowIfAuthenticated,
   remove: allowIfAuthenticated
 });
-TestResultSteps.deny({
+Collections.TestResultSteps.deny({
   insert: allowIfTester,
   update: allowIfTester,
   remove: allowIfTester,
@@ -102,36 +102,36 @@ TestResultSteps.deny({
 /**
  * Helpers
  */
-TestResultSteps.helpers({
+Collections.TestResultSteps.helpers({
   testCaseStep: function () {
-    return TestCaseSteps.findOne({staticId: this.testCaseStepId, projectVersionId: this.projectVersionId});
+    return Collections.TestCaseSteps.findOne({staticId: this.testCaseStepId, projectVersionId: this.projectVersionId});
   },
   /**
    * Find all of the log messages attributed to this step
    */
   logMessages: function () {
     if(this.isFirst()){
-      return LogMessages.find({
+      return Collections.LogMessages.find({
         $or: [
           { "context.testResultStepId": this._id },
           { "context.testResultRoleId": this.testResultRoleId, "context.testResultStepId": { $exists: false } }
         ]
       }, {sort: {time: 1}});
     } else {
-      return LogMessages.find({ "context.testResultStepId": this._id }, {sort: {time: 1}});
+      return Collections.LogMessages.find({ "context.testResultStepId": this._id }, {sort: {time: 1}});
     }
   },
   /**
    * Find the step context message pertaining to this step
    */
   logContextMessage: function () {
-    return LogMessages.findOne({ "sender": "context", "data.type": "step", "context.testResultStepId": this._id });
+    return Collections.LogMessages.findOne({ "sender": "context", "data.type": "step", "context.testResultStepId": this._id });
   },
   /**
    * Get all of the test-map relevant context messages in order
    */
   testMapContexts: function () {
-    return LogMessages.find({
+    return Collections.LogMessages.find({
       "sender": "context",
       "data.type": {$in: ["node", "action"]},
       "context.testResultStepId": this._id
@@ -148,18 +148,18 @@ TestResultSteps.helpers({
    * Get all of the screenshots for this step
    */
   screenshots: function () {
-    return Screenshots.find({ testResultStepId: this._id }, {sort: {uploadedAt: -1}}).map(function (image, i) {image.index = i; return image});
+    return Collections.Screenshots.find({ testResultStepId: this._id }, {sort: {uploadedAt: -1}}).map(function (image, i) {image.index = i; return image});
   },
   isFirst: function () {
     return this.order == 0;
   },
   isLast: function () {
-    return TestResultSteps.find({testResultRoleId: this.testResultRoleId, order: {$gt: this.order}}).count()
+    return Collections.TestResultSteps.find({testResultRoleId: this.testResultRoleId, order: {$gt: this.order}}).count()
   },
   nextStep: function () {
-    return TestResultSteps.findOne({testResultRoleId: this.testResultRoleId, order: this.order + 1})
+    return Collections.TestResultSteps.findOne({testResultRoleId: this.testResultRoleId, order: this.order + 1})
   },
   previousStep: function () {
-    return TestResultSteps.findOne({testResultRoleId: this.testResultRoleId, order: this.order - 1})
+    return Collections.TestResultSteps.findOne({testResultRoleId: this.testResultRoleId, order: this.order - 1})
   }
 });

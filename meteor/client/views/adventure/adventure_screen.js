@@ -198,7 +198,7 @@ Template.AdventureScreen.events({
     $(".adventure-highlight-detail").find(".selected").removeClass("selected");
 
     // send the command to get information about the "clicked" element
-    AdventureCommands.insert({
+    Collections.AdventureCommands.insert({
       projectId: instance.data.adventure.projectId,
       adventureId: instance.data.adventure._id,
       updateState: false,
@@ -378,13 +378,13 @@ Template.AdventureScreen.events({
           $(".adventure-sidebar").animate({scrollTop: targetTop + currentScroll - 10 - sidebarTop}, 200, function () {
             var field = commandType == "ready" ? "readyCode" : "validationCode",
               update = {$set: {}},
-              node = Nodes.findOne(nodeId);
+              node = Collections.Nodes.findOne(nodeId);
             if(node[field] && node[field].length){
               update.$set[field] = node[field] + "\n" + commandType + "." + command + "('" + selector + "');";
             } else {
               update.$set[field] = commandType + "." + command + "('" + selector + "');";
             }
-            Nodes.update(nodeId, update, function (error, result) {
+            Collections.Nodes.update(nodeId, update, function (error, result) {
               if(error){
                 Meteor.log.error("Failed to update node value: " + error.message);
                 Dialog.error("Failed to update node value: " + error.message);
@@ -403,14 +403,14 @@ Template.AdventureScreen.events({
               currentScroll = $(".adventure-sidebar").scrollTop(),
               sidebarTop = $(".adventure-sidebar").offset().top;
             $(".adventure-sidebar").animate({scrollTop: targetTop + currentScroll - 10 - sidebarTop}, 200, function () {
-              var action = Actions.findOne(targetId),
+              var action = Collections.Actions.findOne(targetId),
                 update = {$set: {}};
               if(action.code && action.code.length){
                 update.$set.code = action.code + "\n" + "driver." + command + "('" + selector + "');";
               } else {
                 update.$set.code  = "driver." + command + "('" + selector + "');";
               }
-              Actions.update(targetId, update, function (error, result) {
+              Collections.Actions.update(targetId, update, function (error, result) {
                 if(error){
                   Meteor.log.error("Failed to update action value: " + error.message);
                   Dialog.error("Failed to update action value: " + error.message);
@@ -466,7 +466,7 @@ Template.AdventureScreen.rendered = function () {
   });
 
   // Observe the commands to pick up the highlight elements
-  AdventureCommands.find({
+  Collections.AdventureCommands.find({
     adventureId: instance.data.adventure._id,
     "result.highlightElements": {$exists: true}
   }, {sort: {dateCreated: -1}, limit: 1}).observe({

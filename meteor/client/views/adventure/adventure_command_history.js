@@ -5,7 +5,7 @@ Template.AdventureCommandHistory.helpers({
   getCommands: function () {
     if(this.adventure._id){
       var count = Template.instance().historyLength.get();
-      return AdventureCommands.find({ adventureId: this.adventure._id }, {sort:{dateCreated: -1}});
+      return Collections.AdventureCommands.find({ adventureId: this.adventure._id }, {sort:{dateCreated: -1}});
     }
   },
   formatResult: function () {

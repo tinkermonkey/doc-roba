@@ -45,7 +45,7 @@ Template.AdventureEditNodeActionRow.events({
 
     console.log("Execute Action: ", code);
     if(code.length){
-      AdventureCommands.insert({
+      Collections.AdventureCommands.insert({
         projectId: adventure.projectId,
         adventureId: adventure._id,
         code: code
@@ -73,7 +73,7 @@ Template.AdventureEditNodeActionRow.events({
       callback: function (btn) {
         //console.log("Dialog button pressed: ", btn);
         if(btn == "Delete"){
-          Actions.remove(action._id, function (error, result) {
+          Collections.Actions.remove(action._id, function (error, result) {
             if(error) {
               Meteor.log.error("Failed to delete action: " + error.message);
               Dialog.hide();

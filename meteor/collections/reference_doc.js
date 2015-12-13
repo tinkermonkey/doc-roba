@@ -3,16 +3,16 @@
  * Node Reference Documentation
  * ============================================================================
  */
-ReferenceDocs = new FS.Collection("reference_docs", {
+Collections.ReferenceDocs = new FS.Collection("reference_docs", {
   stores: [new FS.Store.FileSystem("reference_docs", { path: FS.basePath + "reference_docs" })]
 });
-ReferenceDocs.allow({
+Collections.ReferenceDocs.allow({
   insert:   allowIfAuthenticated,
   update:   allowIfAuthenticated,
   remove:   allowIfAuthenticated,
   download: allowIfAuthenticated
 });
-ReferenceDocs.deny({
+Collections.ReferenceDocs.deny({
   insert:   denyIfNotAuthenticated,
   update:   denyIfNotAuthenticated,
   remove:   denyIfNotAuthenticated,

@@ -55,29 +55,29 @@ Schemas.TestGroup = new SimpleSchema({
     autoValue: autoValueModifiedBy
   }
 });
-TestGroups = new Mongo.Collection("test_groups");
-TestGroups.attachSchema(Schemas.TestGroup);
-TestGroups.allow({
+Collections.TestGroups = new Mongo.Collection("test_groups");
+Collections.TestGroups.attachSchema(Schemas.TestGroup);
+Collections.TestGroups.allow({
   insert: allowIfAuthenticated,
   update: allowIfAuthenticated,
   remove: allowIfAuthenticated
 });
-TestGroups.deny({
+Collections.TestGroups.deny({
   insert: allowIfTester,
   update: allowIfTester,
   remove: allowIfTester,
   fetch: ['projectId']
 });
-trackChanges(TestGroups, "test_groups");
+trackChanges(Collections.TestGroups, "test_groups");
 
 /**
  * Helpers
  */
-TestGroups.helpers({
+Collections.TestGroups.helpers({
   groups: function () {
-    return TestGroups.find({ parentGroupId: this.staticId, projectVersionId: this.projectVersionId }, { sort: { title: 1 } })
+    return Collections.TestGroups.find({ parentGroupId: this.staticId, projectVersionId: this.projectVersionId }, { sort: { title: 1 } })
   },
   testCases: function () {
-    return TestCases.find({ testGroupId: this.staticId, projectVersionId: this.projectVersionId }, { sort: { title: 1 } })
+    return Collections.TestCases.find({ testGroupId: this.staticId, projectVersionId: this.projectVersionId }, { sort: { title: 1 } })
   }
 });

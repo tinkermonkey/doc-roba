@@ -4,7 +4,7 @@
 Template.DataStoreFieldList.helpers({
   getFields: function () {
     if(this._id){
-      return DataStoreFields.find({dataStoreId: this._id}, {sort: {order: 1}});
+      return Collections.DataStoreFields.find({dataStoreId: this._id}, {sort: {order: 1}});
     }
   }
 });
@@ -17,7 +17,7 @@ Template.DataStoreFieldList.events({
     var instance = Template.instance(),
       order = parseInt(instance.$(".sortable-table-row").length || 0) + 1;
 
-    DataStoreFields.insert({
+    Collections.DataStoreFields.insert({
       title: "New Field",
       dataKey: "new_field",
       type: FieldTypes.string,
@@ -50,7 +50,7 @@ Template.DataStoreFieldList.events({
       ],
       callback: function (btn) {
         if(btn == "Delete"){
-          DataStoreFields.remove(field._id, function (error, response) {
+          Collections.DataStoreFields.remove(field._id, function (error, response) {
             Dialog.hide();
             if(error){
               Meteor.log.error("Delete Field failed: " + error.message);
@@ -81,7 +81,7 @@ Template.DataStoreFieldList.events({
       }
     }
 
-    DataStoreFields.update(fieldId, update, function (error) {
+    Collections.DataStoreFields.update(fieldId, update, function (error) {
       if(error){
         Meteor.log.error("DataStore Field update failed: " + error.message);
         Dialog.error("DataStore Field update failed: " + error.message);
@@ -115,7 +115,7 @@ Template.DataStoreFieldList.rendered = function () {
             oldOrder = parseInt($(el).attr("data-field-order")),
             fieldId = $(el).attr("data-pk");
           if(newOrder != oldOrder){
-            DataStoreFields.update(fieldId, {$set: {order: newOrder}}, function (error, response) {
+            Collections.DataStoreFields.update(fieldId, {$set: {order: newOrder}}, function (error, response) {
               if(error){
                 Meteor.log.error("DataStore Field order update failed: " + error.message);
                 Dialog.error("DataStore Field order update failed: " + error.message);

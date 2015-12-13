@@ -3,4 +3,4 @@
  * This is schema-less
  * @type {Mongo.Collection}
  */
-LogMessages = new Mongo.Collection("log_messages");
+Collections.LogMessages = new Mongo.Collection("log_messages");

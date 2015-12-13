@@ -25,7 +25,7 @@ Template.TestCaseStepAction.created = function () {
 
   instance.autorun(function () {
     var data = Template.currentData(),
-      sourceStep = TestCaseSteps.findOne({
+      sourceStep = Collections.TestCaseSteps.findOne({
         testCaseRoleId: data.testCaseRoleId,
         order: {$lt: data.order},
         type: {$in: [TestCaseStepTypes.node, TestCaseStepTypes.action]}
@@ -39,8 +39,8 @@ Template.TestCaseStepAction.created = function () {
 
       // if there's a value for this step, validate that the action is available on the node present
       if(stepData && stepData.actionId && sourceStep.data.nodeId){
-        var action = Actions.findOne({staticId: stepData.actionId, projectVersionId: data.projectVersionId}),
-          node = Nodes.findOne({staticId: sourceStep.data.nodeId, projectVersionId: data.projectVersionId});
+        var action = Collections.Actions.findOne({staticId: stepData.actionId, projectVersionId: data.projectVersionId}),
+          node = Collections.Nodes.findOne({staticId: sourceStep.data.nodeId, projectVersionId: data.projectVersionId});
         if(action){
           if(!(action.nodeId == sourceStep.data.nodeId || _.contains(node.navMenus, action.nodeId))){
             data.error.set("This action specified is not available on the current node");

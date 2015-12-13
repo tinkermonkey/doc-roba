@@ -31,18 +31,18 @@ Schemas.ProjectVersion = new SimpleSchema({
     autoValue: autoValueModifiedBy
   }
 });
-ProjectVersions = new Mongo.Collection("project_versions");
-ProjectVersions.attachSchema(Schemas.ProjectVersion);
-ProjectVersions.allow({
+Collections.ProjectVersions = new Mongo.Collection("project_versions");
+Collections.ProjectVersions.attachSchema(Schemas.ProjectVersion);
+Collections.ProjectVersions.allow({
   insert: allowIfAuthenticated,
   update: allowIfAuthenticated,
   remove: allowIfAuthenticated,
   fetch: []
 });
-ProjectVersions.deny({
+Collections.ProjectVersions.deny({
   insert: allowIfAdmin,
   update: allowIfAdmin,
   remove: allowIfAdmin,
   fetch: ['projectId']
 });
-trackChanges(ProjectVersions, "project_versions");
+trackChanges(Collections.ProjectVersions, "project_versions");

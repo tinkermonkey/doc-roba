@@ -10,9 +10,9 @@ Meteor.startup(function () {
   Meteor.publish('nodes', function (projectId, projectVersionId) {
     // check that there is a project role for the current user
     if(this.userId && projectId && projectVersionId){
-      var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
+      var role = Collections.ProjectRoles.findOne({userId: this.userId, projectId: projectId});
       if(role){
-        return Nodes.find({projectVersionId: projectVersionId});
+        return Collections.Nodes.find({projectVersionId: projectVersionId});
       }
     }
     return [];
@@ -20,9 +20,9 @@ Meteor.startup(function () {
   Meteor.publish('actions', function (projectId, projectVersionId) {
     // check that there is a project role for the current user
     if(this.userId && projectId && projectVersionId){
-      var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
+      var role = Collections.ProjectRoles.findOne({userId: this.userId, projectId: projectId});
       if(role){
-        return Actions.find({projectVersionId: projectVersionId});
+        return Collections.Actions.find({projectVersionId: projectVersionId});
       }
     }
     return [];
@@ -33,7 +33,7 @@ Meteor.startup(function () {
    * ============================================================================
    */
   Meteor.publish('driver_commands', function () {
-    return DriverCommands.find();
+    return Collections.DriverCommands.find();
   });
 
   /**
@@ -44,10 +44,10 @@ Meteor.startup(function () {
   Meteor.publish('projects', function () {
     if(this.userId){
       var projectIds = [];
-      ProjectRoles.find({userId: this.userId}).forEach(function (role) {
+      Collections.ProjectRoles.find({userId: this.userId}).forEach(function (role) {
         projectIds.push(role.projectId);
       });
-      return Projects.find({_id: {$in: projectIds }});
+      return Collections.Projects.find({_id: {$in: projectIds }});
     }
     return [];
   });
@@ -55,20 +55,20 @@ Meteor.startup(function () {
     if(this.userId){
       //return ProjectRoles.find({userId: this.userId});
       var projectIds = [];
-      ProjectRoles.find({userId: this.userId}).forEach(function (role) {
+      Collections.ProjectRoles.find({userId: this.userId}).forEach(function (role) {
         projectIds.push(role.projectId);
       });
-      return ProjectRoles.find({projectId: {$in: projectIds }});
+      return Collections.ProjectRoles.find({projectId: {$in: projectIds }});
     }
     return [];
   });
   Meteor.publish('project_versions', function () {
     if(this.userId){
       var projectIds = [];
-      ProjectRoles.find({userId: this.userId}).forEach(function (role) {
+      Collections.ProjectRoles.find({userId: this.userId}).forEach(function (role) {
         projectIds.push(role.projectId);
       });
-      return ProjectVersions.find({projectId: {$in: projectIds }});
+      return Collections.ProjectVersions.find({projectId: {$in: projectIds }});
     }
     return [];
   });
@@ -76,7 +76,7 @@ Meteor.startup(function () {
     if(this.userId){
       var projectIds = [],
         limit = limit || 25;
-      ProjectRoles.find({userId: this.userId}).forEach(function (role) {
+      Collections.ProjectRoles.find({userId: this.userId}).forEach(function (role) {
         projectIds.push(role.projectId);
       });
       return RecordChanges.find({projectId: {$in: projectIds}}, {limit: limit});
@@ -92,9 +92,9 @@ Meteor.startup(function () {
   Meteor.publish('user_types', function (projectId, projectVersionId) {
     // check that there is a project role for the current user
     if(this.userId && projectId && projectVersionId){
-      var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
+      var role = Collections.ProjectRoles.findOne({userId: this.userId, projectId: projectId});
       if(role){
-        return Nodes.find({projectVersionId: projectVersionId, type: NodeTypes.userType});
+        return Collections.Nodes.find({projectVersionId: projectVersionId, type: NodeTypes.userType});
       }
     }
     return [];
@@ -102,9 +102,9 @@ Meteor.startup(function () {
   Meteor.publish('platforms', function (projectId, projectVersionId) {
     // check that there is a project role for the current user
     if(this.userId && projectId && projectVersionId){
-      var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
+      var role = Collections.ProjectRoles.findOne({userId: this.userId, projectId: projectId});
       if(role){
-        return Nodes.find({projectVersionId: projectVersionId, type: NodeTypes.platform});
+        return Collections.Nodes.find({projectVersionId: projectVersionId, type: NodeTypes.platform});
       }
     }
     return [];
@@ -118,9 +118,9 @@ Meteor.startup(function () {
   Meteor.publish('servers', function (projectId, projectVersionId) {
     // check that there is a project role for the current user
     if(this.userId && projectId && projectVersionId){
-      var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
+      var role = Collections.ProjectRoles.findOne({userId: this.userId, projectId: projectId});
       if(role){
-        return Servers.find({projectVersionId: projectVersionId});
+        return Collections.Servers.find({projectVersionId: projectVersionId});
       }
     }
     return [];
@@ -128,9 +128,9 @@ Meteor.startup(function () {
   Meteor.publish('server', function (projectId, projectVersionId, serverId) {
     // check that there is a project role for the current user
     if(this.userId && projectId && projectVersionId){
-      var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
+      var role = Collections.ProjectRoles.findOne({userId: this.userId, projectId: projectId});
       if(role){
-        return Servers.find({projectVersionId: projectVersionId, staticId: serverId});
+        return Collections.Servers.find({projectVersionId: projectVersionId, staticId: serverId});
       }
     }
     return [];
@@ -138,9 +138,9 @@ Meteor.startup(function () {
   Meteor.publish('test_systems', function (projectId, projectVersionId) {
     // check that there is a project role for the current user
     if(this.userId && projectId && projectVersionId){
-      var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
+      var role = Collections.ProjectRoles.findOne({userId: this.userId, projectId: projectId});
       if(role){
-        return TestSystems.find({projectVersionId: projectVersionId});
+        return Collections.TestSystems.find({projectVersionId: projectVersionId});
       }
     }
     return [];
@@ -148,9 +148,9 @@ Meteor.startup(function () {
   Meteor.publish('test_system', function (projectId, projectVersionId, testSystemId) {
     // check that there is a project role for the current user
     if(this.userId && projectId && projectVersionId){
-      var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
+      var role = Collections.ProjectRoles.findOne({userId: this.userId, projectId: projectId});
       if(role){
-        return TestSystems.find({projectVersionId: projectVersionId, staticId: testSystemId});
+        return Collections.TestSystems.find({projectVersionId: projectVersionId, staticId: testSystemId});
       }
     }
     return [];
@@ -158,9 +158,9 @@ Meteor.startup(function () {
   Meteor.publish('test_agents', function (projectId, projectVersionId) {
     // check that there is a project role for the current user
     if(this.userId && projectId && projectVersionId){
-      var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
+      var role = Collections.ProjectRoles.findOne({userId: this.userId, projectId: projectId});
       if(role){
-        return TestAgents.find({projectVersionId: projectVersionId});
+        return Collections.TestAgents.find({projectVersionId: projectVersionId});
       }
     }
     return [];
@@ -168,9 +168,9 @@ Meteor.startup(function () {
   Meteor.publish('test_agent', function (projectId, projectVersionId, testAgentId) {
     // check that there is a project role for the current user
     if(this.userId && projectId && projectVersionId){
-      var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
+      var role = Collections.ProjectRoles.findOne({userId: this.userId, projectId: projectId});
       if(role){
-        return TestAgents.find({projectVersionId: projectVersionId, staticId: testAgentId});
+        return Collections.TestAgents.find({projectVersionId: projectVersionId, staticId: testAgentId});
       }
     }
     return [];

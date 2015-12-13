@@ -9,7 +9,7 @@ Template.TestCaseDashboard.helpers({
   },
   testCase: function () {
     if(this.query && this.query.testCaseId){
-      return TestCases.findOne(this.query.testCaseId);
+      return Collections.TestCases.findOne(this.query.testCaseId);
     }
   }
 });

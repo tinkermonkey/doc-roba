@@ -1,4 +1,4 @@
-if (Nodes.find().count() === 0) {
+if (Collections.Nodes.find().count() === 0) {
   Meteor.log.info('No data found, executing data fixture');
 
   // Create a user
@@ -17,36 +17,36 @@ if (Nodes.find().count() === 0) {
   }
 
   // Create a project
-  var project1 = Projects.findOne({title: "Demo Project"});
+  var project1 = Collections.Projects.findOne({title: "Demo Project"});
   if(!project1){
     Meteor.log.info("Fixture: Creating Project");
-    Projects.insert({
+    Collections.Projects.insert({
       title: "Demo Project",
       owner: user1._id,
       createdBy: user1._id,
       modifiedBy: user1._id
     });
-    project1 = Projects.findOne({title: "Demo Project"});
+    project1 = Collections.Projects.findOne({title: "Demo Project"});
   }
 
   // Create a project version
-  var project1Version1 = ProjectVersions.findOne({projectId: project1._id});
+  var project1Version1 = Collections.ProjectVersions.findOne({projectId: project1._id});
   if(!project1Version1){
     Meteor.log.info("Fixture: Creating Project Version");
-    ProjectVersions.insert({
+    Collections.ProjectVersions.insert({
       projectId: project1._id,
       version: "0.1",
       createdBy: user1._id,
       modifiedBy: user1._id
     });
-    project1Version1 = ProjectVersions.findOne({projectId: project1._id});
+    project1Version1 = Collections.ProjectVersions.findOne({projectId: project1._id});
   }
   
   // Add the user's role to the project
-  var project1Version1Role1 = ProjectRoles.findOne({projectId: project1._id, userId: user1._id});
+  var project1Version1Role1 = Collections.ProjectRoles.findOne({projectId: project1._id, userId: user1._id});
   if(!project1Version1Role1){
     Meteor.log.info("Fixture: Creating Project Role");
-    ProjectRoles.insert({
+    Collections.ProjectRoles.insert({
       projectId: project1._id,
       userId: user1._id,
       name: user1.profile.name,
@@ -55,7 +55,7 @@ if (Nodes.find().count() === 0) {
       createdBy: user1._id,
       modifiedBy: user1._id
     });
-    project1Version1Role1 = ProjectRoles.findOne({projectId: project1._id, userId: user1._id});
+    project1Version1Role1 = Collections.ProjectRoles.findOne({projectId: project1._id, userId: user1._id});
   }
 
   // start with the list of nodes
@@ -154,8 +154,8 @@ if (Nodes.find().count() === 0) {
   var addNode = function (node, parentId, projectId, versionId, userId) {
     // insert the node
     console.log("Inserting node: ", node.title, parentId, projectId, versionId, userId );
-    var parent = Nodes.findOne({staticId: parentId, projectVersionId: versionId});
-      nodeId = Nodes.insert({
+    var parent = Collections.Nodes.findOne({staticId: parentId, projectVersionId: versionId});
+      nodeId = Collections.Nodes.insert({
         title: node.title,
         type: node.type,
         parentId: parentId,
@@ -168,7 +168,7 @@ if (Nodes.find().count() === 0) {
     });
 
     // get the static id to link the nodes correctly
-    var newNode = Nodes.findOne(nodeId);
+    var newNode = Collections.Nodes.findOne(nodeId);
 
     if(node.children) {
       _.each(node.children, function (d) {
@@ -181,22 +181,22 @@ if (Nodes.find().count() === 0) {
   addNode(rootNode, null, project1._id, project1Version1._id, user1._id);
 
   // Create some fields for the user types
-  var userTypes = Nodes.find({type: NodeTypes.userType, projectId: project1._id, projectVersionId: project1Version1._id});
+  var userTypes = Collections.Nodes.find({type: NodeTypes.userType, projectId: project1._id, projectVersionId: project1Version1._id});
   userTypes.forEach(function (userTypeNode) {
     // locate the data store
-    var dataStore = DataStores.findOne({dataKey: userTypeNode._id});
+    var dataStore = Collections.DataStores.findOne({dataKey: userTypeNode._id});
 
     if(dataStore){
       // add some fields
       var fields = ["Email", "Password", "Name", "Enrolled"];
       _.each(fields, function (field, fieldIndex) {
         console.log("Fixture: Adding field", field, "to user type", userTypeNode.title);
-        var check = DataStoreFields.findOne({
+        var check = Collections.DataStoreFields.findOne({
           title: field,
           dataStoreId: dataStore._id
         });
         if(!check){
-          DataStoreFields.insert({
+          Collections.DataStoreFields.insert({
             title: field,
             dataKey: Util.dataKey(field),
             type: FieldTypes.string,
@@ -215,10 +215,10 @@ if (Nodes.find().count() === 0) {
   });
 
   // Create a server record
-  var project1Server1 = Servers.findOne({projectVersionId: project1Version1._id, title: "Localhost"});
+  var project1Server1 = Collections.Servers.findOne({projectVersionId: project1Version1._id, title: "Localhost"});
   if(!project1Server1){
     Meteor.log.info("Fixture: Creating Project Server");
-    Servers.insert({
+    Collections.Servers.insert({
       projectId: project1._id,
       projectVersionId: project1Version1._id,
       title: "Localhost",
@@ -227,14 +227,14 @@ if (Nodes.find().count() === 0) {
       createdBy: user1._id,
       modifiedBy: user1._id
     });
-    project1Server1 = Servers.findOne({projectVersionId: project1Version1._id, title: "Localhost"});
+    project1Server1 = Collections.Servers.findOne({projectVersionId: project1Version1._id, title: "Localhost"});
   }
 
   // Create a test-system
-  var project1TestSystem1 = TestSystems.findOne({projectVersionId: project1Version1._id, title: "Localhost"});
+  var project1TestSystem1 = Collections.TestSystems.findOne({projectVersionId: project1Version1._id, title: "Localhost"});
   if(!project1TestSystem1){
     Meteor.log.info("Fixture: Creating Project Test System");
-    TestSystems.insert({
+    Collections.TestSystems.insert({
       projectId: project1._id,
       projectVersionId: project1Version1._id,
       title: "Localhost",
@@ -243,7 +243,7 @@ if (Nodes.find().count() === 0) {
       createdBy: user1._id,
       modifiedBy: user1._id
     });
-    project1TestSystem1 = Servers.findOne({projectVersionId: project1Version1._id, title: "Localhost"});
+    project1TestSystem1 = Collections.Servers.findOne({projectVersionId: project1Version1._id, title: "Localhost"});
   }
 
   // Create a set of user-agents
@@ -270,36 +270,36 @@ if (Nodes.find().count() === 0) {
   }
 
   // Create a project
-  var project2 = Projects.findOne({title: "Another Project"});
+  var project2 = Collections.Projects.findOne({title: "Another Project"});
   if(!project2){
     Meteor.log.info("Fixture: Creating Project");
-    Projects.insert({
+    Collections.Projects.insert({
       title: "Another Project",
       owner: user2._id,
       createdBy: user2._id,
       modifiedBy: user2._id
     });
-    project2 = Projects.findOne({title: "Another Project"});
+    project2 = Collections.Projects.findOne({title: "Another Project"});
   }
 
   // Create a project version
-  var project2Version1 = ProjectVersions.findOne({projectId: project2._id});
+  var project2Version1 = Collections.ProjectVersions.findOne({projectId: project2._id});
   if(!project2Version1){
     Meteor.log.info("Fixture: Creating Project Version");
-    ProjectVersions.insert({
+    Collections.ProjectVersions.insert({
       projectId: project2._id,
       version: "1.0",
       createdBy: user2._id,
       modifiedBy: user2._id
     });
-    project2Version1 = ProjectVersions.findOne({projectId: project2._id});
+    project2Version1 = Collections.ProjectVersions.findOne({projectId: project2._id});
   }
 
   // Add the user's role to the project
-  var project2Version1Role1 = ProjectRoles.findOne({projectId: project2._id, userId: user2._id});
+  var project2Version1Role1 = Collections.ProjectRoles.findOne({projectId: project2._id, userId: user2._id});
   if(!project2Version1Role1){
     Meteor.log.info("Fixture: Creating Project Role");
-    ProjectRoles.insert({
+    Collections.ProjectRoles.insert({
       projectId: project2._id,
       userId: user2._id,
       name: user2.profile.name,
@@ -308,14 +308,14 @@ if (Nodes.find().count() === 0) {
       createdBy: user2._id,
       modifiedBy: user2._id
     });
-    project2Version1Role1 = ProjectRoles.findOne({projectId: project2._id, userId: user2._id});
+    project2Version1Role1 = Collections.ProjectRoles.findOne({projectId: project2._id, userId: user2._id});
   }
 
   // Add the first user to the 2nd project as a tester
-  var project2Version1Role2 = ProjectRoles.findOne({projectId: project2._id, userId: user1._id});
+  var project2Version1Role2 = Collections.ProjectRoles.findOne({projectId: project2._id, userId: user1._id});
   if(!project2Version1Role2){
     Meteor.log.info("Fixture: Creating Project Role");
-    ProjectRoles.insert({
+    Collections.ProjectRoles.insert({
       projectId: project2._id,
       userId: user1._id,
       name: user1.profile.name,
@@ -324,7 +324,7 @@ if (Nodes.find().count() === 0) {
       createdBy: user2._id,
       modifiedBy: user2._id
     });
-    project2Version1Role2 = ProjectRoles.findOne({projectId: project2._id, userId: user2._id});
+    project2Version1Role2 = Collections.ProjectRoles.findOne({projectId: project2._id, userId: user2._id});
   }
 
   // start with the list of nodes

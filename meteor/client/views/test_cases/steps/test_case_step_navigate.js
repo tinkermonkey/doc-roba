@@ -33,12 +33,12 @@ Template.TestCaseStepNavigate.created = function () {
 
   instance.autorun(function () {
     var data = Template.currentData(),
-      sourceStep = TestCaseSteps.findOne({
+      sourceStep = Collections.TestCaseSteps.findOne({
         testCaseRoleId: data.testCaseRoleId,
         order: {$lt: data.order},
         type: {$in: [TestCaseStepTypes.node, TestCaseStepTypes.action]}
       }, {sort: {order: -1}}),
-      destinationStep = TestCaseSteps.findOne({
+      destinationStep = Collections.TestCaseSteps.findOne({
         testCaseRoleId: data.testCaseRoleId,
         order: {$gt: data.order}
       }, {sort: {order: 1}}),
@@ -76,7 +76,7 @@ Template.TestCaseStepNavigate.created = function () {
         stepData.sourceId = sourceNode;
         stepData.destinationId = destinationNode;
         console.log("Saving navigation step data: ", stepData, data.data);
-        TestCaseSteps.update(data._id, {$set: {data: stepData}}, function (error) {
+        Collections.TestCaseSteps.update(data._id, {$set: {data: stepData}}, function (error) {
           if(error){
             Meteor.log.error("Failed to update navigation step: " + error.message);
             Dialog.error("Failed to update navigation step: " + error.message);
@@ -84,8 +84,8 @@ Template.TestCaseStepNavigate.created = function () {
         });
       }
 
-      var sourceNodeRecord = Nodes.findOne({projectVersionId: data.projectVersionId, staticId: sourceNode}),
-        destinationNodeRecord = Nodes.findOne({projectVersionId: data.projectVersionId, staticId: destinationNode});
+      var sourceNodeRecord = Collections.Nodes.findOne({projectVersionId: data.projectVersionId, staticId: sourceNode}),
+        destinationNodeRecord = Collections.Nodes.findOne({projectVersionId: data.projectVersionId, staticId: destinationNode});
       if(sourceNodeRecord && destinationNodeRecord){
         // ready to create the route
         try{

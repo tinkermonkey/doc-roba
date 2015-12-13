@@ -21,7 +21,7 @@ Template.TestRunTemplate.events({
         update["$set"][dataKey] = newValue;
       }
 
-      TestRunTemplates.update(templateId, update, function (error) {
+      Collections.TestRunTemplates.update(templateId, update, function (error) {
         if(error){
           Meteor.log.error("Failed to update test run template value: " + error.message);
           console.log(update);

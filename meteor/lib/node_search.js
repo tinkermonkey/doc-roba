@@ -34,7 +34,7 @@ NodeSearch = {
       searchResults = [];
 
     // go through each node and score it against the current url
-    Nodes.find({projectVersionId: projectVersionId, type: {$in: [NodeTypes.page, NodeTypes.view]}}).forEach(function (node) {
+    Collections.Nodes.find({projectVersionId: projectVersionId, type: {$in: [NodeTypes.page, NodeTypes.view]}}).forEach(function (node) {
       //console.log("Checking node ", node._id, node.url, node.pageTitle);
       // initialize the score
       var result = {
@@ -83,7 +83,7 @@ NodeSearch = {
       searchResults = [];
 
     // go through each node and score it against the current url
-    Nodes.find({
+    Collections.Nodes.find({
       projectVersionId: projectVersionId,
       type: {$in: [NodeTypes.page, NodeTypes.view]},
       $or: [
@@ -131,7 +131,7 @@ NodeSearch = {
     check(instance, Blaze.TemplateInstance);
 
     var data = instance.data,
-      node = Nodes.findOne({staticId: data.adventure.lastKnownNode});
+      node = Collections.Nodes.findOne({staticId: data.adventure.lastKnownNode});
 
     // check the local url
     if(node && node.url && data.state && data.state.url){

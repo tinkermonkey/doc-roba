@@ -11,7 +11,7 @@ DSUtil = {
    * Fetch a simple schema by _id
    */
   getSimpleSchemaById: function (dataStoreId) {
-    var ds = DataStores.findOne({_id: dataStoreId});
+    var ds = Collections.DataStores.findOne({_id: dataStoreId});
     if(ds){
       //if(!DataStoreSchemas[ds._id]){
         DataStoreSchemas[ds._id] = DSUtil.simpleSchema(ds.schema);
@@ -24,7 +24,7 @@ DSUtil = {
    * Fetch a simple schema by dataStoreKey
    */
   getSimpleSchemaByKey: function (dataStoreKey) {
-    var ds = DataStores.findOne({dataKey: dataStoreKey});
+    var ds = Collections.DataStores.findOne({dataKey: dataStoreKey});
     if(ds){
       //if(!DataStoreSchemas[ds._id]){
         DataStoreSchemas[ds._id] = DSUtil.simpleSchema(ds.schema);
@@ -55,7 +55,7 @@ DSUtil = {
           // Create the schema if it doesn't exist
           if(!DataStoreSchemas[field.customFieldType]){
             //console.log("Generating child schema: ", field.customFieldType);
-            var childStore = DataStores.findOne(field.customFieldType);
+            var childStore = Collections.DataStores.findOne(field.customFieldType);
             if(childStore){
               DataStoreSchemas[field.customFieldType] = DSUtil.simpleSchema(childStore.schema);
             } else {
@@ -90,8 +90,8 @@ DSUtil = {
    * @param dsId The datastore ID
    */
   flexSchema: function (dsId) {
-    var store = DataStores.findOne(dsId);
-    store.fields = DataStoreFields.find({dataStoreId: dsId}, {sort: {order: 1}}).fetch();
+    var store = Collections.DataStores.findOne(dsId);
+    store.fields = Collections.DataStoreFields.find({dataStoreId: dsId}, {sort: {order: 1}}).fetch();
 
     _.each(store.fields, function (field) {
       if(field.type === FieldTypes.custom){
@@ -119,9 +119,9 @@ DSUtil = {
    */
   renderRow: function (rowId) {
     if(rowId){
-      var row = DataStoreRows.findOne(rowId);
+      var row = Collections.DataStoreRows.findOne(rowId);
       if(row){
-        var dataStore = DataStores.findOne(row.dataStoreId);
+        var dataStore = Collections.DataStores.findOne(row.dataStoreId);
         if(dataStore && row){
           var renderer = DSUtil.rowRenderer(dataStore);
           return renderer(row);
@@ -137,7 +137,7 @@ DSUtil = {
    */
   getRenderedDataStoreRows: function (dataKey, query) {
     if(dataKey) {
-      var dataStore = DataStores.findOne({dataKey: dataKey});
+      var dataStore = Collections.DataStores.findOne({dataKey: dataKey});
       if (dataStore) {
         // assemble the query
         query = query || {};
@@ -145,7 +145,7 @@ DSUtil = {
 
         // Get the rows and the renderer
         var renderer = DSUtil.rowRenderer(dataStore);
-        return DataStoreRows.find(query).map(function (row) {
+        return Collections.DataStoreRows.find(query).map(function (row) {
           var text = renderer(row);
           return {
             value: row._id,

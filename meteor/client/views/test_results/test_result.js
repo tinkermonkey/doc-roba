@@ -3,11 +3,11 @@
  */
 Template.TestResult.helpers({
   resultWithCase: function () {
-    this.testCase = TestCases.findOne({projectVersionId: this.projectVersionId, staticId: this.testCaseId});
+    this.testCase = Collections.TestCases.findOne({projectVersionId: this.projectVersionId, staticId: this.testCaseId});
     return this;
   },
   roleResults: function () {
-    return TestResultRoles.find({testResultId: this._id});
+    return Collections.TestResultRoles.find({testResultId: this._id});
   }
 });
 

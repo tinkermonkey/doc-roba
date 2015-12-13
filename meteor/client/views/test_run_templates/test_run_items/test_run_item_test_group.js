@@ -3,7 +3,7 @@
  */
 Template.TestRunItemTestGroup.helpers({
   getTestGroup: function () {
-    return TestGroups.findOne({staticId: this.config.testGroupId, projectVersionId: this.projectVersionId});
+    return Collections.TestGroups.findOne({staticId: this.config.testGroupId, projectVersionId: this.projectVersionId});
   },
   getBreadcrumbs: function () {
     return Template.instance().getBreadcrumbs(this, [this.title]).reverse();
@@ -34,7 +34,7 @@ Template.TestRunItemTestGroup.created = function () {
   instance.getBreadcrumbs = function (item, breadcrumbs) {
     var parentId = item.testGroupId || item.parentGroupId;
     if(parentId){
-      var parent = TestGroups.findOne({staticId: parentId, projectVersionId: item.projectVersionId});
+      var parent = Collections.TestGroups.findOne({staticId: parentId, projectVersionId: item.projectVersionId});
       if(parent){
         breadcrumbs = breadcrumbs.concat(instance.getBreadcrumbs(parent, [parent.title]));
       }
@@ -47,13 +47,13 @@ Template.TestRunItemTestGroup.created = function () {
     var tests = [];
 
     // get the tests
-    TestCases.find({testGroupId: group.staticId, projectVersionId: group.projectVersionId}, {sort: {title: 1}}).forEach(function (test) {
+    Collections.TestCases.find({testGroupId: group.staticId, projectVersionId: group.projectVersionId}, {sort: {title: 1}}).forEach(function (test) {
       test.breadcrumbs = instance.getBreadcrumbs(test, [test.title]).reverse();
       tests.push(test);
     });
 
     // Get the tests for sub-groups
-    TestGroups.find({parentGroupId: group.staticId, projectVersionId: group.projectVersionId}, {sort: {title: 1}}).forEach(function (child) {
+    Collections.TestGroups.find({parentGroupId: group.staticId, projectVersionId: group.projectVersionId}, {sort: {title: 1}}).forEach(function (child) {
       tests = tests.concat(instance.getTests(child));
     });
 

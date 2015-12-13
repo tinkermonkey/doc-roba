@@ -3,12 +3,12 @@
  */
 Template.TestCaseStepWait.helpers({
   getRole: function () {
-    return TestCaseRoles.findOne({staticId: this.testCaseRoleId, projectVersionId: this.projectVersionId});
+    return Collections.TestCaseRoles.findOne({staticId: this.testCaseRoleId, projectVersionId: this.projectVersionId});
   },
   waitPartners: function () {
     if(this.data && this.data.waitId){
       var stepIdMap = [], // keep a handy lookup of the step Is so we know what to remove
-        waitPartnerIds = _.without(TestCaseSteps.find({
+        waitPartnerIds = _.without(Collections.TestCaseSteps.find({
           "data.waitId": this.data.waitId,
           projectVersionId: this.projectVersionId
         }).map(function (step) {
@@ -16,7 +16,7 @@ Template.TestCaseStepWait.helpers({
           return step.testCaseRoleId
         }), this.testCaseRoleId);
 
-      return TestCaseRoles.find({
+      return Collections.TestCaseRoles.find({
         staticId: {$in: waitPartnerIds},
         projectVersionId: this.projectVersionId
       }).map(function (role) {
@@ -45,7 +45,7 @@ Template.TestCaseStepWait.created = function () {
   // check for errors and manage changes to the waitId
   instance.autorun(function () {
     var data = Template.currentData(),
-      roles = TestCaseRoles.find({
+      roles = Collections.TestCaseRoles.find({
         staticId: {$ne: data.testCaseRoleId },
         testCaseId: data.testCaseId,
         projectVersionId: data.projectVersionId
@@ -89,7 +89,7 @@ Template.TestCaseStepWait.created = function () {
 
           if(!keep && removeId){
             console.log("Update Step remove waitId", removeId);
-            TestCaseSteps.update(removeId, {$unset: {"data.waitId": true }}, function (error) {
+            Collections.TestCaseSteps.update(removeId, {$unset: {"data.waitId": true }}, function (error) {
               if(error){
                 Meteor.log.error("Failed to update step: " + error.message);
                 Dialog.error("Failed to update step: " + error.message);
@@ -204,10 +204,10 @@ Template.TestCaseStepWait.rendered = function () {
       // do the actual updating
       _.each(updates, function (update) {
         if(update.waitId){
-          var stepData = TestCaseSteps.findOne(update.stepId).data || {};
+          var stepData = Collections.TestCaseSteps.findOne(update.stepId).data || {};
           stepData.waitId = update.waitId;
           console.log("Update Step waitId", update.stepId, {$set: {data: stepData }});
-          TestCaseSteps.update(update.stepId, {$set: {data: stepData }}, function (error) {
+          Collections.TestCaseSteps.update(update.stepId, {$set: {data: stepData }}, function (error) {
             if(error){
               Meteor.log.error("Failed to update step: " + error.message);
               Dialog.error("Failed to update step: " + error.message);

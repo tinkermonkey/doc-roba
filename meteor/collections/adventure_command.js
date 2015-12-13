@@ -49,14 +49,14 @@ Schemas.AdventureCommand = new SimpleSchema({
     denyUpdate: true
   }
 });
-AdventureCommands = new Mongo.Collection("adventure_commands");
-AdventureCommands.attachSchema(Schemas.AdventureCommand);
-AdventureCommands.allow({
+Collections.AdventureCommands = new Mongo.Collection("adventure_commands");
+Collections.AdventureCommands.attachSchema(Schemas.AdventureCommand);
+Collections.AdventureCommands.allow({
   insert: allowIfAuthenticated,
   update: allowIfAuthenticated,
   remove: allowIfAuthenticated
 });
-AdventureCommands.deny({
+Collections.AdventureCommands.deny({
   insert: allowIfTester,
   update: allowIfTester,
   remove: allowIfTester,

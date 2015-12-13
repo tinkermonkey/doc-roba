@@ -1,4 +1,19 @@
 /**
+ * npm packages
+ */
+fs            = Npm.require("fs");
+path          = Npm.require("path");
+childProcess  = Npm.require("child_process");
+zip           = Npm.require("node-zip");
+
+/**
+ * Top level configuration data
+ */
+DocRoba = {
+  rootPath: fs.realpathSync(process.env.PWD)
+};
+
+/**
  * Expose these for the client to call
  */
 Meteor.startup(function () {
@@ -15,20 +30,20 @@ Meteor.startup(function () {
     updateNodePlatform: function () {
       var setData = function (parentId, versionId, userTypeId, platformId) {
         console.log("setData: ", parentId, versionId, userTypeId, platformId);
-        Nodes.find({parentId: parentId, projectVersionId: versionId}).forEach(function (node) {
+        Collections.Nodes.find({parentId: parentId, projectVersionId: versionId}).forEach(function (node) {
           console.log("setData Update: ", node._id, userTypeId, platformId);
-          Nodes.update(node._id, {$set: {userTypeId: userTypeId, platformId: platformId}});
+          Collections.Nodes.update(node._id, {$set: {userTypeId: userTypeId, platformId: platformId}});
           setData(node.staticId, versionId, userTypeId, platformId);
         });
       };
-      Nodes.find({type: NodeTypes.userType}).forEach(function (userType) {
+      Collections.Nodes.find({type: NodeTypes.userType}).forEach(function (userType) {
         // get all of the childNodes
-        Nodes.find({parentId: userType.staticId, projectVersionId: userType.projectVersionId}).forEach(function (node) {
+        Collections.Nodes.find({parentId: userType.staticId, projectVersionId: userType.projectVersionId}).forEach(function (node) {
           var platformId;
           if(node.type == NodeTypes.platform){
             platformId = node.staticId;
           }
-          Nodes.update(node._id, {$set: {userTypeId: userType.staticId}});
+          Collections.Nodes.update(node._id, {$set: {userTypeId: userType.staticId}});
           setData(node.staticId, userType.projectVersionId, userType.staticId, platformId);
         })
       });
@@ -47,20 +62,20 @@ Meteor.startup(function () {
 
       Meteor.log.debug("deleteNode: " + nodeId);
       if(nodeId){
-        var node = Nodes.findOne(nodeId),
+        var node = Collections.Nodes.findOne(nodeId),
           actionRemoveList = [];
 
         check(node, Object);
         check(node._id, String);
 
         // Get all of the from this node
-        Actions.find({ nodeId: node.staticId, projectVersionId: node.projectVersionId }).forEach(function (a) {
+        Collections.Actions.find({ nodeId: node.staticId, projectVersionId: node.projectVersionId }).forEach(function (a) {
           RecordChanges.remove({collection: "actions", recordId: a._id});
           actionRemoveList.push(a._id);
         });
 
         // Find all of the actions which lead to this node and remove the routes
-        Actions.find({ "routes.nodeId": node.staticId, projectVersionId: node.projectVersionId  }).forEach(function (a) {
+        Collections.Actions.find({ "routes.nodeId": node.staticId, projectVersionId: node.projectVersionId  }).forEach(function (a) {
           // if the action only leads
           var otherRoutes = a.routes.filter(function (route) { return route.nodeId !== node.staticId});
           if(!otherRoutes.length){
@@ -68,17 +83,17 @@ Meteor.startup(function () {
             actionRemoveList.push(a._id);
           } else {
             // update the action to remove the route
-            Actions.update({_id: a._id}, { $pull: { routes: { nodeId: node.staticId } } });
+            Collections.Actions.update({_id: a._id}, { $pull: { routes: { nodeId: node.staticId } } });
           }
         });
 
         // remove all of the actions which link to this node
-        Actions.remove({ _id: {$in: actionRemoveList} });
+        Collections.Actions.remove({ _id: {$in: actionRemoveList} });
 
         // Remove all of the documentation for this node
 
         // Remove the node itself
-        Nodes.remove({_id: nodeId});
+        Collections.Nodes.remove({_id: nodeId});
 
         // Remove the change history for this node
         RecordChanges.remove({collection: "nodes", recordId: nodeId});
@@ -104,18 +119,18 @@ Meteor.startup(function () {
       check(versionString, String);
 
       // Validate all of the Ids by pulling in the records
-      var sourceVersion = ProjectVersions.findOne(sourceVersionId),
-        project = Projects.findOne(sourceVersion.projectId);
+      var sourceVersion = Collections.ProjectVersions.findOne(sourceVersionId),
+        project = Collections.Projects.findOne(sourceVersion.projectId);
       if(sourceVersion && project){
         // validate that the current user has permission to create a new version
-        var role = ProjectRoles.findOne({projectId: sourceVersion.projectId, userId: userId});
+        var role = Collections.ProjectRoles.findOne({projectId: sourceVersion.projectId, userId: userId});
         if(!role || !(role.role === RoleTypes.admin || role.role === RoleTypes.owner)){
           Meteor.log.error("CreateVersion: user " + userId + " not authorized, " + (role ? role.role : "no role for this project"));
           throw new Meteor.Error("Not Authorized", "You are not authorized to make this change");
         }
 
         // Create the new version record
-        var versionId = ProjectVersions.insert({
+        var versionId = Collections.ProjectVersions.insert({
           projectId: sourceVersion.projectId,
           version: versionString,
           createdBy: userId,
@@ -127,7 +142,7 @@ Meteor.startup(function () {
         }
 
         // Replicate all of the important records from the source version
-        var replicateCollections = [Nodes, Actions];
+        var replicateCollections = [Collections.Nodes, Actions];
         _.each(replicateCollections, function (collection) {
           collection.find({ projectVersionId: sourceVersion._id }).forEach(function (record) {
             var replica = createReplica(record);

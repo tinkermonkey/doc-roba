@@ -77,14 +77,14 @@ Schemas.Adventure = new SimpleSchema({
     denyUpdate: true
   }
 });
-Adventures = new Mongo.Collection("adventures");
-Adventures.attachSchema(Schemas.Adventure);
-Adventures.allow({
+Collections.Adventures = new Mongo.Collection("adventures");
+Collections.Adventures.attachSchema(Schemas.Adventure);
+Collections.Adventures.allow({
   insert: allowIfAuthenticated,
   update: allowIfAuthenticated,
   remove: allowIfAuthenticated
 });
-Adventures.deny({
+Collections.Adventures.deny({
   insert: allowIfTester,
   update: allowIfTester,
   remove: allowIfTester,

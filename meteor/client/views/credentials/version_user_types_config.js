@@ -4,11 +4,11 @@
 Template.VersionUserTypesConfig.helpers({
   userTypes: function () {
     if(this.version && this.version._id){
-      return Nodes.find({projectVersionId: this.version._id, type: NodeTypes.userType}, {sort: {title: 1}});
+      return Collections.Nodes.find({projectVersionId: this.version._id, type: NodeTypes.userType}, {sort: {title: 1}});
     }
   },
   getDataStore: function () {
-    return DataStores.findOne({dataKey: this._id});
+    return Collections.DataStores.findOne({dataKey: this._id});
   }
 });
 
@@ -23,7 +23,7 @@ Template.VersionUserTypesConfig.events({
       update = {$set: {}};
     update["$set"][dataKey] = newValue;
 
-    DataStores.update(dataStoreId, update, function (error) {
+    Collections.DataStores.update(dataStoreId, update, function (error) {
       if(error){
         Meteor.log.error("DataStore update failed: " + error.message);
         Dialog.error("DataStore update failed: " + error.message);

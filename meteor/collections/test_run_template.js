@@ -57,14 +57,14 @@ Schemas.TestRunTemplate = new SimpleSchema({
     denyUpdate: true
   }
 });
-TestRunTemplates = new Mongo.Collection("test_run_templates");
-TestRunTemplates.attachSchema(Schemas.TestRunTemplate);
-TestRunTemplates.allow({
+Collections.TestRunTemplates = new Mongo.Collection("test_run_templates");
+Collections.TestRunTemplates.attachSchema(Schemas.TestRunTemplate);
+Collections.TestRunTemplates.allow({
   insert: allowIfAuthenticated,
   update: allowIfAuthenticated,
   remove: allowIfAuthenticated
 });
-TestRunTemplates.deny({
+Collections.TestRunTemplates.deny({
   insert: allowIfTester,
   update: allowIfTester,
   remove: allowIfTester,

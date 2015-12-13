@@ -89,7 +89,7 @@ TreeActionHandler.prototype.addAction = function (sourceNode, destinationNode) {
       title: 'New Action'
     };
 
-  Actions.insert(actionConfig, function (error, response) {
+  Collections.Actions.insert(actionConfig, function (error, response) {
     if(error){
       console.error("Failed to create Action: ", error);
     } else {
@@ -104,7 +104,7 @@ TreeActionHandler.prototype.addAction = function (sourceNode, destinationNode) {
 TreeActionHandler.prototype.addRoute = function (action, destinationNode) {
   Meteor.log.debug("addRoute: ", action, destinationNode);
 
-  Actions.update({_id: action._id }, {
+  Collections.Actions.update({_id: action._id }, {
     $push: { routes: {
       order: action.routes.length,
       nodeId: destinationNode.staticId,

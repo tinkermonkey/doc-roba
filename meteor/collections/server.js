@@ -51,17 +51,17 @@ Schemas.Server = new SimpleSchema({
     type: Number
   }
 });
-Servers = new Mongo.Collection("servers");
-Servers.attachSchema(Schemas.Server);
-Servers.allow({
+Collections.Servers = new Mongo.Collection("servers");
+Collections.Servers.attachSchema(Schemas.Server);
+Collections.Servers.allow({
   insert: allowIfAuthenticated,
   update: allowIfAuthenticated,
   remove: allowIfAuthenticated
 });
-Servers.deny({
+Collections.Servers.deny({
   insert: allowIfAdmin,
   update: allowIfAdmin,
   remove: allowIfAdmin,
   fetch: ['projectId']
 });
-trackChanges(Servers, "servers");
+trackChanges(Collections.Servers, "servers");

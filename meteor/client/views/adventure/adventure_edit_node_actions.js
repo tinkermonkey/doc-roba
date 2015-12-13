@@ -3,15 +3,15 @@
  */
 Template.AdventureEditNodeActions.helpers({
   getActions: function () {
-    return Actions.find({nodeId: this.staticId, projectVersionId: this.projectVersionId}, {sort: {title: 1}})
+    return Collections.Actions.find({nodeId: this.staticId, projectVersionId: this.projectVersionId}, {sort: {title: 1}})
   },
   getNavMenus: function () {
     var navs = [],
       node = this;
     _.each(node.navMenus, function (navMenuId) {
-      var nav = Nodes.findOne({staticId: navMenuId, projectVersionId: node.projectVersionId});
+      var nav = Collections.Nodes.findOne({staticId: navMenuId, projectVersionId: node.projectVersionId});
       if(nav){
-        nav.actions = Actions.find({nodeId: navMenuId, projectVersionId: node.projectVersionId}, {sort: {title: 1}});
+        nav.actions = Collections.Actions.find({nodeId: navMenuId, projectVersionId: node.projectVersionId}, {sort: {title: 1}});
         navs.push(nav);
       } else {
         Meteor.log.error("NavMenu node not found: ", navMenuID);
@@ -41,7 +41,7 @@ Template.AdventureEditNodeActions.events({
     var node = this;
 
     if(node && node._id){
-      Actions.insert({
+      Collections.Actions.insert({
         projectId: node.projectId,
         projectVersionId: node.projectVersionId,
         nodeId: node.staticId,

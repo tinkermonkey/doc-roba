@@ -3,7 +3,7 @@
  */
 Template.VersionCustomFieldTypes.helpers({
   customTypes: function () {
-    return DataStores.find({
+    return Collections.DataStores.find({
       projectVersionId: this.version._id,
       deleted: false,
       category: DataStoreCategories.userTypeCustom
@@ -19,7 +19,7 @@ Template.VersionCustomFieldTypes.events({
     console.log("Add Custom Type");
     var instance = Template.instance();
     if(instance && instance.data && instance.data.project && instance.data.version){
-      DataStores.insert({
+      Collections.DataStores.insert({
         title: "New Type",
         dataKey: Util.dataKey(DataStoreCategories.userTypeCustom + " New Type"),
         category: DataStoreCategories.userTypeCustom,
@@ -38,7 +38,7 @@ Template.VersionCustomFieldTypes.events({
     console.log("Delete Custom Type");
     var customType = $(event.target).attr("data-store-id");
     if(customType){
-      DataStores.update({_id: customType}, {$set: {deleted: true}}, function (error, response) {
+      Collections.DataStores.update({_id: customType}, {$set: {deleted: true}}, function (error, response) {
         if(error){
           console.error("Custom Type delete failed: ", error);
         } else {
@@ -60,7 +60,7 @@ Template.VersionCustomFieldTypes.rendered = function () {
   updateDataStoreNameEditable(instance);
 
   // Update the tabs if the list of custom types changes
-  DataStores.find({projectVersionId: instance.data.version._id, deleted: false}).observeChanges({
+  Collections.DataStores.find({projectVersionId: instance.data.version._id, deleted: false}).observeChanges({
     added: function () {
       Tabs.init(instance).activateFirst(instance);
       updateDataStoreNameEditable(instance);
@@ -92,7 +92,7 @@ var updateDataStoreNameEditable = function (instance) {
         dataStoreId = $(editedElement).attr("data-pk");
 
       if(dataStoreId){
-        DataStores.update({_id: dataStoreId}, {$set: {title: newValue}});
+        Collections.DataStores.update({_id: dataStoreId}, {$set: {title: newValue}});
       }
 
       setTimeout(function () {

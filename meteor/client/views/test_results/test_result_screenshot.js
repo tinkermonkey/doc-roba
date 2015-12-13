@@ -33,10 +33,10 @@ Template.TestResultScreenshot.helpers({
     }
   },
   getSimilarScreenshots: function () {
-    return Screenshots.similarScreenshots(this);
+    return Collections.Screenshots.similarScreenshots(this);
   },
   getPreviousVersionScreenshots: function () {
-    return Screenshots.previousVersionScreenshots(this);
+    return Collections.Screenshots.previousVersionScreenshots(this);
   }
 });
 
@@ -127,7 +127,7 @@ Template.TestResultScreenshot.events({
       };
 
       // see if the comparison is already loaded
-      var comparison = ScreenshotComparisons.findOne({baseScreenshot: instance.data.screenshot._id, compareScreenshot: screenshot._id});
+      var comparison = Collections.ScreenshotComparisons.findOne({baseScreenshot: instance.data.screenshot._id, compareScreenshot: screenshot._id});
       if(comparison){
         layers[screenshot._id].transform = comparison.result.transform;
       }
@@ -274,7 +274,7 @@ Template.TestResultScreenshot.rendered = function () {
     }
   };
 
-  ScreenshotComparisons.find({baseScreenshot: instance.data.screenshot._id}).observe({
+  Collections.ScreenshotComparisons.find({baseScreenshot: instance.data.screenshot._id}).observe({
     added: updateLayerComparison,
     changed: updateLayerComparison
   });

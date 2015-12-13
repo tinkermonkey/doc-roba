@@ -4,8 +4,8 @@
  * ============================================================================
  */
 // This collection is schema-less because it's just a black box
-AdventureStates = new Mongo.Collection("adventure_states");
-AdventureStates.allow({
+Collections.AdventureStates = new Mongo.Collection("adventure_states");
+Collections.AdventureStates.allow({
   insert: allowIfAuthenticated,
   update: allowIfAuthenticated
 });

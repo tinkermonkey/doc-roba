@@ -3,7 +3,7 @@
  */
 Template.AdventureConsole.helpers({
   getTestSystem: function () {
-    return TestSystems.findOne({staticId: this.adventure.testSystemId, projectVersionId: this.adventure.projectVersionId});
+    return Collections.TestSystems.findOne({staticId: this.adventure.testSystemId, projectVersionId: this.adventure.projectVersionId});
   },
   getFullContext: function () {
     var instance = Template.instance();
@@ -13,7 +13,7 @@ Template.AdventureConsole.helpers({
   getCurrentNode: function () {
     var nodeId = Template.instance().currentNode.get();
     if(nodeId){
-      return Nodes.findOne({ staticId: nodeId, projectVersionId: this.adventure.projectVersionId });
+      return Collections.Nodes.findOne({ staticId: nodeId, projectVersionId: this.adventure.projectVersionId });
     }
   }
 });
@@ -23,7 +23,7 @@ Template.AdventureConsole.helpers({
  */
 Template.AdventureConsole.events({
   "click .btn-unpause-adventure": function (e, instance) {
-    Adventures.update(instance.data.adventure._id, {$set: {status: instance.prePauseStatus || AdventureStatus.awaitingCommand}}, function (error, result) {
+    Collections.Adventures.update(instance.data.adventure._id, {$set: {status: instance.prePauseStatus || AdventureStatus.awaitingCommand}}, function (error, result) {
       if(error){
         Meteor.log.error("Un-Pause failed: " + error.message);
         Dialog.error("Un-Pause failed: " + error.message);
@@ -32,7 +32,7 @@ Template.AdventureConsole.events({
   },
   "click .btn-pause-adventure": function (e, instance) {
     instance.prePauseStatus = instance.data.adventure.status;
-    Adventures.update(instance.data.adventure._id, {$set: {status: AdventureStatus.paused}}, function (error, result) {
+    Collections.Adventures.update(instance.data.adventure._id, {$set: {status: AdventureStatus.paused}}, function (error, result) {
       if(error){
         Meteor.log.error("Pause failed: " + error.message);
         Dialog.error("Pause failed: " + error.message);
@@ -82,7 +82,7 @@ Template.AdventureConsole.rendered = function () {
   Accordion.init(instance);
 
   // pick up any updates to the last known node
-  Adventures.find({_id: instance.data.adventure._id}).observeChanges({
+  Collections.Adventures.find({_id: instance.data.adventure._id}).observeChanges({
     changed: function (id, fields) {
       //console.log("Adventure changed: ", fields);
       if(_.contains(_.keys(fields), "lastKnownNode")){
@@ -96,7 +96,7 @@ Template.AdventureConsole.rendered = function () {
 
   // React to changes in the url
   //console.log("Observing changes for adventure state: ", instance.data.state._id);
-  AdventureStates.find({_id: instance.data.state._id}).observeChanges({
+  Collections.AdventureStates.find({_id: instance.data.state._id}).observeChanges({
     changed: function (id, fields) {
       //console.log("Adventure State changed: ", _.keys(fields));
       if(_.contains(_.keys(fields), "url") || _.contains(_.keys(fields), "title")){

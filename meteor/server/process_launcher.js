@@ -2,11 +2,6 @@
  * Handle the launching of various child processes
  */
 Meteor.startup(function () {
-  // Needed to launch helpers
-  fs                = Npm.require("fs");
-  childProcess      = Npm.require("child_process");
-
-  // Initialize
   ProcessLauncher.init();
 });
 
@@ -21,9 +16,12 @@ ProcessLauncher = {
    * Initialize the Process Launcher
    */
   init: function () {
-    this.baseLogPath       = fs.realpathSync(process.env.PWD) + "/" + Meteor.settings.paths.automation_logs + "/launcher/";
-    this.automationPath    = fs.realpathSync(process.env.PWD) + "/" + Meteor.settings.paths.automation + "/";
-    this.imageAnalysisPath = fs.realpathSync(process.env.PWD) + "/" + Meteor.settings.paths.image_analysis + "/";
+    //this.baseLogPath       = fs.realpathSync(process.env.PWD) + "/" + Meteor.settings.paths.automation_logs + "/launcher/";
+    //this.automationPath    = fs.realpathSync(process.env.PWD) + "/" + Meteor.settings.paths.automation + "/";
+    //this.imageAnalysisPath = fs.realpathSync(process.env.PWD) + "/" + Meteor.settings.paths.image_analysis + "/";
+    this.baseLogPath       = path.join(DocRoba.rootPath, Meteor.settings.paths.automation_logs, "launcher");
+    this.automationPath    = path.join(DocRoba.rootPath, Meteor.settings.paths.automation);
+    this.imageAnalysisPath = path.join(DocRoba.rootPath, Meteor.settings.paths.image_analysis);
 
     Meteor.log.info("ProcessLauncher.init logPath: " + this.baseLogPath);
     Meteor.log.info("ProcessLauncher.init automationPath: " + this.automationPath);

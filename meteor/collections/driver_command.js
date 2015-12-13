@@ -1,4 +1,4 @@
 /**
  * Driver command reference
  */
-DriverCommands = new Meteor.Collection("driver_commands");
+Collections.DriverCommands = new Meteor.Collection("driver_commands");

@@ -4,7 +4,7 @@
 Template.AdventureEditActionForm.helpers({
   // sometimes the action record end up being non-reactive
   getActionRecord: function () {
-    return Actions.findOne(this._id);
+    return Collections.Actions.findOne(this._id);
   }
 });
 
@@ -21,7 +21,7 @@ Template.AdventureEditActionForm.events({
     if(dataKey){
       update["$set"][dataKey] = newValue;
       //console.log("Edited: ", dataKey, newValue, update, instance.data);
-      Actions.update(instance.data._id, update, function (error) {
+      Collections.Actions.update(instance.data._id, update, function (error) {
         if(error){
           Meteor.log.error("Failed to update action value: " + error.message);
           Dialog.error("Failed to update action value: " + error.message);

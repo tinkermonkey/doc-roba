@@ -10,9 +10,9 @@ Meteor.startup(function () {
     console.log("Publish: data_stores");
     // check that there is a project role for the current user
     if(this.userId && projectId && projectVersionId){
-      var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
+      var role = Collections.ProjectRoles.findOne({userId: this.userId, projectId: projectId});
       if(role){
-        return DataStores.find({projectVersionId: projectVersionId});
+        return Collections.DataStores.find({projectVersionId: projectVersionId});
       }
     }
     console.log("DataStores publication: returning nothing");
@@ -22,9 +22,9 @@ Meteor.startup(function () {
     console.log("Publish: data_store_fields");
     // check that there is a project role for the current user
     if(this.userId && projectId && projectVersionId && dataStoreId){
-      var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
+      var role = Collections.ProjectRoles.findOne({userId: this.userId, projectId: projectId});
       if(role){
-        return DataStoreFields.find({projectVersionId: projectVersionId, dataStoreId: dataStoreId});
+        return Collections.DataStoreFields.find({projectVersionId: projectVersionId, dataStoreId: dataStoreId});
       }
     }
     console.log("DataStoreFields publication: returning nothing");
@@ -34,9 +34,9 @@ Meteor.startup(function () {
     console.log("Publish: data_store_fields");
     // check that there is a project role for the current user
     if(this.userId && projectId && projectVersionId & dataStoreId){
-      var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
+      var role = Collections.ProjectRoles.findOne({userId: this.userId, projectId: projectId});
       if(role){
-        return DataStoreRows.find({projectVersionId: projectVersionId, dataStoreId: dataStoreId});
+        return Collections.DataStoreRows.find({projectVersionId: projectVersionId, dataStoreId: dataStoreId});
       }
     }
     console.log("DataStoreRows publication: returning nothing");
@@ -46,9 +46,9 @@ Meteor.startup(function () {
     console.log("Publish: all_data_store_fields");
     // check that there is a project role for the current user
     if(this.userId && projectId && projectVersionId){
-      var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
+      var role = Collections.ProjectRoles.findOne({userId: this.userId, projectId: projectId});
       if(role){
-        return DataStoreFields.find({projectVersionId: projectVersionId});
+        return Collections.DataStoreFields.find({projectVersionId: projectVersionId});
       }
     }
     console.log("AllDataStoreFields publication: returning nothing");
@@ -58,9 +58,9 @@ Meteor.startup(function () {
     console.log("Publish: all_data_store_rows");
     // check that there is a project role for the current user
     if(this.userId && projectId && projectVersionId){
-      var role = ProjectRoles.findOne({userId: this.userId, projectId: projectId});
+      var role = Collections.ProjectRoles.findOne({userId: this.userId, projectId: projectId});
       if(role){
-        return DataStoreRows.find({projectVersionId: projectVersionId});
+        return Collections.DataStoreRows.find({projectVersionId: projectVersionId});
       }
     }
     console.log("AllDataStoreRows publication: returning nothing");
@@ -107,24 +107,24 @@ Meteor.startup(function () {
       check(update, Object);
 
       // pull the DataStoreRow record
-      var record = DataStoreRows.findOne(recordId);
+      var record = Collections.DataStoreRows.findOne(recordId);
       if(!record){
         throw new Meteor.Error("Update Failed", "Record not found");
       }
 
       // Validate all of the Ids by pulling in the records
-      var sourceVersion = ProjectVersions.findOne(record.projectVersionId),
-        project = Projects.findOne(sourceVersion.projectId);
+      var sourceVersion = Collections.ProjectVersions.findOne(record.projectVersionId),
+        project = Collections.Projects.findOne(sourceVersion.projectId);
       if(sourceVersion && project) {
         // validate that the current user has permission to create a new version
-        var role = ProjectRoles.findOne({projectId: sourceVersion.projectId, userId: userId});
+        var role = Collections.ProjectRoles.findOne({projectId: sourceVersion.projectId, userId: userId});
         if (!role || !(role.role === RoleTypes.admin || role.role === RoleTypes.owner)) {
           Meteor.log.error("updateDataStoreRow: user " + userId + " not authorized, " + (role ? role.role : "no role for this project"));
           throw new Meteor.Error("Not Authorized", "You are not authorized to make this change");
         }
 
         // validate against the schema for this datastore
-        var datastore = DataStores.findOne(record.dataStoreId),
+        var datastore = Collections.DataStores.findOne(record.dataStoreId),
           dsSchema = DSUtil.simpleSchema(datastore.schema),// TODO: these should be cached
           valid = dsSchema.newContext().validate(update);
 
@@ -132,7 +132,7 @@ Meteor.startup(function () {
           throw new Meteor.Error("Validated Failed", "Record is not valid");
         }
 
-        DataStoreRows.update(recordId, {$set: update}, {filter: false, validate: false}, function (error, response) {
+        Collections.DataStoreRows.update(recordId, {$set: update}, {filter: false, validate: false}, function (error, response) {
           if(error){
             throw new Meteor.Error("DataStoreRow Update Failed", error);
           }

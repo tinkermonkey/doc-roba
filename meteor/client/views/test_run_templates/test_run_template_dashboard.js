@@ -9,7 +9,7 @@ Template.TestRunTemplateDashboard.helpers({
   },
   testRunTemplate: function () {
     if(this.query && this.query.testRunTemplateId){
-      return TestRunTemplates.findOne(this.query.testRunTemplateId);
+      return Collections.TestRunTemplates.findOne(this.query.testRunTemplateId);
     }
   }
 });

@@ -43,7 +43,7 @@ Template.TestCaseStepCustom.rendered = function () {
   var instance = this;
   instance.autorun(function () {
     var data = Template.currentData(),
-      previousStep = TestCaseSteps.findOne({
+      previousStep = Collections.TestCaseSteps.findOne({
         testCaseRoleId: data.testCaseRoleId,
         order: {$lt: data.order}
       }, {sort: {order: -1}}),

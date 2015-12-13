@@ -123,7 +123,7 @@ TreeNodeHandler.prototype.addNode = function(parent, dir){
   config.projectVersionId = parent.projectVersionId;
 
   // Create the record
-  Nodes.insert(config, function (error, nodeId) {
+  Collections.Nodes.insert(config, function (error, nodeId) {
     if(!error && nodeId){
       Meteor.log.debug("Node inserted: " + nodeId);
       tree.nodeStateCache[nodeId] = {

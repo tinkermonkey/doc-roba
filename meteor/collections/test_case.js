@@ -55,20 +55,20 @@ Schemas.TestCase = new SimpleSchema({
     autoValue: autoValueModifiedBy
   }
 });
-TestCases = new Mongo.Collection("test_cases");
-TestCases.attachSchema(Schemas.TestCase);
-TestCases.allow({
+Collections.TestCases = new Mongo.Collection("test_cases");
+Collections.TestCases.attachSchema(Schemas.TestCase);
+Collections.TestCases.allow({
   insert: allowIfAuthenticated,
   update: allowIfAuthenticated,
   remove: allowIfAuthenticated
 });
-TestCases.deny({
+Collections.TestCases.deny({
   insert: allowIfTester,
   update: allowIfTester,
   remove: allowIfTester,
   fetch: ['projectId']
 });
-trackChanges(TestCases, "test_cases");
+trackChanges(Collections.TestCases, "test_cases");
 
 /**
  * Schema for configuring a test case run
@@ -109,9 +109,9 @@ Schemas.TestCaseRun = new SimpleSchema({
 /**
  * Helpers
  */
-TestCases.helpers({
+Collections.TestCases.helpers({
   roles: function () {
-    return TestCaseRoles.find({testCaseId: this.staticId, projectVersionId: this.projectVersionId}, {sort: {order: 1}});
+    return Collections.TestCaseRoles.find({testCaseId: this.staticId, projectVersionId: this.projectVersionId}, {sort: {order: 1}});
   },
   /**
    * Validate the config for running a test case
@@ -122,7 +122,7 @@ TestCases.helpers({
     var testCase = this;
 
     // validate that the server exists and is active
-    var server = Servers.findOne({staticId: config.serverId, projectVersionId: testCase.projectVersionId});
+    var server = Collections.Servers.findOne({staticId: config.serverId, projectVersionId: testCase.projectVersionId});
     if(!server){
       throw new Meteor.Error("invalid-server", "Test config server not found " + config.serverId, [testCase, config]);
     } else if(!server.active === true){
@@ -139,7 +139,7 @@ TestCases.helpers({
         check(roleConfig, Schemas.TestCaseRunRole);
 
         // validate the role test system
-        var testSystem = TestSystems.findOne({staticId: roleConfig.testSystemId, projectVersionId: testCase.projectVersionId});
+        var testSystem = Collections.TestSystems.findOne({staticId: roleConfig.testSystemId, projectVersionId: testCase.projectVersionId});
         if(!testSystem){
           throw new Meteor.Error("invalid-test-system", "Test config test system not found " + roleConfig.testSystemId, [testCase, config, roleConfig]);
         } else if(!testSystem.active === true){
@@ -147,13 +147,13 @@ TestCases.helpers({
         }
 
         // validate the role test agent
-        var testAgents = TestAgents.findOne({staticId: roleConfig.testAgentId, projectVersionId: testCase.projectVersionId});
+        var testAgents = Collections.TestAgents.findOne({staticId: roleConfig.testAgentId, projectVersionId: testCase.projectVersionId});
         if(!testAgents){
           throw new Meteor.Error("invalid-test-agent", "Test config test agent not found " + roleConfig.testAgentId, [testCase, config, roleConfig]);
         }
 
         // validate the role account
-        var account = DataStoreRows.findOne({_id: roleConfig.accountId});
+        var account = Collections.DataStoreRows.findOne({_id: roleConfig.accountId});
         if(!account){
           throw new Meteor.Error("invalid-test-account", "Test config account not found " + roleConfig.accountId, [testCase, config, roleConfig]);
         }
@@ -175,7 +175,7 @@ TestCases.helpers({
 
     if(testCase.validateRunConfig(config)){
       // prepare the records starting with the test result
-      var testResultId = TestResults.insert({
+      var testResultId = Collections.TestResults.insert({
         projectId: testCase.projectId,
         projectVersionId: testCase.projectVersionId,
         testCaseId: testCase.staticId,
@@ -190,9 +190,9 @@ TestCases.helpers({
 
         // snapshot the account to use for the test
         roleConfig.dataContext = roleConfig.dataContext || {};
-        roleConfig.dataContext.account = DataStoreRows.findOne({_id: roleConfig.accountId});
+        roleConfig.dataContext.account = Collections.DataStoreRows.findOne({_id: roleConfig.accountId});
 
-        var testRoleResultId = TestResultRoles.insert({
+        var testRoleResultId = Collections.TestResultRoles.insert({
           projectId: testCase.projectId,
           projectVersionId: testCase.projectVersionId,
           testRunId: config.testRunId,
@@ -212,7 +212,7 @@ TestCases.helpers({
           data.action = step.action();
           data.node = step.firstNode();
 
-          TestResultSteps.insert({
+          Collections.TestResultSteps.insert({
             projectId: testCase.projectId,
             projectVersionId: testCase.projectVersionId,
             testResultId: testResultId,

@@ -6,7 +6,7 @@ Template.AdventureSelectorResult.helpers({
     var currentNode = Util.findParentData("currentNode"),
       adventure = Util.findParentData("adventure");
     if(currentNode && adventure){
-      return Nodes.findOne({ staticId: currentNode.get(), projectVersionId: adventure.projectVersionId });
+      return Collections.Nodes.findOne({ staticId: currentNode.get(), projectVersionId: adventure.projectVersionId });
     }
   }
 });

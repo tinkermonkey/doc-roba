@@ -80,14 +80,14 @@ Schemas.TestResultRole = new SimpleSchema({
     optional: true
   }
 });
-TestResultRoles = new Mongo.Collection("test_result_roles");
-TestResultRoles.attachSchema(Schemas.TestResultRole);
-TestResultRoles.allow({
+Collections.TestResultRoles = new Mongo.Collection("test_result_roles");
+Collections.TestResultRoles.attachSchema(Schemas.TestResultRole);
+Collections.TestResultRoles.allow({
   insert: allowIfAuthenticated,
   update: allowIfAuthenticated,
   remove: allowIfAuthenticated
 });
-TestResultRoles.deny({
+Collections.TestResultRoles.deny({
   insert: allowIfTester,
   update: allowIfTester,
   remove: allowIfTester,
@@ -97,21 +97,21 @@ TestResultRoles.deny({
 /**
  * Helpers
  */
-TestResultRoles.helpers({
+Collections.TestResultRoles.helpers({
   role: function () {
-    return TestCaseRoles.findOne({staticId: this.testCaseRoleId, projectVersionId: this.projectVersionId});
+    return Collections.TestCaseRoles.findOne({staticId: this.testCaseRoleId, projectVersionId: this.projectVersionId});
   },
   steps: function () {
-    return TestResultSteps.find({testResultRoleId: this._id}, {sort: {order: 1}});
+    return Collections.TestResultSteps.find({testResultRoleId: this._id}, {sort: {order: 1}});
   },
   testResult: function () {
-    return TestResults.findOne({_id: this.testResultId});
+    return Collections.TestResults.findOne({_id: this.testResultId});
   },
   testSystem: function () {
-    return TestSystems.findOne({staticId: this.testSystemId, projectVersionId: this.projectVersionId});
+    return Collections.TestSystems.findOne({staticId: this.testSystemId, projectVersionId: this.projectVersionId});
   },
   testAgent: function () {
-    return TestAgents.findOne({staticId: this.testAgentId, projectVersionId: this.projectVersionId});
+    return Collections.TestAgents.findOne({staticId: this.testAgentId, projectVersionId: this.projectVersionId});
   },
   isStaged: function () {
     return this.status = TestResultStatus.staged

@@ -41,14 +41,14 @@ Schemas.AdventureStep = new SimpleSchema({
     optional: true
   }
 });
-AdventureSteps = new Mongo.Collection("adventure_steps");
-AdventureSteps.attachSchema(Schemas.AdventureStep);
-AdventureSteps.allow({
+Collections.AdventureSteps = new Mongo.Collection("adventure_steps");
+Collections.AdventureSteps.attachSchema(Schemas.AdventureStep);
+Collections.AdventureSteps.allow({
   insert: allowIfAuthenticated,
   update: allowIfAuthenticated,
   remove: allowIfAuthenticated
 });
-AdventureSteps.deny({
+Collections.AdventureSteps.deny({
   insert: allowIfTester,
   update: allowIfTester,
   remove: allowIfTester,

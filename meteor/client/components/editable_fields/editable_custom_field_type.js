@@ -20,7 +20,7 @@ Template.EditableCustomFieldType.rendered = function () {
 
   instance.autorun(function () {
     var data = Template.currentData(),
-      types = DataStores.find({
+      types = Collections.DataStores.find({
         projectVersionId: instance.data.projectVersionId,
         deleted: false,
         category: DataStoreCategories.userTypeCustom

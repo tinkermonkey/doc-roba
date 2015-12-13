@@ -60,17 +60,17 @@ Schemas.TestAgent = new SimpleSchema({
     type: Number
   }
 });
-TestAgents = new Mongo.Collection("test_agents");
-TestAgents.attachSchema(Schemas.TestAgent);
-TestAgents.allow({
+Collections.TestAgents = new Mongo.Collection("test_agents");
+Collections.TestAgents.attachSchema(Schemas.TestAgent);
+Collections.TestAgents.allow({
   insert: allowIfAuthenticated,
   update: allowIfAuthenticated,
   remove: allowIfAuthenticated
 });
-TestAgents.deny({
+Collections.TestAgents.deny({
   insert: allowIfAdmin,
   update: allowIfAdmin,
   remove: allowIfAdmin,
   fetch: ['projectId']
 });
-trackChanges(TestAgents, "test_agents");
+trackChanges(Collections.TestAgents, "test_agents");

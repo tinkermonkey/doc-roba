@@ -67,29 +67,29 @@ Schemas.DataStoreField = new SimpleSchema({
     autoValue: autoValueModifiedBy
   }
 });
-DataStoreFields = new Mongo.Collection("data_store_fields");
-DataStoreFields.attachSchema(Schemas.DataStoreField);
-DataStoreFields.allow({
+Collections.DataStoreFields = new Mongo.Collection("data_store_fields");
+Collections.DataStoreFields.attachSchema(Schemas.DataStoreField);
+Collections.DataStoreFields.allow({
   insert: allowIfAuthenticated,
   update: allowIfAuthenticated,
   remove: allowIfAuthenticated
 });
-DataStoreFields.deny({
+Collections.DataStoreFields.deny({
   insert: function (userId, field) {
-    var pr = ProjectRoles.findOne({userId: userId, projectId: field.projectId});
+    var pr = Collections.ProjectRoles.findOne({userId: userId, projectId: field.projectId});
     return !(userId && pr && (pr.role === RoleTypes.admin || pr.role === RoleTypes.owner));
   },
   update: function (userId, field, fields, modifier) {
-    var pr = ProjectRoles.findOne({userId: userId, projectId: field.projectId});
+    var pr = Collections.ProjectRoles.findOne({userId: userId, projectId: field.projectId});
     return !(userId && pr && (pr.role === RoleTypes.admin || pr.role === RoleTypes.owner));
   },
   remove: function (userId, field) {
-    var pr = ProjectRoles.findOne({userId: userId, projectId: field.projectId});
+    var pr = Collections.ProjectRoles.findOne({userId: userId, projectId: field.projectId});
     return !(userId && pr && (pr.role === RoleTypes.admin || pr.role === RoleTypes.owner));
   },
   fetch: ['projectId']
 });
-trackChanges(DataStoreFields, "data_store_fields");
+trackChanges(Collections.DataStoreFields, "data_store_fields");
 
 /**
  * ============================================================================
@@ -97,11 +97,11 @@ trackChanges(DataStoreFields, "data_store_fields");
  * ============================================================================
  */
 if(Meteor.isServer){
-  DataStoreFields.after.insert(function (userId, fieldDef) {
+  Collections.DataStoreFields.after.insert(function (userId, fieldDef) {
     // Update the schema
     updateDataStoreSchema(fieldDef.dataStoreId);
   });
-  DataStoreFields.after.update(function (userId, fieldDef, changedParams) {
+  Collections.DataStoreFields.after.update(function (userId, fieldDef, changedParams) {
     // Find all of the embedded usages
 
     // Rename the field for all existing records
@@ -109,7 +109,7 @@ if(Meteor.isServer){
     // Update the schema
     updateDataStoreSchema(fieldDef.dataStoreId);
   });
-  DataStoreFields.after.remove(function (userId, fieldDef) {
+  Collections.DataStoreFields.after.remove(function (userId, fieldDef) {
     // Find all of the embedded usages
 
     // Remove the field from all existing records
@@ -127,7 +127,7 @@ if(Meteor.isServer){
     var schema = {};
 
     // get all of the fields
-    var fields = DataStoreFields.find({dataStoreId: dataStoreId}, {sort: {order: 1}});
+    var fields = Collections.DataStoreFields.find({dataStoreId: dataStoreId}, {sort: {order: 1}});
 
     // build up the schema
     fields.forEach(function (field) {
@@ -144,6 +144,6 @@ if(Meteor.isServer){
 
     // store the schema
     console.log("DataStoreSchema: ", schema);
-    DataStores.update({_id: dataStoreId}, {$set: {schema: schema}});
+    Collections.DataStores.update({_id: dataStoreId}, {$set: {schema: schema}});
   };
 }

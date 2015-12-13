@@ -41,7 +41,7 @@ Template.AdventureLogTable.created = function () {
   // setup the messages data
   instance.messages = function() {
     //return Template.instance().messages().find({"context.adventureId": this._id}, {sort: {time: -1}});
-    return LogMessages.find({
+    return Collections.LogMessages.find({
       "context.adventureId": instance.data._id
     }, {
       sort: { time: -1 },
@@ -62,7 +62,7 @@ Template.AdventureLogTable.created = function () {
       if(limit > 0){
         instance.loaded.set(limit);
       } else {
-        var count = LogMessages.find({"context.adventureId": instance.data._id}).count();
+        var count = Collections.LogMessages.find({"context.adventureId": instance.data._id}).count();
         //console.log("Limit:", limit, "Count:", count);
         instance.loaded.set(count);
       }

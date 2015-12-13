@@ -20,7 +20,7 @@ Template.action_edit_variables.events({
       order = action.variables ? action.variables.length - 1 : 0;
 
     if(action){
-      Actions.update(action._id, {
+      Collections.Actions.update(action._id, {
         $push: {
           variables: {
             order: order,
@@ -60,7 +60,7 @@ Template.action_edit_variables.events({
       callback: function (btn) {
         //console.log("Dialog button pressed: ", btn);
         if(btn == "Delete"){
-          Actions.update(variable.actionId, { $pull: { variables: {order: variable.order} } }, function (error, response) {
+          Collections.Actions.update(variable.actionId, { $pull: { variables: {order: variable.order} } }, function (error, response) {
             Dialog.hide();
             if(error){
               Meteor.log.error("Delete Variable failed: " + error.message);
@@ -95,7 +95,7 @@ Template.action_edit_variables.events({
       }
     }
 
-    Actions.update(actionId, update, function (error) {
+    Collections.Actions.update(actionId, update, function (error) {
       if(error){
         Meteor.log.error("Action Variable update failed: " + error.message);
         Dialog.error("Action Variable update failed: " + error.message);
@@ -134,7 +134,7 @@ Template.action_edit_variables.rendered = function () {
         });
 
         //console.log("Update pre-send: ", update);
-        Actions.update(actionId, update, function (error) {
+        Collections.Actions.update(actionId, update, function (error) {
           if(error){
             Meteor.log.error("Action Variable order update failed: " + error.message);
             Dialog.error("Action Variable order update failed: " + error.message);

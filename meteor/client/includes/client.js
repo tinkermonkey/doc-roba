@@ -105,7 +105,7 @@ Template.registerHelper("renderLookup", function (lookupName, key, style) {
 Template.registerHelper("renderNodeTitle", function (staticId, projectVersionId) {
   check(staticId, String);
   check(projectVersionId, String);
-  var node = Nodes.findOne({staticId: staticId, projectVersionId: projectVersionId});
+  var node = Collections.Nodes.findOne({staticId: staticId, projectVersionId: projectVersionId});
   return node ? node.title : "";
 });
 
@@ -115,7 +115,7 @@ Template.registerHelper("renderNodeTitle", function (staticId, projectVersionId)
 Template.registerHelper("renderNameByRole", function (userId) {
   var role;
   if(userId){
-    role = ProjectRoles.findOne({userId: userId});
+    role = Collections.ProjectRoles.findOne({userId: userId});
     if(role){
       return role.name;
     }
@@ -160,8 +160,8 @@ Template.registerHelper("renderLogTime", function (value) {
  */
 Template.registerHelper("userProjects", function () {
   var projects = [];
-  ProjectRoles.find({userId: Meteor.userId()}).forEach(function (role) {
-    var project = Projects.findOne({_id: role.projectId});
+  Collections.ProjectRoles.find({userId: Meteor.userId()}).forEach(function (role) {
+    var project = Collections.Projects.findOne({_id: role.projectId});
     if(project){
       project.role = role.role;
       projects.push(project);
@@ -175,7 +175,7 @@ Template.registerHelper("userProjects", function () {
  */
 Template.registerHelper("userRole", function (projectId) {
   projectId = (this ? this._id : this) || projectId;
-  var role = ProjectRoles.findOne({userId: Meteor.userId(), projectId: projectId});
+  var role = Collections.ProjectRoles.findOne({userId: Meteor.userId(), projectId: projectId});
   return role ? role.role : null;
 });
 
@@ -185,7 +185,7 @@ Template.registerHelper("userRole", function (projectId) {
 Template.registerHelper("projectVersions", function () {
   var project = this;
   if(project && project._id){
-    return ProjectVersions.find({projectId: project._id}, {sort: {version: -1}});
+    return Collections.ProjectVersions.find({projectId: project._id}, {sort: {version: -1}});
   }
 });
 
@@ -203,7 +203,7 @@ Template.registerHelper("setTitle", function () {
  */
 Template.registerHelper("renderCustomFieldType", function (type) {
   if(type){
-    var customType = DataStores.findOne(type);
+    var customType = Collections.DataStores.findOne(type);
     if(customType){
       return customType.title;
     }
@@ -221,7 +221,7 @@ Template.registerHelper("renderTestAgentName", function (testAgent) {
  * Render a test agent name from just the ID
  */
 Template.registerHelper("renderTestAgentNameFromId", function (id) {
-  var testAgent = TestAgents.findOne({_id: id});
+  var testAgent = Collections.TestAgents.findOne({_id: id});
   if(testAgent){
     return Util.getTestAgentNameWithVersion(testAgent);
   }
@@ -231,7 +231,7 @@ Template.registerHelper("renderTestAgentNameFromId", function (id) {
  * Render a test agent name from just the static ID and project version
  */
 Template.registerHelper("renderTestAgentNameFromStaticId", function (staticId, projectVersionId) {
-  var testAgent = TestAgents.findOne({staticId: staticId, projectVersionId: projectVersionId});
+  var testAgent = Collections.TestAgents.findOne({staticId: staticId, projectVersionId: projectVersionId});
   if(testAgent) {
     return Util.getTestAgentNameWithVersion(testAgent);
   }
@@ -241,7 +241,7 @@ Template.registerHelper("renderTestAgentNameFromStaticId", function (staticId, p
  * Render a server name
  */
 Template.registerHelper("renderServerName", function (serverId) {
-  var server = Servers.findOne(serverId);
+  var server = Collections.Servers.findOne(serverId);
   if(server){
     return server.title;
   }
@@ -251,7 +251,7 @@ Template.registerHelper("renderServerName", function (serverId) {
  * Render a server name from a server staticId
  */
 Template.registerHelper("renderServerNameFromStaticId", function (staticId, projectVersionId) {
-  var server = Servers.findOne({staticId: staticId, projectVersionId: projectVersionId});
+  var server = Collections.Servers.findOne({staticId: staticId, projectVersionId: projectVersionId});
   if(server){
     return server.title;
   }
@@ -261,7 +261,7 @@ Template.registerHelper("renderServerNameFromStaticId", function (staticId, proj
  * Render a test system name
  */
 Template.registerHelper("renderTestSystemName", function (testSystemId) {
-  var testSystem = TestSystems.findOne(testSystemId);
+  var testSystem = Collections.TestSystems.findOne(testSystemId);
   if(testSystem){
     return testSystem.title;
   }
@@ -271,7 +271,7 @@ Template.registerHelper("renderTestSystemName", function (testSystemId) {
  * Render a test system name from a test system staticId
  */
 Template.registerHelper("renderTestSystemNameFromStaticId", function (staticId, projectVersionId) {
-  var testSystem = TestSystems.findOne({staticId: staticId, projectVersionId: projectVersionId});
+  var testSystem = Collections.TestSystems.findOne({staticId: staticId, projectVersionId: projectVersionId});
   if(testSystem){
     return testSystem.title;
   }
@@ -283,7 +283,7 @@ Template.registerHelper("renderTestSystemNameFromStaticId", function (staticId, 
 Template.registerHelper("hasRole", function (roleName, projectId) {
   console.log("HasRole: ", roleName, projectId);
   if(roleName){
-    var role = ProjectRoles.findOne({userId: Meteor.userId(), projectId: projectId}),
+    var role = Collections.ProjectRoles.findOne({userId: Meteor.userId(), projectId: projectId}),
       hasRole = false;
 
     switch(roleName){
@@ -326,7 +326,7 @@ Template.registerHelper("getDataName", function (value) {
  */
 Template.registerHelper("getNode", function (staticId, versionId) {
   if(staticId && versionId) {
-    return Nodes.findOne({staticId: staticId, projectVersionId: versionId});
+    return Collections.Nodes.findOne({staticId: staticId, projectVersionId: versionId});
   }
 });
 
@@ -335,7 +335,7 @@ Template.registerHelper("getNode", function (staticId, versionId) {
  */
 Template.registerHelper("getAction", function (staticId, versionId) {
   if(staticId && versionId) {
-    return Actions.findOne({staticId: staticId, projectVersionId: versionId});
+    return Collections.Actions.findOne({staticId: staticId, projectVersionId: versionId});
   }
 });
 

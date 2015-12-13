@@ -66,18 +66,18 @@ Schemas.Action = new SimpleSchema({
     autoValue: autoValueModifiedBy
   }
 });
-Actions = new Mongo.Collection("actions");
-Actions.attachSchema(Schemas.Action);
-Actions.allow({
+Collections.Actions = new Mongo.Collection("actions");
+Collections.Actions.attachSchema(Schemas.Action);
+Collections.Actions.allow({
   insert: allowIfAuthenticated,
   update: allowIfAuthenticated,
   remove: allowIfAuthenticated
 });
-Actions.deny({
+Collections.Actions.deny({
   insert: allowIfTester,
   update: allowIfTester,
   remove: allowIfTester,
   fetch: ['projectId']
 });
-trackChanges(Actions, "actions");
-autoUpdateOrder(Actions, ["variables", "routes"]);
+trackChanges(Collections.Actions, "actions");
+autoUpdateOrder(Collections.Actions, ["variables", "routes"]);

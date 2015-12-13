@@ -64,7 +64,7 @@ Router.map(function () {
     layoutTemplate: "CenterPoleLayout",
     template: "Home",
     data: function () {
-      return { project: Projects.findOne({_id: this.params._id}) };
+      return { project: Collections.Projects.findOne({_id: this.params._id}) };
     },
     waitOn: function () { return [
       Meteor.subscribe("projects"),
@@ -79,8 +79,8 @@ Router.map(function () {
     template: "Home",
     data: function () {
       return {
-        project: Projects.findOne({_id: this.params.projectId}),
-        version: ProjectVersions.findOne({_id: this.params._id})
+        project: Collections.Projects.findOne({_id: this.params.projectId}),
+        version: Collections.ProjectVersions.findOne({_id: this.params._id})
       };
     },
     waitOn: function () { return [
@@ -100,8 +100,8 @@ Router.map(function () {
   this.route("doc_tree", {
     path: "/doc_tree/projects/:projectId/versions/:_id",
     data: function () {
-      var project = Projects.findOne({_id: this.params.projectId}),
-        version = ProjectVersions.findOne({_id: this.params._id});
+      var project = Collections.Projects.findOne({_id: this.params.projectId}),
+        version = Collections.ProjectVersions.findOne({_id: this.params._id});
 
       if(project && version){
         return {
@@ -129,8 +129,8 @@ Router.map(function () {
     layoutTemplate: "CenterPoleLayout",
     data: function () {
       return {
-        project: Projects.findOne({_id: this.params.projectId}),
-        version: ProjectVersions.findOne({_id: this.params._id}),
+        project: Collections.Projects.findOne({_id: this.params.projectId}),
+        version: Collections.ProjectVersions.findOne({_id: this.params._id}),
         query: this.params.query
       };
     },
@@ -155,8 +155,8 @@ Router.map(function () {
     layoutTemplate: "CenterPoleLayout",
     data: function () {
       return {
-        project: Projects.findOne({_id: this.params.projectId}),
-        version: ProjectVersions.findOne({_id: this.params._id}),
+        project: Collections.Projects.findOne({_id: this.params.projectId}),
+        version: Collections.ProjectVersions.findOne({_id: this.params._id}),
         query: this.params.query
       };
     },
@@ -172,7 +172,7 @@ Router.map(function () {
   });
   this.route("driver_command_list", {
     path: "/driver_command_list",
-    data: function () { return DriverCommands.find({}, {sort: {type: 1, name: 1}}); },
+    data: function () { return Collections.DriverCommands.find({}, {sort: {type: 1, name: 1}}); },
     waitOn: function () { return [Meteor.subscribe("driver_commands")]; }
   });
   this.route("adventure_console", {
@@ -180,8 +180,8 @@ Router.map(function () {
     layoutTemplate: "no_menu_layout",
     data: function () {
       return {
-        adventure: Adventures.findOne(this.params.adventureId),
-        state: AdventureStates.findOne({adventureId: this.params.adventureId})
+        adventure: Collections.Adventures.findOne(this.params.adventureId),
+        state: Collections.AdventureStates.findOne({adventureId: this.params.adventureId})
       };
     },
     waitOn: function () { return [
@@ -201,7 +201,7 @@ Router.map(function () {
   });
   this.route("adventure_log", {
     path: "/adventure_log/:adventureId",
-    data: function () { return Adventures.findOne(this.params.adventureId); },
+    data: function () { return Collections.Adventures.findOne(this.params.adventureId); },
     waitOn: function () { return [
       Meteor.subscribe("adventure", this.params.adventureId)
     ]; }
@@ -209,7 +209,7 @@ Router.map(function () {
   this.route("test_result", {
     path: "/test_result/:projectId/:_id",
     layoutTemplate: "CenterPoleLayout",
-    data: function () { return TestResults.findOne(this.params._id); },
+    data: function () { return Collections.TestResults.findOne(this.params._id); },
     waitOn: function () { return [
       Meteor.subscribe("projects"),
       Meteor.subscribe("project_roles"),

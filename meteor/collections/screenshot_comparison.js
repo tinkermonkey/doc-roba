@@ -27,14 +27,14 @@ Schemas.ScreenshotComparison = new SimpleSchema({
     denyUpdate: true
   }
 });
-ScreenshotComparisons = new Mongo.Collection("screenshot_comparisons");
-ScreenshotComparisons.attachSchema(Schemas.ScreenshotComparison);
-ScreenshotComparisons.allow({
+Collections.ScreenshotComparisons = new Mongo.Collection("screenshot_comparisons");
+Collections.ScreenshotComparisons.attachSchema(Schemas.ScreenshotComparison);
+Collections.ScreenshotComparisons.allow({
   insert: allowIfAuthenticated,
   update: allowIfAuthenticated,
   remove: allowIfAuthenticated
 });
-ScreenshotComparisons.deny({
+Collections.ScreenshotComparisons.deny({
   insert: allowIfTester,
   update: allowIfTester,
   remove: allowIfTester,
@@ -44,5 +44,5 @@ ScreenshotComparisons.deny({
 /**
  * Helpers
  */
-ScreenshotComparisons.helpers({
+Collections.ScreenshotComparisons.helpers({
 });

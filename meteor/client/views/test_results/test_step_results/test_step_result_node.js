@@ -4,7 +4,7 @@
 Template.TestResultStepNode.helpers({
   // TODO: this is a convoluted way to obtain the context
   nodeContext: function () {
-    var logContext = LogMessages.findOne({"context.testResultStepId": this.step._id, sender:"context", "data.type": "node"});
+    var logContext = Collections.LogMessages.findOne({"context.testResultStepId": this.step._id, sender:"context", "data.type": "node"});
     if(logContext && logContext.data.length){
       return logContext.data[0].data
     }

@@ -65,17 +65,17 @@ Schemas.TestSystem = new SimpleSchema({
     type: Number
   }
 });
-TestSystems = new Mongo.Collection("test_systems");
-TestSystems.attachSchema(Schemas.TestSystem);
-TestSystems.allow({
+Collections.TestSystems = new Mongo.Collection("test_systems");
+Collections.TestSystems.attachSchema(Schemas.TestSystem);
+Collections.TestSystems.allow({
   insert: allowIfAuthenticated,
   update: allowIfAuthenticated,
   remove: allowIfAuthenticated
 });
-TestSystems.deny({
+Collections.TestSystems.deny({
   insert: allowIfAdmin,
   update: allowIfAdmin,
   remove: allowIfAdmin,
   fetch: ['projectId']
 });
-trackChanges(TestSystems, "test_systems");
+trackChanges(Collections.TestSystems, "test_systems");

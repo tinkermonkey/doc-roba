@@ -3,19 +3,19 @@
  * Screen shots from testing and adventures
  * ============================================================================
  */
-Screenshots = new FS.Collection("screenshots", {
+Collections.Screenshots = new FS.Collection("screenshots", {
   stores: [
     new FS.Store.FileSystem("thumbs", { path: FS.basePath + "screenshot_thumbs", transformWrite: FS.createThumb }),
     new FS.Store.FileSystem("screenshots", { path: FS.basePath + "screenshots" })
   ]
 });
-Screenshots.allow({
+Collections.Screenshots.allow({
   insert:   allowIfAuthenticated,
   update:   allowIfAuthenticated,
   remove:   allowIfAuthenticated,
   download: allowIfAuthenticated
 });
-Screenshots.deny({
+Collections.Screenshots.deny({
   insert:   denyIfNotAuthenticated,
   update:   denyIfNotAuthenticated,
   remove:   denyIfNotAuthenticated,
@@ -27,9 +27,9 @@ Screenshots.deny({
  * Force a couple of helpers (collection helpers don't seem to work on FS.Collection)
  * This is shared server-side and client-side logic used by publications & helpers
  */
-Screenshots.similarScreenshots = function (screenshot){
+Collections.Screenshots.similarScreenshots = function (screenshot){
   if(screenshot){
-    return Screenshots.find({
+    return Collections.Screenshots.find({
       _id: {$ne: screenshot._id},
       nodeId: screenshot.nodeId,
       projectVersionId: screenshot.projectVersionId,
@@ -38,10 +38,10 @@ Screenshots.similarScreenshots = function (screenshot){
   }
 };
 
-Screenshots.previousVersionScreenshots = function (screenshot){
+Collections.Screenshots.previousVersionScreenshots = function (screenshot){
   if(screenshot){
     // get the list of previous versions
-    return Screenshots.find({
+    return Collections.Screenshots.find({
       _id: {$ne: screenshot._id},
       nodeId: screenshot.nodeId,
       projectVersionId: {$ne: screenshot.projectVersionId},

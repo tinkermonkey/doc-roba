@@ -38,26 +38,26 @@ Schemas.DataStoreRow = new SimpleSchema({
     autoValue: autoValueModifiedBy
   }
 });
-DataStoreRows = new Mongo.Collection("data_store_rows");
-DataStoreRows.attachSchema(Schemas.DataStoreRow);
-DataStoreRows.allow({
+Collections.DataStoreRows = new Mongo.Collection("data_store_rows");
+Collections.DataStoreRows.attachSchema(Schemas.DataStoreRow);
+Collections.DataStoreRows.allow({
   insert: allowIfAuthenticated,
   update: allowIfAuthenticated,
   remove: allowIfAuthenticated
 });
-DataStoreRows.deny({
+Collections.DataStoreRows.deny({
   insert: function (userId, field) {
-    var pr = ProjectRoles.findOne({userId: userId, projectId: field.projectId});
+    var pr = Collections.ProjectRoles.findOne({userId: userId, projectId: field.projectId});
     return !(userId && pr && (pr.role === RoleTypes.admin || pr.role === RoleTypes.owner));
   },
   update: function (userId, field, fields, modifier) {
-    var pr = ProjectRoles.findOne({userId: userId, projectId: field.projectId});
+    var pr = Collections.ProjectRoles.findOne({userId: userId, projectId: field.projectId});
     return !(userId && pr && (pr.role === RoleTypes.admin || pr.role === RoleTypes.owner));
   },
   remove: function (userId, field) {
-    var pr = ProjectRoles.findOne({userId: userId, projectId: field.projectId});
+    var pr = Collections.ProjectRoles.findOne({userId: userId, projectId: field.projectId});
     return !(userId && pr && (pr.role === RoleTypes.admin || pr.role === RoleTypes.owner));
   },
   fetch: ['projectId']
 });
-trackChanges(DataStoreRows, "data_store_rows");
+trackChanges(Collections.DataStoreRows, "data_store_rows");

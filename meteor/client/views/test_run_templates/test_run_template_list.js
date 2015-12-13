@@ -3,7 +3,7 @@
  */
 Template.TestRunTemplateList.helpers({
   testRunTemplates: function () {
-    return TestRunTemplates.find({ projectVersionId: this.version._id}, { sort: { title: 1 } });
+    return Collections.TestRunTemplates.find({ projectVersionId: this.version._id}, { sort: { title: 1 } });
   }
 });
 
@@ -30,7 +30,7 @@ Template.TestRunTemplateList.events({
       version = instance.data.version;
 
     if(itemType && itemName && itemName.length){
-      TestRunTemplates.insert({
+      Collections.TestRunTemplates.insert({
         projectId: version.projectId,
         projectVersionId: version._id,
         title: itemName

@@ -36,7 +36,7 @@ Template.TestCaseStep.events({
     var step = instance.data;
     if(step && step._id){
       e.stopImmediatePropagation();
-      TestCaseSteps.remove(step._id, function (error) {
+      Collections.TestCaseSteps.remove(step._id, function (error) {
         if(error){
           Meteor.log.error("Failed to delete test step: " + error.message);
           Dialog.error("Failed to delete test step: " + error.message);
@@ -59,7 +59,7 @@ Template.TestCaseStep.events({
       }
 
       console.log("TestCaseStep data update: ", stepData, newValue);
-      TestCaseSteps.update(testCaseStep._id, {$set: {data: stepData}}, function (error) {
+      Collections.TestCaseSteps.update(testCaseStep._id, {$set: {data: stepData}}, function (error) {
         if(error){
           Meteor.log.error("Failed to update step: " + error.message);
           Dialog.error("Failed to update step: " + error.message);

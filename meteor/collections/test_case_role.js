@@ -59,30 +59,30 @@ Schemas.TestCaseRole = new SimpleSchema({
     autoValue: autoValueModifiedBy
   }
 });
-TestCaseRoles = new Mongo.Collection("test_case_roles");
-TestCaseRoles.attachSchema(Schemas.TestCaseRole);
-TestCaseRoles.allow({
+Collections.TestCaseRoles = new Mongo.Collection("test_case_roles");
+Collections.TestCaseRoles.attachSchema(Schemas.TestCaseRole);
+Collections.TestCaseRoles.allow({
   insert: allowIfAuthenticated,
   update: allowIfAuthenticated,
   remove: allowIfAuthenticated
 });
-TestCaseRoles.deny({
+Collections.TestCaseRoles.deny({
   insert: allowIfTester,
   update: allowIfTester,
   remove: allowIfTester,
   fetch: ['projectId']
 });
-trackChanges(TestCaseRoles, "test_case_roles");
+trackChanges(Collections.TestCaseRoles, "test_case_roles");
 
 /**
  * Helpers
  */
-TestCaseRoles.helpers({
+Collections.TestCaseRoles.helpers({
   steps: function () {
-    return TestCaseSteps.find({testCaseRoleId: this.staticId, projectVersionId: this.projectVersionId}, {sort: {order: 1}});
+    return Collections.TestCaseSteps.find({testCaseRoleId: this.staticId, projectVersionId: this.projectVersionId}, {sort: {order: 1}});
   },
   step: function (order) {
-    return TestCaseSteps.findOne({testCaseRoleId: this.staticId, projectVersionId: this.projectVersionId, order: order});
+    return Collections.TestCaseSteps.findOne({testCaseRoleId: this.staticId, projectVersionId: this.projectVersionId, order: order});
   },
   platform: function () {
     var firstStep = this.step(0);
@@ -91,7 +91,7 @@ TestCaseRoles.helpers({
     }
   },
   userType: function () {
-    var firstStep = TestCaseSteps.findOne({testCaseRoleId: this.staticId, projectVersionId: this.projectVersionId, order: 0});
+    var firstStep = Collections.TestCaseSteps.findOne({testCaseRoleId: this.staticId, projectVersionId: this.projectVersionId, order: 0});
     if(firstStep && firstStep.firstNode()){
       return firstStep.firstNode().userType();
     }

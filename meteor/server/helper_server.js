@@ -8,16 +8,16 @@ Meteor.startup(function() {
     setTestSystemStatus: function (testSystemId, status) {
       console.log("setTestSystemStatus: ", testSystemId, status);
       if (testSystemId) {
-        var testSystem = TestSystems.findOne({_id: testSystemId});
+        var testSystem = Collections.TestSystems.findOne({_id: testSystemId});
         if (testSystem) {
-          TestSystems.update({_id: testSystem._id}, {$set: {status: status}});
+          Collections.TestSystems.update({_id: testSystem._id}, {$set: {status: status}});
         }
       }
     },
     // Get the status of a test system
     getTestSystemStatus: function (testSystemId) {
       if (testSystemId) {
-        var testSystem = TestSystems.findOne({_id: testSystemId});
+        var testSystem = Collections.TestSystems.findOne({_id: testSystemId});
         if (testSystem) {
           return testSystem.status;
         }
@@ -26,20 +26,20 @@ Meteor.startup(function() {
     // Set the current log file name of a test system
     setTestSystemLogFile: function (testSystemId, path) {
       if (testSystemId) {
-        TestSystems.update({_id: testSystemId}, {$set: {logFile: path}});
+        Collections.TestSystems.update({_id: testSystemId}, {$set: {logFile: path}});
       }
     },
     // Retrieve the record for a test system
     loadTestSystemRecord: function (testSystemId) {
       console.log("loadTestSystemRecord: ", testSystemId);
       if (testSystemId) {
-        return TestSystems.findOne({_id: testSystemId});
+        return Collections.TestSystems.findOne({_id: testSystemId});
       }
     },
     // Get the next adventure for a test system
     getNextAdventure: function (testSystemId) {
       if (testSystemId) {
-        var adventure = Adventures.find({testSystemId: testSystemId, status: /ready/i}, {sort:{timeCreated: -1}, limit: 1}).fetch();
+        var adventure = Collections.Adventures.find({testSystemId: testSystemId, status: /ready/i}, {sort:{timeCreated: -1}, limit: 1}).fetch();
         if (adventure.length) {
           adventure = adventure[0];
           //console.log("getNextAdventure: ", adventure);
@@ -60,7 +60,7 @@ Meteor.startup(function() {
     // Get the next adventure id for a test system
     getNextAdventureId: function (testSystemId) {
       if (testSystemId) {
-        var adventures = Adventures.find({testSystemId: testSystemId, status: /ready/i}, {sort:{timeCreated: -1}, limit: 1}).fetch();
+        var adventures = Collections.Adventures.find({testSystemId: testSystemId, status: /ready/i}, {sort:{timeCreated: -1}, limit: 1}).fetch();
         if (adventures.length) {
           var adventure = adventures[0];
           return adventure._id;

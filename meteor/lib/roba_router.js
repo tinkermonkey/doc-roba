@@ -29,7 +29,7 @@ RobaRouter = {
 RobaRoute = function (destination, source) {
   //Meteor.log.info("RobaRoute: Routing from " + source + " to " + destination);
   this.destination = {
-    node: _.isObject(destination) ? destination : Nodes.findOne(destination)
+    node: _.isObject(destination) ? destination : Collections.Nodes.findOne(destination)
   };
   if(!this.destination.node){
     Meteor.log.error("RobaRoute Failure: destination node " + destination + " not found");
@@ -41,7 +41,7 @@ RobaRoute = function (destination, source) {
 
   if(source){
     this.source = {
-      node: _.isObject(source) ? source : Nodes.findOne(source)
+      node: _.isObject(source) ? source : Collections.Nodes.findOne(source)
     };
     if(!this.source.node){
       Meteor.log.error("RobaRoute Failure: source node " + source + " not found");
@@ -75,7 +75,7 @@ RobaRoute.prototype.findParents = function (branch) {
   check(branch.node.parentId, String);
 
   // get the first parent
-  var parent = Nodes.findOne({
+  var parent = Collections.Nodes.findOne({
       staticId: branch.node.parentId,
       projectVersionId: branch.node.projectVersionId
     }),
@@ -90,7 +90,7 @@ RobaRoute.prototype.findParents = function (branch) {
 
   // follow the structure up to the determine the platform and user type
   while(parent.type !== NodeTypes.root && parentLevel++ < 1000){
-    parent = Nodes.findOne({staticId: parent.parentId, projectVersionId: parent.projectVersionId});
+    parent = Collections.Nodes.findOne({staticId: parent.parentId, projectVersionId: parent.projectVersionId});
     branch.parents.push(parent);
   }
 
@@ -130,12 +130,12 @@ RobaRoute.prototype.route = function () {
   // get the list of nodes for this project
   var routeMap = {},
     versionId = this.destination.node.projectVersionId,
-    nodeList = Nodes.find({projectVersionId: versionId}, {fields: {staticId: 1, navMenus: 1}}).fetch();
+    nodeList = Collections.Nodes.find({projectVersionId: versionId}, {fields: {staticId: 1, navMenus: 1}}).fetch();
 
   // get the actions for each node
   _.each(nodeList, function (node) {
     // load the direct actions
-    Actions.find({nodeId: node.staticId, projectVersionId: versionId}, {fields: {routes: 1}}).forEach(function (action) {
+    Collections.Actions.find({nodeId: node.staticId, projectVersionId: versionId}, {fields: {routes: 1}}).forEach(function (action) {
       _.each(action.routes, function (route) {
         if(!routeMap[node.staticId]){
           routeMap[node.staticId] = {};
@@ -147,7 +147,7 @@ RobaRoute.prototype.route = function () {
 
     // load the nav actions
     _.each(node.navMenus, function (navMenuId) {
-      Actions.find({nodeId: navMenuId, projectVersionId: versionId}, {fields: {routes: 1}}).forEach(function (action) {
+      Collections.Actions.find({nodeId: navMenuId, projectVersionId: versionId}, {fields: {routes: 1}}).forEach(function (action) {
         _.each(action.routes, function (route) {
           if(!routeMap[node.staticId]){
             routeMap[node.staticId] = {};
@@ -177,7 +177,7 @@ RobaRoute.prototype.route = function () {
       routeMap[platform.staticId] = {};
     }
 
-    var platformEntryPoints = Nodes.find({ parentId: platform.staticId }, {fields: {staticId: 1}}).forEach(function (platformEntry) {
+    var platformEntryPoints = Collections.Nodes.find({ parentId: platform.staticId }, {fields: {staticId: 1}}).forEach(function (platformEntry) {
       routeMap[platform.staticId][platformEntry.staticId] = 1; // get the weight eventually
     });
 
@@ -205,7 +205,7 @@ RobaRoute.prototype.route = function () {
     pointNodeId = rawRoute[i];
     var step = {
       nodeId: pointNodeId,
-      node: Nodes.findOne({staticId: pointNodeId, projectVersionId: start.projectVersionId})
+      node: Collections.Nodes.findOne({staticId: pointNodeId, projectVersionId: start.projectVersionId})
     };
 
     // skip the platform step
@@ -219,8 +219,8 @@ RobaRoute.prototype.route = function () {
     // pick an action for each step except the last
     if(i < rawRoute.length - 1){
       step.destinationId = rawRoute[i + 1];
-      step.destination = Nodes.findOne({staticId: step.destinationId, projectVersionId: start.projectVersionId});
-      step.action = Actions.findOne({
+      step.destination = Collections.Nodes.findOne({staticId: step.destinationId, projectVersionId: start.projectVersionId});
+      step.action = Collections.Actions.findOne({
         nodeId: step.nodeId,
         projectVersionId: start.projectVersionId,
         routes: {
@@ -232,7 +232,7 @@ RobaRoute.prototype.route = function () {
       if(!step.action){
         j = 0;
         while(!step.action && j < step.node.navMenus.length){
-          step.action = Actions.findOne({
+          step.action = Collections.Actions.findOne({
             nodeId: step.node.navMenus[j],
             projectVersionId: start.projectVersionId,
             routes: {

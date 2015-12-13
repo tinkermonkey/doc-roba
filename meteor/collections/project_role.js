@@ -42,18 +42,18 @@ Schemas.ProjectRole = new SimpleSchema({
     autoValue: autoValueModifiedBy
   }
 });
-ProjectRoles = new Mongo.Collection("project_roles");
-ProjectRoles.attachSchema(Schemas.ProjectRole);
-ProjectRoles.allow({
+Collections.ProjectRoles = new Mongo.Collection("project_roles");
+Collections.ProjectRoles.attachSchema(Schemas.ProjectRole);
+Collections.ProjectRoles.allow({
   insert: allowIfAuthenticated,
   update: allowIfAuthenticated,
   remove: allowIfAuthenticated,
   fetch: []
 });
-ProjectRoles.deny({
+Collections.ProjectRoles.deny({
   insert: allowIfAdmin,
   update: allowIfAdmin,
   remove: allowIfAdmin,
   fetch: ['projectId']
 });
-trackChanges(ProjectRoles, "project_roles");
+trackChanges(Collections.ProjectRoles, "project_roles");

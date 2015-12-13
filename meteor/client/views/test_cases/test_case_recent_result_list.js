@@ -37,7 +37,7 @@ Template.TestCaseRecentResultList.created = function () {
 
   // setup the results data
   instance.results = function() {
-    return TestResults.find({
+    return Collections.TestResults.find({
       testCaseId: instance.data.staticId
     }, {
       sort: { dateCreated: -1 },
@@ -58,13 +58,13 @@ Template.TestCaseRecentResultList.created = function () {
       if(limit > 0){
         instance.loaded.set(limit);
       } else {
-        var count = TestResults.find({testCaseId: instance.data.staticId, projectVersionId: instance.data.projectVersionId}).count();
+        var count = Collections.TestResults.find({testCaseId: instance.data.staticId, projectVersionId: instance.data.projectVersionId}).count();
         //console.log("Limit:", limit, "Count:", count);
         instance.loaded.set(count);
       }
 
       // subscribe to the role results for each of the results
-      TestResults.find({testCaseId: instance.data.staticId, projectVersionId: instance.data.projectVersionId})
+      Collections.TestResults.find({testCaseId: instance.data.staticId, projectVersionId: instance.data.projectVersionId})
         .forEach(function (result) {
           //console.log("Found test result: ", result);
           if(!instance.roleSubs[result._id]){

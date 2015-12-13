@@ -6,22 +6,22 @@ Meteor.startup(function () {
    * Publications
    */
   Meteor.publish('adventure', function (adventureId) {
-    return Adventures.find({_id: adventureId});
+    return Collections.Adventures.find({_id: adventureId});
   });
   Meteor.publish('adventure_test_system', function (testSystemId) {
-    return TestSystems.find({staticId: testSystemId});
+    return Collections.TestSystems.find({staticId: testSystemId});
   });
   Meteor.publish('adventure_test_agent', function (testAgentId) {
-    return TestAgents.find({staticId: testAgentId});
+    return Collections.TestAgents.find({staticId: testAgentId});
   });
   Meteor.publish('adventure_server', function (serverId) {
-    return Servers.find({staticId: serverId});
+    return Collections.Servers.find({staticId: serverId});
   });
   Meteor.publish('adventure_state', function (adventureId) {
-    return AdventureStates.find({adventureId: adventureId});
+    return Collections.AdventureStates.find({adventureId: adventureId});
   });
   Meteor.publish('adventures', function () {
-    return Adventures.find({});
+    return Collections.Adventures.find({});
   });
   Meteor.publish('adventure_log', function (adventureId, limit) {
     limit = limit || 100;
@@ -30,15 +30,15 @@ Meteor.startup(function () {
       options.limit = limit;
     }
     //console.log('adventure_log:', adventureId, limit, options);
-    return LogMessages.find({
+    return Collections.LogMessages.find({
       "context.adventureId": adventureId
     }, options);
   });
   Meteor.publish('adventure_actions', function (adventureId) {
-    return AdventureSteps.find({adventureId: adventureId}, {sort: {order: 1}});
+    return Collections.AdventureSteps.find({adventureId: adventureId}, {sort: {order: 1}});
   });
   Meteor.publish('adventure_commands', function (adventureId) {
-    return AdventureCommands.find({adventureId: adventureId}, {sort: {dateCreated: 1}});
+    return Collections.AdventureCommands.find({adventureId: adventureId}, {sort: {dateCreated: 1}});
   });
 
   /**
@@ -53,13 +53,13 @@ Meteor.startup(function () {
       check(adventureId, String);
 
       Meteor.log.debug("launchAdventure: " + adventureId);
-      var adventure = Adventures.findOne(adventureId);
+      var adventure = Collections.Adventures.findOne(adventureId);
       check(adventure, Object);
       check(adventure._id, String);
 
       // Queue the adventure
-      Adventures.update(adventureId, {$set: {status: AdventureStatus.staged }});
-      AdventureSteps.update({adventureId: adventureId }, {$set: {status: AdventureStepStatus.staged }});
+      Collections.Adventures.update(adventureId, {$set: {status: AdventureStatus.staged }});
+      Collections.AdventureSteps.update({adventureId: adventureId }, {$set: {status: AdventureStepStatus.staged }});
 
       var token = Accounts.singleUseAuth.generate({ expires: { seconds: 5 } }),
         command = [ProcessLauncher.adventureScript, "--adventureId", adventureId, "--token", token].join(" "),
@@ -67,15 +67,15 @@ Meteor.startup(function () {
         proc = ProcessLauncher.launchAutomation(command, logFile, function (code) {
           var adventure = this;
           Meteor.log.debug("Adventure Exit: " + adventure._id + ", " + code);
-          Adventures.update(adventure._id , {$unset: {pid: ""}});
+          Collections.Adventures.update(adventure._id , {$unset: {pid: ""}});
           if(code){
-            Adventures.update(adventure._id , {$set: {status: AdventureStatus.failed}});
+            Collections.Adventures.update(adventure._id , {$set: {status: AdventureStatus.failed}});
           } else {
-            Adventures.update({_id: adventure._id, status: {$nin: [AdventureStatus.failed]} }, {$set: {status: AdventureStatus.complete}});
+            Collections.Adventures.update({_id: adventure._id, status: {$nin: [AdventureStatus.failed]} }, {$set: {status: AdventureStatus.complete}});
           }
         }.bind(adventure));
 
-      Adventures.update(adventureId, {$set: {pid: proc.pid}});
+      Collections.Adventures.update(adventureId, {$set: {pid: proc.pid}});
       Meteor.log.info("launchAdventure launched: " + adventureId + " as " + proc.pid + " > " + logFile);
     },
 
@@ -98,7 +98,7 @@ Meteor.startup(function () {
       check(adventureId, String);
 
       Meteor.log.debug("pauseAdventure: " + adventureId);
-      Adventures.update(adventureId, {$set: { status: AdventureStatus.paused }})
+      Collections.Adventures.update(adventureId, {$set: { status: AdventureStatus.paused }})
     },
 
     /**
@@ -122,9 +122,9 @@ Meteor.startup(function () {
       check(adventureId, String);
       check(status, Number);
 
-      var adventure = Adventures.findOne({_id: adventureId});
+      var adventure = Collections.Adventures.findOne({_id: adventureId});
       check(adventure, Object);
-      Adventures.update({_id: adventure._id}, {$set: {status: status}});
+      Collections.Adventures.update({_id: adventure._id}, {$set: {status: status}});
     },
 
     /**
@@ -136,7 +136,7 @@ Meteor.startup(function () {
       Meteor.log.debug("saveAdventureState: " + adventureId);
       check(adventureId, String);
       check(state, Object);
-      AdventureStates.upsert({adventureId: adventureId}, {$set: state});
+      Collections.AdventureStates.upsert({adventureId: adventureId}, {$set: state});
     },
 
     /**
@@ -149,9 +149,9 @@ Meteor.startup(function () {
       check(adventureId, String);
       check(nodeId, String);
 
-      var adventure = Adventures.findOne({_id: adventureId});
+      var adventure = Collections.Adventures.findOne({_id: adventureId});
       check(adventure, Object);
-      Adventures.update({_id: adventure._id}, {$set: {lastKnownNode: nodeId}});
+      Collections.Adventures.update({_id: adventure._id}, {$set: {lastKnownNode: nodeId}});
     },
 
     /**
@@ -164,7 +164,7 @@ Meteor.startup(function () {
       check(adventureId, String);
       check(path, String);
 
-      Adventures.update({_id: adventureId}, {$set: {logFile: path}});
+      Collections.Adventures.update({_id: adventureId}, {$set: {logFile: path}});
     },
 
     /**
@@ -178,10 +178,10 @@ Meteor.startup(function () {
       check(stepId, String);
       check(status, Number);
 
-      var step = AdventureSteps.findOne({_id: stepId});
+      var step = Collections.AdventureSteps.findOne({_id: stepId});
       check(step, Object);
 
-      AdventureSteps.update({_id: step._id}, {$set: {status: status}});
+      Collections.AdventureSteps.update({_id: step._id}, {$set: {status: status}});
     },
 
     /**
@@ -195,7 +195,7 @@ Meteor.startup(function () {
       check(stepId, String);
       check(type, String);
 
-      var step = AdventureSteps.findOne({_id: stepId});
+      var step = Collections.AdventureSteps.findOne({_id: stepId});
       check(step, Object);
 
       var stepResult = step.result || {};
@@ -206,7 +206,7 @@ Meteor.startup(function () {
 
       stepResult[type].push(result);
 
-      AdventureSteps.update({_id: step._id}, {$set: {result: stepResult}});
+      Collections.AdventureSteps.update({_id: step._id}, {$set: {result: stepResult}});
     },
 
     /**
@@ -221,7 +221,7 @@ Meteor.startup(function () {
       check(status, Number);
 
       // Load the command
-      var command = AdventureCommands.findOne({_id: commandId});
+      var command = Collections.AdventureCommands.findOne({_id: commandId});
       check(command, Object);
 
       // Don't write the result unless it exists to prevent losing an existing result
@@ -234,9 +234,9 @@ Meteor.startup(function () {
           };
         }
 
-        AdventureCommands.update({_id: command._id}, {$set: {status: status, result: saveResult}});
+        Collections.AdventureCommands.update({_id: command._id}, {$set: {status: status, result: saveResult}});
       } else {
-        AdventureCommands.update({_id: command._id}, {$set: {status: status}});
+        Collections.AdventureCommands.update({_id: command._id}, {$set: {status: status}});
       }
     },
 
@@ -247,7 +247,7 @@ Meteor.startup(function () {
      */
     loadNode: function (staticId, projectVersionId) {
       Meteor.log.debug("loadNode: " + staticId + ", " + projectVersionId);
-      return Nodes.findOne({staticId: staticId, projectVersionId: projectVersionId});
+      return Collections.Nodes.findOne({staticId: staticId, projectVersionId: projectVersionId});
     },
 
     /**
@@ -264,15 +264,15 @@ Meteor.startup(function () {
  * @param adventureId
  */
 abortAdventure = function (adventureId) {
-  var adventure = Adventures.findOne(adventureId);
+  var adventure = Collections.Adventures.findOne(adventureId);
   if(adventure){
-    Adventures.update({_id: adventure._id}, {$set: {status: AdventureStatus.complete, abort: true}});
+    Collections.Adventures.update({_id: adventure._id}, {$set: {status: AdventureStatus.complete, abort: true}});
 
     // give it a few seconds, but make sure the process ends
     if(adventure.pid){
       Meteor.setTimeout(function () {
         // get the updated record
-        adventure = Adventures.findOne(adventureId);
+        adventure = Collections.Adventures.findOne(adventureId);
 
         // check to see if the process has exited
         if(adventure.pid){

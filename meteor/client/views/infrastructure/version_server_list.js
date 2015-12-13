@@ -3,7 +3,7 @@
  */
 Template.VersionServerList.helpers({
   sortedServers: function () {
-    return Servers.find({projectVersionId: this.version._id}, {sort: {order: 1}}).fetch();
+    return Collections.Servers.find({projectVersionId: this.version._id}, {sort: {order: 1}}).fetch();
   },
   getConfigSchema: function () {
     return Template.instance().configSchema.get();
@@ -17,7 +17,7 @@ Template.VersionServerList.events({
   "click .btn-add-server": function () {
     var instance = Template.instance(),
       order = instance.$(".server-list-row").length;
-    Servers.insert({
+    Collections.Servers.insert({
       projectId: this.project._id,
       projectVersionId: this.version._id,
       title: "New Server",
@@ -40,7 +40,7 @@ Template.VersionServerList.events({
       callback: function (btn) {
         //console.log("Dialog button pressed: ", btn);
         if(btn == "Delete"){
-          Servers.remove(server._id, function (error, response) {
+          Collections.Servers.remove(server._id, function (error, response) {
             Dialog.hide();
             if(error){
               Meteor.log.error("Delete failed: " + error.message);
@@ -58,7 +58,7 @@ Template.VersionServerList.events({
       dataKey = $(e.target).attr("data-key"),
       update = {$set: {}};
     update["$set"][dataKey] = newValue;
-    Servers.update(serverId, update, function (error, response) {
+    Collections.Servers.update(serverId, update, function (error, response) {
       if(error){
         Meteor.log.error("Server update failed: " + error.message);
         Dialog.error("Server update failed: " + error.message);
@@ -101,7 +101,7 @@ Template.VersionServerList.rendered = function () {
           order = $(el).attr("data-sort-order");
           if(order != i){
             console.log("Updating order: ", i, $(el).attr("data-pk"));
-            Servers.update($(el).attr("data-pk"), {$set: {order: i}}, function (error, response) {
+            Collections.Servers.update($(el).attr("data-pk"), {$set: {order: i}}, function (error, response) {
               if(error){
                 Meteor.log.error("Server order update failed: " + error.message);
                 Dialog.error("Server order update failed: " + error.message);
@@ -120,12 +120,12 @@ Template.VersionServerList.rendered = function () {
   });
 
   // Setup the config schema initial valur
-  var ds = DataStores.findOne({dataKey: "server_config_" + instance.data.version._id});
+  var ds = Collections.DataStores.findOne({dataKey: "server_config_" + instance.data.version._id});
   DataStoreSchemas[ds._id] = DSUtil.simpleSchema(ds.schema);
   instance.configSchema.set(DataStoreSchemas[ds._id]);
 
   // Keep the server config simple schema up to date
-  instance.configObservation = DataStores.find({dataKey: "server_config_" + instance.data.version._id}).observeChanges({
+  instance.configObservation = Collections.DataStores.find({dataKey: "server_config_" + instance.data.version._id}).observeChanges({
     changed: function (id, fields) {
       if(_.contains(fields, "schema")){
         DataStoreSchemas[id] = DSUtil.simpleSchema(fields.schema);

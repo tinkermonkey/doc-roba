@@ -51,7 +51,7 @@ Template.AdventureToolbar.helpers({
   getCurrentNode: function () {
     var nodeId = this.currentNode.get();
     if(nodeId){
-      return Nodes.findOne({ staticId: nodeId, projectVersionId: this.adventure.projectVersionId });
+      return Collections.Nodes.findOne({ staticId: nodeId, projectVersionId: this.adventure.projectVersionId });
     }
   },
   getSelector: function () {
@@ -77,7 +77,7 @@ Template.AdventureToolbar.events({
 
     if(selector && lastLocation){
       // send the command to clear all of the highlighted elements
-      var commandId = AdventureCommands.insert({
+      var commandId = Collections.AdventureCommands.insert({
         projectId: instance.data.adventure.projectId,
         adventureId: instance.data.adventure._id,
         code: "driver.refineSelector(" + lastLocation.x + ", " + lastLocation.y + ", \"" + Util.escapeDoubleQuotes(selector) + "\");"
@@ -87,7 +87,7 @@ Template.AdventureToolbar.events({
           Dialog.error("Error adding adventure command: " + error.message);
         } else {
           // wait for the command to return
-          var cursor = AdventureCommands.find({_id: commandId}).observe({
+          var cursor = Collections.AdventureCommands.find({_id: commandId}).observe({
             changed: function (newDoc) {
               if(newDoc.status == AdventureStepStatus.complete){
                 console.log("Command Complete: ", newDoc.result);
@@ -115,7 +115,7 @@ Template.AdventureToolbar.events({
     var selector = instance.$(".selector-value").val();
 
     // send the command to clear all of the highlighted elements
-    AdventureCommands.insert({
+    Collections.AdventureCommands.insert({
       projectId: instance.data.adventure.projectId,
       adventureId: instance.data.adventure._id,
       code: "driver.testSelector(\"" + Util.escapeDoubleQuotes(selector) + "\");"
@@ -160,7 +160,7 @@ Template.AdventureToolbar.events({
     }
 
     // send the command to clear all of the highlighted elements
-    AdventureCommands.insert({
+    Collections.AdventureCommands.insert({
       projectId: instance.data.adventure.projectId,
       adventureId: instance.data.adventure._id,
       updateState: true,
@@ -187,7 +187,7 @@ Template.AdventureToolbar.events({
     this.checkResult.set();
 
     // send the command to clear all of the highlighted elements
-    AdventureCommands.insert({
+    Collections.AdventureCommands.insert({
       projectId: instance.data.adventure.projectId,
       adventureId: instance.data.adventure._id,
       updateState: false,

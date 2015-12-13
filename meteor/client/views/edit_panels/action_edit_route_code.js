@@ -37,7 +37,7 @@ Template.action_edit_route_code.rendered = function () {
           var routeKey = "routes." + route.index + ".routeCode",
             update = {$set: {}};
           update["$set"][routeKey] = editor.getValue();
-          Actions.update(action._id, update, function (error, response) {
+          Collections.Actions.update(action._id, update, function (error, response) {
             if(error){
               Meteor.log.error("Failed to save route code: " + error.message);
             } else {

@@ -62,8 +62,8 @@ Template.MapTree.rendered = function () {
       Meteor.log.debug("Auto-run executing map_tree: ");
 
       // get the nodes and actions
-      var mapNodes = Nodes.find({projectVersionId: instance.data.projectVersionId}).fetch(),
-        mapActions = Actions.find({projectVersionId: instance.data.projectVersionId}).fetch();
+      var mapNodes = Collections.Nodes.find({projectVersionId: instance.data.projectVersionId}).fetch(),
+        mapActions = Collections.Actions.find({projectVersionId: instance.data.projectVersionId}).fetch();
 
       if(instance.lastUpdate && Date.now() - instance.lastUpdate > 1000){
         console.log("MapLayout: direct update");

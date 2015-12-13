@@ -3,13 +3,13 @@
  */
 Template.TestRunItemTemplate.helpers({
   getTemplate: function () {
-    return TestRunTemplates.findOne({staticId: this.config.templateId, projectVersionId: this.projectVersionId});
+    return Collections.TestRunTemplates.findOne({staticId: this.config.templateId, projectVersionId: this.projectVersionId});
   },
   itemCount: function () {
-    return TestRunTemplateItems.find({templateId: this.staticId, type: TestRunItemTypes.test, projectVersionId: this.projectVersionId}).count();
+    return Collections.TestRunTemplateItems.find({templateId: this.staticId, type: TestRunItemTypes.test, projectVersionId: this.projectVersionId}).count();
   },
   stageCount: function () {
-    return TestRunTemplateItems.find({parentId: this.staticId, type: TestRunItemTypes.stage, projectVersionId: this.projectVersionId}).count();
+    return Collections.TestRunTemplateItems.find({parentId: this.staticId, type: TestRunItemTypes.stage, projectVersionId: this.projectVersionId}).count();
   }
 });
 

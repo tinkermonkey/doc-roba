@@ -3,7 +3,7 @@
  */
 Template.VersionTestSystemList.helpers({
   sortedTestSystems: function () {
-    return TestSystems.find({projectVersionId: this.version._id}, {sort: {order: 1}}).fetch();
+    return Collections.TestSystems.find({projectVersionId: this.version._id}, {sort: {order: 1}}).fetch();
   }
 });
 
@@ -14,7 +14,7 @@ Template.VersionTestSystemList.events({
   "click .btn-add-test-system": function () {
     var instance = Template.instance(),
       order = instance.$(".sortable-table-row").length;
-    TestSystems.insert({
+    Collections.TestSystems.insert({
       projectId: this.project._id,
       projectVersionId: this.version._id,
       title: "New Test System",
@@ -48,7 +48,7 @@ Template.VersionTestSystemList.events({
       callback: function (btn) {
         //console.log("Dialog button pressed: ", btn);
         if(btn == "Delete"){
-          TestSystems.remove(testSystem._id, function (error, response) {
+          Collections.TestSystems.remove(testSystem._id, function (error, response) {
             Dialog.hide();
             if(error){
               Meteor.log.error("Delete failed: " + error.message);
@@ -66,7 +66,7 @@ Template.VersionTestSystemList.events({
       dataKey = $(e.target).attr("data-key"),
       update = {$set: {}};
     update["$set"][dataKey] = newValue;
-    TestSystems.update(testSystemId, update, function (error) {
+    Collections.TestSystems.update(testSystemId, update, function (error) {
       if(error){
         Meteor.log.error("Test System update failed: " + error.message);
         Dialog.error("Test System update failed: " + error.message);
@@ -100,7 +100,7 @@ Template.VersionTestSystemList.rendered = function () {
           order = $(el).attr("data-sort-order");
           if(order != i){
             console.log("Updating order: ", i, $(el).attr("data-pk"));
-            TestSystems.update($(el).attr("data-pk"), {$set: {order: i}}, function (error, response) {
+            Collections.TestSystems.update($(el).attr("data-pk"), {$set: {order: i}}, function (error, response) {
               if(error){
                 Meteor.log.error("Test System order update failed: " + error.message);
                 Dialog.error("Test System order update failed: " + error.message);

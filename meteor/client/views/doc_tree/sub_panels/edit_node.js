@@ -3,7 +3,7 @@
  */
 Template.edit_node.helpers({
   getNodeRecord: function () {
-    return Nodes.findOne({_id: this._id});
+    return Collections.Nodes.findOne({_id: this._id});
   },
   isVisitable: function () {
     return this.type == NodeTypes.page || this.type == NodeTypes.view
@@ -35,7 +35,7 @@ Template.edit_node.events({
     console.log("update: ", dataKey, instance.data._id);
     if(dataKey){
       update["$set"][dataKey] = newValue;
-      Nodes.update(instance.data._id, update, function (error) {
+      Collections.Nodes.update(instance.data._id, update, function (error) {
         if(error){
           Meteor.log.error("Failed to update node value: " + error.message);
           Dialog.error("Failed to update node value: " + error.message);

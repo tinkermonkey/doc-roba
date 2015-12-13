@@ -134,22 +134,22 @@ Schemas.Node = new SimpleSchema({
     autoValue: autoValueModifiedBy
   }
 });
-Nodes = new Mongo.Collection("nodes");
-Nodes.attachSchema(Schemas.Node);
-Nodes.allow({
+Collections.Nodes = new Mongo.Collection("nodes");
+Collections.Nodes.attachSchema(Schemas.Node);
+Collections.Nodes.allow({
   insert: allowIfAuthenticated,
   update: allowIfAuthenticated,
   remove: allowIfAuthenticated,
   fetch: ["staticId"]
 });
-Nodes.deny({
+Collections.Nodes.deny({
   insert: allowIfTester,
   update: allowIfTester,
   remove: allowIfTester,
   fetch: ['projectId']
 });
-trackChanges(Nodes, "nodes");
-autoUpdateOrder(Nodes, ["urlParameters"]);
+trackChanges(Collections.Nodes, "nodes");
+autoUpdateOrder(Collections.Nodes, ["urlParameters"]);
 
 /**
  * ============================================================================
@@ -158,10 +158,10 @@ autoUpdateOrder(Nodes, ["urlParameters"]);
  * ============================================================================
  */
 if(Meteor.isServer) {
-  Nodes.after.insert(function (userId, node) {
+  Collections.Nodes.after.insert(function (userId, node) {
     if(node.type === NodeTypes.userType) {
       // Create a new data store for users of this type
-      DataStores.insert({
+      Collections.DataStores.insert({
         title: node.title + " Users",
         dataKey: node._id,
         category: DataStoreCategories.userType,
@@ -172,18 +172,18 @@ if(Meteor.isServer) {
       });
     }
   });
-  Nodes.after.update(function (userId, node, changedFields) {
+  Collections.Nodes.after.update(function (userId, node, changedFields) {
     if(node.type === NodeTypes.userType) {
       if(_.contains(changedFields, "title")){
         // update the data store title
-        DataStores.update({dataKey: node._id}, {$set: {title: node.title + " Users"}});
+        Collections.DataStores.update({dataKey: node._id}, {$set: {title: node.title + " Users"}});
       }
     }
   });
-  Nodes.after.remove(function (userId, node) {
+  Collections.Nodes.after.remove(function (userId, node) {
     if(node.type === NodeTypes.userType) {
       // update the data store title
-      DataStores.update({dataKey: node._id}, {$set: {deleted: true}});
+      Collections.DataStores.update({dataKey: node._id}, {$set: {deleted: true}});
     }
   });
 }
@@ -191,23 +191,23 @@ if(Meteor.isServer) {
 /**
  * Helpers
  */
-Nodes.helpers({
+Collections.Nodes.helpers({
   platform: function () {
     if(this.platformId){
-      return Nodes.findOne({staticId: this.platformId, projectVersionId: this.projectVersionId});
+      return Collections.Nodes.findOne({staticId: this.platformId, projectVersionId: this.projectVersionId});
     }
   },
   userType: function () {
     if(this.userTypeId){
-      return Nodes.findOne({staticId: this.userTypeId, projectVersionId: this.projectVersionId});
+      return Collections.Nodes.findOne({staticId: this.userTypeId, projectVersionId: this.projectVersionId});
     }
   },
   getAccount: function () {
     if(this.userTypeId || this.type == NodeTypes.userType){
       var userTypeId = this.userTypeId || this._id,
-        dataStore = DataStores.findOne({ dataKey: userTypeId });
+        dataStore = Collections.DataStores.findOne({ dataKey: userTypeId });
       if(dataStore){
-        return DataStoreRows.findOne({dataStoreId: dataStore._id}, {sort: {dateCreated: 1}});
+        return Collections.DataStoreRows.findOne({dataStoreId: dataStore._id}, {sort: {dateCreated: 1}});
       }
     }
   }

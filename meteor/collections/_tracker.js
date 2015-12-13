@@ -68,8 +68,8 @@ Schemas.RecordChange = new SimpleSchema({
     denyUpdate: true
   }
 });
-RecordChanges = new Meteor.Collection("record_changes");
-RecordChanges.attachSchema(Schemas.RecordChange);
+Collections.RecordChanges = new Meteor.Collection("record_changes");
+Collections.RecordChanges.attachSchema(Schemas.RecordChange);
 
 /**
  * Define a list of fields which will automatically be pulled off of the changed record
@@ -123,7 +123,7 @@ trackChanges = function (collection, collectionName) {
     _.each(changePullList, function (field) { if(record[field]){ change[field] = record[field]; }});
 
     // Store the change
-    RecordChanges.insert(change);
+    Collections.RecordChanges.insert(change);
   });
 
   // After update tracking
@@ -159,7 +159,7 @@ trackChanges = function (collection, collectionName) {
     _.each(changePullList, function (field) { if(record[field]){ change[field] = record[field]; }});
 
     // Store the change
-    RecordChanges.insert(change);
+    Collections.RecordChanges.insert(change);
   }, {fetchPrevious: true});
 
   // After remove tracking
@@ -180,6 +180,6 @@ trackChanges = function (collection, collectionName) {
     _.each(changePullList, function (field) { if(record[field]){ change[field] = record[field]; }});
 
     // Store the change
-    RecordChanges.insert(change);
+    Collections.RecordChanges.insert(change);
   });
 };

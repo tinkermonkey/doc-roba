@@ -5,7 +5,7 @@ Template.AdventureContext.helpers({
   getNode: function () {
     //console.log("AdventureContext: ", this);
     if(this.currentNode && this.currentNode.get()){
-      var node = Nodes.findOne({staticId: this.currentNode.get(), projectVersionId: this.adventure.projectVersionId});
+      var node = Collections.Nodes.findOne({staticId: this.currentNode.get(), projectVersionId: this.adventure.projectVersionId});
       //console.log("AdventureContext, node: ", node);
       if(node){
         // clear the ignore list once a node is found
@@ -142,7 +142,7 @@ Template.AdventureContext.events({
       }
 
       // Get the parent node to figure out the platform and user type
-      var parent = Nodes.findOne({staticId: record.parentId, projectVersionId: record.projectVersionId});
+      var parent = Collections.Nodes.findOne({staticId: record.parentId, projectVersionId: record.projectVersionId});
       if(!parent){
         Meteor.log.error("Create node failed: could not find parent node " + record.parentId + " for project " + record.projectVersionId);
         Dialog.error("Create node failed: could not find parent node " + record.parentId + " for project " + record.projectVersionId);
@@ -152,7 +152,7 @@ Template.AdventureContext.events({
       record.platformId = parent.platformId;
 
       // create the record
-      Nodes.insert(record);
+      Collections.Nodes.insert(record);
 
       // transition back to the normal layout
       $(".adventure-focus-form").removeClass("adventure-focus-form");
@@ -171,7 +171,7 @@ Template.AdventureContext.events({
     if(dataKey){
       update["$set"][dataKey] = newValue;
       //console.log("Edited: ", dataKey, newValue, node);
-      Nodes.update(nodeId, update, function (error) {
+      Collections.Nodes.update(nodeId, update, function (error) {
         if(error){
           Meteor.log.error("Failed to update node value: " + error.message);
           Dialog.error("Failed to update node value: " + error.message);
@@ -196,7 +196,7 @@ Template.AdventureContext.events({
 
     // send the command to get information about the "clicked" element
     if(field && node[field] && _.contains([AdventureStatus.awaitingCommand], adventureContext.adventure.status)){
-      AdventureCommands.insert({
+      Collections.AdventureCommands.insert({
         projectId: adventureContext.adventure.projectId,
         adventureId: adventureContext.adventure._id,
         updateState: false,

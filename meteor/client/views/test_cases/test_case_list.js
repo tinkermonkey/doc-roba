@@ -3,10 +3,10 @@
  */
 Template.TestCaseList.helpers({
   baseGroups: function () {
-    return TestGroups.find({ parentGroupId: null, projectVersionId: this.version._id }, { sort: { title: 1 } });
+    return Collections.TestGroups.find({ parentGroupId: null, projectVersionId: this.version._id }, { sort: { title: 1 } });
   },
   baseTestCases: function () {
-    return TestCases.find({ testGroupId: null, projectVersionId: this.version._id }, { sort: { title: 1 } });
+    return Collections.TestCases.find({ testGroupId: null, projectVersionId: this.version._id }, { sort: { title: 1 } });
   }
 });
 
@@ -58,8 +58,8 @@ Template.TestCaseList.events({
         }
       });
     };
-    TestCases.find({ title: {$regex: search, $options: "i"}, projectVersionId: this.version._id }).forEach(highlight);
-    TestGroups.find({ title: {$regex: search, $options: "i"}, projectVersionId: this.version._id }).forEach(highlight);
+    Collections.TestCases.find({ title: {$regex: search, $options: "i"}, projectVersionId: this.version._id }).forEach(highlight);
+    Collections.TestGroups.find({ title: {$regex: search, $options: "i"}, projectVersionId: this.version._id }).forEach(highlight);
 
     // show no results if nothing matched
     if(!instance.$(".test-case-list-selectable.highlight").length){
@@ -81,7 +81,7 @@ Template.TestCaseList.events({
 
     if(itemType && itemName && itemName.length){
       if(itemType == "testcase"){
-        TestCases.insert({
+        Collections.TestCases.insert({
           projectId: version.projectId,
           projectVersionId: version._id,
           testGroupId: groupId,
@@ -95,7 +95,7 @@ Template.TestCaseList.events({
           }
         });
       } else if(itemType == "testgroup") {
-        TestGroups.insert({
+        Collections.TestGroups.insert({
           projectId: version.projectId,
           projectVersionId: version._id,
           parentGroupId: groupId,
@@ -179,14 +179,14 @@ Template.TestCaseList.rendered = function () {
         console.log("Drop: ", itemId, "on", groupId);
         if (groupId && itemId) {
           if (itemIsGroup) {
-            TestGroups.update(itemId, {$set: {parentGroupId: groupId}}, function (error) {
+            Collections.TestGroups.update(itemId, {$set: {parentGroupId: groupId}}, function (error) {
               if (error) {
                 Meteor.log.error("Failed to update parent group: " + error.message);
                 Dialog.error("Failed to update parent group: " + error.message);
               }
             });
           } else {
-            TestCases.update(itemId, {$set: {testGroupId: groupId}}, function (error) {
+            Collections.TestCases.update(itemId, {$set: {testGroupId: groupId}}, function (error) {
               if (error) {
                 Meteor.log.error("Failed to update test group: " + error.message);
                 Dialog.error("Failed to update test group: " + error.message);

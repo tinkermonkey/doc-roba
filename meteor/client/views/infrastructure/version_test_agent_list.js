@@ -3,7 +3,7 @@
  */
 Template.VersionTestAgentList.helpers({
   sortedTestAgents: function () {
-    return TestAgents.find({projectVersionId: this.version._id}, {sort: {order: 1}}).fetch();
+    return Collections.TestAgents.find({projectVersionId: this.version._id}, {sort: {order: 1}}).fetch();
   }
 });
 
@@ -14,7 +14,7 @@ Template.VersionTestAgentList.events({
   "click .btn-add-test-agent": function () {
     var instance = Template.instance(),
       order = instance.$(".sortable-table-row").length;
-    TestAgents.insert({
+    Collections.TestAgents.insert({
       projectId: this.project._id,
       projectVersionId: this.version._id,
       type: TestAgentTypes.selenium,
@@ -46,7 +46,7 @@ Template.VersionTestAgentList.events({
       callback: function (btn) {
         //console.log("Dialog button pressed: ", btn);
         if(btn == "Delete"){
-          TestAgents.remove(testAgent._id, function (error, response) {
+          Collections.TestAgents.remove(testAgent._id, function (error, response) {
             Dialog.hide();
             if(error){
               Meteor.log.error("Delete failed: ", error);
@@ -64,7 +64,7 @@ Template.VersionTestAgentList.events({
       dataKey = $(e.target).attr("data-key"),
       update = {$set: {}};
     update["$set"][dataKey] = newValue;
-    TestAgents.update(testAgentId, update, function (error) {
+    Collections.TestAgents.update(testAgentId, update, function (error) {
       if(error){
         console.error("Test Agent update failed: ", error);
         Dialog.error("Test Agent update failed: " + error.message);
@@ -98,7 +98,7 @@ Template.VersionTestAgentList.rendered = function () {
           order = $(el).attr("data-sort-order");
           if(order != i){
             console.log("Updating order: ", i, $(el).attr("data-pk"));
-            TestAgents.update($(el).attr("data-pk"), {$set: {order: i}}, function (error, response) {
+            Collections.TestAgents.update($(el).attr("data-pk"), {$set: {order: i}}, function (error, response) {
               if(error){
                 console.error("Test Agent order update failed: ", error);
                 Dialog.error("Test Agent order update failed: " + error.message);

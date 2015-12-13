@@ -38,18 +38,18 @@ Schemas.Project = new SimpleSchema({
     autoValue: autoValueModifiedBy
   }
 });
-Projects = new Mongo.Collection("projects");
-Projects.attachSchema(Schemas.Project);
-Projects.allow({
+Collections.Projects = new Mongo.Collection("projects");
+Collections.Projects.attachSchema(Schemas.Project);
+Collections.Projects.allow({
   insert: allowIfAuthenticated,
   update: allowIfAuthenticated,
   remove: allowIfAuthenticated,
   fetch: []
 });
-Projects.deny({
+Collections.Projects.deny({
   insert: allowIfAdmin,
   update: allowIfAdmin,
   remove: allowIfAdmin,
   fetch: ['owner']
 });
-trackChanges(Projects, "projects");
+trackChanges(Collections.Projects, "projects");

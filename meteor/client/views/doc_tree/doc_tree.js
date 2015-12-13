@@ -36,20 +36,20 @@ Template.DocTree.rendered = function () {
 
       // get fresh node data
       //self.treeLayout.masterNodeList = Nodes.find({projectVersionId: self.data.version._id}).fetch();
-      self.treeLayout.nodeHandler.setNodes(Nodes.find({projectVersionId: self.data.version._id}).fetch());
-      self.treeLayout.actionHandler.setActions(Actions.find({projectVersionId: self.data.version._id}).fetch());
+      self.treeLayout.nodeHandler.setNodes(Collections.Nodes.find({projectVersionId: self.data.version._id}).fetch());
+      self.treeLayout.actionHandler.setActions(Collections.Actions.find({projectVersionId: self.data.version._id}).fetch());
 
       // get the mesh of navMenu actions
-      self.treeLayout.actionHandler.setNavActions(Nodes.find({
+      self.treeLayout.actionHandler.setNavActions(Collections.Nodes.find({
         type: NodeTypes.navMenu, projectVersionId: self.data.version._id
       }).map(function (navMenu) {
         return {
           menu: navMenu,
-          actions: Actions.find({
+          actions: Collections.Actions.find({
             projectVersionId: self.data.version._id,
             nodeId: navMenu.staticId
           }).fetch(),
-          nodes: Nodes.find({
+          nodes: Collections.Nodes.find({
             projectVersionId: self.data.version._id,
             navMenus: navMenu.staticId
           }).map(function (node) { return node.staticId })

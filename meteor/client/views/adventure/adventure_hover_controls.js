@@ -26,7 +26,7 @@ Template.AdventureHoverControls.events({
 
     // send the command to clear all of the highlighted elements
     if(selector){
-      AdventureCommands.insert({
+      Collections.AdventureCommands.insert({
         projectId: instance.data.adventure.projectId,
         adventureId: instance.data.adventure._id,
         code: "driver." + command + "(\"" + selector + "\");"
@@ -59,7 +59,7 @@ Template.AdventureHoverControls.events({
 
     // send the command to clear all of the highlighted elements
     if(selector){
-      AdventureCommands.insert({
+      Collections.AdventureCommands.insert({
         projectId: instance.data.adventure.projectId,
         adventureId: instance.data.adventure._id,
         code: "var el = driver.element(\"" + selector + "\"); driver.moveTo(el.ELEMENT);"
@@ -101,7 +101,7 @@ Template.AdventureHoverControls.rendered = function () {
       }
 
       if(selector){
-        AdventureCommands.insert({
+        Collections.AdventureCommands.insert({
           projectId: instance.data.adventure.projectId,
           adventureId: instance.data.adventure._id,
           code: "driver.setValue(\"" + selector + "\", \"" + newValue + "\");"
