@@ -28,7 +28,8 @@ Meteor.startup(function(){
 var DemoDataHandler = {
   // The location the files will be stored
   dataPath: '../demo_data',
-  fileRegex: /\.json\.zip$/,
+  fileRegex: /\.json$|\.json\.zip/,
+  encoding: 'utf8',
 
   // These collections will be exported
   collectionList: [
@@ -59,7 +60,7 @@ var DemoDataHandler = {
   ],
 
   /**
-   * Export all of the data
+   * Export all demo data
    */
   exportData: function () {
     console.log("DemoDataHandler.exportData");
@@ -68,7 +69,7 @@ var DemoDataHandler = {
     Meteor.log.debug("DemoDataHandler.exportData data folder: " + dataDir);
 
     // clear out the directory if it exists
-    if(fs.existsSync()){
+    if(fs.existsSync(dataDir)){
       Meteor.log.info("DemoDataHandler.exportData removing existing files");
       fs.readdirSync(dataDir)
         .filter(function (filepath) {
@@ -85,5 +86,43 @@ var DemoDataHandler = {
     }
     
     // export the collections
+    DemoDataHandler.collectionList.forEach(function (collectionName) {
+      // open a file for the collection
+      var collectionFilePath = path.join(dataDir, collectionName + ".json"),
+        cursor = Collections[collectionName].find({});
+      DemoDataHandler.exportRecords(cursor, collectionFilePath, collectionName);
+    });
+
+    // export the users
+    var usersFilePath = path.join(dataDir, "Users.json");
+    DemoDataHandler.exportRecords(Meteor.users.find({}, {fields: {
+      "services.resume": 0,
+      "services.singleUse": 0
+    }}), usersFilePath, "Users");
+
+    Meteor.log.info("DemoDataHandler.exportData complete");
+  },
+
+  /**
+   * Export a particular collection
+   */
+  exportRecords: function (cursor, jsonFilePath, collectionName) {
+    // open a file for the collection
+    var output = "",
+      recordCount = cursor.count();
+
+    Meteor.log.info("DemoDataHandler.exportData exporting " + collectionName + " (" + recordCount + " records)");
+
+    // start the JSON file
+    output += "[\n";
+    cursor.forEach(function (record, i) {
+      output += JSON.stringify(record) + (i < recordCount - 1 ? ",\n" : "\n");
+    });
+    output += "]\n";
+
+    // Zip it
+    var zipFile = new AdmZip();
+    zipFile.addFile(path.basename(jsonFilePath), new Buffer(output, DemoDataHandler.encoding), collectionName);
+    zipFile.writeZip(jsonFilePath + ".zip");
   }
 };

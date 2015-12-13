@@ -4,7 +4,7 @@
 fs            = Npm.require("fs");
 path          = Npm.require("path");
 childProcess  = Npm.require("child_process");
-zip           = Npm.require("node-zip");
+AdmZip        = Npm.require("adm-zip");
 
 /**
  * Top level configuration data
