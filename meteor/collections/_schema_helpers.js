@@ -2,7 +2,9 @@
  * Top level object to capture all of the schemas
  */
 Schemas = {};
-Collections = {};
+Collections = {
+  Users: Meteor.users
+};
 
 /**
  * Enable debug for the moment

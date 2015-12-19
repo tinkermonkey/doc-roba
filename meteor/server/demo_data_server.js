@@ -4,6 +4,7 @@
 Meteor.startup(function(){
   if (Collections.Projects.find().count() == 0 && Collections.Nodes.find().count() == 0) {
     Meteor.log.info("No data found, executing data fixture");
+    DemoDataHandler.importData();
   }
 
   /**
@@ -174,11 +175,29 @@ var DemoDataHandler = {
       zipEntries.forEach(function (zipEntry) {
         if(zipEntry.entryName && zipEntry.entryName.match(/\.json$/)){
           Meteor.log.debug("DemoDataHandler.importRecords reading file " + zipEntry.entryName );
-          var inputBuffer = AdmZip.readAsTextAsync(zipEntry, DemoDataHandler.encoding);
+
+          var input = zipFile.readAsText(zipEntry, DemoDataHandler.encoding);
           try {
-            var input = JSON.parse(inputBuffer.toString());
+            var data = JSON.parse(input),
+              collectionName = zipEntry.entryName.replace(/\.json$/i, "");
+            Meteor.log.debug("DemoDataHandler.importRecords found " + data.length + " records for " + collectionName );
           } catch (e) {
             Meteor.log.error("DemoDataHandler.importRecords JSON parse failed: " + e.toString());
+          }
+
+          if(Collections[collectionName]){
+            data.forEach(function (record) {
+              // Use the direct method to circumvent the collection hooks
+              if(Collections[collectionName] && Collections[collectionName].direct){
+                Collections[collectionName].direct.insert(record);
+              } else {
+                // CollectionFS doesn't have hooks and I have to figure out how to encode the file data
+                //Collections[collectionName].insert(record);
+
+              }
+            });
+          } else {
+            Meteor.log.error("DemoDataHandler.importRecords failed: collection [" + collectionName + "] not found");
           }
         }
       });
