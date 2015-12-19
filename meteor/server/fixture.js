@@ -1,4 +1,4 @@
-if (Collections.Nodes.find().count() === 0) {
+if (Collections.Nodes.find().count() === 0 && 0) {
   Meteor.log.info('No data found, executing data fixture');
 
   // Create a user

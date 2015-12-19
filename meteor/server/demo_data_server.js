@@ -15,9 +15,7 @@ Meteor.startup(function(){
      */
     exportDemoData: function () {
       Meteor.log.info("exportDemoData called");
-      //Meteor.bindEnvironment(function () {
-        DemoDataHandler.exportData();
-      //});
+      DemoDataHandler.exportData();
     }
   });
 });
@@ -63,7 +61,7 @@ var DemoDataHandler = {
    * Export all demo data
    */
   exportData: function () {
-    console.log("DemoDataHandler.exportData");
+    Meteor.log.info("DemoDataHandler.exportData");
     var dataDir = path.join(DocRoba.rootPath, DemoDataHandler.dataPath);
 
     Meteor.log.debug("DemoDataHandler.exportData data folder: " + dataDir);
@@ -76,7 +74,7 @@ var DemoDataHandler = {
           return path.basename(filepath).match(DemoDataHandler.fileRegex) != null
         })
         .forEach(function(filepath) {
-          Meteor.log.info("Removing file: " + filepath);
+          Meteor.log.debug("Removing file: " + filepath);
           fs.unlinkSync(path.join(dataDir, filepath));
         });
     } else {
@@ -100,18 +98,24 @@ var DemoDataHandler = {
       "services.singleUse": 0
     }}), usersFilePath, "Users");
 
+    // export log messages for test results
+    var logMessagePath = path.join(dataDir, "LogMessages.json");
+    DemoDataHandler.exportRecords(Collections.LogMessages.find({testResultRoleId: {$exists: 1}}), logMessagePath, "LogMessages");
+
     Meteor.log.info("DemoDataHandler.exportData complete");
   },
 
   /**
    * Export a particular collection
+   * @param cursor          Collection cursor pointing to records to export
+   * @param jsonFilePath    Path to the json file to export to
+   * @param collectionName  The name of the collection to tag the data with
    */
   exportRecords: function (cursor, jsonFilePath, collectionName) {
-    // open a file for the collection
     var output = "",
       recordCount = cursor.count();
 
-    Meteor.log.info("DemoDataHandler.exportData exporting " + collectionName + " (" + recordCount + " records)");
+    Meteor.log.info("DemoDataHandler.exportRecords exporting " + collectionName + " (" + recordCount + " records)");
 
     // start the JSON file
     output += "[\n";
@@ -124,5 +128,62 @@ var DemoDataHandler = {
     var zipFile = new AdmZip();
     zipFile.addFile(path.basename(jsonFilePath), new Buffer(output, DemoDataHandler.encoding), collectionName);
     zipFile.writeZip(jsonFilePath + ".zip");
+  },
+
+  /**
+   * Import all demo data
+   */
+  importData: function () {
+    Meteor.log.info("DemoDataHandler.importData");
+    var dataDir = path.join(DocRoba.rootPath, DemoDataHandler.dataPath);
+
+    Meteor.log.debug("DemoDataHandler.importData data folder: " + dataDir);
+
+    // clear out the directory if it exists
+    if(fs.existsSync(dataDir)){
+      Meteor.log.debug("DemoDataHandler.importData scanning data files");
+      fs.readdirSync(dataDir)
+        .filter(function (filepath) {
+          return path.basename(filepath).match(DemoDataHandler.fileRegex) != null
+        })
+        .forEach(function(filepath) {
+          DemoDataHandler.importRecords(path.join(dataDir, filepath));
+        });
+    } else {
+      // create the folder
+      Meteor.log.error("DemoDataHandler.importData data directory didn't exist: " + dataDir);
+    }
+
+    Meteor.log.info("DemoDataHandler.importData complete");
+  },
+
+  /**
+   * Export a particular collection
+   * @param zipFilePath Path to the zip file to import
+   */
+  importRecords: function (zipFilePath) {
+    var input = "",
+      recordCount = 0;
+
+    Meteor.log.info("DemoDataHandler.importRecords importing " + path.basename(zipFilePath) );
+
+    // Unzip it
+    var zipFile = new AdmZip(zipFilePath),
+      zipEntries = zipFile.getEntries();
+    if(zipEntries){
+      zipEntries.forEach(function (zipEntry) {
+        if(zipEntry.entryName && zipEntry.entryName.match(/\.json$/)){
+          Meteor.log.debug("DemoDataHandler.importRecords reading file " + zipEntry.entryName );
+          var inputBuffer = AdmZip.readAsTextAsync(zipEntry, DemoDataHandler.encoding);
+          try {
+            var input = JSON.parse(inputBuffer.toString());
+          } catch (e) {
+            Meteor.log.error("DemoDataHandler.importRecords JSON parse failed: " + e.toString());
+          }
+        }
+      });
+    } else {
+      Meteor.log.error("Zip file didn't contain any zip entries: " + zipFilePath);
+    }
   }
 };
