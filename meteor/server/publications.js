@@ -79,7 +79,7 @@ Meteor.startup(function () {
       Collections.ProjectRoles.find({userId: this.userId}).forEach(function (role) {
         projectIds.push(role.projectId);
       });
-      return RecordChanges.find({projectId: {$in: projectIds}}, {limit: limit});
+      return Collections.RecordChanges.find({projectId: {$in: projectIds}}, {limit: limit});
     }
     return [];
   });
