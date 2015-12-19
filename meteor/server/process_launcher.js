@@ -16,10 +16,8 @@ ProcessLauncher = {
    * Initialize the Process Launcher
    */
   init: function () {
-    //this.baseLogPath       = fs.realpathSync(process.env.PWD) + "/" + Meteor.settings.paths.automation_logs + "/launcher/";
-    //this.automationPath    = fs.realpathSync(process.env.PWD) + "/" + Meteor.settings.paths.automation + "/";
-    //this.imageAnalysisPath = fs.realpathSync(process.env.PWD) + "/" + Meteor.settings.paths.image_analysis + "/";
-    this.baseLogPath       = path.join(DocRoba.rootPath, Meteor.settings.paths.automation_logs, "launcher");
+    this.baseLogPath       = path.join(DocRoba.rootPath, Meteor.settings.paths.automation_logs);
+    this.launcherLogPath   = path.join(DocRoba.rootPath, Meteor.settings.paths.automation, "launcher");
     this.automationPath    = path.join(DocRoba.rootPath, Meteor.settings.paths.automation);
     this.imageAnalysisPath = path.join(DocRoba.rootPath, Meteor.settings.paths.image_analysis);
 
@@ -31,6 +29,10 @@ ProcessLauncher = {
     if(!fs.existsSync(this.baseLogPath)){
       Meteor.log.debug("ProcessLauncher creating log directory: " + this.baseLogPath);
       fs.mkdirSync(this.baseLogPath);
+    }
+    if(!fs.existsSync(this.launcherLogPath)){
+      Meteor.log.debug("ProcessLauncher creating log directory: " + this.launcherLogPath);
+      fs.mkdirSync(this.launcherLogPath);
     }
   },
 
@@ -45,7 +47,7 @@ ProcessLauncher = {
     Meteor.log.info("ProcessLauncher.launchAutomation: " + command);
 
     // create a log file path
-    var logFilePath = this.baseLogPath + logFileName,
+    var logFilePath = this.launcherLogPath + logFileName,
       out = fs.openSync(logFilePath, "a"),
       err = fs.openSync(logFilePath, "a");
 
@@ -82,7 +84,7 @@ ProcessLauncher = {
     Meteor.log.info("ProcessLauncher.launchImageTask: " + command);
 
     // create a log file path
-    var logFilePath = this.baseLogPath + logFileName,
+    var logFilePath = this.launcherLogPath + logFileName,
       out = fs.openSync(logFilePath, "w"),
       err = fs.openSync(logFilePath, "a");
 
