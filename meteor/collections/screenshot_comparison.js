@@ -29,17 +29,9 @@ Schemas.ScreenshotComparison = new SimpleSchema({
 });
 Collections.ScreenshotComparisons = new Mongo.Collection("screenshot_comparisons");
 Collections.ScreenshotComparisons.attachSchema(Schemas.ScreenshotComparison);
-Collections.ScreenshotComparisons.allow({
-  insert: allowIfAuthenticated,
-  update: allowIfAuthenticated,
-  remove: allowIfAuthenticated
-});
-Collections.ScreenshotComparisons.deny({
-  insert: allowIfTester,
-  update: allowIfTester,
-  remove: allowIfTester,
-  fetch: ['projectId']
-});
+// casual users need to be able to create these when viewing test results
+Collections.ScreenshotComparisons.deny(Auth.ruleSets.deny.ifNoProjectAccess);
+Collections.ScreenshotComparisons.allow(Auth.ruleSets.allow.ifAuthenticated);
 
 /**
  * Helpers

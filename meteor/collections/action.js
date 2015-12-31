@@ -68,16 +68,7 @@ Schemas.Action = new SimpleSchema({
 });
 Collections.Actions = new Mongo.Collection("actions");
 Collections.Actions.attachSchema(Schemas.Action);
-Collections.Actions.allow({
-  insert: allowIfAuthenticated,
-  update: allowIfAuthenticated,
-  remove: allowIfAuthenticated
-});
-Collections.Actions.deny({
-  insert: allowIfTester,
-  update: allowIfTester,
-  remove: allowIfTester,
-  fetch: ['projectId']
-});
+Collections.Actions.deny(Auth.ruleSets.deny.ifNotTester);
+Collections.Actions.allow(Auth.ruleSets.allow.ifAuthenticated);
 trackChanges(Collections.Actions, "actions");
 autoUpdateOrder(Collections.Actions, ["variables", "routes"]);

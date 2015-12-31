@@ -21,7 +21,7 @@ Meteor.startup(function () {
     echo: function () {
       // Require authentication
       if(!this.userId){
-        throw new Meteor.Error("Authentication Failed", "User is not authenticated");
+        throw new Meteor.Error("User is not authenticated");
       }
 
       Meteor.log.debug("Echo called by user " + this.userId);
@@ -65,40 +65,40 @@ Meteor.startup(function () {
         var node = Collections.Nodes.findOne(nodeId),
           actionRemoveList = [];
 
-        check(node, Object);
-        check(node._id, String);
-
-        // Get all of the from this node
-        Collections.Actions.find({ nodeId: node.staticId, projectVersionId: node.projectVersionId }).forEach(function (a) {
-          RecordChanges.remove({collection: "actions", recordId: a._id});
-          actionRemoveList.push(a._id);
-        });
-
-        // Find all of the actions which lead to this node and remove the routes
-        Collections.Actions.find({ "routes.nodeId": node.staticId, projectVersionId: node.projectVersionId  }).forEach(function (a) {
-          // if the action only leads
-          var otherRoutes = a.routes.filter(function (route) { return route.nodeId !== node.staticId});
-          if(!otherRoutes.length){
-            RecordChanges.remove({collection: "actions", recordId: a._id});
+        if(node){
+          // Get all of the from this node
+          Collections.Actions.find({ nodeId: node.staticId, projectVersionId: node.projectVersionId }).forEach(function (a) {
+            Collections.RecordChanges.remove({collection: "actions", recordId: a._id});
             actionRemoveList.push(a._id);
-          } else {
-            // update the action to remove the route
-            Collections.Actions.update({_id: a._id}, { $pull: { routes: { nodeId: node.staticId } } });
-          }
-        });
+          });
 
-        // remove all of the actions which link to this node
-        Collections.Actions.remove({ _id: {$in: actionRemoveList} });
+          // Find all of the actions which lead to this node and remove the routes
+          Collections.Actions.find({ "routes.nodeId": node.staticId, projectVersionId: node.projectVersionId  }).forEach(function (a) {
+            // if the action only leads
+            var otherRoutes = a.routes.filter(function (route) { return route.nodeId !== node.staticId});
+            if(!otherRoutes.length){
+              Collections.RecordChanges.remove({collection: "actions", recordId: a._id});
+              actionRemoveList.push(a._id);
+            } else {
+              // update the action to remove the route
+              Collections.Actions.update({_id: a._id}, { $pull: { routes: { nodeId: node.staticId } } });
+            }
+          });
 
-        // Remove all of the documentation for this node
+          // remove all of the actions which link to this node
+          Collections.Actions.remove({ _id: {$in: actionRemoveList} });
 
-        // Remove the node itself
-        Collections.Nodes.remove({_id: nodeId});
+          // Remove all of the documentation for this node
 
-        // Remove the change history for this node
-        RecordChanges.remove({collection: "nodes", recordId: nodeId});
+          // Remove the node itself
+          Collections.Nodes.remove({_id: nodeId});
+
+          // Remove the change history for this node
+          Collections.RecordChanges.remove({collection: "nodes", recordId: nodeId});
+        } else {
+          throw new Meteor.Error("Node not found: " + nodeId);
+        }
       }
-      //return nodeId;
     },
 
     /**
@@ -109,10 +109,10 @@ Meteor.startup(function () {
      */
     createVersion: function (sourceVersionId, versionString) {
       // Require authentication
-      var userId = this.userId;
-      if(!userId){
-        throw new Meteor.Error("Authentication Failed", "User is not authenticated");
+      if(!this.userId){
+        throw new Meteor.Error("createVersion: not authenticated");
       }
+      var user = Meteor.users.findOne(this.userId);
 
       // require a full set of source material
       check(sourceVersionId, String);
@@ -122,11 +122,8 @@ Meteor.startup(function () {
       var sourceVersion = Collections.ProjectVersions.findOne(sourceVersionId),
         project = Collections.Projects.findOne(sourceVersion.projectId);
       if(sourceVersion && project){
-        // validate that the current user has permission to create a new version
-        var role = Collections.ProjectRoles.findOne({projectId: sourceVersion.projectId, userId: userId});
-        if(!role || !(role.role === RoleTypes.admin || role.role === RoleTypes.owner)){
-          Meteor.log.error("CreateVersion: user " + userId + " not authorized, " + (role ? role.role : "no role for this project"));
-          throw new Meteor.Error("Not Authorized", "You are not authorized to make this change");
+        if(!user.hasAdminAccess(sourceVersion.projectId)){
+          throw new Meteor.Error("createVersion: user not authorized");
         }
 
         // Create the new version record
@@ -138,8 +135,16 @@ Meteor.startup(function () {
         });
 
         if(!versionId){
-          throw new Meteor.Error("Version Creation Failure", "Failed to create new version record");
+          throw new Meteor.Error("createVersion: failed to create new version record");
         }
+
+        /**
+         * Helper for creating replica records
+         */
+        var createReplica = function (record) {
+          // Leave dateCreated and createdBy intact to preserve documentation history
+          return _.omit(record, ["_id", "modifiedBy", "dateModified", "projectVersionId"]);
+        };
 
         // Replicate all of the important records from the source version
         var replicateCollections = [Collections.Nodes, Actions];
@@ -151,7 +156,7 @@ Meteor.startup(function () {
             try {
               collection.insert(replica);
             } catch (e) {
-              console.error("Insert failed: ", e.message);
+              Meteor.log.error("createVersion insert failed: " + e.toString());
             }
           });
         });
@@ -159,17 +164,8 @@ Meteor.startup(function () {
         // done!
         return versionId;
       } else {
-        throw new Meteor.Error("Source Data Failure", "Unable to create version from information provided");
+        throw new Meteor.Error("createVersion: unable to create version from information provided");
       }
     }
   });
 });
-
-/**
- * Create a replica record that is ready to be inserted
- * @param record The original record to replicate
- */
-var createReplica = function (record) {
-  // Leave dateCreated and createdBy intact to preserve documentation history
-  return _.omit(record, ["_id", "modifiedBy", "dateModified", "projectVersionId"]);
-};

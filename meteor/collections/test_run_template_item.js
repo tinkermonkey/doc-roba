@@ -59,14 +59,5 @@ Schemas.TestRunTemplateItem = new SimpleSchema({
 });
 Collections.TestRunTemplateItems = new Mongo.Collection("test_run_template_items");
 Collections.TestRunTemplateItems.attachSchema(Schemas.TestRunTemplateItem);
-Collections.TestRunTemplateItems.allow({
-  insert: allowIfAuthenticated,
-  update: allowIfAuthenticated,
-  remove: allowIfAuthenticated
-});
-Collections.TestRunTemplateItems.deny({
-  insert: allowIfTester,
-  update: allowIfTester,
-  remove: allowIfTester,
-  fetch: ['projectId']
-});
+Collections.TestRunTemplateItems.deny(Auth.ruleSets.deny.ifNotTester);
+Collections.TestRunTemplateItems.allow(Auth.ruleSets.allow.ifAuthenticated);

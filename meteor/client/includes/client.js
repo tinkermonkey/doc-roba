@@ -110,14 +110,13 @@ Template.registerHelper("renderNodeTitle", function (staticId, projectVersionId)
 });
 
 /**
- * Render a user's name with information from the Project Roles collection
+ * Render a user's name
  */
-Template.registerHelper("renderNameByRole", function (userId) {
-  var role;
+Template.registerHelper("renderUserDisplayName", function (userId) {
   if(userId){
-    role = Collections.ProjectRoles.findOne({userId: userId});
-    if(role){
-      return role.name;
+    var user = Meteor.users.findOne(userId);
+    if(user){
+      return user.profile.name;
     }
   }
 });
@@ -159,15 +158,10 @@ Template.registerHelper("renderLogTime", function (value) {
  * Get a list of projects for a user, including their role
  */
 Template.registerHelper("userProjects", function () {
-  var projects = [];
-  Collections.ProjectRoles.find({userId: Meteor.userId()}).forEach(function (role) {
-    var project = Collections.Projects.findOne({_id: role.projectId});
-    if(project){
-      project.role = role.role;
-      projects.push(project);
-    }
-  });
-  return projects;
+  var projects = Meteor.user().projectList;
+  if(projects){
+    return Collections.Projects.find({_id: {$in: projects}});
+  }
 });
 
 /**
@@ -175,8 +169,27 @@ Template.registerHelper("userProjects", function () {
  */
 Template.registerHelper("userRole", function (projectId) {
   projectId = (this ? this._id : this) || projectId;
-  var role = Collections.ProjectRoles.findOne({userId: Meteor.userId(), projectId: projectId});
-  return role ? role.role : null;
+  var user = Meteor.user();
+  if(user && user.projects && user.projects[projectId] && user.projects[projectId].roles){
+    return _.min(user.projects[projectId].roles)
+  }
+});
+
+/**
+ * Check if a user has role permissions for a project
+ */
+Template.registerHelper("hasRole", function (roleName, projectId) {
+  Meteor.log.debug("hasRole: " + roleName + ", " + projectId);
+  if(roleName){
+    var roleType = RoleTypesLookup[roleName];
+    if(roleType){
+      var user = Meteor.user();
+      if(user && user.projects && user.projects[projectId] && user.projects[projectId].roles){
+        return _.contains(user.projects[projectId].roles, roleType)
+      }
+    }
+  }
+  return false
 });
 
 /**
@@ -274,30 +287,6 @@ Template.registerHelper("renderTestSystemNameFromStaticId", function (staticId, 
   var testSystem = Collections.TestSystems.findOne({staticId: staticId, projectVersionId: projectVersionId});
   if(testSystem){
     return testSystem.title;
-  }
-});
-
-/**
- * Check if a user has role permissions for a project
- */
-Template.registerHelper("hasRole", function (roleName, projectId) {
-  console.log("HasRole: ", roleName, projectId);
-  if(roleName){
-    var role = Collections.ProjectRoles.findOne({userId: Meteor.userId(), projectId: projectId}),
-      hasRole = false;
-
-    switch(roleName){
-      case "admin":
-        hasRole = _.contains([RoleTypes.owner, RoleTypes.admin], role.role);
-        break;
-      case "tester":
-        hasRole = _.contains([RoleTypes.owner, RoleTypes.admin, RoleTypes.tester], role.role);
-        break;
-      case "documentation":
-        hasRole = true;
-        break;
-    }
-    return hasRole;
   }
 });
 

@@ -3,10 +3,10 @@
  */
 Template.ProjectActivity.helpers({
   hasChanges: function () {
-    return RecordChanges.find({ projectId: this.project._id }).count();
+    return Collections.RecordChanges.find({ projectId: this.project._id }).count();
   },
   projectChanges: function () {
-    return RecordChanges.find({ projectId: this.project._id }, { sort: { date: -1 } });
+    return Collections.RecordChanges.find({ projectId: this.project._id }, { sort: { date: -1 } });
   }
 });
 

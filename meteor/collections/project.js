@@ -40,16 +40,15 @@ Schemas.Project = new SimpleSchema({
 });
 Collections.Projects = new Mongo.Collection("projects");
 Collections.Projects.attachSchema(Schemas.Project);
-Collections.Projects.allow({
-  insert: allowIfAuthenticated,
-  update: allowIfAuthenticated,
-  remove: allowIfAuthenticated,
-  fetch: []
-});
-Collections.Projects.deny({
-  insert: allowIfAdmin,
-  update: allowIfAdmin,
-  remove: allowIfAdmin,
-  fetch: ['owner']
-});
+Collections.Projects.deny(Auth.ruleSets.deny.ifNotAdmin);
+Collections.Projects.allow(Auth.ruleSets.allow.ifAuthenticated);
 trackChanges(Collections.Projects, "projects");
+
+/**
+ * Helpers
+ */
+Collections.Projects.helpers({
+  versions: function () {
+    return Collections.ProjectVersions.find({projectId: this._id})
+  }
+});

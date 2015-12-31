@@ -16,6 +16,18 @@ Meteor.startup(function () {
           }
         });
       }
+    },
+    /**
+     * Give a user a role for a project
+     * @param projectId
+     * @param userId
+     */
+    grantProjectRole: function (projectId, userId, role) {
+      Meteor.log.info("grantProjectRole: " + projectId + ", " + userId + ", " + role);
+      var user = Meteor.users.findOne(userId);
+      if(user && RoleTypesLookup[role]){
+        user.addProjectRole(projectId, role);
+      }
     }
   });
 });

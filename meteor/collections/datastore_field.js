@@ -69,26 +69,8 @@ Schemas.DataStoreField = new SimpleSchema({
 });
 Collections.DataStoreFields = new Mongo.Collection("data_store_fields");
 Collections.DataStoreFields.attachSchema(Schemas.DataStoreField);
-Collections.DataStoreFields.allow({
-  insert: allowIfAuthenticated,
-  update: allowIfAuthenticated,
-  remove: allowIfAuthenticated
-});
-Collections.DataStoreFields.deny({
-  insert: function (userId, field) {
-    var pr = Collections.ProjectRoles.findOne({userId: userId, projectId: field.projectId});
-    return !(userId && pr && (pr.role === RoleTypes.admin || pr.role === RoleTypes.owner));
-  },
-  update: function (userId, field, fields, modifier) {
-    var pr = Collections.ProjectRoles.findOne({userId: userId, projectId: field.projectId});
-    return !(userId && pr && (pr.role === RoleTypes.admin || pr.role === RoleTypes.owner));
-  },
-  remove: function (userId, field) {
-    var pr = Collections.ProjectRoles.findOne({userId: userId, projectId: field.projectId});
-    return !(userId && pr && (pr.role === RoleTypes.admin || pr.role === RoleTypes.owner));
-  },
-  fetch: ['projectId']
-});
+Collections.DataStoreFields.deny(Auth.ruleSets.deny.ifNotTester);
+Collections.DataStoreFields.allow(Auth.ruleSets.allow.ifAuthenticated);
 trackChanges(Collections.DataStoreFields, "data_store_fields");
 
 /**

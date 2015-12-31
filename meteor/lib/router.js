@@ -3,11 +3,9 @@
  * Setup the default router config
  */
 Router.configure({
-  layoutTemplate: "layout",
+  layoutTemplate: "BaseLayout",
   loadingTemplate: "loading",
-  notFoundTemplate: "not_found",
-  waitOn: function () { return [
-  ]; }
+  notFoundTemplate: "not_found"
 });
 Router.plugin("dataNotFound", {notFoundTemplate: "not_found"});
 Router.onBeforeAction("loading");
@@ -54,7 +52,6 @@ Router.map(function () {
     layoutTemplate: "CenterPoleLayout",
     waitOn: function () { return [
       Meteor.subscribe("projects"),
-      Meteor.subscribe("project_roles"),
       Meteor.subscribe("project_versions"),
       Meteor.subscribe("changes")
     ]; }
@@ -68,7 +65,6 @@ Router.map(function () {
     },
     waitOn: function () { return [
       Meteor.subscribe("projects"),
-      Meteor.subscribe("project_roles"),
       Meteor.subscribe("project_versions"),
       Meteor.subscribe("changes")
     ]; }
@@ -85,7 +81,6 @@ Router.map(function () {
     },
     waitOn: function () { return [
       Meteor.subscribe("projects"),
-      Meteor.subscribe("project_roles"),
       Meteor.subscribe("project_versions"),
       Meteor.subscribe("changes"),
       Meteor.subscribe("user_types", this.params.projectId, this.params._id),
@@ -112,7 +107,6 @@ Router.map(function () {
     },
     waitOn: function () { return [
       Meteor.subscribe("projects"),
-      Meteor.subscribe("project_roles"),
       Meteor.subscribe("project_versions"),
       Meteor.subscribe("nodes", this.params.projectId, this.params._id),
       Meteor.subscribe("actions", this.params.projectId, this.params._id),
@@ -136,7 +130,6 @@ Router.map(function () {
     },
     waitOn: function () { return [
       Meteor.subscribe("projects"),
-      Meteor.subscribe("project_roles"),
       Meteor.subscribe("project_versions"),
       Meteor.subscribe("test_groups", this.params.projectId, this.params._id),
       Meteor.subscribe("test_cases", this.params.projectId, this.params._id),
@@ -162,7 +155,6 @@ Router.map(function () {
     },
     waitOn: function () { return [
       Meteor.subscribe("projects"),
-      Meteor.subscribe("project_roles"),
       Meteor.subscribe("project_versions"),
       Meteor.subscribe("test_cases", this.params.projectId, this.params._id),
       Meteor.subscribe("test_groups", this.params.projectId, this.params._id),
@@ -186,7 +178,6 @@ Router.map(function () {
     },
     waitOn: function () { return [
       Meteor.subscribe("projects"),
-      Meteor.subscribe("project_roles"),
       Meteor.subscribe("project_versions"),
       Meteor.subscribe("adventure", this.params.adventureId),
       Meteor.subscribe("adventure_state", this.params.adventureId),
@@ -212,7 +203,6 @@ Router.map(function () {
     data: function () { return Collections.TestResults.findOne(this.params._id); },
     waitOn: function () { return [
       Meteor.subscribe("projects"),
-      Meteor.subscribe("project_roles"),
       Meteor.subscribe("project_versions"),
       Meteor.subscribe("test_result", this.params.projectId, this.params._id),
       Meteor.subscribe("test_result_roles", this.params.projectId, this.params._id),

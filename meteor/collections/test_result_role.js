@@ -82,17 +82,8 @@ Schemas.TestResultRole = new SimpleSchema({
 });
 Collections.TestResultRoles = new Mongo.Collection("test_result_roles");
 Collections.TestResultRoles.attachSchema(Schemas.TestResultRole);
-Collections.TestResultRoles.allow({
-  insert: allowIfAuthenticated,
-  update: allowIfAuthenticated,
-  remove: allowIfAuthenticated
-});
-Collections.TestResultRoles.deny({
-  insert: allowIfTester,
-  update: allowIfTester,
-  remove: allowIfTester,
-  fetch: ['projectId']
-});
+Collections.TestResultRoles.deny(Auth.ruleSets.deny.ifNotTester);
+Collections.TestResultRoles.allow(Auth.ruleSets.allow.ifAuthenticated);
 
 /**
  * Helpers

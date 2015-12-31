@@ -67,15 +67,6 @@ Schemas.TestSystem = new SimpleSchema({
 });
 Collections.TestSystems = new Mongo.Collection("test_systems");
 Collections.TestSystems.attachSchema(Schemas.TestSystem);
-Collections.TestSystems.allow({
-  insert: allowIfAuthenticated,
-  update: allowIfAuthenticated,
-  remove: allowIfAuthenticated
-});
-Collections.TestSystems.deny({
-  insert: allowIfAdmin,
-  update: allowIfAdmin,
-  remove: allowIfAdmin,
-  fetch: ['projectId']
-});
+Collections.TestSystems.deny(Auth.ruleSets.deny.ifNotTester);
+Collections.TestSystems.allow(Auth.ruleSets.allow.ifAuthenticated);
 trackChanges(Collections.TestSystems, "test_systems");

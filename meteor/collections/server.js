@@ -53,15 +53,6 @@ Schemas.Server = new SimpleSchema({
 });
 Collections.Servers = new Mongo.Collection("servers");
 Collections.Servers.attachSchema(Schemas.Server);
-Collections.Servers.allow({
-  insert: allowIfAuthenticated,
-  update: allowIfAuthenticated,
-  remove: allowIfAuthenticated
-});
-Collections.Servers.deny({
-  insert: allowIfAdmin,
-  update: allowIfAdmin,
-  remove: allowIfAdmin,
-  fetch: ['projectId']
-});
+Collections.Servers.deny(Auth.ruleSets.deny.ifNotTester);
+Collections.Servers.allow(Auth.ruleSets.allow.ifAuthenticated);
 trackChanges(Collections.Servers, "servers");

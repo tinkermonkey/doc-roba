@@ -43,14 +43,5 @@ Schemas.AdventureStep = new SimpleSchema({
 });
 Collections.AdventureSteps = new Mongo.Collection("adventure_steps");
 Collections.AdventureSteps.attachSchema(Schemas.AdventureStep);
-Collections.AdventureSteps.allow({
-  insert: allowIfAuthenticated,
-  update: allowIfAuthenticated,
-  remove: allowIfAuthenticated
-});
-Collections.AdventureSteps.deny({
-  insert: allowIfTester,
-  update: allowIfTester,
-  remove: allowIfTester,
-  fetch: ['projectId']
-});
+Collections.AdventureSteps.deny(Auth.ruleSets.deny.ifNoProjectAccess);
+Collections.AdventureSteps.allow(Auth.ruleSets.allow.ifAuthenticated);

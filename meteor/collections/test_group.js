@@ -57,17 +57,8 @@ Schemas.TestGroup = new SimpleSchema({
 });
 Collections.TestGroups = new Mongo.Collection("test_groups");
 Collections.TestGroups.attachSchema(Schemas.TestGroup);
-Collections.TestGroups.allow({
-  insert: allowIfAuthenticated,
-  update: allowIfAuthenticated,
-  remove: allowIfAuthenticated
-});
-Collections.TestGroups.deny({
-  insert: allowIfTester,
-  update: allowIfTester,
-  remove: allowIfTester,
-  fetch: ['projectId']
-});
+Collections.TestGroups.deny(Auth.ruleSets.deny.ifNotTester);
+Collections.TestGroups.allow(Auth.ruleSets.allow.ifAuthenticated);
 trackChanges(Collections.TestGroups, "test_groups");
 
 /**

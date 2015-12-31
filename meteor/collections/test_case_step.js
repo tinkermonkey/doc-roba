@@ -68,17 +68,8 @@ Schemas.TestCaseStep = new SimpleSchema({
 });
 Collections.TestCaseSteps = new Mongo.Collection("test_case_steps");
 Collections.TestCaseSteps.attachSchema(Schemas.TestCaseStep);
-Collections.TestCaseSteps.allow({
-  insert: allowIfAuthenticated,
-  update: allowIfAuthenticated,
-  remove: allowIfAuthenticated
-});
-Collections.TestCaseSteps.deny({
-  insert: allowIfTester,
-  update: allowIfTester,
-  remove: allowIfTester,
-  fetch: ['projectId']
-});
+Collections.TestCaseSteps.deny(Auth.ruleSets.deny.ifNotTester);
+Collections.TestCaseSteps.allow(Auth.ruleSets.allow.ifAuthenticated);
 trackChanges(Collections.TestCaseSteps, "test_case_steps");
 
 /**

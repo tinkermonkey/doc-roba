@@ -22,6 +22,8 @@ FS.createThumb = function(fileObj, readStream, writeStream) {
   gm(readStream, fileObj.name()).resize("200", "200").stream().pipe(writeStream);
 };
 
+
+
 /**
  * ============================================================================
  * Global helper functions used in the schemas
@@ -72,47 +74,24 @@ autoValueModifiedBy = function () {
 // Auto update the order of any ordered lists
 autoUpdateOrder = function (collection, orderedFields) {
   // Only run on the server
-  if(!Meteor.isServer){
-    return;
-  }
-
-  // After update tracking
-  collection.after.update(function (userId, record, changedFields) {
-    _.each(orderedFields, function (orderedField) {
-      if(_.contains(changedFields, orderedField)){
-        // re-order the values quietly
-        var update = {},
-          sortedValues = record[orderedField].sort(function (value) { return value.order });
-        _.each(sortedValues, function (value, i) {
-          if(value.order !== i){
-            update[orderedField + "." + i + ".order"] = i;
+  if(Meteor.isServer){
+    collection.after.update(function (userId, record, changedFields) {
+      _.each(orderedFields, function (orderedField) {
+        if(_.contains(changedFields, orderedField)){
+          // re-order the values quietly
+          var update = {},
+            sortedValues = record[orderedField].sort(function (value) { return value.order });
+          _.each(sortedValues, function (value, i) {
+            if(value.order !== i){
+              update[orderedField + "." + i + ".order"] = i;
+            }
+          });
+          if(_.keys(update).length){
+            Meteor.log.debug("autoUpdateOrder Update: ", update);
+            collection.direct.update(record._id, {$set: update});
           }
-        });
-        if(_.keys(update).length){
-          console.log("autoUpdateOrder Update: ", update);
-          collection.direct.update(record._id, {$set: update});
         }
-      }
+      });
     });
-  });
-};
-
-/**
- * ============================================================================
- * Global allow/deny functions
- * ============================================================================
- */
-allowIfAuthenticated = function (userId, doc) {
-  return userId !== null;
-};
-allowIfAdmin = function (userId, doc) {
-  var pr = Collections.ProjectRoles.findOne({userId: userId, projectId: doc.projectId});
-  return !(userId && pr && (pr.role === RoleTypes.admin || pr.role === RoleTypes.owner));
-};
-allowIfTester = function (userId, doc) {
-  var pr = Collections.ProjectRoles.findOne({userId: userId, projectId: doc.projectId});
-  return !(userId && pr && (pr.role === RoleTypes.admin || pr.role === RoleTypes.owner || pr.role === RoleTypes.tester));
-};
-denyIfNotAuthenticated = function (userId, doc) {
-  return userId == null || userId == false;
+  }
 };

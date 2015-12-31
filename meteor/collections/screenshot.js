@@ -9,18 +9,18 @@ Collections.Screenshots = new FS.Collection("screenshots", {
     new FS.Store.FileSystem("screenshots", { path: FS.basePath + "screenshots" })
   ]
 });
-Collections.Screenshots.allow({
-  insert:   allowIfAuthenticated,
-  update:   allowIfAuthenticated,
-  remove:   allowIfAuthenticated,
-  download: allowIfAuthenticated
-});
 Collections.Screenshots.deny({
-  insert:   denyIfNotAuthenticated,
-  update:   denyIfNotAuthenticated,
-  remove:   denyIfNotAuthenticated,
-  download: denyIfNotAuthenticated,
+  insert:   Auth.denyIfNoProjectAccess,
+  update:   Auth.denyIfNoProjectAccess,
+  remove:   Auth.denyIfNoProjectAccess,
+  download: Auth.denyIfNoProjectAccess,
   fetch: ['projectId']
+});
+Collections.Screenshots.allow({
+  insert:   Auth.allowIfAuthenticated,
+  update:   Auth.allowIfAuthenticated,
+  remove:   Auth.allowIfAuthenticated,
+  download: Auth.allowIfAuthenticated
 });
 
 /**

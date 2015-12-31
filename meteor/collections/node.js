@@ -136,18 +136,8 @@ Schemas.Node = new SimpleSchema({
 });
 Collections.Nodes = new Mongo.Collection("nodes");
 Collections.Nodes.attachSchema(Schemas.Node);
-Collections.Nodes.allow({
-  insert: allowIfAuthenticated,
-  update: allowIfAuthenticated,
-  remove: allowIfAuthenticated,
-  fetch: ["staticId"]
-});
-Collections.Nodes.deny({
-  insert: allowIfTester,
-  update: allowIfTester,
-  remove: allowIfTester,
-  fetch: ['projectId']
-});
+Collections.Nodes.deny(Auth.ruleSets.deny.ifNotTester);
+Collections.Nodes.allow(Auth.ruleSets.allow.ifAuthenticated);
 trackChanges(Collections.Nodes, "nodes");
 autoUpdateOrder(Collections.Nodes, ["urlParameters"]);
 
