@@ -33,6 +33,13 @@ Template.Home.events({
 });
 
 /**
+ * Template Created
+ */
+Template.Home.created = function(){
+  var instance = this;
+};
+
+/**
  * Template Rendered
  */
 Template.Home.rendered = function(){

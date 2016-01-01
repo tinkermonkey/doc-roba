@@ -4,16 +4,16 @@
 Template.VersionServerConfig.helpers({
   getDataStore: function () {
     var context = this,
-      ds = Collections.DataStores.findOne({dataKey: "server_config_" + context.version._id});
+      ds = Collections.DataStores.findOne({dataKey: "server_config_" + context._id});
     if(!ds){
       Collections.DataStores.insert({
-        projectVersionId: context.version._id,
-        projectId: context.project._id,
-        dataKey: "server_config_" + context.version._id,
-        title: context.project.title + " " + context.version.version + " server configuration",
+        projectVersionId: context._id,
+        projectId: context.projectId,
+        dataKey: "server_config_" + context._id,
+        title: context.project.title + " " + context.version + " server configuration",
         category: DataStoreCategories.serverConfig
       });
-      ds = Collections.DataStores.findOne({dataKey: "server_config_" + context.version._id});
+      ds = Collections.DataStores.findOne({dataKey: "server_config_" + context._id});
     }
     return ds;
   }

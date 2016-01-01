@@ -1,0 +1,41 @@
+<template name="ProjectHome">
+  {{#CenterPoleLayout}}
+    {{#if ready}}
+      {{#contentFor "title"}}
+        {{#with currentUser }}
+          {{name}}
+        {{/with}}
+      {{/contentFor}}
+
+      {{#contentFor "header"}}
+        {{> ProjectNav }}
+      {{/contentFor}}
+
+      {{#contentFor "nav"}}
+        {{> HomeNav }}
+      {{/contentFor}}
+
+      {{#with project}}
+        {{setTitle title}}
+
+        <ul class="nav nav-pills content-header">
+          <li role="presentation" class="active"><a data-tab-name="activity">Activity</a></li>
+          <li role="presentation"><a data-tab-name="versions">Versions</a></li>
+          {{#if hasProjectAdminRole _id}}
+            <li role="presentation"><a data-tab-name="team">Team</a></li>
+          {{/if}}
+        </ul>
+
+        <div class="tab-container">
+          <div class="tab" data-tab-name="activity">{{> ProjectActivity }}</div>
+          <div class="tab" data-tab-name="versions">{{> ProjectVersions }}</div>
+          {{#if hasProjectAdminRole _id}}
+            <div class="tab" data-tab-name="team">{{> ProjectTeam }}</div>
+          {{/if}}
+        </div>
+      {{/with}}
+    {{else}}
+      {{> CustomSpinner }}
+    {{/if}}
+  {{/CenterPoleLayout}}
+</template>

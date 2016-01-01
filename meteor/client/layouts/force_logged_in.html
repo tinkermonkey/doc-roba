@@ -1,0 +1,7 @@
+<template name="ForceLoggedIn">
+  {{#if currentUser}}
+    {{> Template.contentBlock }}
+  {{else}}
+    {{> Login }}
+  {{/if}}
+</template>

@@ -4,7 +4,7 @@
 Template.VersionCustomFieldTypes.helpers({
   customTypes: function () {
     return Collections.DataStores.find({
-      projectVersionId: this.version._id,
+      projectVersionId: this._id,
       deleted: false,
       category: DataStoreCategories.userTypeCustom
     }, {sort: {title: 1}});
@@ -15,27 +15,22 @@ Template.VersionCustomFieldTypes.helpers({
  * Template Helpers
  */
 Template.VersionCustomFieldTypes.events({
-  "click .btn-add-custom-type": function (event) {
-    console.log("Add Custom Type");
-    var instance = Template.instance();
-    if(instance && instance.data && instance.data.project && instance.data.version){
-      Collections.DataStores.insert({
-        title: "New Type",
-        dataKey: Util.dataKey(DataStoreCategories.userTypeCustom + " New Type"),
-        category: DataStoreCategories.userTypeCustom,
-        projectId: instance.data.project._id,
-        projectVersionId: instance.data.version._id
-      }, function (error, response) {
-        if(error){
-          console.error("Custom Type insert failed: ", error);
-        } else {
-          console.log("Custom Type inserted: ", response);
-        }
-      });
-    }
+  "click .btn-add-custom-type": function (event, instance) {
+    Collections.DataStores.insert({
+      title: "New Type",
+      dataKey: Util.dataKey(DataStoreCategories.userTypeCustom + " New Type"),
+      category: DataStoreCategories.userTypeCustom,
+      projectId: instance.data.projectId,
+      projectVersionId: instance.data._id
+    }, function (error, response) {
+      if(error){
+        console.error("Custom Type insert failed: ", error);
+      } else {
+        console.log("Custom Type inserted: ", response);
+      }
+    });
   },
   "click .btn-delete-custom-type": function (event) {
-    console.log("Delete Custom Type");
     var customType = $(event.target).attr("data-store-id");
     if(customType){
       Collections.DataStores.update({_id: customType}, {$set: {deleted: true}}, function (error, response) {
@@ -55,14 +50,11 @@ Template.VersionCustomFieldTypes.events({
 Template.VersionCustomFieldTypes.rendered = function () {
   var instance = Template.instance();
 
-  // Initialize the tabs
-  Tabs.init(instance).activateFirst(instance);
   updateDataStoreNameEditable(instance);
 
-  // Update the tabs if the list of custom types changes
+  // Update the editables if the list of custom types changes
   Collections.DataStores.find({projectVersionId: instance.data.version._id, deleted: false}).observeChanges({
     added: function () {
-      Tabs.init(instance).activateFirst(instance);
       updateDataStoreNameEditable(instance);
     },
     changed: function () {  Tabs.init(instance).activateFirst(instance); },

@@ -43,5 +43,8 @@ trackChanges(Collections.ProjectVersions, "project_versions");
 Collections.ProjectVersions.helpers({
   project: function () {
     return Collections.Projects.findOne(this.projectId)
+  },
+  userTypes: function () {
+    return Collections.Nodes.find({projectVersionId: this._id, type: NodeTypes.userType}, {sort: {title: 1}});
   }
 });

@@ -5,8 +5,20 @@ Tabs = {
   /**
    * Initialize the tab functionality
    */
-  init: function (instance) {
-    //console.log("Tabs.init");
+  init: function (instance, retry) {
+    // have a retry loop because sometimes the rendering timing can be off
+    if(!instance.$("ul.nav > li > a").get(0)){
+      retry = retry || 0;
+      if(retry > 10){
+        Meteor.log.error("Tabs.init failed after " + (retry-1) + " retries");
+        return;
+      }
+      Meteor.log.debug("Tabs.init retry " + retry);
+      setTimeout(function () {
+        Tabs.init(instance, retry + 1);
+      }, 250);
+      return;
+    }
 
     // Setup the tab event listeners
     instance.$("ul.nav > li > a").each(function (i, el) {
@@ -62,7 +74,7 @@ Tabs = {
    */
   activateFirst: function (instance) {
     // set the active tab if none is set
-    //console.log("Activate First:")
+    Meteor.log.debug("Activate First:", instance.$("ul.nav"));
     instance.$("ul.nav").each(function (i, el) {
       var activeTab = $(el).find("li.active > a").get(0);
       if(!activeTab) {

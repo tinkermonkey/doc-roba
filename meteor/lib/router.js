@@ -36,87 +36,22 @@ Router.map(function () {
     }
   });
   this.route("login", {
-    layoutTemplate: "insecure_layout",
     path: "/login"
   });
   this.route("logout", {
-    layoutTemplate: "insecure_layout",
-    path: "/logout",
-    onBeforeAction: function () {
-      Meteor.logout();
-      this.next();
-    }
+    path: "/logout"
   });
   this.route("home", {
-    path: "/home/",
-    layoutTemplate: "CenterPoleLayout",
-    waitOn: function () { return [
-      Meteor.subscribe("projects"),
-      Meteor.subscribe("project_versions"),
-      Meteor.subscribe("changes")
-    ]; }
+    path: "/home/"
   });
-  this.route("home_project", {
-    path: "/home/projects/:_id",
-    layoutTemplate: "CenterPoleLayout",
-    template: "Home",
-    data: function () {
-      return { project: Collections.Projects.findOne({_id: this.params._id}) };
-    },
-    waitOn: function () { return [
-      Meteor.subscribe("projects"),
-      Meteor.subscribe("project_versions"),
-      Meteor.subscribe("changes")
-    ]; }
+  this.route("project_home", {
+    path: "/home/:_id"
   });
-  this.route("home_version", {
-    path: "/home/projects/:projectId/versions/:_id",
-    layoutTemplate: "CenterPoleLayout",
-    template: "Home",
-    data: function () {
-      return {
-        project: Collections.Projects.findOne({_id: this.params.projectId}),
-        version: Collections.ProjectVersions.findOne({_id: this.params._id})
-      };
-    },
-    waitOn: function () { return [
-      Meteor.subscribe("projects"),
-      Meteor.subscribe("project_versions"),
-      Meteor.subscribe("changes"),
-      Meteor.subscribe("user_types", this.params.projectId, this.params._id),
-      Meteor.subscribe("data_stores", this.params.projectId, this.params._id),
-      Meteor.subscribe("all_data_store_fields", this.params.projectId, this.params._id),
-      Meteor.subscribe("all_data_store_rows", this.params.projectId, this.params._id),
-      Meteor.subscribe("servers", this.params.projectId, this.params._id),
-      Meteor.subscribe("test_systems", this.params.projectId, this.params._id),
-      Meteor.subscribe("test_agents", this.params.projectId, this.params._id)
-    ]; }
+  this.route("version_home", {
+    path: "/home/:projectId/:_id"
   });
   this.route("doc_tree", {
-    path: "/doc_tree/projects/:projectId/versions/:_id",
-    data: function () {
-      var project = Collections.Projects.findOne({_id: this.params.projectId}),
-        version = Collections.ProjectVersions.findOne({_id: this.params._id});
-
-      if(project && version){
-        return {
-          project: project,
-          version: version
-        };
-      }
-    },
-    waitOn: function () { return [
-      Meteor.subscribe("projects"),
-      Meteor.subscribe("project_versions"),
-      Meteor.subscribe("nodes", this.params.projectId, this.params._id),
-      Meteor.subscribe("actions", this.params.projectId, this.params._id),
-      Meteor.subscribe("data_stores", this.params.projectId, this.params._id),
-      Meteor.subscribe("all_data_store_fields", this.params.projectId, this.params._id),
-      Meteor.subscribe("all_data_store_rows", this.params.projectId, this.params._id),
-      Meteor.subscribe("servers", this.params.projectId, this.params._id),
-      Meteor.subscribe("test_systems", this.params.projectId, this.params._id),
-      Meteor.subscribe("test_agents", this.params.projectId, this.params._id)
-    ]; }
+    path: "/doc_tree/:projectId/:_id"
   });
   this.route("test_case_dashboard", {
     path: "/test_case_dashboard/:projectId/:_id",
@@ -169,7 +104,7 @@ Router.map(function () {
   });
   this.route("adventure_console", {
     path: "/adventure_console/:projectId/:projectVersionId/:adventureId",
-    layoutTemplate: "no_menu_layout",
+    layoutTemplate: "NoMenuLayout",
     data: function () {
       return {
         adventure: Collections.Adventures.findOne(this.params.adventureId),

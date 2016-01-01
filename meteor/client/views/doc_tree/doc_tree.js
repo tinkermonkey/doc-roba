@@ -2,12 +2,38 @@
  * Basic helpers for the tree display
  */
 Template.DocTree.helpers({
-  getName: function () {
-    if(Meteor.user()) {
-      return Meteor.user().profile.name;
-    }
+  project: function () {
+    return Template.project.get()
+  },
+  version: function () {
+    return Template.version.get()
   }
 });
+
+/**
+ * Template Created
+ */
+Template.DocTree.created = function () {
+  var instance = this;
+  instance.project = new ReactiveVar();
+  instance.version = new ReactiveVar();
+
+  instance.autorun(function () {
+    var route = Router.current();
+    instance.subscribe("nodes", route.params.projectId, route.params._id);
+    instance.subscribe("actions", route.params.projectId, route.params._id);
+    instance.subscribe("data_stores", route.params.projectId, route.params._id);// TODO: Move to lower level template
+    instance.subscribe("all_data_store_fields", route.params.projectId, route.params._id);// TODO: Move to lower level template
+    instance.subscribe("all_data_store_rows", route.params.projectId, route.params._id);// TODO: Move to lower level template
+    instance.subscribe("servers", route.params.projectId, route.params._id);// TODO: Move to lower level template
+    instance.subscribe("test_systems", route.params.projectId, route.params._id);// TODO: Move to lower level template
+    instance.subscribe("test_agents", route.params.projectId, route.params._id);// TODO: Move to lower level template
+
+    // pull in the project and project version records
+    instance.project.set(Collections.Projects.findOne(route.params.projectId));
+    instance.version.set(Collections.ProjectVersions.findOne(route.params._id));
+  });
+};
 
 /**
  * Setup the tree display once the template is rendered
@@ -35,7 +61,6 @@ Template.DocTree.rendered = function () {
       Meteor.log.debug("Auto-run executing doc_tree: ", self.data);
 
       // get fresh node data
-      //self.treeLayout.masterNodeList = Nodes.find({projectVersionId: self.data.version._id}).fetch();
       self.treeLayout.nodeHandler.setNodes(Collections.Nodes.find({projectVersionId: self.data.version._id}).fetch());
       self.treeLayout.actionHandler.setActions(Collections.Actions.find({projectVersionId: self.data.version._id}).fetch());
 

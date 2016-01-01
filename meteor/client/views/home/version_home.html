@@ -1,0 +1,41 @@
+<template name="VersionHome">
+  {{#CenterPoleLayout}}
+    {{#if ready}}
+      {{#contentFor "title"}}
+        {{#with currentUser }}
+          {{name}}
+        {{/with}}
+      {{/contentFor}}
+
+      {{#contentFor "header"}}
+        {{> ProjectNav }}
+      {{/contentFor}}
+
+      {{#contentFor "nav"}}
+        {{> HomeNav }}
+      {{/contentFor}}
+
+      {{#with version}}
+        {{setTitle project.title "v" version}}
+
+        <ul class="nav nav-pills content-header">
+          <li role="presentation" class="active"><a data-tab-name="activity">Activity</a></li>
+          <li role="presentation"><a data-tab-name="credentials">Credentials</a></li>
+          <li role="presentation"><a data-tab-name="credentials_config">Credential Configuration</a></li>
+          <li role="presentation"><a data-tab-name="servers">Server Configuration</a></li>
+          <li role="presentation"><a data-tab-name="test-systems">Test Systems & Agents</a></li>
+        </ul>
+
+        <div class="tab-container">
+          <div class="tab" data-tab-name="activity">{{> VersionActivity }}</div>
+          <div class="tab" data-tab-name="credentials">{{> VersionCredentials }}</div>
+          <div class="tab" data-tab-name="credentials_config">{{> VersionCredentialsConfig }}</div>
+          <div class="tab" data-tab-name="servers">{{> VersionServers }}</div>
+          <div class="tab" data-tab-name="test-systems">{{> VersionTestSystems }}</div>
+        </div>
+      {{/with}}
+    {{else}}
+      {{> CustomSpinner }}
+    {{/if}}
+  {{/CenterPoleLayout}}
+</template>

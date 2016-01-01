@@ -33,6 +33,13 @@ Template.registerHelper("debug", function(){
 });
 
 /**
+ * Subscriptions ready
+ */
+Template.registerHelper("ready", function(){
+  return Template.instance().subscriptionsReady()
+});
+
+/**
  * Not Null helper
  */
 Template.registerHelper("notNull", function(value){
@@ -158,10 +165,11 @@ Template.registerHelper("renderLogTime", function (value) {
  * Get a list of projects for a user, including their role
  */
 Template.registerHelper("userProjects", function () {
-  var projects = Meteor.user().projectList;
-  if(projects){
-    return Collections.Projects.find({_id: {$in: projects}});
+  var user = Meteor.user();
+  if(user && user.projectList){
+    return Collections.Projects.find({_id: {$in: user.projectList}});
   }
+  console.log("userProjects:", user);
 });
 
 /**
@@ -178,10 +186,19 @@ Template.registerHelper("userRole", function (projectId) {
 /**
  * Check if a user has role permissions for a project
  */
+Template.registerHelper("hasProjectAdminRole", function (projectId) {
+  if(projectId && Meteor.userId()) {
+    var user = Meteor.users.findOne(Meteor.userId());
+    return user.hasAdminAccess(projectId);
+  }
+});
+
+/**
+ * Check if a user has role permissions for a project
+ */
 Template.registerHelper("hasRole", function (roleName, projectId) {
-  Meteor.log.debug("hasRole: " + roleName + ", " + projectId);
   if(roleName){
-    var roleType = RoleTypesLookup[roleName];
+    var roleType = RoleTypes[roleName];
     if(roleType){
       var user = Meteor.user();
       if(user && user.projects && user.projects[projectId] && user.projects[projectId].roles){

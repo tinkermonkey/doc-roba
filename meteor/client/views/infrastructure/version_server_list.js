@@ -3,7 +3,7 @@
  */
 Template.VersionServerList.helpers({
   sortedServers: function () {
-    return Collections.Servers.find({projectVersionId: this.version._id}, {sort: {order: 1}}).fetch();
+    return Collections.Servers.find({projectVersionId: this._id}, {sort: {order: 1}}).fetch();
   },
   getConfigSchema: function () {
     return Template.instance().configSchema.get();
@@ -16,10 +16,11 @@ Template.VersionServerList.helpers({
 Template.VersionServerList.events({
   "click .btn-add-server": function () {
     var instance = Template.instance(),
-      order = instance.$(".server-list-row").length;
+        projectVersion = this,
+        order = instance.$(".server-list-row").length;
     Collections.Servers.insert({
-      projectId: this.project._id,
-      projectVersionId: this.version._id,
+      projectId: projectVersion.projectId,
+      projectVersionId: projectVersion._id,
       title: "New Server",
       url: "HTTP://server.com",
       active: true,
@@ -120,12 +121,12 @@ Template.VersionServerList.rendered = function () {
   });
 
   // Setup the config schema initial valur
-  var ds = Collections.DataStores.findOne({dataKey: "server_config_" + instance.data.version._id});
+  var ds = Collections.DataStores.findOne({dataKey: "server_config_" + instance.data._id});
   DataStoreSchemas[ds._id] = DSUtil.simpleSchema(ds.schema);
   instance.configSchema.set(DataStoreSchemas[ds._id]);
 
   // Keep the server config simple schema up to date
-  instance.configObservation = Collections.DataStores.find({dataKey: "server_config_" + instance.data.version._id}).observeChanges({
+  instance.configObservation = Collections.DataStores.find({dataKey: "server_config_" + instance.data._id}).observeChanges({
     changed: function (id, fields) {
       if(_.contains(fields, "schema")){
         DataStoreSchemas[id] = DSUtil.simpleSchema(fields.schema);

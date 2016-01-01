@@ -1,0 +1,12 @@
+<template name="BaseLayout">
+  {{#if ready }}
+    <svg id="global-defs-svg">
+      <defs>
+        {{> yield "svgDefs"}}
+      </defs>
+    </svg>
+    {{> yield }}
+  {{else}}
+    {{> CustomSpinner }}
+  {{/if}}
+</template>

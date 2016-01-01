@@ -130,7 +130,7 @@ Template.Login.events({
 Template.Login.rendered = function () {
   // check if the user is logged in
   if(Meteor.userId()){
-    console.log("User logged in already, logging out");
+    Meteor.log.info("User logged in already, logging out");
     Meteor.logout();
   }
 

@@ -1,19 +1,21 @@
 <template name="Logout">
-  {{setTitle "DocRoba :: Logout"}}
+  {{#InsecureLayout}}
+    {{setTitle "DocRoba :: Logout"}}
 
-  <svg class="login-container login-svg">
-    <defs>
-      {{> def_inset_shadow_gradient }}
-      {{> def_logout_clip }}
-    </defs>
-    <circle class="login-frame" r="45%" cx="50%" cy="50%" fill="url(#inset-shadow-gradient)"></circle>
-  </svg>
+    <svg class="login-container login-svg">
+      <defs>
+        {{> def_inset_shadow_gradient }}
+        {{> def_logout_clip }}
+      </defs>
+      <circle class="login-frame" r="45%" cx="50%" cy="50%" fill="url(#inset-shadow-gradient)"></circle>
+    </svg>
 
-  <div class="login-container login-html" style="clip-path: url('#logout-clip') !important; -webkit-clip-path: url('#logout-clip') !important;">
-    <div class="login-slide">
-      <div id="login-form-container">
-        <div class="logout-bye">Bye!</div>
+    <div class="login-container login-html" style="clip-path: url('#logout-clip') !important; -webkit-clip-path: url('#logout-clip') !important;">
+      <div class="login-slide">
+        <div id="login-form-container">
+          <div class="logout-bye">Bye!</div>
+        </div>
       </div>
     </div>
-  </div>
+  {{/InsecureLayout}}
 </template>

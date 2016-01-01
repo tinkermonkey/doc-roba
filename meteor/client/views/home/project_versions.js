@@ -3,9 +3,7 @@
  */
 Template.ProjectVersions.helpers({
   projectVersions: function () {
-    if(this.project){
-      return Collections.ProjectVersions.find({ projectId: this.project._id }, { sort: { version: -1 } });
-    }
+    return Collections.ProjectVersions.find({ projectId: this._id }, { sort: { version: -1 } });
   }
 });
 

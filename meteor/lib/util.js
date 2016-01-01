@@ -267,6 +267,19 @@ Util = {
   },
 
   /**
+   *
+   * @param view
+   */
+  findTemplateFromView: function (view){
+    while(!view.templateInstance() && view.parentView){
+      return Util.findTemplateFromView(view.parentView)
+    }
+    if(view.templateInstance){
+      return view.templateInstance()
+    }
+  },
+
+  /**
    * Get a full measure of an elements scoll top and left
    */
   getAbsoluteScroll: function (rawEl) {

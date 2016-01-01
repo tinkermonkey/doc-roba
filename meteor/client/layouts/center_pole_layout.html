@@ -1,26 +1,22 @@
 <template name="CenterPoleLayout">
-  {{> nav_menu }}
+  {{#ForceLoggedIn}}
+    {{> nav_menu }}
 
-  <svg id="global-defs-svg">
-    <defs>
-      {{> yield "svgDefs"}}
-    </defs>
-  </svg>
+    <div class="center-pole-container">
+      <div class="center-pole-left">
+        <div class="center-pole-left-inner">
+          <div class="center-pole-page-title">
+            {{> yield "header"}}
+          </div>
 
-  <div class="center-pole-container">
-    <div class="center-pole-left">
-      <div class="center-pole-left-inner">
-        <div class="center-pole-page-title">
-          {{> yield "header"}}
-        </div>
-
-        <div class="center-pole-nav">
-          {{> yield "nav"}}
+          <div class="center-pole-nav">
+            {{> yield "nav"}}
+          </div>
         </div>
       </div>
+      <div class="center-pole-content">
+        {{> Template.contentBlock }}
+      </div>
     </div>
-    <div class="center-pole-content">
-      {{> yield }}
-    </div>
-  </div>
+  {{/ForceLoggedIn}}
 </template>

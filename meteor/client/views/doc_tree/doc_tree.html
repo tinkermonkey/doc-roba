@@ -1,67 +1,73 @@
 <template name="DocTree">
-  {{setTitle "DocTree :: " project.title " v " version.version}}
+  {{#FullscreenLayout}}
+    {{#if ready }}
+      {{setTitle "DocTree :: " project.title " v " version.version}}
 
-  {{#contentFor "title"}}
-    <a href="/?project={{project.id}}&version={{version._id}}">{{project.title}} v {{version.version}}</a>
-  {{/contentFor}}
+      {{#contentFor "title"}}
+        <a href="/?project={{project.id}}&version={{version._id}}">{{project.title}} v {{version.version}}</a>
+      {{/contentFor}}
 
-  {{#contentFor "svgDefs"}}
-    {{> svg_def "outer-glow" }}
-    {{> svg_def "shadow" }}
-    {{> svg_def "crisp-shadow" }}
-    {{> svg_def "node-clip-path" }}
-    {{> svg_def "root-clip-path" }}
-    {{> svg_def "inset-clip-path" }}
-    {{> svg_def "node-hover" }}
-    {{> svg_def "node-control-back" }}
-    {{> svg_def "node-control-back-roba" }}
-    {{> svg_def "node-control-back-page" }}
-    {{> svg_def "node-control-back-view" }}
-    {{> svg_def "node-control-back-navMenu" }}
-    {{> svg_def "root-node-back" }}
-    {{> svg_def "node-back" }}
-    {{> svg_def "page-back" }}
-    {{> svg_def "node-controls-back-gradient" }}
-    {{> svg_def "action-arrow" }}
-    {{> svg_def "action-arrow-blunt" }}
-    {{> svg_def "action-arrow-hover" }}
-    {{> svg_def "action-arrow-blunt-hover" }}
-  {{/contentFor}}
+      {{#contentFor "svgDefs"}}
+        {{> svg_def "outer-glow" }}
+        {{> svg_def "shadow" }}
+        {{> svg_def "crisp-shadow" }}
+        {{> svg_def "node-clip-path" }}
+        {{> svg_def "root-clip-path" }}
+        {{> svg_def "inset-clip-path" }}
+        {{> svg_def "node-hover" }}
+        {{> svg_def "node-control-back" }}
+        {{> svg_def "node-control-back-roba" }}
+        {{> svg_def "node-control-back-page" }}
+        {{> svg_def "node-control-back-view" }}
+        {{> svg_def "node-control-back-navMenu" }}
+        {{> svg_def "root-node-back" }}
+        {{> svg_def "node-back" }}
+        {{> svg_def "page-back" }}
+        {{> svg_def "node-controls-back-gradient" }}
+        {{> svg_def "action-arrow" }}
+        {{> svg_def "action-arrow-blunt" }}
+        {{> svg_def "action-arrow-hover" }}
+        {{> svg_def "action-arrow-blunt-hover" }}
+      {{/contentFor}}
 
-  <div id="{{getElementId}}">
-    <svg id="doc-tree-base" class="doc-tree-svg">
-      <g class="global-layer">
-        <g class="link-layer"></g>
-      </g>
-    </svg>
-    <div style="position: fixed; top:0px; left: 0px;">
-      <div id="tree-html-layer">
-      </div>
-    </div>
-    <svg class="doc-tree-svg no-mouse">
-      <g class="global-layer" style="pointer-events: auto;">
-        <g class="action-link-layer"></g>
-        <g class="node-controls-layer-back"></g>
-        <g class="node-controls-layer"></g>
-        <g class="node-layer" style="display: inherit;"></g>
-        <g class="node-controls-layer-front"></g>
-        <g class="action-hover-layer-back"></g>
-        <g class="action-controls-layer-back"></g>
-        <g class="action-hover-layer-front"></g>
-        <g class="action-controls-layer-front"></g>
-        <g class="drop-node-layer"></g>
-      </g>
-      <g class="inset-layer">
-        <circle class="inset-frame" cx="100" cy="100" r="100"></circle>
-        <g class="inset-clip" style="clip-path: url(#inset-clip-path);">
-          <g class="inset-content">
-            <g class="inset-link-layer"></g>
-            <g class="inset-node-layer"></g>
+      <div id="{{getElementId}}">
+        <svg id="doc-tree-base" class="doc-tree-svg">
+          <g class="global-layer">
+            <g class="link-layer"></g>
           </g>
-          <rect class="inset-viewport" x="0" y="0" width="0" height="0"></rect>
-        </g>
-      </g>
-      <g id="highlight-layer"></g>
-    </svg>
-  </div>
+        </svg>
+        <div style="position: fixed; top:0px; left: 0px;">
+          <div id="tree-html-layer">
+          </div>
+        </div>
+        <svg class="doc-tree-svg no-mouse">
+          <g class="global-layer" style="pointer-events: auto;">
+            <g class="action-link-layer"></g>
+            <g class="node-controls-layer-back"></g>
+            <g class="node-controls-layer"></g>
+            <g class="node-layer" style="display: inherit;"></g>
+            <g class="node-controls-layer-front"></g>
+            <g class="action-hover-layer-back"></g>
+            <g class="action-controls-layer-back"></g>
+            <g class="action-hover-layer-front"></g>
+            <g class="action-controls-layer-front"></g>
+            <g class="drop-node-layer"></g>
+          </g>
+          <g class="inset-layer">
+            <circle class="inset-frame" cx="100" cy="100" r="100"></circle>
+            <g class="inset-clip" style="clip-path: url(#inset-clip-path);">
+              <g class="inset-content">
+                <g class="inset-link-layer"></g>
+                <g class="inset-node-layer"></g>
+              </g>
+              <rect class="inset-viewport" x="0" y="0" width="0" height="0"></rect>
+            </g>
+          </g>
+          <g id="highlight-layer"></g>
+        </svg>
+      </div>
+    {{else}}
+      {{> CustomSpinner }}
+    {{/if}}
+  {{/FullscreenLayout}}
 </template>
