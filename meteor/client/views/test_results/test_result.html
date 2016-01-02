@@ -1,5 +1,5 @@
 <template name="TestResult">
-  {{#contentFor "title"}}
+  {{#contentFor "nav-title"}}
     Test Result: {{testCase.title}}
   {{/contentFor}}
 
@@ -14,7 +14,7 @@
   {{/contentFor}}
 
   {{#contentFor "header"}}
-    {{> ProjectNav }}
+    {{> CurrentProjectNav }}
   {{/contentFor}}
 
   {{#contentFor "nav"}}

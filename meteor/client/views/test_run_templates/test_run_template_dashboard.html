@@ -1,28 +1,32 @@
 <template name="TestRunTemplateDashboard">
-  {{#contentFor "title"}}
-    Test Run Dashboard
-  {{/contentFor}}
+  {{#CenterPoleLayout}}
+    {{#if ready}}
+      {{#contentFor "nav-title"}}
+        Test Run Dashboard
+      {{/contentFor}}
 
-  {{#contentFor "svgDefs"}}
-    {{> svg_def "node-clip-path" }}
-    {{> svg_def "node-hover" }}
-    {{> svg_def "action-arrow" }}
-  {{/contentFor}}
+      {{#contentFor "svgDefs"}}
+        {{> svg_def "node-clip-path" }}
+        {{> svg_def "node-hover" }}
+        {{> svg_def "action-arrow" }}
+      {{/contentFor}}
 
-  {{#contentFor "header"}}
-    {{> ProjectNav }}
-  {{/contentFor}}
+      {{#contentFor "header"}}
+        {{> CurrentProjectNav project=project version=version}}
+      {{/contentFor}}
 
-  {{#contentFor "nav"}}
-    {{> TestRunTemplateList version=version testRunTemplateId=testRunTemplateId }}
-    {{> TestCaseList project=project version=version connectToSortable=".test-run-item-list" }}
-  {{/contentFor}}
+      {{#contentFor "nav"}}
+        {{> TestRunTemplateList version=version testRunTemplateId=testRunTemplateId }}
+        {{> TestCaseList project=project version=version connectToSortable=".test-run-item-list" }}
+      {{/contentFor}}
 
-  {{#if testRunTemplateId}}
-    {{> TestRunTemplate testRunTemplate }}
-  {{else}}
-    <div class="align-center" style="margin-top: 200px;">
-      <h2>Select a Test Run Template</h2>
-    </div>
-  {{/if}}
+      {{#if testRunTemplateId}}
+        {{> TestRunTemplate testRunTemplate }}
+      {{else}}
+        <div class="align-center" style="margin-top: 200px;">
+          <h2>Select a Test Run Template</h2>
+        </div>
+      {{/if}}
+    {{/if}}
+  {{/CenterPoleLayout}}
 </template>

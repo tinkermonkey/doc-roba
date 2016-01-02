@@ -34,11 +34,11 @@ TreeLayout = function (elementId, context, config) {
   };
 
   // set the width and height to match the window
-  self.width = $(window).innerWidth() - parseInt($('body').css('margin-right')) - parseInt($('body').css('margin-left')) * 2;
-  self.height = $(window).innerHeight() - parseInt($('body').css('margin-top')) - parseInt($('body').css('margin-bottom')) * 2;
+  self.width = $(window).innerWidth() - parseInt($("body").css("margin-right")) - parseInt($("body").css("margin-left")) * 2;
+  self.height = $(window).innerHeight() - parseInt($("body").css("margin-top")) - parseInt($("body").css("margin-bottom")) * 2;
 
-  console.log("self.width: ", self.width);
-  console.log("self.height: ", self.height);
+  Meteor.log.debug("TreeLayout width: " + self.width);
+  Meteor.log.debug("TreeLayout height: " + self.height);
 
   // set the container bounds
   self.layoutRoot = d3.select("#" + elementId);
@@ -47,7 +47,7 @@ TreeLayout = function (elementId, context, config) {
     .width(self.width);
 
   // Setup the panning-zoomer
-  Meteor.log.debug("Configuring zoomer");
+  Meteor.log.debug("TreeLayout Configuring zoomer");
   self.zoomer = d3.behavior.zoom(".global-layer")
     .scaleExtent([0.25, 1.5])
     .on("zoom", function () {
@@ -59,7 +59,7 @@ TreeLayout = function (elementId, context, config) {
     .call(self.zoomer);
 
   // setup the main svg element
-  Meteor.log.debug("Configuring svg element");
+  Meteor.log.debug("TreeLayout Configuring svg element");
   self.layoutRoot.selectAll(".doc-tree-svg")
     .attr("width", self.width)
     .attr("height", self.height);
@@ -122,8 +122,8 @@ TreeLayout = function (elementId, context, config) {
 TreeLayout.prototype.init = function () {
   var self = this;
 
-  Meteor.log.info("TreeLayout.init");
-  this.scaleAndTranslate(self.scale, self.translation);
+  Meteor.log.info("TreeLayout init");
+  self.scaleAndTranslate(self.scale, self.translation);
 
   // figure out the max depth that we need to expand to
   var maxDepth = treeUtils.getMaxDepth(self.nodeHandler.getNodes(), function (d) { return d.logExpanded && !d.visExpanded; }) + 1,
@@ -136,7 +136,7 @@ TreeLayout.prototype.init = function () {
 
   // make sure there is correct data
   if(!self.nodeHandler.getRootNodes().length){
-    throw new Error("TreeLayout.init failed: no root nodes");
+    throw new Error("TreeLayout init failed: no root nodes");
   }
 
   // Expand the root nodes
@@ -174,10 +174,10 @@ TreeLayout.prototype.prepData = function () {
 TreeLayout.prototype.resize = function () {
   var self = this;
 
-  Meteor.log.debug("Window resize");
+  Meteor.log.debug("TreeLayout resize");
   // Measure the new dimensions
-  self.width = $(window).innerWidth() - parseInt($('body').css('margin-right')) - parseInt($('body').css('margin-left'));
-  self.height = $(window).innerHeight() - parseInt($('body').css('margin-top')) - parseInt($('body').css('margin-bottom'));
+  self.width = $(window).innerWidth() - parseInt($("body").css("margin-right")) - parseInt($("body").css("margin-left"));
+  self.height = $(window).innerHeight() - parseInt($("body").css("margin-top")) - parseInt($("body").css("margin-bottom"));
 
   // Update the root element
   self.layoutRoot.selectAll(".doc-tree-svg")
@@ -200,13 +200,13 @@ TreeLayout.prototype.resize = function () {
  */
 TreeLayout.prototype.keyDown = function (e) {
   //Meteor.log.debug("Key down: ", e.which);
-  if (e.which === 8 && $(e.target).prop("tagName").toLowerCase() !== 'input') {
+  if (e.which === 8 && $(e.target).prop("tagName").toLowerCase() !== "input") {
     e.preventDefault();
     e.stopPropagation();
 
     // Check for a node selection
     if ($("svg .node-selected").length) {
-      Meteor.log.debug("Selection found, passing to node confirmDelete");
+      Meteor.log.debug("TreeLayout keyDown selection found for delete key, passing to node confirmDelete");
       var nodeList = this.getSelectedNodes();
       this.confirmDeleteNodes(nodeList);
     }
@@ -231,7 +231,7 @@ TreeLayout.prototype.unlock = function () {
  * Destroy!
  */
 TreeLayout.prototype.destroy = function () {
-  Meteor.log.info("Destroy Called: Removing event handlers");
+  Meteor.log.info("TreeLayout destroy called, removing event handlers");
   $(window).unbind("mousemove");
   $(document).unbind("keydown");
   $(".doc-tree-svg").unbind("click");
@@ -251,13 +251,13 @@ TreeLayout.prototype.mouseMove = function (e) {
  * @param node
  */
 TreeLayout.prototype.getSelectedNodes = function () {
-  Meteor.log.info("getSelectedNodes");
+  Meteor.log.info("TreeLayout getSelectedNodes");
   var selectedNodes = [];
   this.nodeHandler.layer.selectAll(".node-selected").each(function (d, i) {
     if (d) {
       selectedNodes.push(d);
     } else {
-      Meteor.log.error("Found null node during getSelected");
+      Meteor.log.error("TreeLayout getSelectedNodes found null node during getSelected");
     }
   });
 
@@ -269,7 +269,7 @@ TreeLayout.prototype.getSelectedNodes = function () {
  * @param node
  */
 TreeLayout.prototype.confirmDeleteNodes = function (nodeList) {
-  Meteor.log.info("confirmDeleteNodes: " + nodeList.length);
+  Meteor.log.info("TreeLayout confirmDeleteNodes: " + nodeList.length);
   var self = this,
     rootList = [].concat(nodeList);
 
@@ -278,7 +278,7 @@ TreeLayout.prototype.confirmDeleteNodes = function (nodeList) {
     nodeList = nodeList.concat(self.nodeHandler.getDescendants(node));
   });
   nodeList = _.uniq(nodeList);
-  Meteor.log.debug("Full delete list: " + nodeList.length + " nodes");
+  Meteor.log.debug("TreeLayout full delete list: " + nodeList.length + " nodes");
 
   // clone the node state prior to disrupting it
   self.savedNodeState = _.clone(self.nodeStateCache);
@@ -351,13 +351,13 @@ TreeLayout.prototype.confirmDeleteNodes = function (nodeList) {
  * @param node
  */
 TreeLayout.prototype.deleteNode = function(node){
-  Meteor.log.debug("Deleting node: " + node._id + " (" + node.title + ")");
+  Meteor.log.debug("TreeLayout deleting node: " + node._id + " (" + node.title + ")");
 
   Meteor.call("deleteNode", node._id, function (error, response) {
     if(!error){
-      Meteor.log.info("Deleted node: ", node._id);
+      Meteor.log.info("TreeLayout deleted node: " + node._id);
     } else {
-      Meteor.log.error("Error deleting node: ", error);
+      Meteor.log.error("TreeLayout error deleting node: " + error);
     }
   });
 };
@@ -374,7 +374,7 @@ TreeLayout.prototype.highlightNodes = function(nodeList, forceExpand){
   forceExpand = forceExpand || false;
 
   // create the background
-  Meteor.log.debug("Creating background");
+  Meteor.log.debug("TreeLayout highlightNodes creating background");
   this.highlightLayer.append("rect")
     .attr("class", "background")
     .attr("x", -10000)
@@ -383,7 +383,7 @@ TreeLayout.prototype.highlightNodes = function(nodeList, forceExpand){
     .attr("height", 20000);
 
   // get the bounding box for the selected nodes
-  Meteor.log.debug("Getting bounding box");
+  Meteor.log.debug("TreeLayout highlightNodes getting bounding box");
   var bounds = treeUtils.nodeListBounds(nodeList, this.config.highlightSurroundMargin);
   //Meteor.log.debug("Bounds: " + JSON.stringify(bounds));
 
@@ -404,8 +404,8 @@ TreeLayout.prototype.highlightNodes = function(nodeList, forceExpand){
       // Clone the main group
       this.highlightLayer.node().appendChild(node.cloneNode(true));
     } catch(e) {
-      Meteor.log.error("Error Cloning node: " + e);
-      Meteor.log.debug(e);
+      Meteor.log.error("TreeLayout error Cloning node: " + e.toString());
+      console.log(e);
     }
   }
 
@@ -538,7 +538,7 @@ TreeLayout.prototype.startCollapse = function(node, duration){
  * @param duration The duration of each collapse step
  */
 TreeLayout.prototype.collapse = function(nodeList, fromDepth, toDepth, duration){
-  Meteor.log.debug('Collapsing nodes from depth: ' + fromDepth + ' to: ' + toDepth + " in " + duration);
+  Meteor.log.debug("TreeLayout collapsing nodes from depth: " + fromDepth + " to: " + toDepth + " in " + duration);
 
   // search for unexpanded (visually) nodes that should be (logically)
   var depthNodes      = treeUtils.getAtDepth(nodeList, fromDepth),
@@ -631,7 +631,7 @@ TreeLayout.prototype.localToScreenCoordinates = function(point){
 TreeLayout.prototype.fitAndCenter = function(rect, callback){
   var self = this;
 
-  Meteor.log.debug("Fit and center");
+  Meteor.log.debug("TreeLayout fit and center");
   var r = this.localToScreenCoordinates(rect),
     contentWindow = {
       x: self.insetLayout.config.radius * 2 + self.insetLayout.config.margin * 2,
@@ -774,8 +774,8 @@ TreeLayout.prototype.scaleAndTranslate = function (scale, translation, callback,
   // translate and scale the inset viewport
   self.insetLayout.updateViewport();
 
-  //Meteor.log.debug("scale: ", scale);
-  //Meteor.log.debug("translation: ", translation);
+  //Meteor.log.debug("TreeLayout scaleAndTranslate scale: ", scale);
+  //Meteor.log.debug("TreeLayout scaleAndTranslate translation: ", translation);
   Session.set("viewState", {
     scale: this.scale,
     translation: this.translation.slice()
@@ -834,10 +834,10 @@ TreeLayout.prototype.baseClickHandler = function(e){
 
   // make sure the click is actually on the base element
   if (d3.select(e.target).classed("doc-tree-svg")) {
-    //Meteor.log.debug("Global click: ", e.target);
+    //Meteor.log.debug("TreeLayout baseClickHandler global click: ", e.target);
 
     // clear the selection
-    self.layoutRoot.selectAll('.node-selected').classed("node-selected", false);
+    self.layoutRoot.selectAll(".node-selected").classed("node-selected", false);
 
     // clear the shown actions
     self.actionHandler.clearVisibleActions();
@@ -894,20 +894,20 @@ TreeLayout.prototype.nodeClickFilter = function (d) {
 TreeLayout.prototype.nodeClickHandler = function(e, d){
   var self = this;
 
-  Meteor.log.debug('click: ' + d._id + " (" +  d.title + ")");
+  Meteor.log.debug("TreeLayout nodeClickHandler: " + d._id + " (" +  d.title + ")");
 
   // fetch the node fresh, sometimes the click events get stale data
   var node = self.nodeHandler.getNode(d._id),
     nodeSelect = self.layoutRoot.select("#node_" + d._id + " .node");
 
-  //Meteor.log.debug(node);
+  //console.log(node);
   if(e.shiftKey){
     // toggle select the node clicked
     var selected = nodeSelect.classed("node-selected");
     nodeSelect.classed("node-selected", !selected);
   } else {
     // clear any selection
-    self.layoutRoot.selectAll('.node-selected').classed("node-selected", false);
+    self.layoutRoot.selectAll(".node-selected").classed("node-selected", false);
     //nodeSelect.classed("node-selected", true);
 
     self.nodeControls.show(d);
@@ -920,7 +920,7 @@ TreeLayout.prototype.nodeClickHandler = function(e, d){
  * Front line event handler for double-clicks on nodes
  */
 TreeLayout.prototype.nodeDblClickHandler = function(e, d){
-  Meteor.log.debug('dblClick: ' + d._id + " (" +  d.title + ")");
+  Meteor.log.debug("TreeLayout nodeDblClickHandler: " + d._id + " (" +  d.title + ")");
   var self = this,
     node = self.nodeHandler.getNode(d._id); // fetch the node fresh, sometimes the click events get stale data
 
@@ -932,15 +932,15 @@ TreeLayout.prototype.nodeDblClickHandler = function(e, d){
     node.logExpanded = !node.logExpanded;
     if(node.childPages.length || node.childViews.length){
       if(node.logExpanded){
-        Meteor.log.debug('StartExpand');
+        Meteor.log.debug("TreeLayout nodeDblClickHandler startExpand");
         self.startExpand(node);
       } else {
-        Meteor.log.debug('StartCollapse');
+        Meteor.log.debug("TreeLayout nodeDblClickHandler tartCollapse");
         self.startCollapse(node);
       }
     }
   } else {
-    Meteor.log.debug('No children: ', node);
+    Meteor.log.debug("TreeLayout nodeDblClickHandler no children: " + node._id + " " + node.title);
   }
 };
 
@@ -951,7 +951,7 @@ TreeLayout.prototype.nodeDblClickHandler = function(e, d){
 TreeLayout.prototype.nodeMouseEnterHandler = function (d) {
   var self = this;
 
-  //Meteor.log.debug("mouseenter: ", d);
+  //Meteor.log.debug("TreeLayout nodeMouseEnterHandler: " + d._id + " " + d.title);
   if(!self.state.inDrag){
     // Make sure the node contols don't hide if they're visible for this node
     if(self.nodeControls.node && self.nodeControls.node._id == d._id){
@@ -974,7 +974,7 @@ TreeLayout.prototype.nodeMouseEnterHandler = function (d) {
 TreeLayout.prototype.nodeMouseLeaveHandler = function (d) {
   var self = this;
 
-  //Meteor.log.debug("mouseleave: ", d);
+  //Meteor.log.debug("TreeLayout nodeMouseLeaveHandler: " + d._id + " " + d.title);
   if(!self.state.inDrag){
     // hide the node controls
     //self.nodeControls.considerHiding();
@@ -1011,7 +1011,7 @@ TreeLayout.prototype.actionRightClickHandler = function (d) {
  * @param d
  */
 TreeLayout.prototype.actionMouseEnterHandler = function (d) {
-  //Meteor.log.debug("Action mouseenter: ", d);
+  //Meteor.log.debug("TreeLayout actionMouseEnterHandler: " + d._id + " " + d.title);
   var self = this;
 
   if(!self.state.inDrag){
@@ -1034,7 +1034,7 @@ TreeLayout.prototype.actionMouseEnterHandler = function (d) {
  * @param d
  */
 TreeLayout.prototype.actionMouseLeaveHandler = function (d) {
-  //Meteor.log.debug("Action mouseleave: ", d);
+  //Meteor.log.debug("TreeLayout actionMouseLeaveHandler: " + d._id + " " + d.title);
   var self = this;
 
   if(!self.state.inDrag){
@@ -1062,7 +1062,7 @@ TreeLayout.prototype.updateContentBounds = function () {
       right: rootNode.family.right + rootNode.x
     };
   } else {
-    Meteor.log.error("TreeLayout: no root node!");
+    Meteor.log.error("TreeLayout updateContentBounds: no root node!");
   }
 };
 
@@ -1086,7 +1086,7 @@ TreeLayout.prototype.update = function(duration){
   self.linkHandler.update(duration);
 
   // Update the actions
-  self.actionHandler.update(duration);
+  //self.actionHandler.update(duration);
 
   // Update the inset view
   self.insetLayout.update(duration);
@@ -1110,7 +1110,7 @@ TreeLayout.prototype.cacheNodeState = function(){
   // fully erase anything that existed
   self.nodeStateCache = {};
 
-  Meteor.log.debug("Caching Node State");
+  Meteor.log.debug("TreeLayout caching node state");
   _.each(self.nodeHandler.getNodes(), function (node) {
     self.nodeStateCache[ node._id ] = {
       visExpanded: node.visExpanded,
@@ -1127,7 +1127,7 @@ TreeLayout.prototype.cacheNodeState = function(){
 TreeLayout.prototype.restoreCachedNodeState = function(){
   var self = this;
 
-  Meteor.log.debug("Restoring Cached Node State");
+  Meteor.log.debug("TreeLayout restoring cached node state");
   _.each(self.nodeHandler.getNodes(), function (node) {
     if(self.nodeStateCache[ node._id ] !== undefined){
       node.visExpanded = self.nodeStateCache[ node._id ].visExpanded;

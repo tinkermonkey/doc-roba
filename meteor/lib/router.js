@@ -4,19 +4,8 @@
  */
 Router.configure({
   layoutTemplate: "BaseLayout",
-  loadingTemplate: "loading",
-  notFoundTemplate: "not_found"
+  loadingTemplate: "loading"
 });
-Router.plugin("dataNotFound", {notFoundTemplate: "not_found"});
-Router.onBeforeAction("loading");
-Router.onBeforeAction(function () {
-  if (!Meteor.userId()) {
-    console.log("Intercepted unauthenticated users, routing to login");
-    this.render("Login", {data: {intercepted: true}});
-  } else {
-    this.next();
-  }
-}, { except: ["login", "root", "logout", "test"] });
 
 /**
  * Defined routes
@@ -27,80 +16,34 @@ Router.map(function () {
   });
   this.route("root", {
     path: "/",
-    action: function () {
-      if (Meteor.userId()) {
-        this.redirect("/home");
-      } else {
-        this.redirect("/login");
-      }
-    }
+    template: "Home"
   });
-  this.route("login", {
+  this.route("Login", {
     path: "/login"
   });
-  this.route("logout", {
+  this.route("Logout", {
     path: "/logout"
   });
-  this.route("home", {
+  this.route("Home", {
     path: "/home/"
   });
-  this.route("project_home", {
+  this.route("ProjectHome", {
     path: "/home/:_id"
   });
-  this.route("version_home", {
+  this.route("VersionHome", {
     path: "/home/:projectId/:_id"
   });
-  this.route("doc_tree", {
+  this.route("DocTree", {
     path: "/doc_tree/:projectId/:_id"
   });
-  this.route("test_case_dashboard", {
-    path: "/test_case_dashboard/:projectId/:_id",
-    layoutTemplate: "CenterPoleLayout",
-    data: function () {
-      return {
-        project: Collections.Projects.findOne({_id: this.params.projectId}),
-        version: Collections.ProjectVersions.findOne({_id: this.params._id}),
-        query: this.params.query
-      };
-    },
-    waitOn: function () { return [
-      Meteor.subscribe("projects"),
-      Meteor.subscribe("project_versions"),
-      Meteor.subscribe("test_groups", this.params.projectId, this.params._id),
-      Meteor.subscribe("test_cases", this.params.projectId, this.params._id),
-      Meteor.subscribe("nodes", this.params.projectId, this.params._id),
-      Meteor.subscribe("actions", this.params.projectId, this.params._id),
-      Meteor.subscribe("data_stores", this.params.projectId, this.params._id),
-      Meteor.subscribe("all_data_store_fields", this.params.projectId, this.params._id),
-      Meteor.subscribe("all_data_store_rows", this.params.projectId, this.params._id),
-      Meteor.subscribe("servers", this.params.projectId, this.params._id),
-      Meteor.subscribe("test_systems", this.params.projectId, this.params._id),
-      Meteor.subscribe("test_agents", this.params.projectId, this.params._id)
-    ]; }
+  this.route("TestCaseDashboard", {
+    path: "/test_case_dashboard/:projectId/:_id"
   });
-  this.route("test_run_template_dashboard", {
-    path: "/test_run_template_dashboard/:projectId/:_id",
-    layoutTemplate: "CenterPoleLayout",
-    data: function () {
-      return {
-        project: Collections.Projects.findOne({_id: this.params.projectId}),
-        version: Collections.ProjectVersions.findOne({_id: this.params._id}),
-        query: this.params.query
-      };
-    },
-    waitOn: function () { return [
-      Meteor.subscribe("projects"),
-      Meteor.subscribe("project_versions"),
-      Meteor.subscribe("test_cases", this.params.projectId, this.params._id),
-      Meteor.subscribe("test_groups", this.params.projectId, this.params._id),
-      Meteor.subscribe("test_run_templates", this.params.projectId, this.params._id),
-      Meteor.subscribe("test_run_template_items", this.params.projectId, this.params._id)
-    ]; }
+  this.route("TestRunTemplateDashboard", {
+    path: "/test_run_template_dashboard/:projectId/:_id"
   });
-  this.route("driver_command_list", {
-    path: "/driver_command_list",
-    data: function () { return Collections.DriverCommands.find({}, {sort: {type: 1, name: 1}}); },
-    waitOn: function () { return [Meteor.subscribe("driver_commands")]; }
+  this.route("DriverCommandList", {
+    path: "/driver_command_list"
   });
   this.route("adventure_console", {
     path: "/adventure_console/:projectId/:projectVersionId/:adventureId",

@@ -1,14 +1,12 @@
-<template name="Home">
+<template name="Home" xmlns="http://www.w3.org/1999/html">
   {{#CenterPoleLayout}}
     {{#if ready}}
-      {{#contentFor "title"}}
-        {{#with currentUser }}
-          {{name}}
-        {{/with}}
+      {{#contentFor "nav-title"}}
+        {{currentUser.profile.name}}
       {{/contentFor}}
 
       {{#contentFor "header"}}
-        {{> ProjectNav }}
+        <h1>{{ currentUser.profile.name }}</h1>
       {{/contentFor}}
 
       {{#contentFor "nav"}}
@@ -16,7 +14,9 @@
       {{/contentFor}}
 
       {{setTitle "Home"}}
+
       <h1>Personal Dashboard</h1>
+
     {{else}}
       {{> CustomSpinner }}
     {{/if}}

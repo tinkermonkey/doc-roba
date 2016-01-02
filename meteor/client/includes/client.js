@@ -173,13 +173,16 @@ Template.registerHelper("userProjects", function () {
 });
 
 /**
- * Get a list of projects for a user, including their role
+ * Get the role for this user for a given project
  */
 Template.registerHelper("userRole", function (projectId) {
   projectId = (this ? this._id : this) || projectId;
   var user = Meteor.user();
   if(user && user.projects && user.projects[projectId] && user.projects[projectId].roles){
-    return _.min(user.projects[projectId].roles)
+    var role = _.min(user.projects[projectId].roles);
+    if(role != null){
+      return RoleTypesLookup[role]
+    }
   }
 });
 
@@ -314,6 +317,9 @@ Template.registerHelper("getElementId", function () {
   var instance = Template.instance();
   if(!instance._elementId){
     instance._elementId = "Element_" + new Mongo.ObjectID()._str;
+    if(instance._elementIdReactor){
+      instance._elementIdReactor.set(instance._elementId);
+    }
   }
   return instance._elementId;
 });

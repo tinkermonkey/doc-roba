@@ -1,14 +1,12 @@
 <template name="ProjectHome">
   {{#CenterPoleLayout}}
     {{#if ready}}
-      {{#contentFor "title"}}
-        {{#with currentUser }}
-          {{name}}
-        {{/with}}
+      {{#contentFor "nav-title"}}
+        {{project.title}}
       {{/contentFor}}
 
       {{#contentFor "header"}}
-        {{> ProjectNav }}
+        {{> CurrentProjectNav project=project}}
       {{/contentFor}}
 
       {{#contentFor "nav"}}

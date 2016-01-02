@@ -3,7 +3,7 @@
     {{#if ready }}
       {{setTitle "DocTree :: " project.title " v " version.version}}
 
-      {{#contentFor "title"}}
+      {{#contentFor "nav-title"}}
         <a href="/?project={{project.id}}&version={{version._id}}">{{project.title}} v {{version.version}}</a>
       {{/contentFor}}
 

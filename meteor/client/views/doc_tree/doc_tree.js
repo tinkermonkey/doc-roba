@@ -3,10 +3,10 @@
  */
 Template.DocTree.helpers({
   project: function () {
-    return Template.project.get()
+    return Template.instance().project.get()
   },
   version: function () {
-    return Template.version.get()
+    return Template.instance().version.get()
   }
 });
 
@@ -17,6 +17,7 @@ Template.DocTree.created = function () {
   var instance = this;
   instance.project = new ReactiveVar();
   instance.version = new ReactiveVar();
+  instance._elementIdReactor = new ReactiveVar();
 
   instance.autorun(function () {
     var route = Router.current();
@@ -39,67 +40,82 @@ Template.DocTree.created = function () {
  * Setup the tree display once the template is rendered
  */
 Template.DocTree.rendered = function () {
-  var self = this,
-    viewState = Session.get("viewState"),
-    nodeState = Session.get("nodeState");
+  var instance = this,
+      // We don't actually want these to be reactive in the auto-run because it could create a loop
+      viewState = Session.get("viewState"),
+      nodeState = Session.get("nodeState");
 
-  if(!self.init){
-    self.init = true;
-    // Setup the view only once
-    self.treeLayout = new TreeLayout(self._elementId, self.data);
+  // for the data binding we just need to setup an update call
+  instance.autorun(function () {
+    var version = instance.version.get(),
+        project = instance.project.get(),
+        elementId = instance._elementIdReactor.get(), // this is only set when the dom elements exist
+        subsReady = instance.subscriptionsReady();
 
-    // restore the cached node state
-    self.treeLayout.nodeStateCache = nodeState || {};
+    if(subsReady && elementId){
+      // initialize once
+      if(!instance.init){
+        // Setup the view only once
+        Meteor.log.debug("DocTree: creating tree layout " + instance._elementId);
+        instance.treeLayout = new TreeLayout(instance._elementId, {version: version, project: project});
 
-    // restore a cached view
-    if (viewState) {
-      self.treeLayout.scaleAndTranslate(viewState.scale, viewState.translation);
-    }
+        // restore the cached node state
+        instance.treeLayout.nodeStateCache = nodeState || {};
 
-    // for the data binding we just need to setup an update call
-    self.autorun(function () {
-      Meteor.log.debug("Auto-run executing doc_tree: ", self.data);
+        // restore a cached view
+        if (viewState) {
+          instance.treeLayout.scaleAndTranslate(viewState.scale, viewState.translation);
+        }
+
+        Meteor.log.debug("DocTree Nodes:" + Collections.Nodes.find({projectVersionId: version._id}).count());
+        Meteor.log.debug("DocTree Actions:" + Collections.Actions.find({projectVersionId: version._id}).count());
+      }
 
       // get fresh node data
-      self.treeLayout.nodeHandler.setNodes(Collections.Nodes.find({projectVersionId: self.data.version._id}).fetch());
-      self.treeLayout.actionHandler.setActions(Collections.Actions.find({projectVersionId: self.data.version._id}).fetch());
+      instance.treeLayout.nodeHandler.setNodes(Collections.Nodes.find({projectVersionId: version._id}).fetch());
+      instance.treeLayout.actionHandler.setActions(Collections.Actions.find({projectVersionId: version._id}).fetch());
 
       // get the mesh of navMenu actions
-      self.treeLayout.actionHandler.setNavActions(Collections.Nodes.find({
-        type: NodeTypes.navMenu, projectVersionId: self.data.version._id
+      instance.treeLayout.actionHandler.setNavActions(Collections.Nodes.find({
+        type: NodeTypes.navMenu, projectVersionId: version._id
       }).map(function (navMenu) {
         return {
           menu: navMenu,
           actions: Collections.Actions.find({
-            projectVersionId: self.data.version._id,
+            projectVersionId: version._id,
             nodeId: navMenu.staticId
           }).fetch(),
           nodes: Collections.Nodes.find({
-            projectVersionId: self.data.version._id,
+            projectVersionId: version._id,
             navMenus: navMenu.staticId
           }).map(function (node) { return node.staticId })
         }
       }));
 
       // restore the cached node state
-      self.treeLayout.restoreCachedNodeState();
+      instance.treeLayout.restoreCachedNodeState();
 
       // set up the base
-      self.treeLayout.update();
+      instance.treeLayout.update();
 
-      //self.treeLayout.updateActionDisplay();
-    });
+      // call init once
+      if(!instance.init){
+        Meteor.log.debug("DocTree initialization complete");
+        // Initialize the tree after setting up autorun so there is data to initialize
+        instance.init = true;
+        instance.treeLayout.init();
+      }
+    }
+  });
 
-    // respond to resize events
-    self.autorun(function () {
-      Meteor.log.debug("Auto-run doc_tree resize");
-      var resize = Session.get("resize");
-      self.treeLayout.resize();
-    });
-
-    // Initialize the tree after setting up autorun so there is data to initialize
-    self.treeLayout.init();
-  }
+  // respond to resize events
+  instance.autorun(function () {
+    var resize = Session.get("resize");
+    if(instance.treeLayout){
+      Meteor.log.debug("DocTree resize");
+      instance.treeLayout.resize();
+    }
+  });
 };
 
 /**

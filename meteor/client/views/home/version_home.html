@@ -1,14 +1,12 @@
 <template name="VersionHome">
   {{#CenterPoleLayout}}
     {{#if ready}}
-      {{#contentFor "title"}}
-        {{#with currentUser }}
-          {{name}}
-        {{/with}}
+      {{#contentFor "nav-title"}}
+        {{project.title}} v {{version.version}}
       {{/contentFor}}
 
       {{#contentFor "header"}}
-        {{> ProjectNav }}
+        {{> CurrentProjectNav project=project version=version}}
       {{/contentFor}}
 
       {{#contentFor "nav"}}
@@ -16,7 +14,7 @@
       {{/contentFor}}
 
       {{#with version}}
-        {{setTitle project.title "v" version}}
+        {{setTitle project.title "v" version.version}}
 
         <ul class="nav nav-pills content-header">
           <li role="presentation" class="active"><a data-tab-name="activity">Activity</a></li>
