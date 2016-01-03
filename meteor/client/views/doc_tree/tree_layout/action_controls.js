@@ -37,7 +37,7 @@ TreeActionControls = function (treeLayout, config) {
  * Initialize the controls
  */
 TreeActionControls.prototype.init = function () {
-  //Meteor.log.debug("actionControls.init()");
+  //console.debug("actionControls.init()");
   var self = this;
 
   // clear out the layer
@@ -51,7 +51,7 @@ TreeActionControls.prototype.init = function () {
  * Lock the controls so they do not change
  */
 TreeActionControls.prototype.lock = function () {
-  //Meteor.log.debug("ActionControls: lock");
+  //console.debug("ActionControls: lock");
   this.locked = true;
 };
 
@@ -59,7 +59,7 @@ TreeActionControls.prototype.lock = function () {
  * Unlock the controls so they can change
  */
 TreeActionControls.prototype.unlock = function () {
-  //Meteor.log.debug("ActionControls: unlock");
+  //console.debug("ActionControls: unlock");
   this.locked = false;
 };
 
@@ -67,7 +67,7 @@ TreeActionControls.prototype.unlock = function () {
  * Create the controls
  */
 TreeActionControls.prototype.create = function () {
-  //Meteor.log.debug("ActionControls.create()");
+  //console.debug("ActionControls.create()");
   var self = this,
     tree = self.treeLayout;
 
@@ -137,7 +137,7 @@ TreeActionControls.prototype.create = function () {
  * Update the location of the controls
  */
 TreeActionControls.prototype.update = function (duration) {
-  //Meteor.log.debug("ActionControls.update()");
+  //console.debug("ActionControls.update()");
   var self = this;
 
   // default duration
@@ -241,7 +241,7 @@ TreeActionControls.prototype.update = function (duration) {
  * @param d The node to control
  */
 TreeActionControls.prototype.show = function (d) {
-  //Meteor.log.debug("ActionControls.show()");
+  //console.debug("ActionControls.show()");
   var self = this;
 
   // make sure it's not locked
@@ -261,7 +261,7 @@ TreeActionControls.prototype.show = function (d) {
  * Hide the controls
  */
 TreeActionControls.prototype.hide = function (duration) {
-  //Meteor.log.debug("ActionControls.hide()");
+  //console.debug("ActionControls.hide()");
   var self = this;
     visible = self.background.attr("r") > 0;
 
@@ -328,7 +328,7 @@ TreeActionControls.prototype.hide = function (duration) {
  * Possibly hide the controls
  */
 TreeActionControls.prototype.considerHiding = function () {
-  //Meteor.log.debug("ActionControls.considerHiding()");
+  //console.debug("ActionControls.considerHiding()");
   var self = this,
     tree = this.treeLayout;
 
@@ -348,7 +348,7 @@ TreeActionControls.prototype.considerHiding = function () {
  * Stop hiding the controls
  */
 TreeActionControls.prototype.cancelHiding = function () {
-  //Meteor.log.debug("ActionControls.cancelHiding()");
+  //console.debug("ActionControls.cancelHiding()");
   var self = this;
 
   if(self.hideTimeout){
@@ -398,7 +398,7 @@ TreeActionControls.prototype.generateDragTetherPath = function () {
  * Handle the user pressing the escape key during a drag
  */
 TreeActionControls.prototype.dragEscapeHandler = function (e) {
-  //Meteor.log.debug("dragEscapeHandler: " + e.which);
+  //console.debug("dragEscapeHandler: " + e.which);
   if(e.which == 27 && e.data){
     e.data.addActionDragEnd();
   }
@@ -408,7 +408,7 @@ TreeActionControls.prototype.dragEscapeHandler = function (e) {
  * Handle the start of an action creating drag
  */
 TreeActionControls.prototype.addActionDragStart = function () {
-  //Meteor.log.debug("ActionControls.addActionDragStart()");
+  //console.debug("ActionControls.addActionDragStart()");
   var self = this,
     tree = self.treeLayout,
     radius = self.getRadius(self.action);
@@ -444,7 +444,7 @@ TreeActionControls.prototype.addActionDragStart = function () {
  * Handle the continued dragging during an add-action operation
  */
 TreeActionControls.prototype.addActionDrag = function () {
-  //Meteor.log.debug("ActionControls.addActionDrag()");
+  //console.debug("ActionControls.addActionDrag()");
   var self = this,
     d = self.action;
 
@@ -461,7 +461,7 @@ TreeActionControls.prototype.addActionDrag = function () {
  * Handle the end of an add-action drag
  */
 TreeActionControls.prototype.addActionDragEnd = function () {
-  //Meteor.log.debug("ActionControls.addActionDragEnd()");
+  //console.debug("ActionControls.addActionDragEnd()");
   var self = this,
     tree = self.treeLayout,
     d = self.action;
@@ -488,7 +488,7 @@ TreeActionControls.prototype.addActionDragEnd = function () {
     // clear out the drop node
     tree.dropNodeHandler.clearNode();
   } else {
-    Meteor.log.info("DragEnd without drop target");
+    console.info("DragEnd without drop target");
   }
 
   // now we're safe to say we're not in a drag event
@@ -515,7 +515,7 @@ TreeActionControls.prototype.addActionDragEnd = function () {
       try {
         delete self.action.drag;
       } catch(e) {
-        Meteor.log.error("DragEnd Error: " + e);
+        console.error("DragEnd Error: " + e);
       }
 
       // ask to hide the node controls

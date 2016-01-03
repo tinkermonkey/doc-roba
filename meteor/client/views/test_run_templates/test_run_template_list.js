@@ -3,7 +3,7 @@
  */
 Template.TestRunTemplateList.helpers({
   testRunTemplates: function () {
-    return Collections.TestRunTemplates.find({ projectVersionId: this.version._id}, { sort: { title: 1 } });
+    return Collections.TestRunTemplates.find({ projectVersionId: FlowRouter.getParam("projectVersionId")}, { sort: { title: 1 } });
   }
 });
 
@@ -27,16 +27,17 @@ Template.TestRunTemplateList.events({
   "click .add-item-form a": function (e, instance) {
     var itemType = $(e.target).closest("a").attr("data-name"),
       itemName = $(".add-item-form input").val().trim(),
-      version = instance.data.version;
+      projectId = FlowRouter.getParam("projectId"),
+      versionId = FlowRouter.getParam("projectVersionId");
 
     if(itemType && itemName && itemName.length){
       Collections.TestRunTemplates.insert({
-        projectId: version.projectId,
-        projectVersionId: version._id,
+        projectId: projectId,
+        projectVersionId: versionId,
         title: itemName
       }, function (error, result) {
         if(error){
-          Meteor.log.error("Failed to insert test run template: " + error.message);
+          console.error("Failed to insert test run template: " + error.message);
           Dialog.error("Failed to insert test run template: " + error.message);
         } else {
           $(".add-item-form input").val("")
@@ -48,8 +49,7 @@ Template.TestRunTemplateList.events({
     var selectable = $(e.target).closest(".test-run-template-list-item");
     instance.$(".test-run-template-list-item.selected").removeClass("selected");
     selectable.addClass("selected");
-
-    Router.query({testRunTemplateId: selectable.attr("data-pk")});
+    FlowRouter.setQueryParams({testRunTemplateId: selectable.attr("data-pk")});
   }
 });
 
@@ -57,7 +57,14 @@ Template.TestRunTemplateList.events({
  * Template Created
  */
 Template.TestRunTemplateList.created = function () {
-  
+  var instance = this;
+
+  instance.autorun(function () {
+    var projectId = FlowRouter.getParam("projectId"),
+        projectVersionId = FlowRouter.getParam("projectVersionId");
+
+    instance.subscribe("test_run_templates", projectId, projectVersionId);
+  });
 };
 
 /**
@@ -65,7 +72,6 @@ Template.TestRunTemplateList.created = function () {
  */
 Template.TestRunTemplateList.rendered = function () {
   var instance = Template.instance();
-  console.log("Selected template: ", instance.data);
 
   // make all of the test case list elements draggable
   instance.$(".test-run-template-list-item").draggable({
@@ -82,9 +88,10 @@ Template.TestRunTemplateList.rendered = function () {
   });
 
   // Select the selected item if there is one defined
-  if(instance.data.testRunTemplateId){
-    console.log("Selected template: ", instance.data.testRunTemplateId);
-    var testRunItem = instance.$(".test-run-template-list-item[data-pk='" + instance.data.testRunTemplateId + "']");
+  var testRunTemplateId = FlowRouter.getQueryParam("testRunTemplateId");
+  if(testRunTemplateId){
+    //console.log("Selected template: ", testRunTemplateId);
+    var testRunItem = instance.$(".test-run-template-list-item[data-pk='" + testRunTemplateId + "']");
     testRunItem.addClass("selected");
   }
 

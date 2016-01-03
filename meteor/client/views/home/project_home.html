@@ -1,20 +1,9 @@
 <template name="ProjectHome">
   {{#CenterPoleLayout}}
     {{#if ready}}
-      {{#contentFor "nav-title"}}
-        {{project.title}}
-      {{/contentFor}}
-
-      {{#contentFor "header"}}
-        {{> CurrentProjectNav }}
-      {{/contentFor}}
-
-      {{#contentFor "nav"}}
-        {{> HomeNav }}
-      {{/contentFor}}
-
       {{#with project}}
         {{setTitle title}}
+        {{setNavTitle title}}
 
         <ul class="nav nav-pills content-header">
           <li role="presentation" class="active"><a data-tab-name="activity">Activity</a></li>

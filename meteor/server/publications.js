@@ -8,7 +8,7 @@ Meteor.startup(function () {
    * ============================================================================
    */
   Meteor.publish("user_data", function () {
-    Meteor.log.debug("Publish: user_data");
+    console.debug("Publish: user_data");
     if (this.userId) {
       return Meteor.users.find({_id: this.userId},
         {fields: {projectList: 1, projects: 1}});
@@ -18,7 +18,7 @@ Meteor.startup(function () {
     }
   });
   Meteor.publish("user_peers", function () {
-    Meteor.log.debug("Publish: user_peers");
+    console.debug("Publish: user_peers");
     if (this.userId && this.projectList && this.projectList.length) {
       var user = this;
       return Meteor.users.find({projectList: {$in: user.projectList}});
@@ -33,21 +33,21 @@ Meteor.startup(function () {
    * ============================================================================
    */
   Meteor.publish("nodes", function (projectId, projectVersionId) {
-    Meteor.log.debug("Publish: nodes");
+    console.debug("Publish: nodes");
     // check that there is a project role for the current user
     if(Auth.hasProjectAccess(this.userId, projectId) && projectVersionId){
       return Collections.Nodes.find({projectVersionId: projectVersionId});
     }
-    Meteor.log.warn("Publish: nodes returning nothing for [" + projectId + "], [" + projectVersionId + "], " + this.userId);
+    console.warn("Publish: nodes returning nothing for [" + projectId + "], [" + projectVersionId + "], " + this.userId);
     return [];
   });
   Meteor.publish("actions", function (projectId, projectVersionId) {
-    Meteor.log.debug("Publish: actions");
+    console.debug("Publish: actions");
     // check that there is a project role for the current user
     if(Auth.hasProjectAccess(this.userId, projectId) && projectVersionId){
       return Collections.Actions.find({projectVersionId: projectVersionId});
     }
-    Meteor.log.warn("Publish: actions returning nothing for [" + projectId + "], [" + projectVersionId + "], " + this.userId);
+    console.warn("Publish: actions returning nothing for [" + projectId + "], [" + projectVersionId + "], " + this.userId);
     return [];
   });
 
@@ -57,7 +57,7 @@ Meteor.startup(function () {
    * ============================================================================
    */
   Meteor.publish("driver_commands", function () {
-    Meteor.log.debug("Publish: driver_commands");
+    console.debug("Publish: driver_commands");
     return Collections.DriverCommands.find();
   });
 
@@ -67,31 +67,31 @@ Meteor.startup(function () {
    * ============================================================================
    */
   Meteor.publish("projects", function () {
-    Meteor.log.debug("Publish: projects");
+    console.debug("Publish: projects");
     if(this.userId){
       var user = Meteor.users.findOne(this.userId);
       return Collections.Projects.find({_id: {$in: user.projectList }});
     }
-    Meteor.log.warn("Publish: projects returning nothing");
+    console.warn("Publish: projects returning nothing");
     return [];
   });
   Meteor.publish("project_versions", function () {
-    Meteor.log.debug("Publish: project_versions");
+    console.debug("Publish: project_versions");
     if(this.userId){
       var user = Meteor.users.findOne(this.userId);
       return Collections.ProjectVersions.find({projectId: {$in: user.projectList }});
     }
-    Meteor.log.warn("Publish: project_versions returning nothing");
+    console.warn("Publish: project_versions returning nothing");
     return [];
   });
   Meteor.publish("changes", function (limit) {
-    Meteor.log.debug("Publish: changes");
+    console.debug("Publish: changes");
     if(this.userId){
       var user = Meteor.users.findOne(this.userId),
         limit = limit || 25;
       return Collections.RecordChanges.find({projectId: {$in: user.projectList}}, {limit: limit});
     }
-    Meteor.log.warn("Publish: changes returning nothing");
+    console.warn("Publish: changes returning nothing");
     return [];
   });
 
@@ -101,7 +101,7 @@ Meteor.startup(function () {
    * ============================================================================
    */
   Meteor.publish("user_types", function (projectId, projectVersionId) {
-    Meteor.log.debug("Publish: user_types");
+    console.debug("Publish: user_types");
     // check that there is a project role for the current user
     if(Auth.hasProjectAccess(this.userId, projectId) && projectVersionId){
       return Collections.Nodes.find({projectVersionId: projectVersionId, type: NodeTypes.userType});
@@ -109,7 +109,7 @@ Meteor.startup(function () {
     return [];
   });
   Meteor.publish("platforms", function (projectId, projectVersionId) {
-    Meteor.log.debug("Publish: platforms");
+    console.debug("Publish: platforms");
     // check that there is a project role for the current user
     if(Auth.hasProjectAccess(this.userId, projectId) && projectVersionId){
       return Collections.Nodes.find({projectVersionId: projectVersionId, type: NodeTypes.platform});
@@ -123,7 +123,7 @@ Meteor.startup(function () {
    * ============================================================================
    */
   Meteor.publish("servers", function (projectId, projectVersionId) {
-    Meteor.log.debug("Publish: servers");
+    console.debug("Publish: servers");
     // check that there is a project role for the current user
     if(Auth.hasProjectAccess(this.userId, projectId) && projectVersionId){
       return Collections.Servers.find({projectVersionId: projectVersionId});
@@ -131,7 +131,7 @@ Meteor.startup(function () {
     return [];
   });
   Meteor.publish("server", function (projectId, projectVersionId, serverId) {
-    Meteor.log.debug("Publish: server");
+    console.debug("Publish: server");
     // check that there is a project role for the current user
     if(Auth.hasProjectAccess(this.userId, projectId) && projectVersionId){
       return Collections.Servers.find({projectVersionId: projectVersionId, staticId: serverId});
@@ -139,7 +139,7 @@ Meteor.startup(function () {
     return [];
   });
   Meteor.publish("test_systems", function (projectId, projectVersionId) {
-    Meteor.log.debug("Publish: test_systems");
+    console.debug("Publish: test_systems");
     // check that there is a project role for the current user
     if(Auth.hasProjectAccess(this.userId, projectId) && projectVersionId){
       return Collections.TestSystems.find({projectVersionId: projectVersionId});
@@ -147,7 +147,7 @@ Meteor.startup(function () {
     return [];
   });
   Meteor.publish("test_system", function (projectId, projectVersionId, testSystemId) {
-    Meteor.log.debug("Publish: test_system");
+    console.debug("Publish: test_system");
     // check that there is a project role for the current user
     if(Auth.hasProjectAccess(this.userId, projectId) && projectVersionId){
       return Collections.TestSystems.find({projectVersionId: projectVersionId, staticId: testSystemId});
@@ -155,7 +155,7 @@ Meteor.startup(function () {
     return [];
   });
   Meteor.publish("test_agents", function (projectId, projectVersionId) {
-    Meteor.log.debug("Publish: test_agents");
+    console.debug("Publish: test_agents");
     // check that there is a project role for the current user
     if(Auth.hasProjectAccess(this.userId, projectId) && projectVersionId){
       return Collections.TestAgents.find({projectVersionId: projectVersionId});
@@ -163,7 +163,7 @@ Meteor.startup(function () {
     return [];
   });
   Meteor.publish("test_agent", function (projectId, projectVersionId, testAgentId) {
-    Meteor.log.debug("Publish: test_agent");
+    console.debug("Publish: test_agent");
     // check that there is a project role for the current user
     if(Auth.hasProjectAccess(this.userId, projectId) && projectVersionId){
       return Collections.TestAgents.find({projectVersionId: projectVersionId, staticId: testAgentId});

@@ -32,15 +32,15 @@ Template.AdventureContext.helpers({
       if(matchCount == 1 && match){
         // Check to make sure we don't find what was asked to be ignored
         if(instance.ignore && instance.ignore == match.node.staticId){
-          Meteor.log.debug("searchNodes found a single match but it was to be ignored: " + match.node.staticId);
+          console.debug("searchNodes found a single match but it was to be ignored: " + match.node.staticId);
           return results;
         }
 
         // One and only one match, just figure we know the location
-        Meteor.log.debug("searchNodes found a single match: " + match.node.staticId);
+        console.debug("searchNodes found a single match: " + match.node.staticId);
         this.currentNodeId.set(match.node.staticId);
       } else {
-        Meteor.log.debug("searchNodes result count: " + results.length);
+        console.debug("searchNodes result count: " + results.length);
         return results;
       }
     }
@@ -90,7 +90,7 @@ Template.AdventureContext.events({
         record = formInstance.nodeRecord.get();
       mapInstance.mapLayout.highlightNodes([record.parentId]);
     } catch (e) {
-      Meteor.log.error("Failed to locate map container: " + e.message);
+      console.error("Failed to locate map container: " + e.message);
     }
   },
   "click .btn-cancel-node": function (e, instance) {
@@ -115,7 +115,7 @@ Template.AdventureContext.events({
         mapInstance.mapLayout.zoomAll(250);
       }, 250);
     } catch (e) {
-      Meteor.log.error("Failed to locate map container: " + e.message);
+      console.error("Failed to locate map container: " + e.message);
     }
   },
   "click .btn-wrong-node": function (e, instance) {
@@ -126,7 +126,7 @@ Template.AdventureContext.events({
       // clear the current node identification
       instance.data.currentNodeId.set();
     } catch(e) {
-      Meteor.log.error("Failed to clear node context: " + e.message);
+      console.error("Failed to clear node context: " + e.message);
       Dialog.error("Failed to clear node context: " + e.message);
     }
   },
@@ -144,7 +144,7 @@ Template.AdventureContext.events({
       // Get the parent node to figure out the platform and user type
       var parent = Collections.Nodes.findOne({staticId: record.parentId, projectVersionId: record.projectVersionId});
       if(!parent){
-        Meteor.log.error("Create node failed: could not find parent node " + record.parentId + " for project " + record.projectVersionId);
+        console.error("Create node failed: could not find parent node " + record.parentId + " for project " + record.projectVersionId);
         Dialog.error("Create node failed: could not find parent node " + record.parentId + " for project " + record.projectVersionId);
         return;
       }
@@ -157,7 +157,7 @@ Template.AdventureContext.events({
       // transition back to the normal layout
       $(".adventure-focus-form").removeClass("adventure-focus-form");
     } catch (e) {
-      Meteor.log.error("Failed to load new record: " + e.message);
+      console.error("Failed to load new record: " + e.message);
     }
   },
   "edited .node-edit-form .editable": function (e, instance, newValue) {
@@ -173,12 +173,12 @@ Template.AdventureContext.events({
       //console.log("Edited: ", dataKey, newValue, node);
       Collections.Nodes.update(nodeId, update, function (error) {
         if(error){
-          Meteor.log.error("Failed to update node value: " + error.message);
+          console.error("Failed to update node value: " + error.message);
           Dialog.error("Failed to update node value: " + error.message);
         }
       });
     } else {
-      Meteor.log.error("Failed to update node value: data-key not found");
+      console.error("Failed to update node value: data-key not found");
       Dialog.error("Failed to update node value: data-key not found");
     }
   },
@@ -203,7 +203,7 @@ Template.AdventureContext.events({
         code: "driver.previewCode(\"" + btoa(node[field]) + "\");"
       }, function (error) {
         if(error){
-          Meteor.log.error("Error adding adventure command: " + error.message);
+          console.error("Error adding adventure command: " + error.message);
           Dialog.error("Error adding adventure command: " + error.message);
         }
       });

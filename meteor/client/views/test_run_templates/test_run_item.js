@@ -48,13 +48,13 @@ Template.TestRunItem.events({
 
       Collections.TestRunTemplateItems.update(itemId, update, function (error) {
         if(error){
-          Meteor.log.error("Failed to update test run template item value: " + error.message);
+          console.error("Failed to update test run template item value: " + error.message);
           console.log(update);
           Dialog.error("Failed to update test run template item value: " + error.message);
         }
       });
     } else {
-      Meteor.log.error("Failed to update test run template value: data-key not found");
+      console.error("Failed to update test run template value: data-key not found");
       Dialog.error("Failed to update test run template value: data-key not found");
     }
   }

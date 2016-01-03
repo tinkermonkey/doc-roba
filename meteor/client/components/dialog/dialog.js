@@ -36,7 +36,7 @@ Template.dialog.events({
     var btn = $(event.target).text(),
       instance = Template.instance();
 
-    Meteor.log.debug("Dialog button clicked: " + btn);
+    console.debug("Dialog button clicked: " + btn);
     $(dialog.firstNode).remove();
     if (instance.data.callback) {
       instance.data.callback(btn);

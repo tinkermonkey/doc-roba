@@ -37,12 +37,12 @@ Template.edit_node.events({
       update["$set"][dataKey] = newValue;
       Collections.Nodes.update(instance.data._id, update, function (error) {
         if(error){
-          Meteor.log.error("Failed to update node value: " + error.message);
+          console.error("Failed to update node value: " + error.message);
           Dialog.error("Failed to update node value: " + error.message);
         }
       });
     } else {
-      Meteor.log.error("Failed to update node value: data-key not found");
+      console.error("Failed to update node value: data-key not found");
       Dialog.error("Failed to update node value: data-key not found");
     }
   }

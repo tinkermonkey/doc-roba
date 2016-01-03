@@ -31,7 +31,7 @@ Template.action_edit_variables.events({
         }
       }, function (error, response) {
         if(error){
-          Meteor.log.error("Variable insert failed: " + error.message);
+          console.error("Variable insert failed: " + error.message);
           Dialog.error("Variable insert failed: " + error.message);
         } else {
           // trigger editing on variable
@@ -41,7 +41,7 @@ Template.action_edit_variables.events({
         }
       });
     } else {
-      Meteor.log.error("Add Action Variable failed: no action found");
+      console.error("Add Action Variable failed: no action found");
       console.log(this);
       Dialog.error("Add Action Variable failed: no action found");
     }
@@ -63,7 +63,7 @@ Template.action_edit_variables.events({
           Collections.Actions.update(variable.actionId, { $pull: { variables: {order: variable.order} } }, function (error, response) {
             Dialog.hide();
             if(error){
-              Meteor.log.error("Delete Variable failed: " + error.message);
+              console.error("Delete Variable failed: " + error.message);
               Dialog.error("Delete Variable failed: " + error.message);
             }
           });
@@ -97,7 +97,7 @@ Template.action_edit_variables.events({
 
     Collections.Actions.update(actionId, update, function (error) {
       if(error){
-        Meteor.log.error("Action Variable update failed: " + error.message);
+        console.error("Action Variable update failed: " + error.message);
         Dialog.error("Action Variable update failed: " + error.message);
       }
     });
@@ -136,7 +136,7 @@ Template.action_edit_variables.rendered = function () {
         //console.log("Update pre-send: ", update);
         Collections.Actions.update(actionId, update, function (error) {
           if(error){
-            Meteor.log.error("Action Variable order update failed: " + error.message);
+            console.error("Action Variable order update failed: " + error.message);
             Dialog.error("Action Variable order update failed: " + error.message);
           }
         });

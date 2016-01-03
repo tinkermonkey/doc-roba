@@ -28,7 +28,7 @@ Template.RobaAce.created = function () {
 Template.RobaAce.rendered = function () {
   var instance = this;
   if(!instance.editor) {
-    var editor = instance.editor = ace.edit(instance._elementId);
+    var editor = instance.editor = ace.edit(instance.elementId);
     editor.setTheme("ace/theme/chrome");
     editor.getSession().setMode("ace/mode/javascript");
     editor.getSession().setUseWrapMode(true);
@@ -61,7 +61,7 @@ Template.RobaAce.rendered = function () {
         clearTimeout(instance.updateTimeout);
       }
       instance.updateTimeout = setTimeout(function () {
-        $("#" + instance._elementId).trigger("edited", [editor.getValue() || ""]);
+        $("#" + instance.elementId).trigger("edited", [editor.getValue() || ""]);
       }, 1000);
     });
 
@@ -77,7 +77,7 @@ Template.RobaAce.rendered = function () {
     instance.autorun(function () {
       var data = Template.currentData();
       if(data.value !== instance.editor.getValue()){
-        Meteor.log.debug("RobaAce Data update");
+        console.debug("RobaAce Data update");
         instance.editor.setValue(data.value);
         instance.editor.clearSelection();
       }

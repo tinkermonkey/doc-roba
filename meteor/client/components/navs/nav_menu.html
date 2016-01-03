@@ -7,7 +7,7 @@
             {{> HomeNav }}
           </div>
           <div class="nav-body-right">
-            {{> yield "sub_nav" }}
+            {{> Template.dynamic template=subNav }}
           </div>
         </div>
 
@@ -29,7 +29,7 @@
               <img class="nav-logo" src="/roba_logo.svg">
             </div>
             <div class="nav-title">
-              {{> yield "nav-title"}}
+              {{ navTitle }}
             </div>
           </div>
         </div>

@@ -9,7 +9,7 @@ Template.TestResult.helpers({
     return Template.instance().testCase.get()
   },
   roleResults: function () {
-    return Collections.TestResultRoles.find({testResultId: Router.current().params.testResultId});
+    return Collections.TestResultRoles.find({testResultId: FlowRouter.getParam("testResultId")});
   }
 });
 
@@ -28,29 +28,34 @@ Template.TestResult.created = function () {
 
   // Load the test result record
   instance.autorun(function () {
-    var route = Router.current();
-    instance.subscribe("test_result", route.params.projectId, route.params.testResultId, function () {
-      var testResult = Collections.TestResults.findOne(route.params.testResultId);
+    var projectId = FlowRouter.getParam("projectId"),
+        projectVersionId = FlowRouter.getParam("projectVersionId"),
+        testResultId = FlowRouter.getParam("testResultId");
+
+    instance.subscribe("test_result", projectId, testResultId, function () {
+      var testResult = Collections.TestResults.findOne(testResultId);
       if(testResult){
         instance.testResult.set(testResult);
-        instance.subscribe("test_case", testResult.projectId, testResult.projectVersionId, testResult.testCaseId);
-        instance.subscribe("test_case_roles", testResult.projectId, testResult.projectVersionId, testResult.testCaseId);
-        instance.subscribe("test_case_steps", testResult.projectId, testResult.projectVersionId, testResult.testCaseId);
-        instance.subscribe("server", testResult.projectId, testResult.projectVersionId, testResult.serverId);
+        instance.subscribe("test_case",       projectId, projectVersionId, testResult.testCaseId);
+        instance.subscribe("test_case_roles", projectId, projectVersionId, testResult.testCaseId);
+        instance.subscribe("test_case_steps", projectId, projectVersionId, testResult.testCaseId);
+        instance.subscribe("server",          projectId, projectVersionId, testResult.serverId);
       } else {
-        Dialog.error("Test Result not found");
+        Dialog.error("Test result not found");
       }
     });
-    instance.subscribe("test_result_roles", route.params.projectId, route.params.testResultId);
-    instance.subscribe("test_result_steps", route.params.projectId, route.params.testResultId);
-    instance.subscribe("test_result_screenshots", route.params.projectId, route.params.testResultId);
-    instance.subscribe("test_result_log", route.params.projectId, route.params.testResultId);
+    instance.subscribe("test_result_roles",       projectId, testResultId);
+    instance.subscribe("test_result_steps",       projectId, testResultId);
+    instance.subscribe("test_result_screenshots", projectId, testResultId);
+    instance.subscribe("test_result_log",         projectId, testResultId);
   });
 
   instance.autorun(function () {
     if(instance.subscriptionsReady()){
       var testResult = instance.testResult.get();
-      var testCase = Collections.TestCases.findOne({staticId: testResult.testCaseId, projectVersionId: testResult.projectVersionId});
+      var testCase = Collections.TestCases.findOne({
+        staticId: testResult.testCaseId,
+        projectVersionId: testResult.projectVersionId});
       instance.testCase.set(testCase);
     }
   });

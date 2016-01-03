@@ -1,34 +1,8 @@
 <template name="DocTree">
   {{#FullscreenLayout}}
     {{#if ready }}
-      {{setTitle "DocTree :: " project.title " v " version.version}}
-
-      {{#contentFor "nav-title"}}
-        <a href="/?project={{project.id}}&version={{version._id}}">{{project.title}} v {{version.version}}</a>
-      {{/contentFor}}
-
-      {{#contentFor "svgDefs"}}
-        {{> svg_def "outer-glow" }}
-        {{> svg_def "shadow" }}
-        {{> svg_def "crisp-shadow" }}
-        {{> svg_def "node-clip-path" }}
-        {{> svg_def "root-clip-path" }}
-        {{> svg_def "inset-clip-path" }}
-        {{> svg_def "node-hover" }}
-        {{> svg_def "node-control-back" }}
-        {{> svg_def "node-control-back-roba" }}
-        {{> svg_def "node-control-back-page" }}
-        {{> svg_def "node-control-back-view" }}
-        {{> svg_def "node-control-back-navMenu" }}
-        {{> svg_def "root-node-back" }}
-        {{> svg_def "node-back" }}
-        {{> svg_def "page-back" }}
-        {{> svg_def "node-controls-back-gradient" }}
-        {{> svg_def "action-arrow" }}
-        {{> svg_def "action-arrow-blunt" }}
-        {{> svg_def "action-arrow-hover" }}
-        {{> svg_def "action-arrow-blunt-hover" }}
-      {{/contentFor}}
+      {{setTitle "DocTree ::" project.title "v" version.version}}
+      {{setNavTitle project.title "v" version.version }}
 
       <div id="{{getElementId}}">
         <svg id="doc-tree-base" class="doc-tree-svg">

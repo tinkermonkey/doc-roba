@@ -7,53 +7,53 @@ Meteor.startup(function () {
    * DataStore publications
    */
   Meteor.publish('data_stores', function (projectId, projectVersionId) {
-    Meteor.log.debug("Publish: data_stores");
+    console.debug("Publish: data_stores");
     // check that there is a project role for the current user
     if(this.userId && projectId && projectVersionId
         && Auth.hasProjectAccess(this.userId, projectId)){
       return Collections.DataStores.find({projectVersionId: projectVersionId});
     }
-    Meteor.log.warn("DataStores publication: returning nothing");
+    console.warn("DataStores publication: returning nothing");
     return [];
   });
   Meteor.publish('data_store_fields', function (projectId, projectVersionId, dataStoreId) {
-    Meteor.log.debug("Publish: data_store_fields");
+    console.debug("Publish: data_store_fields");
     // check that there is a project role for the current user
     if(this.userId && projectId && projectVersionId && dataStoreId
         && Auth.hasProjectAccess(this.userId, projectId)){
       return Collections.DataStoreFields.find({projectVersionId: projectVersionId, dataStoreId: dataStoreId});
     }
-    Meteor.log.warn("DataStoreFields publication: returning nothing");
+    console.warn("DataStoreFields publication: returning nothing");
     return [];
   });
   Meteor.publish('data_store_rows', function (projectId, projectVersionId, dataStoreId) {
-    Meteor.log.debug("Publish: data_store_fields");
+    console.debug("Publish: data_store_fields");
     // check that there is a project role for the current user
     if(this.userId && projectId && projectVersionId && dataStoreId
         && Auth.hasProjectAccess(this.userId, projectId)){
       return Collections.DataStoreRows.find({projectVersionId: projectVersionId, dataStoreId: dataStoreId});
     }
-    Meteor.log.warn("DataStoreRows publication: returning nothing");
+    console.warn("DataStoreRows publication: returning nothing");
     return [];
   });
   Meteor.publish('all_data_store_fields', function (projectId, projectVersionId) {
-    Meteor.log.debug("Publish: all_data_store_fields");
+    console.debug("Publish: all_data_store_fields");
     // check that there is a project role for the current user
     if(this.userId && projectId && projectVersionId
         && Auth.hasProjectAccess(this.userId, projectId)){
       return Collections.DataStoreFields.find({projectVersionId: projectVersionId});
     }
-    Meteor.log.warn("AllDataStoreFields publication: returning nothing");
+    console.warn("AllDataStoreFields publication: returning nothing");
     return [];
   });
   Meteor.publish('all_data_store_rows', function (projectId, projectVersionId) {
-    Meteor.log.debug("Publish: all_data_store_rows");
+    console.debug("Publish: all_data_store_rows");
     // check that there is a project role for the current user
     if(this.userId && projectId && projectVersionId
         && Auth.hasProjectAccess(this.userId, projectId)){
       return Collections.DataStoreRows.find({projectVersionId: projectVersionId});
     }
-    Meteor.log.warn("AllDataStoreRows publication: returning nothing");
+    console.warn("AllDataStoreRows publication: returning nothing");
     return [];
   });
 

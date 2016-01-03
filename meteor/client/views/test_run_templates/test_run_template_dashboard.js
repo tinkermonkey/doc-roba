@@ -9,12 +9,12 @@ Template.TestRunTemplateDashboard.helpers({
     return Template.instance().version.get()
   },
   testRunTemplateId: function () {
-    return Router.current().params.query ? Router.current().params.query.testRunTemplateId : null
+    return FlowRouter.getQueryParam("testRunTemplateId")
   },
   testRunTemplate: function () {
-    var query = Router.current().params.query;
-    if(query.testRunTemplateId){
-      return Collections.TestRunTemplates.findOne(query.testRunTemplateId);
+    var testRunTemplateId = FlowRouter.getQueryParam("testRunTemplateId");
+    if(testRunTemplateId){
+      return Collections.TestRunTemplates.findOne(testRunTemplateId);
     }
   }
 });
@@ -33,15 +33,17 @@ Template.TestRunTemplateDashboard.created = function () {
   instance.version = new ReactiveVar();
 
   instance.autorun(function () {
-    var route = Router.current();
-    instance.subscribe("test_cases", route.params.projectId, route.params.projectVersionId);
-    instance.subscribe("test_groups", route.params.projectId, route.params.projectVersionId);
-    instance.subscribe("test_run_templates", route.params.projectId, route.params.projectVersionId);
-    instance.subscribe("test_run_template_items", route.params.projectId, route.params.projectVersionId);
+    var projectId = FlowRouter.getParam("projectId"),
+        projectVersionId = FlowRouter.getParam("projectVersionId");
+
+    instance.subscribe("test_cases", projectId, projectVersionId);
+    instance.subscribe("test_groups", projectId, projectVersionId);
+    instance.subscribe("test_run_templates", projectId, projectVersionId);
+    instance.subscribe("test_run_template_items", projectId, projectVersionId);
 
     // pull in the project and project version records
-    instance.project.set(Collections.Projects.findOne(route.params.projectId));
-    instance.version.set(Collections.ProjectVersions.findOne(route.params.projectVersionId));
+    instance.project.set(Collections.Projects.findOne(projectId));
+    instance.version.set(Collections.ProjectVersions.findOne(projectVersionId));
   });
 };
 

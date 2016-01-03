@@ -28,7 +28,7 @@ Template.EditableFieldType.rendered = function () {
       if (FieldTypesLookup[newValue]) {
         $(editedElement).trigger("edited", [newValue]);
       } else {
-        Meteor.log.error("Variable type update failed, variable type not known: " + newValue);
+        console.error("Variable type update failed, variable type not known: " + newValue);
         Dialog.error("Variable type update failed. Variable type not known: " + newValue);
       }
 

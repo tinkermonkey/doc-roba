@@ -46,7 +46,7 @@ Template.TestRunItemList.created = function () {
       if(newOrder != oldOrder){
         instance.collection.update(itemId, {$set: {order: newOrder}}, function (error, response) {
           if(error){
-            Meteor.log.error("Test Run Item order update failed: " + error.message);
+            console.error("Test Run Item order update failed: " + error.message);
             Dialog.error("Test Run Item order update failed: " + error.message);
           }
         });
@@ -66,7 +66,7 @@ Template.TestRunItemList.created = function () {
     console.log("Removing test run item: ", item._id, TestRunItemTypesLookup[item.type]);
     instance.collection.remove(item._id, function (error) {
       if(error){
-        Meteor.log.error("Failed to delete test run item: " + error.message);
+        console.error("Failed to delete test run item: " + error.message);
         Dialog.error("Failed to delete test run item: " + error.message);
       } else {
         instance.reorderItems();
@@ -148,7 +148,7 @@ Template.TestRunItemList.created = function () {
       // create the record
       instance.collection.insert(newItem, function (error) {
         if(error){
-          Meteor.log.error("Test Run Item insert failed: " + error.message);
+          console.error("Test Run Item insert failed: " + error.message);
           Dialog.error("Test Run Item insert failed: " + error.message);
         } else {
           instance.reorderItems();
@@ -184,7 +184,7 @@ Template.TestRunItemList.rendered = function () {
           newOrder = parseInt(ui.item.prev().attr("data-order") || 0) + 0.1;
         instance.collection.update(itemId, {$set: {parentId: parentId, order: newOrder}}, function (error) {
           if(error){
-            Meteor.log.error("Test Run Item update failed: " + error.message);
+            console.error("Test Run Item update failed: " + error.message);
             Dialog.error("Test Run Item update failed: " + error.message);
           } else {
             instance.reorderItems();

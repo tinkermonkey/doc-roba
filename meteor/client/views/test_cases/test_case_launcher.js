@@ -21,7 +21,10 @@ Template.TestCaseLauncher.helpers({
     }
   },
   serverId: function () {
-    return Template.instance().config.get().serverId;
+    var config = Template.instance().config.get();
+    if(config){
+      return config.serverId;
+    }
   },
   testSystemId: function () {
     var config = Template.instance().config.get(),
@@ -77,7 +80,11 @@ Template.TestCaseLauncher.events({
                 Dialog.error("Launching test failed: " + error.toString());
               } else {
                 // Open the test result
-                Router.go("test_result", { projectId: instance.data.projectId, _id: testResultId });
+                FlowRouter.go("TestResult", {
+                  projectId: instance.data.projectId,
+                  projectVersionId: instance.data.projectVersionId,
+                  testResultId: testResultId
+                });
               }
             });
           } else {
@@ -94,9 +101,28 @@ Template.TestCaseLauncher.events({
  */
 Template.TestCaseLauncher.created = function () {
   var instance = this;
-  instance.config = new ReactiveVar({
-    serverId: Collections.Servers.findOne({projectVersionId: this.data.projectVersionId, active: true}).staticId,
-    roles: {}
+  instance.config = new ReactiveVar();
+
+  instance.autorun(function () {
+    instance.subscribe("nodes", instance.data.projectId, instance.data.projectVersionId);
+    instance.subscribe("servers", instance.data.projectId, instance.data.projectVersionId);
+    instance.subscribe("test_systems", instance.data.projectId, instance.data.projectVersionId);
+    instance.subscribe("test_agents", instance.data.projectId, instance.data.projectVersionId);
+    instance.subscribe("all_data_store_fields", instance.data.projectId, instance.data.projectVersionId);
+    instance.subscribe("all_data_store_rows", instance.data.projectId, instance.data.projectVersionId);
+    instance.subscribe("data_stores", instance.data.projectId, instance.data.projectVersionId);
+
+    if(instance.subscriptionsReady()){
+      var server = Collections.Servers.findOne({projectVersionId: instance.data.projectVersionId, active: true});
+      if(server){
+        instance.config.set({
+          serverId: server.staticId,
+          roles: {}
+        });
+      } else {
+        consolle.error("TestCaseLauncher: no active servers for this project version");
+      }
+    }
   });
 };
 

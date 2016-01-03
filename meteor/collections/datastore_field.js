@@ -105,7 +105,7 @@ if(Meteor.isServer){
    * @param dataStoreId
    */
   updateDataStoreSchema = function (dataStoreId) {
-    Meteor.log.debug("updateDataStoreSchema: ", dataStoreId);
+    console.debug("updateDataStoreSchema: ", dataStoreId);
     var schema = {};
 
     // get all of the fields

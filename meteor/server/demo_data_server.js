@@ -3,7 +3,7 @@
  */
 Meteor.startup(function(){
   if (Collections.Projects.find().count() == 0 && Collections.Nodes.find().count() == 0) {
-    Meteor.log.info("No data found, executing data fixture");
+    console.info("No data found, executing data fixture");
     DemoDataHandler.importData();
   }
 
@@ -15,7 +15,7 @@ Meteor.startup(function(){
      * exportDemoData
      */
     exportDemoData: function () {
-      Meteor.log.info("exportDemoData called");
+      console.info("exportDemoData called");
       DemoDataHandler.exportData();
     }
   });
@@ -62,25 +62,25 @@ var DemoDataHandler = {
    * Export all demo data
    */
   exportData: function () {
-    Meteor.log.info("DemoDataHandler.exportData");
+    console.info("DemoDataHandler.exportData");
     var dataDir = path.join(DocRoba.rootPath, DemoDataHandler.dataPath);
 
-    Meteor.log.debug("DemoDataHandler.exportData data folder: " + dataDir);
+    console.debug("DemoDataHandler.exportData data folder: " + dataDir);
 
     // clear out the directory if it exists
     if(fs.existsSync(dataDir)){
-      Meteor.log.info("DemoDataHandler.exportData removing existing files");
+      console.info("DemoDataHandler.exportData removing existing files");
       fs.readdirSync(dataDir)
         .filter(function (filepath) {
           return path.basename(filepath).match(DemoDataHandler.fileRegex) != null
         })
         .forEach(function(filepath) {
-          Meteor.log.debug("Removing file: " + filepath);
+          console.debug("Removing file: " + filepath);
           fs.unlinkSync(path.join(dataDir, filepath));
         });
     } else {
       // create the folder
-      Meteor.log.info("DemoDataHandler.exportData creating data directory: " + dataDir);
+      console.info("DemoDataHandler.exportData creating data directory: " + dataDir);
       fs.mkdirSync(dataDir);
     }
     
@@ -103,7 +103,7 @@ var DemoDataHandler = {
     var logMessagePath = path.join(dataDir, "LogMessages.json");
     DemoDataHandler.exportRecords(Collections.LogMessages.find({testResultRoleId: {$exists: 1}}), logMessagePath, "LogMessages");
 
-    Meteor.log.info("DemoDataHandler.exportData complete");
+    console.info("DemoDataHandler.exportData complete");
   },
 
   /**
@@ -116,7 +116,7 @@ var DemoDataHandler = {
     var output = "",
       recordCount = cursor.count();
 
-    Meteor.log.info("DemoDataHandler.exportRecords exporting " + collectionName + " (" + recordCount + " records)");
+    console.info("DemoDataHandler.exportRecords exporting " + collectionName + " (" + recordCount + " records)");
 
     // start the JSON file
     output += "[\n";
@@ -135,14 +135,14 @@ var DemoDataHandler = {
    * Import all demo data
    */
   importData: function () {
-    Meteor.log.info("DemoDataHandler.importData");
+    console.info("DemoDataHandler.importData");
     var dataDir = path.join(DocRoba.rootPath, DemoDataHandler.dataPath);
 
-    Meteor.log.debug("DemoDataHandler.importData data folder: " + dataDir);
+    console.debug("DemoDataHandler.importData data folder: " + dataDir);
 
     // clear out the directory if it exists
     if(fs.existsSync(dataDir)){
-      Meteor.log.debug("DemoDataHandler.importData scanning data files");
+      console.debug("DemoDataHandler.importData scanning data files");
       fs.readdirSync(dataDir)
         .filter(function (filepath) {
           return path.basename(filepath).match(DemoDataHandler.fileRegex) != null
@@ -152,10 +152,10 @@ var DemoDataHandler = {
         });
     } else {
       // create the folder
-      Meteor.log.error("DemoDataHandler.importData data directory didn't exist: " + dataDir);
+      console.error("DemoDataHandler.importData data directory didn't exist: " + dataDir);
     }
 
-    Meteor.log.info("DemoDataHandler.importData complete");
+    console.info("DemoDataHandler.importData complete");
   },
 
   /**
@@ -166,7 +166,7 @@ var DemoDataHandler = {
     var input = "",
       recordCount = 0;
 
-    Meteor.log.info("DemoDataHandler.importRecords importing " + path.basename(zipFilePath) );
+    console.info("DemoDataHandler.importRecords importing " + path.basename(zipFilePath) );
 
     // Unzip it
     var zipFile = new AdmZip(zipFilePath),
@@ -174,15 +174,15 @@ var DemoDataHandler = {
     if(zipEntries){
       zipEntries.forEach(function (zipEntry) {
         if(zipEntry.entryName && zipEntry.entryName.match(/\.json$/)){
-          Meteor.log.debug("DemoDataHandler.importRecords reading file " + zipEntry.entryName );
+          console.debug("DemoDataHandler.importRecords reading file " + zipEntry.entryName );
 
           var input = zipFile.readAsText(zipEntry, DemoDataHandler.encoding);
           try {
             var data = JSON.parse(input),
               collectionName = zipEntry.entryName.replace(/\.json$/i, "");
-            Meteor.log.debug("DemoDataHandler.importRecords found " + data.length + " records for " + collectionName );
+            console.debug("DemoDataHandler.importRecords found " + data.length + " records for " + collectionName );
           } catch (e) {
-            Meteor.log.error("DemoDataHandler.importRecords JSON parse failed: " + e.toString());
+            console.error("DemoDataHandler.importRecords JSON parse failed: " + e.toString());
           }
 
           if(Collections[collectionName]){
@@ -197,12 +197,12 @@ var DemoDataHandler = {
               }
             });
           } else {
-            Meteor.log.error("DemoDataHandler.importRecords failed: collection [" + collectionName + "] not found");
+            console.error("DemoDataHandler.importRecords failed: collection [" + collectionName + "] not found");
           }
         }
       });
     } else {
-      Meteor.log.error("Zip file didn't contain any zip entries: " + zipFilePath);
+      console.error("Zip file didn't contain any zip entries: " + zipFilePath);
     }
   }
 };

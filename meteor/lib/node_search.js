@@ -29,7 +29,7 @@ NodeSearch = {
    * @param projectVersionId
    */
   byUrl: function (url, title, projectVersionId) {
-    //Meteor.log.debug("searchNodes: " + url+ ", " + title + ", " + projectVersionId);
+    //console.debug("searchNodes: " + url+ ", " + title + ", " + projectVersionId);
     var maxScore    = -100000,
       searchResults = [];
 
@@ -71,7 +71,7 @@ NodeSearch = {
    * @param projectVersionId
    */
   byTerm: function (searchTerm, projectVersionId) {
-    //Meteor.log.debug("NodeSearch.byTerm: " + searchTerm, projectVersionId);
+    //console.debug("NodeSearch.byTerm: " + searchTerm, projectVersionId);
 
     if(!searchTerm || !searchTerm.length){
       return [];

@@ -116,7 +116,7 @@ Collections.TestResults.helpers({
    * Launch a staged test result
    */
   launch: function () {
-    Meteor.log.debug("TestResult.launch: " + this._id);
+    console.debug("TestResult.launch: " + this._id);
     if(!Meteor.isServer) throw new Meteor.Error("server-only", "This method can only be executed on the server");
 
     // do some quick cleanup in case this is a re-run
@@ -129,14 +129,14 @@ Collections.TestResults.helpers({
 
     // get the list of roles, create a launch token and fire away
     Collections.TestResultRoles.find({testResultId: result._id}).forEach(function (role) {
-      Meteor.log.info("launchTestResult launching role: " + role._id);
+      console.info("launchTestResult launching role: " + role._id);
       var token = Accounts.singleUseAuth.generate({ expires: { seconds: 5 } }),
         command = [ProcessLauncher.testRoleScript, "--roleId", role._id, "--token", token].join(" "),
         logFile = ["test_result_role_", role._id, ".log"].join(""),
         proc = ProcessLauncher.launchAutomation(command, logFile);
 
       Collections.TestResultRoles.update(role._id, {$set: {pid: proc.pid, status: TestResultStatus.launched}});
-      Meteor.log.info("launchTestResult launched: " + role._id + " as " + proc.pid + " > " + logFile);
+      console.info("launchTestResult launched: " + role._id + " as " + proc.pid + " > " + logFile);
     });
   }
 });

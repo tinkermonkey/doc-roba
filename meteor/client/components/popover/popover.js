@@ -114,7 +114,7 @@ Template.popover.events({
   "click .button-bar button": function (e, instance) {
     var btn = $(e.target).text();
 
-    Meteor.log.debug("Popover button clicked: " + btn, instance);
+    console.debug("Popover button clicked: " + btn, instance);
     if (instance.data.callback) {
       instance.data.callback(btn, instance);
     }

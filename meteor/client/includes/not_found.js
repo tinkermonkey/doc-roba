@@ -1,23 +1,23 @@
 /**
  * Template Helpers
  */
-Template.not_found.helpers({});
+Template.NotFound.helpers({});
 
 /**
  * Template Helpers
  */
-Template.not_found.events({});
+Template.NotFound.events({});
 
 /**
  * Template Rendered
  */
-Template.not_found.rendered = function () {
+Template.NotFound.rendered = function () {
 
 };
 
 /**
  * Template Destroyed
  */
-Template.not_found.destroyed = function () {
+Template.NotFound.destroyed = function () {
 
 };

@@ -111,7 +111,7 @@ Template.roba_launcher.events({
         status: AdventureStatus.staged
       }, function (error) {
         if(error){
-          Meteor.log.error("Failed to create adventure: " + error.message);
+          console.error("Failed to create adventure: " + error.message);
           Dialog.error("Failed to create adventure: " + error.message);
         } else {
           // Create the adventure step and link them into the route
@@ -125,7 +125,7 @@ Template.roba_launcher.events({
               order: stepIndex
             }, function (error) {
               if(error){
-                Meteor.log.error("Failed to update adventure route: " + error.message);
+                console.error("Failed to update adventure route: " + error.message);
                 Dialog.error("Failed to update adventure route: " + error.message);
               }
             });
@@ -134,19 +134,19 @@ Template.roba_launcher.events({
           // Update the adventure with the linked route steps
           Collections.Adventures.update(adventureId, {$set: {route: route}}, function (error) {
             if(error){
-              Meteor.log.error("Failed to update adventure route: " + error.message);
+              console.error("Failed to update adventure route: " + error.message);
               Dialog.error("Failed to update adventure route: " + error.message);
             } else {
               // Create the Adventure State record so the console functions properly
               Collections.AdventureStates.insert({adventureId: adventureId, projectId: instance.data.projectId}, function (error) {
                 if(error){
-                  Meteor.log.error("Failed to create adventure state: " + error.message);
+                  console.error("Failed to create adventure state: " + error.message);
                   Dialog.error("Failed to create adventure state: " + error.message);
                 } else {
                   // Launch the Adventure
                   Meteor.call("launchAdventure", adventureId, function (error) {
                     if(error){
-                      Meteor.log.error("Failed to launch adventure " + adventureId + ": " + error.message);
+                      console.error("Failed to launch adventure " + adventureId + ": " + error.message);
                       Dialog.error("Failed to launch adventure " + adventureId + ": " + error.message);
                     } else {
                       // open the live console

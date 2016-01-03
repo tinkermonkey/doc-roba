@@ -22,7 +22,7 @@ Template.EditableCodeEditor.rendered = function () {
   var instance = this;
   if(!instance.editor) {
     console.log("Creating editor:", instance.data);
-    var editor = instance.editor = ace.edit(instance._elementId);
+    var editor = instance.editor = ace.edit(instance.elementId);
     editor.setTheme("ace/theme/chrome");
     editor.getSession().setMode("ace/mode/javascript");
     editor.getSession().setUseWrapMode(true);

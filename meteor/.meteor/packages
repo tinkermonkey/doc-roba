@@ -6,10 +6,8 @@
 d3
 sacha:spin
 mizzao:jquery-ui
-iron:router
 dcsan:reactive-ace
 momentjs:moment
-mrt:trail
 accounts-base
 accounts-password
 aldeed:collection2
@@ -26,7 +24,6 @@ cfs:graphicsmagick
 simple:highlight.js
 standard-minifiers
 meteor-base
-mobile-experience
 mongo
 blaze-html-templates
 session
@@ -40,3 +37,5 @@ spacebars
 check
 dburles:collection-helpers
 twbs:bootstrap
+kadira:flow-router
+kadira:blaze-layout

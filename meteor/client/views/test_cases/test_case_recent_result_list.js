@@ -19,7 +19,11 @@ Template.TestCaseRecentResultList.helpers({
 Template.TestCaseRecentResultList.events({
   "click .test-result-row": function (e, instance) {
     var testResult = this;
-    Router.go("test_result", {projectId: testResult.projectId, projectVersionId: testResult.projectVersionId, _id: testResult._id});
+    FlowRouter.go("TestResult", {
+      projectId: testResult.projectId,
+      projectVersionId: testResult.projectVersionId,
+      testResultId: testResult._id
+    });
   }
 });
 
@@ -33,7 +37,13 @@ Template.TestCaseRecentResultList.created = function () {
   instance.loaded = new ReactiveVar(0);
   instance.limit = new ReactiveVar(10);
   instance.roleSubs = {};
-  //console.log("TestCaseRecentResults: ", instance.data.staticId);
+
+  // subscribe to underlying rendering data
+  instance.autorun(function () {
+    instance.subscribe("servers", instance.data.projectId, instance.data.projectVersionId);
+    instance.subscribe("test_systems", instance.data.projectId, instance.data.projectVersionId);
+    instance.subscribe("test_agents", instance.data.projectId, instance.data.projectVersionId);
+  });
 
   // setup the results data
   instance.results = function() {

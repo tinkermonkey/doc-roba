@@ -3,10 +3,10 @@
  */
 Template.TestCaseList.helpers({
   baseGroups: function () {
-    return Collections.TestGroups.find({ parentGroupId: null, projectVersionId: this.version._id }, { sort: { title: 1 } });
+    return Collections.TestGroups.find({ parentGroupId: null, projectVersionId: FlowRouter.getParam("projectVersionId") }, { sort: { title: 1 } });
   },
   baseTestCases: function () {
-    return Collections.TestCases.find({ testGroupId: null, projectVersionId: this.version._id }, { sort: { title: 1 } });
+    return Collections.TestCases.find({ testGroupId: null, projectVersionId: FlowRouter.getParam("projectVersionId") }, { sort: { title: 1 } });
   }
 });
 
@@ -75,20 +75,21 @@ Template.TestCaseList.events({
   },
   "click .add-item-form a": function (e, instance) {
     var itemType = $(e.target).closest("a").attr("data-name"),
-      itemName = $(".add-item-form input").val().trim(),
-      version = instance.data.version,
-      groupId = instance.$(".test-case-list-group.selected").attr("data-group-id");
+        itemName = $(".add-item-form input").val().trim(),
+        projectId = FlowRouter.getParam("projectId"),
+        versionId = FlowRouter.getParam("projectVersionId"),
+        groupId = instance.$(".test-case-list-group.selected").attr("data-group-id");
 
     if(itemType && itemName && itemName.length){
       if(itemType == "testcase"){
         Collections.TestCases.insert({
-          projectId: version.projectId,
-          projectVersionId: version._id,
+          projectId: projectId,
+          projectVersionId: versionId,
           testGroupId: groupId,
           title: itemName
         }, function (error, result) {
           if(error){
-            Meteor.log.error("Failed to insert test case: " + error.message);
+            console.error("Failed to insert test case: " + error.message);
             Dialog.error("Failed to insert test case: " + error.message);
           } else {
             $(".add-item-form input").val("")
@@ -96,13 +97,13 @@ Template.TestCaseList.events({
         });
       } else if(itemType == "testgroup") {
         Collections.TestGroups.insert({
-          projectId: version.projectId,
-          projectVersionId: version._id,
+          projectId: projectId,
+          projectVersionId: versionId,
           parentGroupId: groupId,
           title: itemName
         }, function (error, result) {
           if(error){
-            Meteor.log.error("Failed to insert test group: " + error.message);
+            console.error("Failed to insert test group: " + error.message);
             Dialog.error("Failed to insert test group: " + error.message);
           } else {
             $(".add-item-form input").val("")
@@ -116,7 +117,7 @@ Template.TestCaseList.events({
       var selectable = $(e.target).closest(".test-case-list-item");
       instance.$(".test-case-list-item.selected").removeClass("selected");
       selectable.addClass("selected");
-      Router.query({testCaseId: selectable.attr("data-pk")});
+      FlowRouter.setQueryParams({testCaseId: selectable.attr("data-pk")});
     }
   },
   // make sure the draggable and droppable items stay up to date
@@ -134,7 +135,16 @@ Template.TestCaseList.events({
  * Template Created
  */
 Template.TestCaseList.created = function () {
-  
+  var instance = this;
+  instance.elementIdReactor = new ReactiveVar();
+
+  instance.autorun(function () {
+    var projectId = FlowRouter.getParam("projectId"),
+        projectVersionId = FlowRouter.getParam("projectVersionId");
+
+    instance.subscribe("test_cases", projectId, projectVersionId);
+    instance.subscribe("test_groups", projectId, projectVersionId);
+  });
 };
 
 /**
@@ -181,14 +191,14 @@ Template.TestCaseList.rendered = function () {
           if (itemIsGroup) {
             Collections.TestGroups.update(itemId, {$set: {parentGroupId: groupId}}, function (error) {
               if (error) {
-                Meteor.log.error("Failed to update parent group: " + error.message);
+                console.error("Failed to update parent group: " + error.message);
                 Dialog.error("Failed to update parent group: " + error.message);
               }
             });
           } else {
             Collections.TestCases.update(itemId, {$set: {testGroupId: groupId}}, function (error) {
               if (error) {
-                Meteor.log.error("Failed to update test group: " + error.message);
+                console.error("Failed to update test group: " + error.message);
                 Dialog.error("Failed to update test group: " + error.message);
               }
             });
@@ -211,11 +221,18 @@ Template.TestCaseList.rendered = function () {
     instance.$(".test-case-list-group").droppable(instance.droppableOptions);
 
     // Select the selected item if there is one defined
-    if(instance.data.testCaseId){
-      var testCaseItem = instance.$(".test-case-list-item[data-pk='" + instance.data.testCaseId + "']");
-      testCaseItem.addClass("selected");
-      testCaseItem.parentsUntil(".test-case-list", ".test-case-list-group-items.hide").each(function (i, el) {
-        Blaze.getView(el).templateInstance().expanded.set(true);
+    var testCaseId = FlowRouter.getQueryParam("testCaseId");
+    if(testCaseId){
+      instance.autorun(function () {
+        var testCaseItem = instance.$(".test-case-list-item[data-pk='" + testCaseId + "']"),
+            elementId = instance.elementIdReactor.get();
+
+        if(elementId){
+          testCaseItem.addClass("selected");
+          testCaseItem.parentsUntil(".test-case-list", ".test-case-list-group-items.hide").each(function (i, el) {
+            Blaze.getView(el).templateInstance().expanded.set(true);
+          });
+        }
       });
     }
   }

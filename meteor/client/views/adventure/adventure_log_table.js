@@ -19,8 +19,7 @@ Template.AdventureLogTable.helpers({
 Template.AdventureLogTable.events({
   "click .btn-load-more": function (e, instance) {
     var limit = instance.limit.get();
-    limit += 5;
-    instance.limit.set(limit);
+    instance.limit.set(limit + 5);
   },
   "click .btn-load-all": function (e, instance) {
     instance.limit.set(-1);
@@ -31,19 +30,17 @@ Template.AdventureLogTable.events({
  * Template Created
  */
 Template.AdventureLogTable.created = function () {
-  var instance = this,
-    params = Router.current().params,
-    query = Router.current().params.query;
+  var instance = this;
 
   // initialize the reactive variables
   instance.loaded = new ReactiveVar(0);
-  instance.limit = new ReactiveVar(query.limit ? parseInt(query.limit) : 100);
+  instance.limit = new ReactiveVar(FlowRouter.getQueryParam("limit") || 100);
 
   // setup the messages data
   instance.messages = function() {
     //return Template.instance().messages().find({"context.adventureId": this._id}, {sort: {time: -1}});
     return Collections.LogMessages.find({
-      "context.adventureId": params.adventureId
+      "context.adventureId": FlowRouter.getParam("adventureId")
     }, {
       sort: { time: -1 },
       limit: instance.loaded.get()
@@ -53,17 +50,18 @@ Template.AdventureLogTable.created = function () {
   // React to limit changes
   instance.autorun(function () {
     // grab the limit
-    var limit = instance.limit.get();
+    var limit = instance.limit.get(),
+        adventureId = FlowRouter.getParam("adventureId");
     //console.log("Loading [", limit, "] messages");
 
     // Update the subscription
-    var subscription = instance.subscribe("adventure_log", params.adventureId, limit);
+    var subscription = instance.subscribe("adventure_log", adventureId, limit);
 
     if(subscription.ready()){
       if(limit > 0){
         instance.loaded.set(limit);
       } else {
-        var count = Collections.LogMessages.find({"context.adventureId": params.adventureId}).count();
+        var count = Collections.LogMessages.find({"context.adventureId": adventureId}).count();
         //console.log("Limit:", limit, "Count:", count);
         instance.loaded.set(count);
       }
@@ -75,6 +73,4 @@ Template.AdventureLogTable.created = function () {
  * Template Rendered
  */
 Template.AdventureLogTable.rendered = function () {
-  var instance = this;
-
 };

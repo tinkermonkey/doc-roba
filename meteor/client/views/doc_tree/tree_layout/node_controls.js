@@ -38,7 +38,7 @@ TreeNodeControls = function (treeLayout, config) {
  * Initialize the controls
  */
 TreeNodeControls.prototype.init = function () {
-  Meteor.log.debug("nodeControls.init()");
+  console.debug("nodeControls.init()");
   var self = this;
 
   // clear out the layer
@@ -53,7 +53,7 @@ TreeNodeControls.prototype.init = function () {
  * Lock the controls so they do not change
  */
 TreeNodeControls.prototype.lock = function () {
-  Meteor.log.debug("NodeControls: lock");
+  console.debug("NodeControls: lock");
   this.locked = true;
 };
 
@@ -61,7 +61,7 @@ TreeNodeControls.prototype.lock = function () {
  * Unlock the controls so they can change
  */
 TreeNodeControls.prototype.unlock = function () {
-  Meteor.log.debug("NodeControls: unlock");
+  console.debug("NodeControls: unlock");
   this.locked = false;
 };
 
@@ -69,7 +69,7 @@ TreeNodeControls.prototype.unlock = function () {
  * Create the controls
  */
 TreeNodeControls.prototype.create = function () {
-  Meteor.log.debug("nodeControls.create()");
+  console.debug("nodeControls.create()");
   var self = this,
     tree = self.treeLayout;
 
@@ -287,7 +287,7 @@ TreeNodeControls.prototype.create = function () {
  * Update the location of the controls
  */
 TreeNodeControls.prototype.update = function () {
-  //Meteor.log.debug("nodeControls.update()");
+  //console.debug("nodeControls.update()");
   var self = this,
     tree = self.treeLayout,
     contraction = 0.75,
@@ -480,7 +480,7 @@ TreeNodeControls.prototype.update = function () {
  * @param d The node to control
  */
 TreeNodeControls.prototype.show = function (d) {
-  //Meteor.log.debug("nodeControls.show()");
+  //console.debug("nodeControls.show()");
   var self = this;
 
   // make sure it's not locked
@@ -544,7 +544,7 @@ TreeNodeControls.prototype.show = function (d) {
  * Hide the controls
  */
 TreeNodeControls.prototype.hide = function () {
-  //Meteor.log.debug("nodeControls.hide()");
+  //console.debug("nodeControls.hide()");
   var self = this,
     visible = self.background.attr("r") > 0;
 
@@ -654,7 +654,7 @@ TreeNodeControls.prototype.hide = function () {
  * Possibly hide the controls
  */
 TreeNodeControls.prototype.considerHiding = function () {
-  //Meteor.log.debug("nodeControls.considerHiding()");
+  //console.debug("nodeControls.considerHiding()");
   var self = this,
     tree = this.treeLayout;
 
@@ -674,7 +674,7 @@ TreeNodeControls.prototype.considerHiding = function () {
  * Stop hiding the controls
  */
 TreeNodeControls.prototype.cancelHiding = function () {
-  //Meteor.log.debug("nodeControls.cancelHiding()");
+  //console.debug("nodeControls.cancelHiding()");
   var self = this;
 
   if(self.hideTimeout){
@@ -795,7 +795,7 @@ TreeNodeControls.prototype.generateDragTetherPath = function () {
  * Handle the user pressing the escape key during a drag
  */
 TreeNodeControls.prototype.dragEscapeHandler = function (e) {
-  Meteor.log.debug("dragEscapeHandler: " + e.which);
+  console.debug("dragEscapeHandler: " + e.which);
   if(e.which == 27 && e.data){
     e.data.addActionDragEnd();
   }
@@ -805,7 +805,7 @@ TreeNodeControls.prototype.dragEscapeHandler = function (e) {
  * Handle the start of an action creating drag
  */
 TreeNodeControls.prototype.addActionDragStart = function () {
-  Meteor.log.debug("nodeControls.addActionDragStart()");
+  console.debug("nodeControls.addActionDragStart()");
   var self = this,
     tree = self.treeLayout,
     radius = self.getRadius(self.node);
@@ -841,7 +841,7 @@ TreeNodeControls.prototype.addActionDragStart = function () {
  * Handle the continued dragging during an add-action operation
  */
 TreeNodeControls.prototype.addActionDrag = function () {
-  //Meteor.log.debug("nodeControls.addActionDrag()");
+  //console.debug("nodeControls.addActionDrag()");
   var self = this,
     d = self.node;
 
@@ -858,7 +858,7 @@ TreeNodeControls.prototype.addActionDrag = function () {
  * Handle the end of an add-action drag
  */
 TreeNodeControls.prototype.addActionDragEnd = function () {
-  Meteor.log.debug("nodeControls.addActionDragEnd()");
+  console.debug("nodeControls.addActionDragEnd()");
   var self = this,
     tree = self.treeLayout,
     d = self.node;
@@ -885,7 +885,7 @@ TreeNodeControls.prototype.addActionDragEnd = function () {
     // clear out the drop node
     tree.dropNodeHandler.clearNode();
   } else {
-    Meteor.log.info("DragEnd without drop target");
+    console.info("DragEnd without drop target");
   }
 
   // now we're safe to say we're not in a drag event
@@ -912,7 +912,7 @@ TreeNodeControls.prototype.addActionDragEnd = function () {
       try {
         delete self.node.drag;
       } catch(e) {
-        Meteor.log.error("DragEnd Error: " + e);
+        console.error("DragEnd Error: " + e);
       }
 
       // ask to hide the node controls

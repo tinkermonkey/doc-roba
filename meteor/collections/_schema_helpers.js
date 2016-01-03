@@ -87,7 +87,7 @@ autoUpdateOrder = function (collection, orderedFields) {
             }
           });
           if(_.keys(update).length){
-            Meteor.log.debug("autoUpdateOrder Update: ", update);
+            console.debug("autoUpdateOrder Update: ", update);
             collection.direct.update(record._id, {$set: update});
           }
         }

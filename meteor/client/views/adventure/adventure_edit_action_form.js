@@ -23,12 +23,12 @@ Template.AdventureEditActionForm.events({
       //console.log("Edited: ", dataKey, newValue, update, instance.data);
       Collections.Actions.update(instance.data._id, update, function (error) {
         if(error){
-          Meteor.log.error("Failed to update action value: " + error.message);
+          console.error("Failed to update action value: " + error.message);
           Dialog.error("Failed to update action value: " + error.message);
         }
       });
     } else {
-      Meteor.log.error("Failed to update action value: data-key not found");
+      console.error("Failed to update action value: data-key not found");
       Dialog.error("Failed to update action value: data-key not found");
     }
   }

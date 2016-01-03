@@ -37,32 +37,32 @@ Template.AdventureConsole.helpers({
  */
 Template.AdventureConsole.events({
   "click .btn-unpause-adventure": function (e, instance) {
-    Collections.Adventures.update(Router.current().params.adventureId, {$set: {status: instance.prePauseStatus || AdventureStatus.awaitingCommand}}, function (error, result) {
+    Collections.Adventures.update(FlowRouter.getParam("adventureId"), {$set: {status: instance.prePauseStatus || AdventureStatus.awaitingCommand}}, function (error, result) {
       if(error){
-        Meteor.log.error("Un-Pause failed: " + error.message);
+        console.error("Un-Pause failed: " + error.message);
         Dialog.error("Un-Pause failed: " + error.message);
       }
     });
   },
   "click .btn-pause-adventure": function (e, instance) {
     instance.prePauseStatus = instance.data.adventure.status;
-    Collections.Adventures.update(Router.current().params.adventureId, {$set: {status: AdventureStatus.paused}}, function (error, result) {
+    Collections.Adventures.update(FlowRouter.getParam("adventureId"), {$set: {status: AdventureStatus.paused}}, function (error, result) {
       if(error){
-        Meteor.log.error("Pause failed: " + error.message);
+        console.error("Pause failed: " + error.message);
         Dialog.error("Pause failed: " + error.message);
       }
     });
   },
   "click .btn-end-adventure": function (e, instance) {
-    Meteor.call("abortAdventure", Router.current().params.adventureId, function (error, result) {
+    Meteor.call("abortAdventure", FlowRouter.getParam("adventureId"), function (error, result) {
       if(error){
-        Meteor.log.error("End Adventure failed: " + error.message);
+        console.error("End Adventure failed: " + error.message);
         Dialog.error("End Adventure failed: " + error.message);
       }
     });
   },
   "click .btn-view-log": function (e, instance) {
-    window.open("/adventure_log/" + Router.current().params.projectId + "/" + Router.current().params.projectVersionId + "/" + Router.current().params.adventureId, "_blank");
+    window.open("/adventure_log/" + FlowRouter.getParam("projectId") + "/" + FlowRouter.getParam("projectVersionId") + "/" + FlowRouter.getParam("adventureId"), "_blank");
   }
 });
 
@@ -77,33 +77,35 @@ Template.AdventureConsole.created = function () {
   instance.testSystem = new ReactiveVar();
 
   instance.autorun(function () {
-    var route = Router.current();
-    console.log("AdventureConsole.created:", route.params.projectId, route.params.projectVersionId, route.params.adventureId);
-    instance.subscribe("adventure", route.params.adventureId);
-    instance.subscribe("adventure_state", route.params.adventureId);
-    instance.subscribe("adventure_actions", route.params.adventureId);
-    instance.subscribe("adventure_commands", route.params.adventureId);
-    instance.subscribe("nodes", route.params.projectId, route.params.projectVersionId);
-    instance.subscribe("actions", route.params.projectId, route.params.projectVersionId);
-    instance.subscribe("servers", route.params.projectId, route.params.projectVersionId);
-    instance.subscribe("test_systems", route.params.projectId, route.params.projectVersionId);
-    instance.subscribe("test_agents", route.params.projectId, route.params.projectVersionId);
+    var projectId = FlowRouter.getParam("projectId"),
+        projectVersionId = FlowRouter.getParam("projectVersionId"),
+        adventureId = FlowRouter.getParam("adventureId");
+
+    instance.subscribe("adventure", adventureId);
+    instance.subscribe("adventure_state", adventureId);
+    instance.subscribe("adventure_actions", adventureId);
+    instance.subscribe("adventure_commands", adventureId);
+    instance.subscribe("nodes", projectId, projectVersionId);
+    instance.subscribe("actions", projectId, projectVersionId);
+    instance.subscribe("servers", projectId, projectVersionId);
+    instance.subscribe("test_systems", projectId, projectVersionId);
+    instance.subscribe("test_agents", projectId, projectVersionId);
   });
 
   instance.autorun(function () {
-    var route = Router.current(),
+    var adventureId = FlowRouter.getParam("adventureId"),
         ready = instance.subscriptionsReady();
-    console.log("autorun: ", ready);
+
     if(ready){
-      var adventure = Collections.Adventures.findOne(route.params.adventureId),
-          state = Collections.AdventureStates.findOne({adventureId: route.params.adventureId});
+      var adventure = Collections.Adventures.findOne(adventureId),
+          state = Collections.AdventureStates.findOne({adventureId: adventureId});
 
       instance.adventure.set(adventure);
       instance.state.set(state);
-      instance.testSystem.set(Collections.TestSystems.findOne({ staticId: adventure.testSystemId, projectVersionId: route.params.adventureId }));
+      instance.testSystem.set(Collections.TestSystems.findOne({ staticId: adventure.testSystemId, projectVersionId: adventureId }));
 
       // pick up any updates to the last known node
-      Collections.Adventures.find({_id: Router.current().params.adventureId}).observeChanges({
+      Collections.Adventures.find({_id: adventureId}).observeChanges({
         changed: function (id, fields) {
           //console.log("Adventure changed: ", fields);
           if(_.contains(_.keys(fields), "lastKnownNode")){

@@ -20,10 +20,7 @@ Template.ProjectHome.created = function () {
   instance.project = new ReactiveVar();
 
   instance.autorun(function () {
-    var route = Router.current();
-
-    // pull in the project and project version records
-    instance.project.set(Collections.Projects.findOne(route.params.projectId));
+    instance.project.set(Collections.Projects.findOne(FlowRouter.getParam("projectId")));
   });
 };
 

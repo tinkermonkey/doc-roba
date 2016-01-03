@@ -10,10 +10,10 @@ Tabs = {
     if(!instance.$("ul.nav > li > a").get(0)){
       retry = retry || 0;
       if(retry > 10){
-        Meteor.log.error("Tabs.init failed after " + (retry-1) + " retries");
+        console.error("Tabs.init failed after " + (retry-1) + " retries");
         return;
       }
-      Meteor.log.debug("Tabs.init retry " + retry);
+      console.debug("Tabs.init retry " + retry);
       setTimeout(function () {
         Tabs.init(instance, retry + 1);
       }, 250);
@@ -74,7 +74,7 @@ Tabs = {
    */
   activateFirst: function (instance) {
     // set the active tab if none is set
-    Meteor.log.debug("Activate First:", instance.$("ul.nav"));
+    console.debug("Activate First:", instance.$("ul.nav"));
     instance.$("ul.nav").each(function (i, el) {
       var activeTab = $(el).find("li.active > a").get(0);
       if(!activeTab) {

@@ -33,24 +33,24 @@ Template.action_edit_route_code.rendered = function () {
           Meteor.clearTimeout(editor.saveTimeout);
         }
         editor.saveTimeout = Meteor.setTimeout(function () {
-          //Meteor.log.debug("Saving action code: " + route._id);
+          //console.debug("Saving action code: " + route._id);
           var routeKey = "routes." + route.index + ".routeCode",
             update = {$set: {}};
           update["$set"][routeKey] = editor.getValue();
           Collections.Actions.update(action._id, update, function (error, response) {
             if(error){
-              Meteor.log.error("Failed to save route code: " + error.message);
+              console.error("Failed to save route code: " + error.message);
             } else {
-              Meteor.log.debug("Route code saved: " + JSON.stringify(update));
+              console.debug("Route code saved: " + JSON.stringify(update));
             }
           });
         }, 1000);
       } else {
-        Meteor.log.error("Error saving action code, no _id found: ", route);
+        console.error("Error saving action code, no _id found: ", route);
       }
     });
   } else {
-    Meteor.log.info("Updating the value of the action code");
+    console.info("Updating the value of the action code");
     instance.editor.setValue(route.routeCode);
   }
 };

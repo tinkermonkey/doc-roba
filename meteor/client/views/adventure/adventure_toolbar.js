@@ -83,7 +83,7 @@ Template.AdventureToolbar.events({
         code: "driver.refineSelector(" + lastLocation.x + ", " + lastLocation.y + ", \"" + Util.escapeDoubleQuotes(selector) + "\");"
       }, function (error) {
         if(error){
-          Meteor.log.error("Error adding adventure command: " + error.message);
+          console.error("Error adding adventure command: " + error.message);
           Dialog.error("Error adding adventure command: " + error.message);
         } else {
           // wait for the command to return
@@ -121,7 +121,7 @@ Template.AdventureToolbar.events({
       code: "driver.testSelector(\"" + Util.escapeDoubleQuotes(selector) + "\");"
     }, function (error) {
       if(error){
-        Meteor.log.error("Error adding adventure command: " + error.message);
+        console.error("Error adding adventure command: " + error.message);
         Dialog.error("Error adding adventure command: " + error.message);
       }
     });
@@ -167,7 +167,7 @@ Template.AdventureToolbar.events({
       code: "true"
     }, function (error) {
       if(error){
-        Meteor.log.error("Error adding adventure command: " + error.message);
+        console.error("Error adding adventure command: " + error.message);
         Dialog.error("Error adding adventure command: " + error.message);
       }
     });
@@ -194,7 +194,7 @@ Template.AdventureToolbar.events({
       code: "driver.clearHighlight();"
     }, function (error) {
       if(error){
-        Meteor.log.error("Error adding adventure command: " + error.message);
+        console.error("Error adding adventure command: " + error.message);
         Dialog.error("Error adding adventure command: " + error.message);
       }
     });

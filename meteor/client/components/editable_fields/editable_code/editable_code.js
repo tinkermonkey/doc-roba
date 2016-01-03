@@ -27,7 +27,7 @@ Template.EditableCode.events({
           if(editor){
             instance.$(".editable-code").trigger("edited", [editor.getValue() || ""]);
           } else {
-            Meteor.log.error("Failed to get EditableCode.editor");
+            console.error("Failed to get EditableCode.editor");
             Dialog.error("Failed to get EditableCode.editor");
           }
         }

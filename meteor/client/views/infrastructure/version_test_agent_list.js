@@ -23,7 +23,7 @@ Template.VersionTestAgentList.events({
       order: order
     }, function (error, response) {
       if(error){
-        Meteor.log.error("Insert failed: ", error);
+        console.error("Insert failed: ", error);
         Dialog.error("Insert failed: " + error.message);
       } else {
         setTimeout(function () {
@@ -49,7 +49,7 @@ Template.VersionTestAgentList.events({
           Collections.TestAgents.remove(testAgent._id, function (error, response) {
             Dialog.hide();
             if(error){
-              Meteor.log.error("Delete failed: ", error);
+              console.error("Delete failed: ", error);
               Dialog.error("Delete failed: " + error.message);
             }
           });

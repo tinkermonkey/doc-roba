@@ -33,7 +33,7 @@ ResultMapLayout = function (elementId, context, config) {
   self.layoutRoot = d3.select("#" + elementId);
 
   // setup the main svg element
-  Meteor.log.debug("Configuring svg element");
+  console.debug("Configuring svg element");
 
   // Select frequently used items
   self.defs = self.layoutRoot.select(".base-defs");
@@ -55,7 +55,7 @@ ResultMapLayout = function (elementId, context, config) {
 ResultMapLayout.prototype.init = function () {
   var self = this;
 
-  Meteor.log.info("ResultMapLayout.init");
+  console.info("ResultMapLayout.init");
 };
 
 /**
@@ -122,7 +122,7 @@ ResultMapLayout.prototype.getRootNode = function () {
  * Destroy!
  */
 ResultMapLayout.prototype.destroy = function () {
-  Meteor.log.info("Destroy Called");
+  console.info("Destroy Called");
 };
 
 /**
@@ -265,7 +265,7 @@ ResultMapLayout.prototype.nodeClickFilter = function (d) {
  * Front line event handler for clicks on nodes
  */
 ResultMapLayout.prototype.nodeClickHandler = function(e, d){
-  Meteor.log.debug('click: ' + d._id + " (" +  d.title + ")");
+  console.debug('click: ' + d._id + " (" +  d.title + ")");
   /*
   var self = this;
 
@@ -273,7 +273,7 @@ ResultMapLayout.prototype.nodeClickHandler = function(e, d){
   var node = self.nodeHandler.getNode(d._id),
     nodeSelect = self.layoutRoot.select("#node_" + d._id + " .node");
 
-  //Meteor.log.debug(node);
+  //console.debug(node);
   if(e.shiftKey){
 
   } else if(e.altKey) {
@@ -288,7 +288,7 @@ ResultMapLayout.prototype.nodeClickHandler = function(e, d){
  * Front line event handler for double-clicks on nodes
  */
 ResultMapLayout.prototype.nodeDblClickHandler = function(e, d){
-  Meteor.log.debug('dblClick: ' + d._id + " (" +  d.title + ")");
+  console.debug('dblClick: ' + d._id + " (" +  d.title + ")");
   /*
   var self = this,
     node = self.nodeHandler.getNode(d._id); // fetch the node fresh, sometimes the click events get stale data
@@ -301,15 +301,15 @@ ResultMapLayout.prototype.nodeDblClickHandler = function(e, d){
     node.logExpanded = !node.logExpanded;
     if(node.childPages.length || node.childViews.length){
       if(node.logExpanded){
-        Meteor.log.debug('StartExpand');
+        console.debug('StartExpand');
         self.startExpand(node);
       } else {
-        Meteor.log.debug('StartCollapse');
+        console.debug('StartCollapse');
         self.startCollapse(node);
       }
     }
   } else {
-    Meteor.log.debug('No children: ', node);
+    console.debug('No children: ', node);
   }
   */
 };
@@ -321,7 +321,7 @@ ResultMapLayout.prototype.nodeDblClickHandler = function(e, d){
 ResultMapLayout.prototype.nodeMouseEnterHandler = function (d) {
   var self = this;
 
-  //Meteor.log.debug("mouseenter: ", d);
+  //console.debug("mouseenter: ", d);
   if(!self.state.inDrag){
     // Make sure the node contols don't hide if they're visible for this node
     /*
@@ -348,7 +348,7 @@ ResultMapLayout.prototype.nodeMouseEnterHandler = function (d) {
 ResultMapLayout.prototype.nodeMouseLeaveHandler = function (d) {
   var self = this;
 
-  //Meteor.log.debug("mouseleave: ", d);
+  //console.debug("mouseleave: ", d);
   if(!self.state.inDrag){
     // hide the node controls
     //self.nodeControls.considerHiding();
@@ -387,7 +387,7 @@ ResultMapLayout.prototype.actionRightClickHandler = function (d) {
  * @param d
  */
 ResultMapLayout.prototype.actionMouseEnterHandler = function (d) {
-  //Meteor.log.debug("Action mouseenter: ", d);
+  //console.debug("Action mouseenter: ", d);
   var self = this;
 
   if(!self.state.inDrag){
@@ -407,7 +407,7 @@ ResultMapLayout.prototype.actionMouseEnterHandler = function (d) {
  * @param d
  */
 ResultMapLayout.prototype.actionMouseLeaveHandler = function (d) {
-  //Meteor.log.debug("Action mouseleave: ", d);
+  //console.debug("Action mouseleave: ", d);
   var self = this;
 
   if(!self.state.inDrag){

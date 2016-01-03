@@ -1,29 +1,8 @@
 <template name="TestResult">
   {{#CenterPoleLayout}}
-    {{#contentFor "svgDefs"}}
-      {{> svg_def "outer-glow" }}
-      {{> svg_def "shadow" }}
-      {{> svg_def "crisp-shadow" }}
-      {{> svg_def "node-clip-path" }}
-      {{> svg_def "node-hover" }}
-      {{> svg_def "action-arrow" }}
-      {{> svg_def "action-arrow-hover" }}
-    {{/contentFor}}
-
-    {{#contentFor "header"}}
-      {{> CurrentProjectNav }}
-    {{/contentFor}}
-
     {{#if ready}}
-      {{#contentFor "nav-title"}}
-        Test Result: {{testCase.title}}
-      {{/contentFor}}
-
       {{setTitle "Test Result: " testCase.title}}
-
-      {{#contentFor "nav"}}
-        {{> TestResultNav }}
-      {{/contentFor}}
+      {{setNavTitle "Test Result: " testCase.title}}
 
       {{#with testResult}}
         <h1>

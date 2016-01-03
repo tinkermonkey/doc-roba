@@ -123,7 +123,7 @@ Collections.Users.helpers({
       projects[projectId].roles = _.uniq(projects[projectId].roles);
       Collections.Users.update(user._id, {$set: {projectList: projectList, projects: projects}});
     } else {
-      Meteor.log.error("Users.addProjectRole failed: user [" + actor.username + "] does not have project admin privileges");
+      console.error("Users.addProjectRole failed: user [" + actor.username + "] does not have project admin privileges");
     }
   }
 });

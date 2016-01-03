@@ -20,7 +20,7 @@ Template.edit_node_url_parameters.events({
       }
     }, function (error) {
       if(error){
-        Meteor.log.error("Failed to add node url parameter: " + error.message);
+        console.error("Failed to add node url parameter: " + error.message);
         Dialog.error("Failed to add node url parameter: " + error.message);
       }
     });
@@ -43,7 +43,7 @@ Template.edit_node_url_parameters.events({
           Collections.Nodes.update(instance.data._id, { $pull: { urlParameters: {order: parameter.order} } }, function (error) {
             Dialog.hide();
             if(error){
-              Meteor.log.error("Delete failed: " + error.message);
+              console.error("Delete failed: " + error.message);
               Dialog.error("Delete failed: " + error.message);
             }
           });
@@ -86,7 +86,7 @@ Template.edit_node_url_parameters.rendered = function () {
         console.log("Update pre-send: ",  instance.data._id, update);
         Collections.Nodes.update( instance.data._id, update, function (error) {
           if(error){
-            Meteor.log.error("Node url parameter order update failed: " + error.message);
+            console.error("Node url parameter order update failed: " + error.message);
             Dialog.error("Node url parameter order update failed: " + error.message);
           }
         });

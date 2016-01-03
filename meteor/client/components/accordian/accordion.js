@@ -7,10 +7,10 @@ Accordion = {
     if(!instance.$(".accordion-heading").get(0)){
       retry = retry || 0;
       if(retry > 10){
-        Meteor.log.error("Accordion.init failed after " + (retry-1) + " retries");
+        console.error("Accordion.init failed after " + (retry-1) + " retries");
         return;
       }
-      Meteor.log.debug("Accordion.init retry " + retry);
+      console.debug("Accordion.init retry " + retry);
       setTimeout(function () {
         Accordion.init(instance, retry + 1);
       }, 250);

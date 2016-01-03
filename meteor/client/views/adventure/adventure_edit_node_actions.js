@@ -14,7 +14,7 @@ Template.AdventureEditNodeActions.helpers({
         nav.actions = Collections.Actions.find({nodeId: navMenuId, projectVersionId: node.projectVersionId}, {sort: {title: 1}});
         navs.push(nav);
       } else {
-        Meteor.log.error("NavMenu node not found: ", navMenuID);
+        console.error("NavMenu node not found: ", navMenuID);
       }
     });
     return navs
@@ -52,12 +52,12 @@ Template.AdventureEditNodeActions.events({
         title: 'New Action'
       }, function (error, result) {
         if(error){
-          Meteor.log.error("Adding Action failed: " + error.message);
+          console.error("Adding Action failed: " + error.message);
           Dialog.error("Adding Action failed: " + error.message);
         }
       });
     } else {
-      Meteor.log.error("Adding Action failed, no node found");
+      console.error("Adding Action failed, no node found");
       Dialog.error("Adding Action failed, no node found");
     }
   }

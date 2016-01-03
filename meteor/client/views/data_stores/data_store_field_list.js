@@ -28,7 +28,7 @@ Template.DataStoreFieldList.events({
       projectVersionId: instance.data.projectVersionId
     }, function (error, response) {
       if(error){
-        Meteor.log.error("Insert Field failed: " + error.message);
+        console.error("Insert Field failed: " + error.message);
         Dialog.error("Insert Field failed: " + error.message);
       } else {
         setTimeout(function () {
@@ -53,7 +53,7 @@ Template.DataStoreFieldList.events({
           Collections.DataStoreFields.remove(field._id, function (error, response) {
             Dialog.hide();
             if(error){
-              Meteor.log.error("Delete Field failed: " + error.message);
+              console.error("Delete Field failed: " + error.message);
               Dialog.error("Delete Field failed: " + error.message);
             }
           });
@@ -83,7 +83,7 @@ Template.DataStoreFieldList.events({
 
     Collections.DataStoreFields.update(fieldId, update, function (error) {
       if(error){
-        Meteor.log.error("DataStore Field update failed: " + error.message);
+        console.error("DataStore Field update failed: " + error.message);
         Dialog.error("DataStore Field update failed: " + error.message);
       }
     });
@@ -117,7 +117,7 @@ Template.DataStoreFieldList.rendered = function () {
           if(newOrder != oldOrder){
             Collections.DataStoreFields.update(fieldId, {$set: {order: newOrder}}, function (error, response) {
               if(error){
-                Meteor.log.error("DataStore Field order update failed: " + error.message);
+                console.error("DataStore Field order update failed: " + error.message);
                 Dialog.error("DataStore Field order update failed: " + error.message);
               }
             });

@@ -24,19 +24,21 @@ Template.VersionHome.created = function () {
   instance.version = new ReactiveVar();
 
   instance.autorun(function () {
-    var route = Router.current();
-    instance.subscribe("nodes", route.params.projectId, route.params.projectVersionId);
-    instance.subscribe("actions", route.params.projectId, route.params.projectVersionId);
-    instance.subscribe("data_stores", route.params.projectId, route.params.projectVersionId);// TODO: Move to lower level template
-    instance.subscribe("all_data_store_fields", route.params.projectId, route.params.projectVersionId);// TODO: Move to lower level template
-    instance.subscribe("all_data_store_rows", route.params.projectId, route.params.projectVersionId);// TODO: Move to lower level template
-    instance.subscribe("servers", route.params.projectId, route.params.projectVersionId);// TODO: Move to lower level template
-    instance.subscribe("test_systems", route.params.projectId, route.params.projectVersionId);// TODO: Move to lower level template
-    instance.subscribe("test_agents", route.params.projectId, route.params.projectVersionId);// TODO: Move to lower level template
+    var projectId = FlowRouter.getParam("projectId"),
+        projectVersionId = FlowRouter.getParam("projectVersionId");
+
+    instance.subscribe("nodes", projectId, projectVersionId);
+    instance.subscribe("actions", projectId, projectVersionId);
+    instance.subscribe("data_stores", projectId, projectVersionId);// TODO: Move to lower level template
+    instance.subscribe("all_data_store_fields", projectId, projectVersionId);// TODO: Move to lower level template
+    instance.subscribe("all_data_store_rows", projectId, projectVersionId);// TODO: Move to lower level template
+    instance.subscribe("servers", projectId, projectVersionId);// TODO: Move to lower level template
+    instance.subscribe("test_systems", projectId, projectVersionId);// TODO: Move to lower level template
+    instance.subscribe("test_agents", projectId, projectVersionId);// TODO: Move to lower level template
 
     // pull in the project and project version records
-    instance.project.set(Collections.Projects.findOne(route.params.projectId));
-    instance.version.set(Collections.ProjectVersions.findOne(route.params.projectVersionId));
+    instance.project.set(Collections.Projects.findOne(projectId));
+    instance.version.set(Collections.ProjectVersions.findOne(projectVersionId));
   });
 };
 

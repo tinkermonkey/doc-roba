@@ -1,33 +1,35 @@
 <template name="TestCaseLauncher">
-  <div>
-    <span class="field-label">Server: </span>
-    {{> EditableServerSelector value=serverId projectVersionId=projectVersionId dataKey="server" }}
-  </div>
-  <div class="flex">
-  {{#each roles}}
+  {{#if ready}}
     <div>
-      <h3>{{title}} <small>({{platform.title}}, {{userType.title}})</small></h3>
-
-      <div>
-        <span class="field-label">Credentials: </span>
-        {{> EditableUserAccount value=accountId projectVersionId=projectVersionId userType=userType dataKey="accountId" }}
-      </div>
-      <div>
-        <span class="field-label">System: </span>
-        {{> EditableTestSystemSelector value=testSystemId testAgent=getTestAgent projectVersionId=projectVersionId dataKey="testSystemId" }}
-      </div>
-      <div>
-        <span class="field-label">Agent: </span>
-        {{> EditableTestAgentSelector value=testAgentId projectVersionId=projectVersionId dataKey="testAgentId" }}
-      </div>
+      <span class="field-label">Server: </span>
+      {{> EditableServerSelector value=serverId projectVersionId=projectVersionId dataKey="server" }}
     </div>
-  {{/each}}
-  </div>
-  <div>
-    <hr>
-    <button class="btn btn-primary btn-launch">
-      <span class="glyphicon glyphicon-send"></span>
-      Launch
-    </button>
-  </div>
+    <div class="flex">
+    {{#each roles}}
+      <div>
+        <h3>{{title}} <small>({{platform.title}}, {{userType.title}})</small></h3>
+
+        <div>
+          <span class="field-label">Credentials: </span>
+          {{> EditableUserAccount value=accountId projectVersionId=projectVersionId userType=userType dataKey="accountId" }}
+        </div>
+        <div>
+          <span class="field-label">System: </span>
+          {{> EditableTestSystemSelector value=testSystemId testAgent=getTestAgent projectVersionId=projectVersionId dataKey="testSystemId" }}
+        </div>
+        <div>
+          <span class="field-label">Agent: </span>
+          {{> EditableTestAgentSelector value=testAgentId projectVersionId=projectVersionId dataKey="testAgentId" }}
+        </div>
+      </div>
+    {{/each}}
+    </div>
+    <div>
+      <hr>
+      <button class="btn btn-primary btn-launch">
+        <span class="glyphicon glyphicon-send"></span>
+        Launch
+      </button>
+    </div>
+  {{/if}}
 </template>

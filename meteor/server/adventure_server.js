@@ -52,7 +52,7 @@ Meteor.startup(function () {
     launchAdventure: function (adventureId) {
       if(!adventureId) { throw new Meteor.Error("launchAdventure failed: no adventureId specified")}
 
-      Meteor.log.debug("launchAdventure: " + adventureId);
+      console.debug("launchAdventure: " + adventureId);
       var adventure = Collections.Adventures.findOne(adventureId);
       if(!adventure) { throw new Meteor.Error("launchAdventure failed: adventure [" + adventureId + "] not found")}
 
@@ -65,7 +65,7 @@ Meteor.startup(function () {
         logFile = ["adventure_", adventureId, ".log"].join(""),
         proc = ProcessLauncher.launchAutomation(command, logFile, function (code) {
           var adventure = this;
-          Meteor.log.debug("Adventure Exit: " + adventure._id + ", " + code);
+          console.debug("Adventure Exit: " + adventure._id + ", " + code);
           Collections.Adventures.update(adventure._id , {$unset: {pid: ""}});
           if(code){
             Collections.Adventures.update(adventure._id , {$set: {status: AdventureStatus.failed}});
@@ -75,7 +75,7 @@ Meteor.startup(function () {
         }.bind(adventure));
 
       Collections.Adventures.update(adventureId, {$set: {pid: proc.pid}});
-      Meteor.log.info("launchAdventure launched: " + adventureId + " as " + proc.pid + " > " + logFile);
+      console.info("launchAdventure launched: " + adventureId + " as " + proc.pid + " > " + logFile);
     },
 
     /**
@@ -85,7 +85,7 @@ Meteor.startup(function () {
     abortAdventure: function (adventureId) {
       check(adventureId, String);
 
-      Meteor.log.debug("abortAdventure: " + adventureId);
+      console.debug("abortAdventure: " + adventureId);
       abortAdventure(adventureId);
     },
 
@@ -96,7 +96,7 @@ Meteor.startup(function () {
     pauseAdventure: function (adventureId) {
       check(adventureId, String);
 
-      Meteor.log.debug("pauseAdventure: " + adventureId);
+      console.debug("pauseAdventure: " + adventureId);
       Collections.Adventures.update(adventureId, {$set: { status: AdventureStatus.paused }})
     },
 
@@ -117,7 +117,7 @@ Meteor.startup(function () {
      * @param status
      */
     setAdventureStatus: function (adventureId, status) {
-      Meteor.log.debug("setAdventureStatus: " + adventureId + ", " + status);
+      console.debug("setAdventureStatus: " + adventureId + ", " + status);
       check(adventureId, String);
       check(status, Number);
 
@@ -132,7 +132,7 @@ Meteor.startup(function () {
      * @param state
      */
     saveAdventureState: function (adventureId, state) {
-      Meteor.log.debug("saveAdventureState: " + adventureId);
+      console.debug("saveAdventureState: " + adventureId);
       check(adventureId, String);
       check(state, Object);
       Collections.AdventureStates.upsert({adventureId: adventureId}, {$set: state});
@@ -144,7 +144,7 @@ Meteor.startup(function () {
      * @param nodeId
      */
     setAdventureLocation: function (adventureId, nodeId) {
-      Meteor.log.debug("setAdventureLocation: " + adventureId + ", " + nodeId);
+      console.debug("setAdventureLocation: " + adventureId + ", " + nodeId);
       check(adventureId, String);
       check(nodeId, String);
 
@@ -159,7 +159,7 @@ Meteor.startup(function () {
      * @param path
      */
     setAdventureLogFile: function (adventureId, path) {
-      Meteor.log.debug("setAdventureLogFile: " + adventureId + ", " + path);
+      console.debug("setAdventureLogFile: " + adventureId + ", " + path);
       check(adventureId, String);
       check(path, String);
 
@@ -173,7 +173,7 @@ Meteor.startup(function () {
      * @param result
      */
     setAdventureStepStatus: function (stepId, status) {
-      Meteor.log.debug("setAdventureStepStatus: " + stepId + ", " + status);
+      console.debug("setAdventureStepStatus: " + stepId + ", " + status);
       check(stepId, String);
       check(status, Number);
 
@@ -190,7 +190,7 @@ Meteor.startup(function () {
      * @param result
      */
     saveAdventureStepResult: function(stepId, type, result) {
-      Meteor.log.debug("saveAdventureStepResult: " + stepId + ", " + type);
+      console.debug("saveAdventureStepResult: " + stepId + ", " + type);
       check(stepId, String);
       check(type, String);
 
@@ -215,7 +215,7 @@ Meteor.startup(function () {
      * @param result
      */
     setCommandStatus: function (commandId, status, result) {
-      Meteor.log.debug("setCommandStatus: " + commandId + ", " + status);
+      console.debug("setCommandStatus: " + commandId + ", " + status);
       check(commandId, String);
       check(status, Number);
 
@@ -245,7 +245,7 @@ Meteor.startup(function () {
      * @param projectVersionId
      */
     loadNode: function (staticId, projectVersionId) {
-      Meteor.log.debug("loadNode: " + staticId + ", " + projectVersionId);
+      console.debug("loadNode: " + staticId + ", " + projectVersionId);
       return Collections.Nodes.findOne({staticId: staticId, projectVersionId: projectVersionId});
     },
 
@@ -275,10 +275,10 @@ abortAdventure = function (adventureId) {
 
         // check to see if the process has exited
         if(adventure.pid){
-          Meteor.log.debug("Looks like adventure " + adventure._id + " may still be alive as pid " + adventure.pid);
+          console.debug("Looks like adventure " + adventure._id + " may still be alive as pid " + adventure.pid);
 
           // make sure it's dead
-          Meteor.log.debug("Killing adventure " + adventure._id + ", " + adventure.pid);
+          console.debug("Killing adventure " + adventure._id + ", " + adventure.pid);
           exec("kill " + adventure.pid, function (error, stdout, stderr) {
             if(error){
               console.error("Killing adventure failed: ", error);
@@ -289,13 +289,13 @@ abortAdventure = function (adventureId) {
             }
           });
         } else {
-          Meteor.log.debug("Adventure abort watchdog: adventure " + adventure._id + " looks dead");
+          console.debug("Adventure abort watchdog: adventure " + adventure._id + " looks dead");
         }
       }, 10000);
     } else {
-      Meteor.log.error("Abort Adventure: No PID for adventure " + adventureId);
+      console.error("Abort Adventure: No PID for adventure " + adventureId);
     }
   } else {
-    Meteor.log.error("Adventure not found: " + adventureId);
+    console.error("Adventure not found: " + adventureId);
   }
 };

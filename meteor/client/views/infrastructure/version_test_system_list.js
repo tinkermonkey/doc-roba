@@ -25,7 +25,7 @@ Template.VersionTestSystemList.events({
       order: order
     }, function (error, response) {
       if(error){
-        Meteor.log.error("Insert failed: " + error.message);
+        console.error("Insert failed: " + error.message);
         Dialog.error("Insert failed: " + error.message);
       } else {
         setTimeout(function () {
@@ -51,7 +51,7 @@ Template.VersionTestSystemList.events({
           Collections.TestSystems.remove(testSystem._id, function (error, response) {
             Dialog.hide();
             if(error){
-              Meteor.log.error("Delete failed: " + error.message);
+              console.error("Delete failed: " + error.message);
               Dialog.error("Delete failed: " + error.message);
             }
           });
@@ -68,7 +68,7 @@ Template.VersionTestSystemList.events({
     update["$set"][dataKey] = newValue;
     Collections.TestSystems.update(testSystemId, update, function (error) {
       if(error){
-        Meteor.log.error("Test System update failed: " + error.message);
+        console.error("Test System update failed: " + error.message);
         Dialog.error("Test System update failed: " + error.message);
       }
     });
@@ -102,7 +102,7 @@ Template.VersionTestSystemList.rendered = function () {
             console.log("Updating order: ", i, $(el).attr("data-pk"));
             Collections.TestSystems.update($(el).attr("data-pk"), {$set: {order: i}}, function (error, response) {
               if(error){
-                Meteor.log.error("Test System order update failed: " + error.message);
+                console.error("Test System order update failed: " + error.message);
                 Dialog.error("Test System order update failed: " + error.message);
               }
             });

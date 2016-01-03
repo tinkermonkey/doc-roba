@@ -17,22 +17,24 @@ Template.DocTree.created = function () {
   var instance = this;
   instance.project = new ReactiveVar();
   instance.version = new ReactiveVar();
-  instance._elementIdReactor = new ReactiveVar();
+  instance.elementIdReactor = new ReactiveVar();
 
   instance.autorun(function () {
-    var route = Router.current();
-    instance.subscribe("nodes", route.params.projectId, route.params.projectVersionId);
-    instance.subscribe("actions", route.params.projectId, route.params.projectVersionId);
-    instance.subscribe("data_stores", route.params.projectId, route.params.projectVersionId);// TODO: Move to lower level template
-    instance.subscribe("all_data_store_fields", route.params.projectId, route.params.projectVersionId);// TODO: Move to lower level template
-    instance.subscribe("all_data_store_rows", route.params.projectId, route.params.projectVersionId);// TODO: Move to lower level template
-    instance.subscribe("servers", route.params.projectId, route.params.projectVersionId);// TODO: Move to lower level template
-    instance.subscribe("test_systems", route.params.projectId, route.params.projectVersionId);// TODO: Move to lower level template
-    instance.subscribe("test_agents", route.params.projectId, route.params.projectVersionId);// TODO: Move to lower level template
+    var projectId = FlowRouter.getParam("projectId"),
+        projectVersionId = FlowRouter.getParam("projectVersionId");
+
+    instance.subscribe("nodes", projectId, projectVersionId);
+    instance.subscribe("actions", projectId, projectVersionId);
+    instance.subscribe("data_stores", projectId, projectVersionId);// TODO: Move to lower level template
+    instance.subscribe("all_data_store_fields", projectId, projectVersionId);// TODO: Move to lower level template
+    instance.subscribe("all_data_store_rows", projectId, projectVersionId);// TODO: Move to lower level template
+    instance.subscribe("servers", projectId, projectVersionId);// TODO: Move to lower level template
+    instance.subscribe("test_systems", projectId, projectVersionId);// TODO: Move to lower level template
+    instance.subscribe("test_agents", projectId, projectVersionId);// TODO: Move to lower level template
 
     // pull in the project and project version records
-    instance.project.set(Collections.Projects.findOne(route.params.projectId));
-    instance.version.set(Collections.ProjectVersions.findOne(route.params.projectVersionId));
+    instance.project.set(Collections.Projects.findOne(projectId));
+    instance.version.set(Collections.ProjectVersions.findOne(projectVersionId));
   });
 };
 
@@ -49,15 +51,15 @@ Template.DocTree.rendered = function () {
   instance.autorun(function () {
     var version = instance.version.get(),
         project = instance.project.get(),
-        elementId = instance._elementIdReactor.get(), // this is only set when the dom elements exist
+        elementId = instance.elementIdReactor.get(), // this is only set when the dom elements exist
         subsReady = instance.subscriptionsReady();
 
     if(subsReady && elementId){
       // initialize once
       if(!instance.init){
         // Setup the view only once
-        Meteor.log.debug("DocTree: creating tree layout " + instance._elementId);
-        instance.treeLayout = new TreeLayout(instance._elementId, {version: version, project: project});
+        console.debug("DocTree: creating tree layout " + instance.elementId);
+        instance.treeLayout = new TreeLayout(instance.elementId, {version: version, project: project});
 
         // restore the cached node state
         instance.treeLayout.nodeStateCache = nodeState || {};
@@ -67,8 +69,8 @@ Template.DocTree.rendered = function () {
           instance.treeLayout.scaleAndTranslate(viewState.scale, viewState.translation);
         }
 
-        Meteor.log.debug("DocTree Nodes:" + Collections.Nodes.find({projectVersionId: version._id}).count());
-        Meteor.log.debug("DocTree Actions:" + Collections.Actions.find({projectVersionId: version._id}).count());
+        console.debug("DocTree Nodes:" + Collections.Nodes.find({projectVersionId: version._id}).count());
+        console.debug("DocTree Actions:" + Collections.Actions.find({projectVersionId: version._id}).count());
       }
 
       // get fresh node data
@@ -100,7 +102,7 @@ Template.DocTree.rendered = function () {
 
       // call init once
       if(!instance.init){
-        Meteor.log.debug("DocTree initialization complete");
+        console.debug("DocTree initialization complete");
         // Initialize the tree after setting up autorun so there is data to initialize
         instance.init = true;
         instance.treeLayout.init();
@@ -112,7 +114,7 @@ Template.DocTree.rendered = function () {
   instance.autorun(function () {
     var resize = Session.get("resize");
     if(instance.treeLayout){
-      Meteor.log.debug("DocTree resize");
+      console.debug("DocTree resize");
       instance.treeLayout.resize();
     }
   });

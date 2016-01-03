@@ -24,13 +24,13 @@ Template.TestCase.events({
 
       Collections.TestCases.update(testCaseId, update, function (error) {
         if(error){
-          Meteor.log.error("Failed to update test case value: " + error.message);
+          console.error("Failed to update test case value: " + error.message);
           console.log(update);
           Dialog.error("Failed to update test case value: " + error.message);
         }
       });
     } else {
-      Meteor.log.error("Failed to update test case value: data-key not found");
+      console.error("Failed to update test case value: data-key not found");
       Dialog.error("Failed to update test case value: data-key not found");
     }
   },
@@ -96,7 +96,7 @@ Template.TestCase.created = function () {
       var stepId = stepList.find(".draggable-wait").attr("data-step-id");
       Collections.TestCaseSteps.update(stepId, {$unset: {"data.waitId": true}}, function (error) {
         if(error){
-          Meteor.log.error("Failed to update step: " + error.message);
+          console.error("Failed to update step: " + error.message);
           Dialog.error("Failed to update step: " + error.message);
         }
       });

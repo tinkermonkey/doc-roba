@@ -44,7 +44,7 @@ Template.VersionServerList.events({
           Collections.Servers.remove(server._id, function (error, response) {
             Dialog.hide();
             if(error){
-              Meteor.log.error("Delete failed: " + error.message);
+              console.error("Delete failed: " + error.message);
               Dialog.error("Delete failed" + error.message);
             }
           });
@@ -61,7 +61,7 @@ Template.VersionServerList.events({
     update["$set"][dataKey] = newValue;
     Collections.Servers.update(serverId, update, function (error, response) {
       if(error){
-        Meteor.log.error("Server update failed: " + error.message);
+        console.error("Server update failed: " + error.message);
         Dialog.error("Server update failed: " + error.message);
       }
     });
@@ -104,7 +104,7 @@ Template.VersionServerList.rendered = function () {
             console.log("Updating order: ", i, $(el).attr("data-pk"));
             Collections.Servers.update($(el).attr("data-pk"), {$set: {order: i}}, function (error, response) {
               if(error){
-                Meteor.log.error("Server order update failed: " + error.message);
+                console.error("Server order update failed: " + error.message);
                 Dialog.error("Server order update failed: " + error.message);
               }
             });

@@ -125,7 +125,7 @@ TreeNodeHandler.prototype.addNode = function(parent, dir){
   // Create the record
   Collections.Nodes.insert(config, function (error, nodeId) {
     if(!error && nodeId){
-      Meteor.log.debug("Node inserted: " + nodeId);
+      console.debug("Node inserted: " + nodeId);
       tree.nodeStateCache[nodeId] = {
         logExpanded: false,
         visExpanded: false
@@ -176,7 +176,7 @@ TreeNodeHandler.prototype.prepNodes = function(){
  * @param nodeList The list of nodes to scan for links
  */
 TreeNodeHandler.prototype.mapNode = function(d){
-  //Meteor.log.debug("mapping node: " + d._id + " (" + d.title + ")");
+  //console.debug("mapping node: " + d._id + " (" + d.title + ")");
   var self = this,
     tree = self.treeLayout;
 

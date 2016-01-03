@@ -261,7 +261,7 @@ Util = {
           return data[key];
         }
       } catch (e) {
-        Meteor.log.error("findParentData failed: " + e.toString);
+        console.error("findParentData failed: " + e.toString);
       }
     }
   },

@@ -27,13 +27,13 @@ Template.TestCaseRole.events({
 
       Collections.TestCaseRoles.update(testCaseRoleId, update, function (error) {
         if(error){
-          Meteor.log.error("Failed to update test case role value: " + error.message);
+          console.error("Failed to update test case role value: " + error.message);
           console.log(update);
           Dialog.error("Failed to update test case role value: " + error.message);
         }
       });
     } else {
-      Meteor.log.error("Failed to update test case role value: data-key not found");
+      console.error("Failed to update test case role value: data-key not found");
       Dialog.error("Failed to update test case role value: data-key not found");
     }
   },
@@ -52,7 +52,7 @@ Template.TestCaseRole.events({
         order: order
       });
     } else {
-      Meteor.log.error("Could not add step: ", type, testCaseRole, order);
+      console.error("Could not add step: ", type, testCaseRole, order);
     }
   },
   "click .btn-delete-role": function (e, instance) {
@@ -73,10 +73,10 @@ Template.TestCaseRole.events({
           Meteor.call("deleteTestCaseRole", testCaseRole, function (error, result) {
             Dialog.hide();
             if(error) {
-              Meteor.log.error("Failed to delete role: " + error.message);
+              console.error("Failed to delete role: " + error.message);
               Dialog.error("Failed to delete role: " + error.message);
             } else {
-              Meteor.log.debug("Role deleted: " + result);
+              console.debug("Role deleted: " + result);
             }
           });
         } else {
@@ -122,7 +122,7 @@ Template.TestCaseRole.rendered = function () {
         if(oldOrder !== newOrder){
           Collections.TestCaseSteps.update(stepId, {$set: {order: newOrder}}, function (error, result) {
             if(error){
-              Meteor.log.error("Failed to update step order: " + error.message);
+              console.error("Failed to update step order: " + error.message);
               Dialog.error("Failed to update step order: " + error.message);
             }
           });

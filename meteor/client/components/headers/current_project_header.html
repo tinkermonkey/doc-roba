@@ -1,0 +1,15 @@
+<template name="CurrentProjectHeader">
+  <h1>
+    {{#with project}}
+      <a href="{{pathFor 'ProjectHome' projectId=_id}}">{{title}}</a>
+    {{/with}}
+  </h1>
+  <h4>
+    {{#with version}}
+      <a href="{{pathFor 'VersionHome'              projectId=projectId projectVersionId=_id}}">v {{version.version}}</a>
+      <a href="{{pathFor 'DocTree'                  projectId=projectId projectVersionId=_id}}"><span class="glyphicon glyphicon-map-marker"></span></a>
+      <a href="{{pathFor 'TestCaseDashboard'        projectId=projectId projectVersionId=_id}}"><span class="glyphicon glyphicon-ok-circle"></span></a>
+      <a href="{{pathFor 'TestRunTemplateDashboard' projectId=projectId projectVersionId=_id}}"><span class="glyphicon glyphicon-list-alt"></span></a>
+    {{/with}}
+  </h4>
+</template>

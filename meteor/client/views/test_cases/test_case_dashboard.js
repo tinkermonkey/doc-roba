@@ -9,12 +9,13 @@ Template.TestCaseDashboard.helpers({
     return Template.instance().version.get()
   },
   testCaseId: function () {
-    return Router.current().params.query ? Router.current().params.query.testCaseId : null
+    return FlowRouter.getQueryParam("testCaseId")
   },
   testCase: function () {
-    var query = Router.current().params.query;
-    if(query.testCaseId){
-      return Collections.TestCases.findOne(query.testCaseId);
+    var testCaseId = FlowRouter.getQueryParam("testCaseId"),
+        projectVersionId = FlowRouter.getParam("projectVersionId");
+    if(testCaseId && projectVersionId){
+      return Collections.TestCases.findOne(testCaseId);
     }
   }
 });
@@ -33,24 +34,17 @@ Template.TestCaseDashboard.created = function () {
   instance.version = new ReactiveVar();
 
   instance.autorun(function () {
-    var route = Router.current();
-    console.log("TestCaseDashboard:", route);
-    instance.subscribe("test_groups", route.params.projectId, route.params.projectVersionId);
-    instance.subscribe("test_cases", route.params.projectId, route.params.projectVersionId);
-    instance.subscribe("nodes", route.params.projectId, route.params.projectVersionId);
-    instance.subscribe("actions", route.params.projectId, route.params.projectVersionId);
-    instance.subscribe("data_stores", route.params.projectId, route.params.projectVersionId);
-    instance.subscribe("all_data_store_fields", route.params.projectId, route.params.projectVersionId);
-    instance.subscribe("all_data_store_rows", route.params.projectId, route.params.projectVersionId);
-
-    // TODO: these should be moved to sub-templates
-    instance.subscribe("servers", route.params.projectId, route.params.projectVersionId);
-    instance.subscribe("test_systems", route.params.projectId, route.params.projectVersionId);
-    instance.subscribe("test_agents", route.params.projectId, route.params.projectVersionId)
+    var projectId = FlowRouter.getParam("projectId"),
+        projectVersionId = FlowRouter.getParam("projectVersionId");
+    
+    instance.subscribe("test_groups", projectId, projectVersionId);
+    instance.subscribe("test_cases", projectId, projectVersionId);
+    instance.subscribe("actions", projectId, projectVersionId);
+    instance.subscribe("nodes", projectId, projectVersionId);
 
     // pull in the project and project version records
-    instance.project.set(Collections.Projects.findOne(route.params.projectId));
-    instance.version.set(Collections.ProjectVersions.findOne(route.params.projectVersionId));
+    instance.project.set(Collections.Projects.findOne(projectId));
+    instance.version.set(Collections.ProjectVersions.findOne(projectVersionId));
   });
 };
 

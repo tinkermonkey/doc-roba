@@ -27,12 +27,12 @@ RobaRouter = {
  * @param source (Optional) The _id of the source node
  */
 RobaRoute = function (destination, source) {
-  //Meteor.log.info("RobaRoute: Routing from " + source + " to " + destination);
+  //console.info("RobaRoute: Routing from " + source + " to " + destination);
   this.destination = {
     node: _.isObject(destination) ? destination : Collections.Nodes.findOne(destination)
   };
   if(!this.destination.node){
-    Meteor.log.error("RobaRoute Failure: destination node " + destination + " not found");
+    console.error("RobaRoute Failure: destination node " + destination + " not found");
     throw new Meteor.Error("RobaRoute Failure", "Destination node " + destination + " not found");
   }
 
@@ -44,7 +44,7 @@ RobaRoute = function (destination, source) {
       node: _.isObject(source) ? source : Collections.Nodes.findOne(source)
     };
     if(!this.source.node){
-      Meteor.log.error("RobaRoute Failure: source node " + source + " not found");
+      console.error("RobaRoute Failure: source node " + source + " not found");
       throw new Meteor.Error("RobaRoute Failure", "Source node " + source + " not found");
     }
 
@@ -57,7 +57,7 @@ RobaRoute = function (destination, source) {
 
   // determine the starting point
   if(!this.feasible){
-    Meteor.log.error("RobaRoute Failure: route is not feasible");
+    console.error("RobaRoute Failure: route is not feasible");
     throw new Meteor.Error("RobaRoute Failure", "Route is not feasible");
   }
 
@@ -82,7 +82,7 @@ RobaRoute.prototype.findParents = function (branch) {
     parentLevel = 1;
 
   if(!parent){
-    Meteor.log.error("RobaRoute Failure: Parent node " + branch.node.parentId + " not found in project version " + branch.node.projectVersionId);
+    console.error("RobaRoute Failure: Parent node " + branch.node.parentId + " not found in project version " + branch.node.projectVersionId);
     throw new Meteor.Error("RobaRoute Failure", "Parent node " + branch.node.parentId + " not found in project version " + branch.node.projectVersionId);
   }
 
@@ -167,9 +167,9 @@ RobaRoute.prototype.route = function () {
   if(!start){
     var platform = this.destination.platform;
 
-    //Meteor.log.debug("RobaRoute.route, start not found, using destination platform: ", platform.title);
+    //console.debug("RobaRoute.route, start not found, using destination platform: ", platform.title);
     if(!platform){
-      Meteor.log.error("RobaRoute.route, could not create route: destination platform not defined");
+      console.error("RobaRoute.route, could not create route: destination platform not defined");
       throw new Meteor.Error("RobaRoute Failure", "Could not create route: destination platform not defined");
     }
 
@@ -188,15 +188,15 @@ RobaRoute.prototype.route = function () {
   var graph = new DijkstraGraph(routeMap);
 
   // get the raw route of nodeIds to string together
-  //Meteor.log.info("RobaRoute.route, determining route from " + start.staticId + " to " + this.destination.node.staticId);
+  //console.info("RobaRoute.route, determining route from " + start.staticId + " to " + this.destination.node.staticId);
   var rawRoute = graph.findShortestPath(start.staticId, this.destination.node.staticId);
 
   if(!rawRoute){
-    Meteor.log.error("RobaRoute.route, could not create route: route not found");
+    console.error("RobaRoute.route, could not create route: route not found");
     throw new Meteor.Error("RobaRoute Failure", "Could not create route: route not found");
   }
 
-  //Meteor.log.debug("RobaRoute.route, found route with " + rawRoute.length + " steps");
+  //console.debug("RobaRoute.route, found route with " + rawRoute.length + " steps");
 
   // Create the full route with node records and actions
   this.route = [];
@@ -210,7 +210,7 @@ RobaRoute.prototype.route = function () {
 
     // skip the platform step
     if(step.node.type == NodeTypes.platform){
-      //Meteor.log.debug("RobaRoute.route, skipping platform node: " + step.node.title);
+      //console.debug("RobaRoute.route, skipping platform node: " + step.node.title);
       continue;
     }
 
@@ -243,7 +243,7 @@ RobaRoute.prototype.route = function () {
           j++;
         }
         if(!step.action){
-          Meteor.log.error("RobaRoute.route, could not create route: action could not be found between " + step.nodeId + " and " + step.destinationId);
+          console.error("RobaRoute.route, could not create route: action could not be found between " + step.nodeId + " and " + step.destinationId);
           throw new Meteor.Error("RobaRoute Failure", "Could not create route: action could not be found between " + step.nodeId + " and " + step.destinationId);
         }
       }

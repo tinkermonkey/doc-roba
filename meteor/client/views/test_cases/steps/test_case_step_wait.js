@@ -91,7 +91,7 @@ Template.TestCaseStepWait.created = function () {
             console.log("Update Step remove waitId", removeId);
             Collections.TestCaseSteps.update(removeId, {$unset: {"data.waitId": true }}, function (error) {
               if(error){
-                Meteor.log.error("Failed to update step: " + error.message);
+                console.error("Failed to update step: " + error.message);
                 Dialog.error("Failed to update step: " + error.message);
               }
             });
@@ -106,7 +106,7 @@ Template.TestCaseStepWait.created = function () {
         try {
           Blaze.getView(el).templateInstance().updateRemovables(false);
         } catch (error) {
-          Meteor.log.error("Failed to propagate updateRemovables: " + error.message);
+          console.error("Failed to propagate updateRemovables: " + error.message);
         }
       });
     }
@@ -209,12 +209,12 @@ Template.TestCaseStepWait.rendered = function () {
           console.log("Update Step waitId", update.stepId, {$set: {data: stepData }});
           Collections.TestCaseSteps.update(update.stepId, {$set: {data: stepData }}, function (error) {
             if(error){
-              Meteor.log.error("Failed to update step: " + error.message);
+              console.error("Failed to update step: " + error.message);
               Dialog.error("Failed to update step: " + error.message);
             }
           });
         } else {
-          Meteor.log.error("Failed to update step: no waitId defined");
+          console.error("Failed to update step: no waitId defined");
         }
       });
 

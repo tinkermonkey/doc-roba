@@ -76,7 +76,7 @@ TreeActionHandler.prototype.getNavActions = function () {
  * Add an action connecting two nodes
  */
 TreeActionHandler.prototype.addAction = function (sourceNode, destinationNode) {
-  Meteor.log.debug("addAction: ", sourceNode, destinationNode);
+  console.debug("addAction: ", sourceNode, destinationNode);
 
   var actionConfig = {
       projectId: sourceNode.projectId,
@@ -102,7 +102,7 @@ TreeActionHandler.prototype.addAction = function (sourceNode, destinationNode) {
  * Add a route to an action
  */
 TreeActionHandler.prototype.addRoute = function (action, destinationNode) {
-  Meteor.log.debug("addRoute: ", action, destinationNode);
+  console.debug("addRoute: ", action, destinationNode);
 
   Collections.Actions.update({_id: action._id }, {
     $push: { routes: {
@@ -626,7 +626,7 @@ TreeActionHandler.prototype.hover = function (d, event) {
   if(d.action && d.action.staticId){
     self.hoverActions = [self.getRouteIdentifier(d)];
   } else {
-    Meteor.log.error("Action Hover Failed: invalid data point passed");
+    console.error("Action Hover Failed: invalid data point passed");
     return;
   }
 
@@ -723,7 +723,7 @@ TreeActionHandler.prototype.updateHover = function (route) {
  * Consider hiding the hovered action
  */
 TreeActionHandler.prototype.considerHiding = function () {
-  //Meteor.log.debug("TreeActionHandler.considerHiding()");
+  //console.debug("TreeActionHandler.considerHiding()");
   var self = this;
 
   // make sure it's not locked
@@ -744,7 +744,7 @@ TreeActionHandler.prototype.considerHiding = function () {
  * Cancel hiding the hovered node
  */
 TreeActionHandler.prototype.cancelHiding = function () {
-  //Meteor.log.debug("TreeActionHandler.cancelHiding()");
+  //console.debug("TreeActionHandler.cancelHiding()");
   var self = this;
 
   if(self.hideTimeout){
@@ -773,7 +773,7 @@ TreeActionHandler.prototype.hideHover = function () {
  * Lock the current hover state
  */
 TreeActionHandler.prototype.lock = function () {
-  //Meteor.log.debug("ActionHandler: lock");
+  //console.debug("ActionHandler: lock");
   this.locked = true;
 };
 
@@ -781,7 +781,7 @@ TreeActionHandler.prototype.lock = function () {
  * Unlock the hover state
  */
 TreeActionHandler.prototype.unlock = function () {
-  //Meteor.log.debug("ActionHandler: unlock");
+  //console.debug("ActionHandler: unlock");
   this.locked = false;
 };
 

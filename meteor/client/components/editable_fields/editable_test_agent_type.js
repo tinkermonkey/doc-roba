@@ -33,7 +33,7 @@ Template.EditableTestAgentType.rendered = function () {
       if (TestAgentTypesLookup[newValue]) {
         $(editedElement).trigger("edited", [newValue]);
       } else {
-        Meteor.log.error("Test Agent Type update failed, Test Agent Type not known: " + newValue);
+        console.error("Test Agent Type update failed, Test Agent Type not known: " + newValue);
         Dialog.error("Test Agent Type update failed. Test Agent Type not known: " + newValue);
       }
 

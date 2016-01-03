@@ -23,7 +23,7 @@ Meteor.startup(function () {
      * @param userId
      */
     grantProjectRole: function (projectId, userId, role) {
-      Meteor.log.info("grantProjectRole: " + projectId + ", " + userId + ", " + role);
+      console.info("grantProjectRole: " + projectId + ", " + userId + ", " + role);
       var user = Meteor.users.findOne(userId);
       if(user && RoleTypesLookup[role]){
         user.addProjectRole(projectId, role);

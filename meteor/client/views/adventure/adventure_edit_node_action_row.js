@@ -51,7 +51,7 @@ Template.AdventureEditNodeActionRow.events({
         code: code
       }, function (error) {
         if(error){
-          Meteor.log.error("Error executing action: " + error.message);
+          console.error("Error executing action: " + error.message);
           Dialog.error("Error executing action: " + error.message);
         }
       });
@@ -75,11 +75,11 @@ Template.AdventureEditNodeActionRow.events({
         if(btn == "Delete"){
           Collections.Actions.remove(action._id, function (error, result) {
             if(error) {
-              Meteor.log.error("Failed to delete action: " + error.message);
+              console.error("Failed to delete action: " + error.message);
               Dialog.hide();
               Dialog.error("Failed to delete action: " + error.message);
             } else {
-              Meteor.log.debug("Action deleted: " + result);
+              console.debug("Action deleted: " + result);
               BottomDrawer.hide();
             }
             Dialog.hide();

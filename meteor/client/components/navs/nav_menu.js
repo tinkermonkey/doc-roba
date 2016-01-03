@@ -2,6 +2,9 @@
  * Template helpers
  */
 Template.nav_menu.helpers({
+  navTitle: function () {
+    return Session.get("navTitle")
+  }
 });
 
 /**

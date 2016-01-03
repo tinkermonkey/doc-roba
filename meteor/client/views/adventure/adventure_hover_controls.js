@@ -32,12 +32,12 @@ Template.AdventureHoverControls.events({
         code: "driver." + command + "(\"" + selector + "\");"
       }, function (error) {
         if(error){
-          Meteor.log.error("Error adding adventure command: " + error.message);
+          console.error("Error adding adventure command: " + error.message);
           Dialog.error("Error adding adventure command: " + error.message);
         }
       });
     } else {
-      Meteor.log.error("Hover Controls click, no selector found");
+      console.error("Hover Controls click, no selector found");
       console.log("element: ", element);
     }
   },
@@ -65,12 +65,12 @@ Template.AdventureHoverControls.events({
         code: "var el = driver.element(\"" + selector + "\"); driver.moveTo(el.ELEMENT);"
       }, function (error) {
         if(error){
-          Meteor.log.error("Error adding adventure command: " + error.message);
+          console.error("Error adding adventure command: " + error.message);
           Dialog.error("Error adding adventure command: " + error.message);
         }
       });
     } else {
-      Meteor.log.error("Hover Controls hover, no selector found");
+      console.error("Hover Controls hover, no selector found");
       console.log("element: ", element);
     }
   },
@@ -108,12 +108,12 @@ Template.AdventureHoverControls.rendered = function () {
         }, function (error) {
           instance.$(".hidden-editable").editable("setValue", "");
           if(error){
-            Meteor.log.error("Error adding adventure command: " + error.message);
+            console.error("Error adding adventure command: " + error.message);
             Dialog.error("Error adding adventure command: " + error.message);
           }
         });
       } else {
-        Meteor.log.error("Hover Controls type, no selector found");
+        console.error("Hover Controls type, no selector found");
         console.log("element: ", element);
       }
     }

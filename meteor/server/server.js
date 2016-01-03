@@ -5,7 +5,7 @@ fs            = Npm.require("fs");
 path          = Npm.require("path");
 childProcess  = Npm.require("child_process");
 AdmZip        = Npm.require("adm-zip");
-
+console.debug = console.log;
 /**
  * Top level configuration data
  */
@@ -24,7 +24,7 @@ Meteor.startup(function () {
         throw new Meteor.Error("User is not authenticated");
       }
 
-      Meteor.log.debug("Echo called by user " + this.userId);
+      console.debug("Echo called by user " + this.userId);
       return { user: this.userId, argv: arguments };
     },
     updateNodePlatform: function () {
@@ -60,7 +60,7 @@ Meteor.startup(function () {
         throw new Meteor.Error("Authentication Failed", "User is not authenticated");
       }
 
-      Meteor.log.debug("deleteNode: " + nodeId);
+      console.debug("deleteNode: " + nodeId);
       if(nodeId){
         var node = Collections.Nodes.findOne(nodeId),
           actionRemoveList = [];
@@ -156,7 +156,7 @@ Meteor.startup(function () {
             try {
               collection.insert(replica);
             } catch (e) {
-              Meteor.log.error("createVersion insert failed: " + e.toString());
+              console.error("createVersion insert failed: " + e.toString());
             }
           });
         });

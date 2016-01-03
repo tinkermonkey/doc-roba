@@ -78,7 +78,7 @@ Template.TestCaseStepNavigate.created = function () {
         console.log("Saving navigation step data: ", stepData, data.data);
         Collections.TestCaseSteps.update(data._id, {$set: {data: stepData}}, function (error) {
           if(error){
-            Meteor.log.error("Failed to update navigation step: " + error.message);
+            console.error("Failed to update navigation step: " + error.message);
             Dialog.error("Failed to update navigation step: " + error.message);
           }
         });

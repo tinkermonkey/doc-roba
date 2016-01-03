@@ -56,7 +56,7 @@ Template.action_edit_routes.events({
           Collections.Actions.update(instance.data._id, { $pull: { routes: {order: route.order} } }, function (error, response) {
             Dialog.hide();
             if(error){
-              Meteor.log.error("Delete failed: ", error);
+              console.error("Delete failed: ", error);
               Dialog.error(error.message);
             }
           });
@@ -82,7 +82,7 @@ Template.action_edit_routes.events({
         }
       }, function (error, response) {
         if(error){
-          Meteor.log.error("Route insert failed: " + error.message);
+          console.error("Route insert failed: " + error.message);
           Dialog.error("Route insert failed: " + error.message);
         } else {
           // trigger editing on the destination node
@@ -92,7 +92,7 @@ Template.action_edit_routes.events({
         }
       });
     } else {
-      Meteor.log.error("Add Action Route failed: no action found");
+      console.error("Add Action Route failed: no action found");
       console.log(this);
       Dialog.error("Add Action Route failed: no action found");
     }

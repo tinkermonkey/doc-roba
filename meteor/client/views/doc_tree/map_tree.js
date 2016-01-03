@@ -52,14 +52,14 @@ Template.MapTree.rendered = function () {
     instance.init = true;
 
     // Setup the view only once
-    instance.mapLayout = new MapLayout(instance._elementId, instance.data);
+    instance.mapLayout = new MapLayout(instance.elementId, instance.data);
 
     // Short circuit the buffering mechanism
     instance.lastUpdate = 1;
 
     // for the data binding we just need to setup an update call
     instance.autorun(function () {
-      Meteor.log.debug("Auto-run executing map_tree: ");
+      console.debug("Auto-run executing map_tree: ");
 
       // get the nodes and actions
       var mapNodes = Collections.Nodes.find({projectVersionId: instance.data.projectVersionId}).fetch(),

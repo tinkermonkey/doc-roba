@@ -40,6 +40,31 @@ Template.registerHelper("ready", function(){
 });
 
 /**
+ * Simple pathFor helper
+ */
+Template.registerHelper("pathFor", function (routeName, routeParams) {
+  return FlowRouter.path(routeName, routeParams.hash);
+});
+
+/**
+ * Set the page title
+ */
+Template.registerHelper("setTitle", function () {
+  if(arguments.length){
+    document.title = _.toArray(arguments).slice(0, -1).join(" ");
+  }
+});
+
+/**
+ * Get the title displayed in the main nav menu
+ */
+Template.registerHelper("setNavTitle", function () {
+  if(arguments.length){
+    Session.set("navTitle", _.toArray(arguments).slice(0, -1).join(" "));
+  }
+});
+
+/**
  * Not Null helper
  */
 Template.registerHelper("notNull", function(value){
@@ -96,13 +121,13 @@ Template.registerHelper("renderLookup", function (lookupName, key, style) {
           return Util.camelToTitle(name);
         }
       } else {
-        Meteor.log.error("renderLookup failed: no key [" + key + "] in " + lookupName);
+        console.error("renderLookup failed: no key [" + key + "] in " + lookupName);
       }
     } else {
-      Meteor.log.error("renderLookup failed: lookup not found " + lookupName);
+      console.error("renderLookup failed: lookup not found " + lookupName);
     }
   } else {
-    Meteor.log.error("renderLookup failed: insufficient data [" + lookupName + "," + key + "]");
+    console.error("renderLookup failed: insufficient data [" + lookupName + "," + key + "]");
   }
 });
 
@@ -223,15 +248,6 @@ Template.registerHelper("projectVersions", function () {
 });
 
 /**
- * Get the list of versions for a project
- */
-Template.registerHelper("setTitle", function () {
-  if(arguments.length){
-    document.title = _.toArray(arguments).slice(0, -1).join(" ");
-  }
-});
-
-/**
  * Render a change type to a string
  */
 Template.registerHelper("renderCustomFieldType", function (type) {
@@ -315,13 +331,13 @@ Template.registerHelper("renderTestSystemNameFromStaticId", function (staticId, 
  */
 Template.registerHelper("getElementId", function () {
   var instance = Template.instance();
-  if(!instance._elementId){
-    instance._elementId = "Element_" + new Mongo.ObjectID()._str;
-    if(instance._elementIdReactor){
-      instance._elementIdReactor.set(instance._elementId);
+  if(!instance.elementId){
+    instance.elementId = "Element_" + new Mongo.ObjectID()._str;
+    if(instance.elementIdReactor){
+      instance.elementIdReactor.set(instance.elementId);
     }
   }
-  return instance._elementId;
+  return instance.elementId;
 });
 
 /**

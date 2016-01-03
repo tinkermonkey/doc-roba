@@ -205,7 +205,7 @@ Template.AdventureScreen.events({
       code: "driver.getElementAtLocation(" + coords.x + "," + coords.y + ", true, true);"
     }, function (error) {
       if(error){
-        Meteor.log.error("Error adding adventure command: " + error.message);
+        console.error("Error adding adventure command: " + error.message);
         Dialog.error("Error adding adventure command: " + error.message);
       }
     });
@@ -255,7 +255,7 @@ Template.AdventureScreen.events({
             value: value
           });
         } else {
-          Meteor.log.error("clickable failure: could not identify attribute or tag: " + el.text());
+          console.error("clickable failure: could not identify attribute or tag: " + el.text());
           Dialog.error("clickable failure: could not identify attribute or tag: " + el.text());
         }
       }
@@ -344,7 +344,7 @@ Template.AdventureScreen.events({
           .css("height", localBounds.height + "px");
       }, 10);
     } else {
-      Meteor.log.error("mouseenter adventure-highlight-hierarchy without bounds");
+      console.error("mouseenter adventure-highlight-hierarchy without bounds");
     }
   },
   "mouseleave .adventure-highlight-hierarchy": function (e, instance) {
@@ -386,7 +386,7 @@ Template.AdventureScreen.events({
             }
             Collections.Nodes.update(nodeId, update, function (error, result) {
               if(error){
-                Meteor.log.error("Failed to update node value: " + error.message);
+                console.error("Failed to update node value: " + error.message);
                 Dialog.error("Failed to update node value: " + error.message);
                 console.log("Attempted update:", update);
               }
@@ -412,7 +412,7 @@ Template.AdventureScreen.events({
               }
               Collections.Actions.update(targetId, update, function (error, result) {
                 if(error){
-                  Meteor.log.error("Failed to update action value: " + error.message);
+                  console.error("Failed to update action value: " + error.message);
                   Dialog.error("Failed to update action value: " + error.message);
                   console.log("Attempted update:", update);
                 }

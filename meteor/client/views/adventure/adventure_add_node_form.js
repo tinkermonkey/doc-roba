@@ -152,7 +152,7 @@ Template.AdventureAddNodeForm.rendered = function () {
         var mapInstance = Blaze.getView($(".map-tree-base").get(0)).templateInstance();
         mapInstance.mapLayout.highlightNodes([record.parentId]);
       } catch (e) {
-        Meteor.log.error("Failed to locate map container: " + e.message);
+        console.error("Failed to locate map container: " + e.message);
       }
     }
   });

@@ -24,10 +24,10 @@ Auth = {
    * @param projectId
    */
   hasProjectAccess: function (userId, projectId) {
-    //Meteor.log.debug("hasProjectAccess: " + userId + ", " + projectId);
+    //console.debug("hasProjectAccess: " + userId + ", " + projectId);
     if(userId && projectId){
       var user = Meteor.users.findOne(userId);
-      //Meteor.log.debug("hasProjectAccess: " + (user && user.hasProjectAccess(projectId)));
+      //console.debug("hasProjectAccess: " + (user && user.hasProjectAccess(projectId)));
       return user && user.hasProjectAccess(projectId)
     }
   },

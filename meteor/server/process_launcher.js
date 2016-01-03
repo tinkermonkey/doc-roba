@@ -21,17 +21,17 @@ ProcessLauncher = {
     this.automationPath    = path.join(DocRoba.rootPath, Meteor.settings.paths.automation);
     this.imageAnalysisPath = path.join(DocRoba.rootPath, Meteor.settings.paths.image_analysis);
 
-    Meteor.log.info("ProcessLauncher.init logPath: " + this.baseLogPath);
-    Meteor.log.info("ProcessLauncher.init automationPath: " + this.automationPath);
-    Meteor.log.info("ProcessLauncher.init imageAnalysisPath: " + this.imageAnalysisPath);
+    console.info("ProcessLauncher.init logPath: " + this.baseLogPath);
+    console.info("ProcessLauncher.init automationPath: " + this.automationPath);
+    console.info("ProcessLauncher.init imageAnalysisPath: " + this.imageAnalysisPath);
 
     // Make sure the log path exists
     if(!fs.existsSync(this.baseLogPath)){
-      Meteor.log.debug("ProcessLauncher creating log directory: " + this.baseLogPath);
+      console.debug("ProcessLauncher creating log directory: " + this.baseLogPath);
       fs.mkdirSync(this.baseLogPath);
     }
     if(!fs.existsSync(this.launcherLogPath)){
-      Meteor.log.debug("ProcessLauncher creating log directory: " + this.launcherLogPath);
+      console.debug("ProcessLauncher creating log directory: " + this.launcherLogPath);
       fs.mkdirSync(this.launcherLogPath);
     }
   },
@@ -44,7 +44,7 @@ ProcessLauncher = {
    * @param exitListener
    */
   launchAutomation: function (command, logFileName, exitListener) {
-    Meteor.log.info("ProcessLauncher.launchAutomation: " + command);
+    console.info("ProcessLauncher.launchAutomation: " + command);
 
     // create a log file path
     var logFilePath = path.join(this.launcherLogPath, logFileName),
@@ -58,16 +58,16 @@ ProcessLauncher = {
       stdio: [ 'ignore', out, err ]
     });
 
-    Meteor.log.debug("ProcessLauncher.launchAutomation Launched: " + proc.pid, this.automationPath + command);
+    console.debug("ProcessLauncher.launchAutomation Launched: " + proc.pid, this.automationPath + command);
 
     // Catch the exit
     proc.on("exit", Meteor.bindEnvironment(exitListener || function (code) {
-        Meteor.log.debug("ProcessLauncher.launchAutomation Exit: " + proc.pid + ", " + code);
+        console.debug("ProcessLauncher.launchAutomation Exit: " + proc.pid + ", " + code);
         try {
           out.close();
           err.close();
         } catch (e) {
-          Meteor.log.error("ProcessLauncher.launchAutomation: " + e.toString());
+          console.error("ProcessLauncher.launchAutomation: " + e.toString());
         }
       }));
 
@@ -81,7 +81,7 @@ ProcessLauncher = {
    * @param callback
    */
   launchImageTask: function (command, logFileName, callback) {
-    Meteor.log.info("ProcessLauncher.launchImageTask: " + command);
+    console.info("ProcessLauncher.launchImageTask: " + command);
 
     // create a log file path
     var logFilePath = path.join(this.launcherLogPath, logFileName),
@@ -95,11 +95,11 @@ ProcessLauncher = {
       stdio: [ 'ignore', out, err ]
     });
 
-    Meteor.log.debug("ProcessLauncher.launchImageTask Launched: " + proc.pid,  "python " + this.imageAnalysisPath + command);
+    console.debug("ProcessLauncher.launchImageTask Launched: " + proc.pid,  "python " + this.imageAnalysisPath + command);
 
     // Catch the exit
     proc.on("exit", Meteor.bindEnvironment(function (code) {
-        Meteor.log.debug("ProcessLauncher.launchImageTask Exit: " + proc.pid + ", " + code);
+        console.debug("ProcessLauncher.launchImageTask Exit: " + proc.pid + ", " + code);
 
         // grab the output
         if(callback){

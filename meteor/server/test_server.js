@@ -8,7 +8,7 @@ Meteor.startup(function () {
    * ============================================================================
    */
   Meteor.publish("test_run_templates", function (projectId, projectVersionId) {
-    Meteor.log.debug("Publish: test_run_templates");
+    console.debug("Publish: test_run_templates");
     // check that there is a project role for the current user
     if(Auth.hasProjectAccess(this.userId, projectId) && projectVersionId){
       return Collections.TestRunTemplates.find({projectVersionId: projectVersionId});
@@ -16,7 +16,7 @@ Meteor.startup(function () {
     return [];
   });
   Meteor.publish("test_run_template_items", function (projectId, projectVersionId) {
-    Meteor.log.debug("Publish: test_run_template_items");
+    console.debug("Publish: test_run_template_items");
     // check that there is a project role for the current user
     if(Auth.hasProjectAccess(this.userId, projectId) && projectVersionId){
       return Collections.TestRunTemplateItems.find({projectVersionId: projectVersionId});
@@ -30,7 +30,7 @@ Meteor.startup(function () {
    * ============================================================================
    */
   Meteor.publish("test_groups", function (projectId, projectVersionId) {
-    Meteor.log.debug("Publish: test_groups");
+    console.debug("Publish: test_groups");
     // check that there is a project role for the current user
     if(Auth.hasProjectAccess(this.userId, projectId) && projectVersionId){
       return Collections.TestGroups.find({projectVersionId: projectVersionId});
@@ -38,7 +38,7 @@ Meteor.startup(function () {
     return [];
   });
   Meteor.publish("test_cases", function (projectId, projectVersionId) {
-    Meteor.log.debug("Publish: test_cases");
+    console.debug("Publish: test_cases");
     // check that there is a project role for the current user
     if(Auth.hasProjectAccess(this.userId, projectId) && projectVersionId){
       return Collections.TestCases.find({projectVersionId: projectVersionId});
@@ -46,7 +46,7 @@ Meteor.startup(function () {
     return [];
   });
   Meteor.publish("test_case", function (projectId, projectVersionId, testCaseId) {
-    Meteor.log.debug("Publish: test_case");
+    console.debug("Publish: test_case");
     // check that there is a project role for the current user
     if(Auth.hasProjectAccess(this.userId, projectId) && projectVersionId){
       return Collections.TestCases.find({projectVersionId: projectVersionId, staticId: testCaseId});
@@ -54,7 +54,7 @@ Meteor.startup(function () {
     return [];
   });
   Meteor.publish("test_case_roles", function (projectId, projectVersionId, testCaseId) {
-    Meteor.log.debug("Publish: test_cases");
+    console.debug("Publish: test_cases");
     // check that there is a project role for the current user
     if(Auth.hasProjectAccess(this.userId, projectId) && projectVersionId){
       return Collections.TestCaseRoles.find({projectVersionId: projectVersionId, testCaseId: testCaseId});
@@ -62,7 +62,7 @@ Meteor.startup(function () {
     return [];
   });
   Meteor.publish("test_case_steps", function (projectId, projectVersionId, testCaseId) {
-    Meteor.log.debug("Publish: test_cases");
+    console.debug("Publish: test_cases");
     // check that there is a project role for the current user
     if(Auth.hasProjectAccess(this.userId, projectId) && projectVersionId){
       return Collections.TestCaseSteps.find({projectVersionId: projectVersionId, testCaseId: testCaseId});
@@ -76,7 +76,7 @@ Meteor.startup(function () {
    * ============================================================================
    */
   Meteor.publish("test_case_results", function (projectId, testCaseId, limit) {
-    Meteor.log.debug("Publish: test_case_results:", testCaseId, limit);
+    console.debug("Publish: test_case_results:", testCaseId, limit);
     // check that there is a project role for the current user
     if(Auth.hasProjectAccess(this.userId, projectId) && testCaseId){
       limit = limit || 10;
@@ -91,7 +91,7 @@ Meteor.startup(function () {
     return [];
   });
   Meteor.publish("test_result", function (projectId, testResultId) {
-    Meteor.log.debug("Publish: test_result:", projectId, testResultId);
+    console.debug("Publish: test_result:", projectId, testResultId);
     // check that there is a project role for the current user
     if(Auth.hasProjectAccess(this.userId, projectId)){
       return Collections.TestResults.find(testResultId);
@@ -99,7 +99,7 @@ Meteor.startup(function () {
     return [];
   });
   Meteor.publish("test_result_roles", function (projectId, testResultId) {
-    Meteor.log.debug("Publish: test_result_roles:", projectId, testResultId);
+    console.debug("Publish: test_result_roles:", projectId, testResultId);
     // check that there is a project role for the current user
     if(Auth.hasProjectAccess(this.userId, projectId)){
       return Collections.TestResultRoles.find({testResultId: testResultId});
@@ -107,7 +107,7 @@ Meteor.startup(function () {
     return [];
   });
   Meteor.publish("test_result_steps", function (projectId, testResultId) {
-    Meteor.log.debug("Publish: test_result_steps:", projectId, testResultId);
+    console.debug("Publish: test_result_steps:", projectId, testResultId);
     // check that there is a project role for the current user
     if(Auth.hasProjectAccess(this.userId, projectId)){
       return Collections.TestResultSteps.find({testResultId: testResultId});
@@ -115,7 +115,7 @@ Meteor.startup(function () {
     return [];
   });
   Meteor.publish("test_result_log", function (projectId, testResultId) {
-    Meteor.log.debug("Publish: test_result_log:", projectId, testResultId);
+    console.debug("Publish: test_result_log:", projectId, testResultId);
     // check that there is a project role for the current user
     if(Auth.hasProjectAccess(this.userId, projectId)){
       return Collections.LogMessages.find({"context.testResultId": testResultId});
@@ -123,7 +123,7 @@ Meteor.startup(function () {
     return [];
   });
   Meteor.publish("test_result_screenshots", function (projectId, testResultId) {
-    Meteor.log.debug("Publish: test_result_screenshots:", projectId, testResultId);
+    console.debug("Publish: test_result_screenshots:", projectId, testResultId);
     // check that there is a project role for the current user
     if(Auth.hasProjectAccess(this.userId, projectId)){
       return Collections.Screenshots.find({testResultId: testResultId});
@@ -131,7 +131,7 @@ Meteor.startup(function () {
     return [];
   });
   Meteor.publish("test_run_result", function (testResultId) {
-    Meteor.log.debug("Publish: test_run_result:", testResultId);
+    console.debug("Publish: test_run_result:", testResultId);
     // check that there is a project role for the current user
     if(this.userId){
       return Collections.TestResults.find(testResultId);
@@ -145,7 +145,7 @@ Meteor.startup(function () {
    * ============================================================================
    */
   Meteor.publish("similar_screenshots", function (screenshotId) {
-    Meteor.log.debug("Publish: similar_screenshots:", screenshotId);
+    console.debug("Publish: similar_screenshots:", screenshotId);
     if(this.userId && screenshotId){
       var screenshot = Collections.Screenshots.findOne(screenshotId);
       if(screenshot && Auth.hasProjectAccess(this.userId, screenshot.projectId)){
@@ -156,7 +156,7 @@ Meteor.startup(function () {
   });
 
   Meteor.publish("previous_version_screenshots", function (screenshotId) {
-    Meteor.log.debug("Publish: previous_version_screenshots:", screenshotId);
+    console.debug("Publish: previous_version_screenshots:", screenshotId);
     if(this.userId && screenshotId) {
       var screenshot = Collections.Screenshots.findOne(screenshotId);
       if (screenshot && Auth.hasProjectAccess(this.userId, screenshot.projectId)) {
@@ -167,7 +167,7 @@ Meteor.startup(function () {
   });
 
   Meteor.publish("screenshot_comparison", function (baseScreenshotId, compareScreenshotId) {
-    Meteor.log.debug("Publish: screenshot_comparison:", baseScreenshotId, compareScreenshotId);
+    console.debug("Publish: screenshot_comparison:", baseScreenshotId, compareScreenshotId);
     if(this.userId && baseScreenshotId && compareScreenshotId) {
       return Collections.ScreenshotComparisons.find({
         baseScreenshot: baseScreenshotId,
@@ -203,7 +203,7 @@ Meteor.startup(function () {
     loadTestRoleManifest: function (testResultRoleId) {
       check(Meteor.user(), Object);
       check(testResultRoleId, String);
-      Meteor.log.debug("loadTestRoleManifest: ", testResultRoleId);
+      console.debug("loadTestRoleManifest: ", testResultRoleId);
 
       // Require authentication
       if(!this.userId){
@@ -233,7 +233,7 @@ Meteor.startup(function () {
      * @param testResultRoleId
      */
     testRoleFailed: function (testResultRoleId, result) {
-      Meteor.log.info("testRoleFailed: " + testResultRoleId + ", " + result);
+      console.info("testRoleFailed: " + testResultRoleId + ", " + result);
       check(Meteor.user(), Object);
       check(testResultRoleId, String);
       var testResultRole = Collections.TestResultRoles.findOne({_id: testResultRoleId});
@@ -389,7 +389,7 @@ Meteor.startup(function () {
         route = source ? RobaRouter.nodeToNode(source, destination) : RobaRouter.routeFromStart();
         return route.export();
       } catch (error) {
-        Meteor.log.error("loadNavigationRoute failed: " + error.message);
+        console.error("loadNavigationRoute failed: " + error.message);
       }
     },
 
@@ -404,7 +404,7 @@ Meteor.startup(function () {
       check(testCase.projectVersionId, String);
       check(testCase._id, String);
 
-      Meteor.log.debug("deleteTestCase: " + testCase._id);
+      console.debug("deleteTestCase: " + testCase._id);
 
       // Delete the roles for this testCase
       var roles = Collections.TestCaseRoles.find({
@@ -414,7 +414,7 @@ Meteor.startup(function () {
       _.each(roles, function (role) {
         Meteor.call("deleteTestCaseRole", role, function (error) {
           if(error){
-            Meteor.log.error("Failed to delete test case role: " + error.message);
+            console.error("Failed to delete test case role: " + error.message);
           }
         });
       });
@@ -432,7 +432,7 @@ Meteor.startup(function () {
       check(role, Object);
       check(role._id, String);
 
-      Meteor.log.debug("deleteTestCaseRole: " + role._id);
+      console.debug("deleteTestCaseRole: " + role._id);
 
       // Delete the steps for this role
       Collections.TestCaseSteps.remove({ testCaseRoleId: role._id });
@@ -450,7 +450,7 @@ Meteor.startup(function () {
       check(Meteor.user(), Object);
       check(testCaseId, String);
       check(config, Object);
-      Meteor.log.info("validateTestCaseRunConfig: " + testCaseId);
+      console.info("validateTestCaseRunConfig: " + testCaseId);
 
       var testCase = Collections.TestCases.findOne(testCaseId);
 
@@ -473,7 +473,7 @@ Meteor.startup(function () {
       check(Meteor.user(), Object);
       check(testCaseId, String);
       check(config, Object);
-      Meteor.log.info("prepareTestCaseRun: " + testCaseId);
+      console.info("prepareTestCaseRun: " + testCaseId);
 
       var testCase = Collections.TestCases.findOne(testCaseId);
 
@@ -485,7 +485,7 @@ Meteor.startup(function () {
 
       // check that the config has data for all of the roles
       var testResultId = testCase.prepareTestResult(config);
-      Meteor.log.info("prepareTestCaseRun.testResultId: " + testResultId);
+      console.info("prepareTestCaseRun.testResultId: " + testResultId);
       return testResultId;
     },
 
@@ -495,7 +495,7 @@ Meteor.startup(function () {
     launchTestResult: function (testResultId) {
       check(Meteor.user(), Object);
       check(testResultId, String);
-      Meteor.log.info("launchTestResult: " + testResultId);
+      console.info("launchTestResult: " + testResultId);
 
       var testResult = Collections.TestResults.findOne(testResultId);
 
@@ -550,7 +550,7 @@ Meteor.startup(function () {
           try {
             var result = JSON.parse(output);
           } catch (e) {
-            Meteor.log.debug("templateCompareScreenshots JSON parse failed: \n" + output + "\n");
+            console.debug("templateCompareScreenshots JSON parse failed: \n" + output + "\n");
             throw new Meteor.Error("templateCompareScreenshots failed: result could not be parsed, " + e.toString());
           }
 

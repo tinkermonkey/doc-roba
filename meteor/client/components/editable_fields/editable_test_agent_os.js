@@ -28,7 +28,7 @@ Template.EditableTestAgentOS.rendered = function () {
       if (TestAgentOSLookup[newValue]) {
         $(editedElement).trigger("edited", [newValue]);
       } else {
-        Meteor.log.error("Test Agent OS update failed, Test Agent OS not known: " + newValue);
+        console.error("Test Agent OS update failed, Test Agent OS not known: " + newValue);
         Dialog.error("Test Agent OS update failed. Test Agent OS not known: " + newValue);
       }
 

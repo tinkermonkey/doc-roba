@@ -42,7 +42,7 @@ Template.AdventureCommandHistory.events({
 
       editorInstance.editor.insert(result.code);
     } catch (e) {
-      Meteor.log.error("Failed to insert command in editor: " + e.message);
+      console.error("Failed to insert command in editor: " + e.message);
       Dialog.error("Failed to insert command in editor: " + e.message);
     }
   }

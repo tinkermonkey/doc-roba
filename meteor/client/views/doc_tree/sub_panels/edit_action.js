@@ -22,13 +22,13 @@ Template.edit_action.events({
       console.log("Updating action record: ", dataKey, newValue, update);
       Collections.Actions.update(instance.data._id, update, function (error) {
         if(error){
-          Meteor.log.error("Failed to update action value: " + error.message);
+          console.error("Failed to update action value: " + error.message);
           console.log(update);
           Dialog.error("Failed to update action value: " + error.message);
         }
       });
     } else {
-      Meteor.log.error("Failed to update action value: data-key not found");
+      console.error("Failed to update action value: data-key not found");
       Dialog.error("Failed to update action value: data-key not found");
     }
   },
@@ -50,11 +50,11 @@ Template.edit_action.events({
         if(btn == "Delete"){
           Collections.Actions.remove(action._id, function (error, result) {
             if(error) {
-              Meteor.log.error("Failed to delete action: " + error.message);
+              console.error("Failed to delete action: " + error.message);
               Dialog.hide();
               Dialog.error("Failed to delete action: " + error.message);
             } else {
-              Meteor.log.debug("Action deleted: " + result);
+              console.debug("Action deleted: " + result);
               BottomDrawer.hide();
             }
             Dialog.hide();

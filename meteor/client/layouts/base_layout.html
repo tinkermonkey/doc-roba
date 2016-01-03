@@ -2,10 +2,10 @@
   {{#if ready }}
     <svg id="global-defs-svg">
       <defs>
-        {{> yield "svgDefs"}}
+        {{> Template.dynamic template=svgDefs}}
       </defs>
     </svg>
-    {{> yield }}
+    {{> Template.dynamic template=content }}
   {{else}}
     {{> CustomSpinner }}
   {{/if}}

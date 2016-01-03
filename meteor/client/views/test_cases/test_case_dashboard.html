@@ -1,23 +1,8 @@
 <template name="TestCaseDashboard">
   {{#CenterPoleLayout}}
     {{#if ready}}
-      {{#contentFor "nav-title"}}
-        Test Case Dashboard
-      {{/contentFor}}
-
-      {{#contentFor "svgDefs"}}
-        {{> svg_def "node-clip-path" }}
-        {{> svg_def "node-hover" }}
-        {{> svg_def "action-arrow" }}
-      {{/contentFor}}
-
-      {{#contentFor "header"}}
-        {{> CurrentProjectNav }}
-      {{/contentFor}}
-
-      {{#contentFor "nav"}}
-        {{> TestCaseList project=project version=version testCaseId=testCaseId editable=true }}
-      {{/contentFor}}
+      {{setTitle "Test Case Dashboard" }}
+      {{setNavTitle "Test Case Dashboard" }}
 
       {{#if testCaseId}}
         {{> TestCase testCase}}
