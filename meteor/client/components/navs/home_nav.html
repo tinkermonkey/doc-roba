@@ -2,7 +2,7 @@
   {{#each userProjects}}
     <div class="home-nav-item {{#if isActiveProject}}active{{/if}}">
       <h4>
-        <a href="{{pathFor 'ProjectHome'}}">{{title}}</a>
+        <a href="{{pathFor 'ProjectHome' projectId=_id}}">{{title}}</a>
         <small>
           {{userRole _id}}
         </small>
@@ -10,11 +10,11 @@
     </div>
     {{#each projectVersions}}
       <div class="home-nav-item {{#if isActiveVersion}}active{{/if}}">
-        <a href="{{pathFor 'VersionHome'}}">v {{version}}</a>
+        <a href="{{pathFor 'VersionHome' projectVersionId=_id}}">v {{version}}</a>
         <small>{{dateFormat dateCreated}}</small>
-        <a href="{{pathFor 'DocTree'}}"><span class="glyphicon glyphicon-map-marker"></span></a>
-        <a href="{{pathFor 'TestCaseDashboard'}}"><span class="glyphicon glyphicon-ok-circle"></span></a>
-        <a href="{{pathFor 'TestRunTemplateDashboard'}}"><span class="glyphicon glyphicon-list-alt"></span></a>
+        <a href="{{pathFor 'DocTree' projectVersionId=_id}}"><span class="glyphicon glyphicon-map-marker"></span></a>
+        <a href="{{pathFor 'TestCaseDashboard' projectVersionId=_id}}"><span class="glyphicon glyphicon-ok-circle"></span></a>
+        <a href="{{pathFor 'TestRunTemplateDashboard' projectVersionId=_id}}"><span class="glyphicon glyphicon-list-alt"></span></a>
       </div>
     {{/each}}
   {{/each}}

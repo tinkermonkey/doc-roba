@@ -35,22 +35,22 @@ Template.TestCaseDashboard.created = function () {
   instance.autorun(function () {
     var route = Router.current();
     console.log("TestCaseDashboard:", route);
-    instance.subscribe("test_groups", route.params.projectId, route.params._id);
-    instance.subscribe("test_cases", route.params.projectId, route.params._id);
-    instance.subscribe("nodes", route.params.projectId, route.params._id);
-    instance.subscribe("actions", route.params.projectId, route.params._id);
-    instance.subscribe("data_stores", route.params.projectId, route.params._id);
-    instance.subscribe("all_data_store_fields", route.params.projectId, route.params._id);
-    instance.subscribe("all_data_store_rows", route.params.projectId, route.params._id);
+    instance.subscribe("test_groups", route.params.projectId, route.params.projectVersionId);
+    instance.subscribe("test_cases", route.params.projectId, route.params.projectVersionId);
+    instance.subscribe("nodes", route.params.projectId, route.params.projectVersionId);
+    instance.subscribe("actions", route.params.projectId, route.params.projectVersionId);
+    instance.subscribe("data_stores", route.params.projectId, route.params.projectVersionId);
+    instance.subscribe("all_data_store_fields", route.params.projectId, route.params.projectVersionId);
+    instance.subscribe("all_data_store_rows", route.params.projectId, route.params.projectVersionId);
 
     // TODO: these should be moved to sub-templates
-    instance.subscribe("servers", route.params.projectId, route.params._id);
-    instance.subscribe("test_systems", route.params.projectId, route.params._id);
-    instance.subscribe("test_agents", route.params.projectId, route.params._id)
+    instance.subscribe("servers", route.params.projectId, route.params.projectVersionId);
+    instance.subscribe("test_systems", route.params.projectId, route.params.projectVersionId);
+    instance.subscribe("test_agents", route.params.projectId, route.params.projectVersionId)
 
     // pull in the project and project version records
     instance.project.set(Collections.Projects.findOne(route.params.projectId));
-    instance.version.set(Collections.ProjectVersions.findOne(route.params._id));
+    instance.version.set(Collections.ProjectVersions.findOne(route.params.projectVersionId));
   });
 };
 

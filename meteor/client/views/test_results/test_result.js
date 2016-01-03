@@ -2,12 +2,6 @@
  * Template Helpers
  */
 Template.TestResult.helpers({
-  project: function () {
-    return Template.instance().project.get()
-  },
-  version: function () {
-    return Template.instance().version.get()
-  },
   testResult: function () {
     return Template.instance().testResult.get()
   },
@@ -15,7 +9,7 @@ Template.TestResult.helpers({
     return Template.instance().testCase.get()
   },
   roleResults: function () {
-    return Collections.TestResultRoles.find({testResultId: Router.current().params._id});
+    return Collections.TestResultRoles.find({testResultId: Router.current().params.testResultId});
   }
 });
 
@@ -31,16 +25,12 @@ Template.TestResult.created = function () {
   var instance = this;
   instance.testResult = new ReactiveVar();
   instance.testCase = new ReactiveVar();
-  instance.project = new ReactiveVar();
-  instance.version = new ReactiveVar();
 
   // Load the test result record
   instance.autorun(function () {
-    console.log("TestResult autorun 1");
     var route = Router.current();
-    instance.subscribe("test_result", route.params.projectId, route.params._id, function () {
-      console.log("TestResult record loaded");
-      var testResult = Collections.TestResults.findOne(route.params._id);
+    instance.subscribe("test_result", route.params.projectId, route.params.testResultId, function () {
+      var testResult = Collections.TestResults.findOne(route.params.testResultId);
       if(testResult){
         instance.testResult.set(testResult);
         instance.subscribe("test_case", testResult.projectId, testResult.projectVersionId, testResult.testCaseId);
@@ -51,23 +41,17 @@ Template.TestResult.created = function () {
         Dialog.error("Test Result not found");
       }
     });
-    instance.subscribe("test_result_roles", route.params.projectId, route.params._id);
-    instance.subscribe("test_result_steps", route.params.projectId, route.params._id);
-    instance.subscribe("test_result_screenshots", route.params.projectId, route.params._id);
-    instance.subscribe("test_result_log", route.params.projectId, route.params._id);
-
-    instance.project.set(Collections.Projects.findOne(route.params.projectId));
-    instance.version.set(Collections.ProjectVersions.findOne(route.params.projectVersionId));
+    instance.subscribe("test_result_roles", route.params.projectId, route.params.testResultId);
+    instance.subscribe("test_result_steps", route.params.projectId, route.params.testResultId);
+    instance.subscribe("test_result_screenshots", route.params.projectId, route.params.testResultId);
+    instance.subscribe("test_result_log", route.params.projectId, route.params.testResultId);
   });
 
   instance.autorun(function () {
     if(instance.subscriptionsReady()){
       var testResult = instance.testResult.get();
-      console.log("TestResult subscriptions ready");
       var testCase = Collections.TestCases.findOne({staticId: testResult.testCaseId, projectVersionId: testResult.projectVersionId});
       instance.testCase.set(testCase);
-    } else {
-      console.log("TestResult autorun 2");
     }
   });
 };

@@ -1,15 +1,15 @@
 <template name="CurrentProjectNav">
   <h1>
     {{#with project}}
-      <a href="{{pathFor 'ProjectHome'}}">{{title}}</a>
+      <a href="{{pathFor 'ProjectHome' projectId=_id}}">{{title}}</a>
     {{/with}}
   </h1>
   <h4>
     {{#with version}}
-      <a href="{{pathFor 'VersionHome'}}">v {{version}}</a>
-      <a href="{{pathFor 'DocTree'}}"><span class="glyphicon glyphicon-map-marker"></span></a>
-      <a href="{{pathFor 'TestCaseDashboard'}}"><span class="glyphicon glyphicon-ok-circle"></span></a>
-      <a href="{{pathFor 'TestRunTemplateDashboard'}}"><span class="glyphicon glyphicon-list-alt"></span></a>
+      <a href="{{pathFor 'VersionHome' projectVersionId=_id}}">v {{version.version}}</a>
+      <a href="{{pathFor 'DocTree' projectVersionId=_id}}"><span class="glyphicon glyphicon-map-marker"></span></a>
+      <a href="{{pathFor 'TestCaseDashboard' projectVersionId=_id}}"><span class="glyphicon glyphicon-ok-circle"></span></a>
+      <a href="{{pathFor 'TestRunTemplateDashboard' projectVersionId=_id}}"><span class="glyphicon glyphicon-list-alt"></span></a>
     {{/with}}
   </h4>
 </template>

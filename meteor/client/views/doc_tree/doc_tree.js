@@ -21,18 +21,18 @@ Template.DocTree.created = function () {
 
   instance.autorun(function () {
     var route = Router.current();
-    instance.subscribe("nodes", route.params.projectId, route.params._id);
-    instance.subscribe("actions", route.params.projectId, route.params._id);
-    instance.subscribe("data_stores", route.params.projectId, route.params._id);// TODO: Move to lower level template
-    instance.subscribe("all_data_store_fields", route.params.projectId, route.params._id);// TODO: Move to lower level template
-    instance.subscribe("all_data_store_rows", route.params.projectId, route.params._id);// TODO: Move to lower level template
-    instance.subscribe("servers", route.params.projectId, route.params._id);// TODO: Move to lower level template
-    instance.subscribe("test_systems", route.params.projectId, route.params._id);// TODO: Move to lower level template
-    instance.subscribe("test_agents", route.params.projectId, route.params._id);// TODO: Move to lower level template
+    instance.subscribe("nodes", route.params.projectId, route.params.projectVersionId);
+    instance.subscribe("actions", route.params.projectId, route.params.projectVersionId);
+    instance.subscribe("data_stores", route.params.projectId, route.params.projectVersionId);// TODO: Move to lower level template
+    instance.subscribe("all_data_store_fields", route.params.projectId, route.params.projectVersionId);// TODO: Move to lower level template
+    instance.subscribe("all_data_store_rows", route.params.projectId, route.params.projectVersionId);// TODO: Move to lower level template
+    instance.subscribe("servers", route.params.projectId, route.params.projectVersionId);// TODO: Move to lower level template
+    instance.subscribe("test_systems", route.params.projectId, route.params.projectVersionId);// TODO: Move to lower level template
+    instance.subscribe("test_agents", route.params.projectId, route.params.projectVersionId);// TODO: Move to lower level template
 
     // pull in the project and project version records
     instance.project.set(Collections.Projects.findOne(route.params.projectId));
-    instance.version.set(Collections.ProjectVersions.findOne(route.params._id));
+    instance.version.set(Collections.ProjectVersions.findOne(route.params.projectVersionId));
   });
 };
 

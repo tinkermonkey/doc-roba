@@ -11,14 +11,14 @@
     {{/contentFor}}
 
     {{#contentFor "header"}}
-      {{> CurrentProjectNav project=project version=version }}
+      {{> CurrentProjectNav }}
     {{/contentFor}}
 
     {{#if ready}}
       {{#contentFor "nav-title"}}
         Test Result: {{testCase.title}}
       {{/contentFor}}
-    
+
       {{setTitle "Test Result: " testCase.title}}
 
       {{#contentFor "nav"}}

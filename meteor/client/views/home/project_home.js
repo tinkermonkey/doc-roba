@@ -23,7 +23,7 @@ Template.ProjectHome.created = function () {
     var route = Router.current();
 
     // pull in the project and project version records
-    instance.project.set(Collections.Projects.findOne(route.params._id));
+    instance.project.set(Collections.Projects.findOne(route.params.projectId));
   });
 };
 

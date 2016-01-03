@@ -34,14 +34,14 @@ Template.TestRunTemplateDashboard.created = function () {
 
   instance.autorun(function () {
     var route = Router.current();
-    instance.subscribe("test_cases", route.params.projectId, route.params._id);
-    instance.subscribe("test_groups", route.params.projectId, route.params._id);
-    instance.subscribe("test_run_templates", route.params.projectId, route.params._id);
-    instance.subscribe("test_run_template_items", route.params.projectId, route.params._id);
+    instance.subscribe("test_cases", route.params.projectId, route.params.projectVersionId);
+    instance.subscribe("test_groups", route.params.projectId, route.params.projectVersionId);
+    instance.subscribe("test_run_templates", route.params.projectId, route.params.projectVersionId);
+    instance.subscribe("test_run_template_items", route.params.projectId, route.params.projectVersionId);
 
     // pull in the project and project version records
     instance.project.set(Collections.Projects.findOne(route.params.projectId));
-    instance.version.set(Collections.ProjectVersions.findOne(route.params._id));
+    instance.version.set(Collections.ProjectVersions.findOne(route.params.projectVersionId));
   });
 };
 
