@@ -26,10 +26,10 @@ Template.TestResultLogDataObject.events({
 
     if(expandee.is(":visible")){
       //expandee.hide('slide',{direction:'left'}, 400)
-      expandee.fadeOut();
+      expandee.hide();
     } else {
       //expandee.show('slide',{direction:'right'}, 400)
-      expandee.fadeIn();
+      expandee.show();
     }
     expander.find(".glyphicon").toggleClass("glyphicon-arrow-right");
     expander.find(".glyphicon").toggleClass("glyphicon-arrow-left");

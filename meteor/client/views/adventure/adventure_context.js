@@ -4,8 +4,8 @@
 Template.AdventureContext.helpers({
   getNode: function () {
     //console.log("AdventureContext: ", this);
-    if(this.currentNode && this.currentNode.get()){
-      var node = Collections.Nodes.findOne({staticId: this.currentNode.get(), projectVersionId: this.adventure.projectVersionId});
+    if(this.currentNodeId && this.currentNodeId.get()){
+      var node = Collections.Nodes.findOne({staticId: this.currentNodeId.get(), projectVersionId: this.adventure.projectVersionId});
       //console.log("AdventureContext, node: ", node);
       if(node){
         // clear the ignore list once a node is found
@@ -38,7 +38,7 @@ Template.AdventureContext.helpers({
 
         // One and only one match, just figure we know the location
         Meteor.log.debug("searchNodes found a single match: " + match.node.staticId);
-        this.currentNode.set(match.node.staticId);
+        this.currentNodeId.set(match.node.staticId);
       } else {
         Meteor.log.debug("searchNodes result count: " + results.length);
         return results;
@@ -121,10 +121,10 @@ Template.AdventureContext.events({
   "click .btn-wrong-node": function (e, instance) {
     try {
       // set the state so that we don't just re-run the search
-      instance.ignore = instance.data.currentNode.get();
+      instance.ignore = instance.data.currentNodeId.get();
 
       // clear the current node identification
-      instance.data.currentNode.set();
+      instance.data.currentNodeId.set();
     } catch(e) {
       Meteor.log.error("Failed to clear node context: " + e.message);
       Dialog.error("Failed to clear node context: " + e.message);
@@ -185,7 +185,7 @@ Template.AdventureContext.events({
   "edited .current-node-selector": function (e, instance, newValue) {
     if(newValue){
       console.log("Node Selected: ", newValue);
-      instance.data.currentNode.set(newValue)
+      instance.data.currentNodeId.set(newValue)
     }
   },
   "click .btn-preview": function (e, instance) {

@@ -51,7 +51,7 @@ Template.AdventureScreen.helpers({
    */
   getMousePosition: function () {
     var instance = Template.instance(),
-      coords = { x: 0, y: 0};
+      coords;
     if(instance.data.state && instance.data.state.mouse && instance.data.state.mouse.x >= 0 && instance.viewport.get() && instance.data.state.viewportSize){
       var remoteViewport  = instance.data.state.viewportSize,
         localViewport     = instance.viewport.get(),

@@ -9,7 +9,6 @@
       </tr>
     </thead>
     <tbody>
-    {{#if Template.subscriptionsReady}}
       {{#each messages}}
         <tr>
           <td class="adventure-log-time">{{renderLogTime time}}</td>
@@ -38,13 +37,13 @@
           </td>
         </tr>
       {{/if}}
-    {{else}}
-      <tr>
-        <td colspan="4" class="adventure-loading">
-          {{> InlineSpinner }}
-        </td>
-      </tr>
-    {{/if}}
+      {{#unless ready}}
+        <tr>
+          <td colspan="4" class="adventure-loading">
+            {{> InlineSpinner }}
+          </td>
+        </tr>
+      {{/unless}}
     </tbody>
   </table>
 </template>

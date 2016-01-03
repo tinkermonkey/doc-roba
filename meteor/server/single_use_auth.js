@@ -4,8 +4,7 @@ Accounts.singleUseAuth = {
    */
   generate: function (options, user) {
     user = user || Meteor.user();
-    check(user, Object);
-    check(user._id, String);
+    if(!user) { throw new Meteor.Error("Accounts.singleUserAuth.generate failed: no user specified")}
 
     var singleUse = {
       token: Random.secret(),

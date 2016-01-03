@@ -5,8 +5,8 @@ Template.AdventureSelectorResult.helpers({
   getCurrentNode: function () {
     var currentNode = Util.findParentData("currentNode"),
       adventure = Util.findParentData("adventure");
-    if(currentNode && adventure){
-      return Collections.Nodes.findOne({ staticId: currentNode.get(), projectVersionId: adventure.projectVersionId });
+    if(currentNodeId && adventure){
+      return Collections.Nodes.findOne({ staticId: currentNodeId.get(), projectVersionId: adventure.projectVersionId });
     }
   }
 });

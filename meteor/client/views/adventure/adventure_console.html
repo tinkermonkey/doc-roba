@@ -1,68 +1,70 @@
 <template name="AdventureConsole">
-  {{setTitle "Adventure :: " }}
+  {{#NoMenuLayout}}
+    {{#if ready}}
+      {{setTitle "Adventure Console" }}
 
-  {{#contentFor "nav-title"}}
-    Adventure Console
-  {{/contentFor}}
+      {{#with getFullContext}}
+        <div class="fluid-container full-page adventure">
+          <div class="adventure-main-view">
+            {{> AdventureScreen }}
+          </div>
+          <div class="adventure-sidebar" style="height: {{relativeHeight 1.0}}px;">
+            <div class="accordion">
+              {{> AdventureStatusBar }}
 
-  {{#with getFullContext}}
-  <div class="fluid-container full-page adventure">
-    <div class="adventure-main-view">
-      {{> AdventureScreen }}
-    </div>
-    <div class="adventure-sidebar" style="height: {{relativeHeight 1.0}}px;">
-      <div class="accordion">
-        {{> AdventureStatusBar }}
+              <div class="accordion-group" data-accordion-name="adventure-map">
+                <div class="accordion-icon"><span class="glyphicon glyphicon-map-marker"></span></div>
+                <div class="accordion-content">
+                  <div class="accordion-heading">Map</div>
+                  <div class="accordion-inner accordion-sticky display">{{> AdventureMap }}</div>
+                </div>
+              </div>
 
-        <div class="accordion-group" data-accordion-name="adventure-map">
-          <div class="accordion-icon"><span class="glyphicon glyphicon-map-marker"></span></div>
-          <div class="accordion-content">
-            <div class="accordion-heading">Map</div>
-            <div class="accordion-inner accordion-sticky display">{{> AdventureMap }}</div>
+              <div class="accordion-group" data-accordion-name="adventure-route">
+                <div class="accordion-icon"><span class="glyphicon glyphicon-picture"></span></div>
+                <div class="accordion-content">
+                  <div class="accordion-heading">Adventure Route</div>
+                  <div class="accordion-inner">{{> AdventureRoute adventure }}</div>
+                </div>
+              </div>
+
+              <div class="accordion-group accordion-grey" data-accordion-name="current-node">
+                <div class="accordion-icon"><span class="glyphicon glyphicon-pencil"></span></div>
+                <div class="accordion-content">
+                  <div class="accordion-heading">Current Node</div>
+                  <div class="accordion-inner full-width">{{> AdventureContext }}</div>
+                </div>
+              </div>
+
+              <div class="accordion-group accordion-grey" data-accordion-name="current-node-actions">
+                <div class="accordion-icon"><span class="glyphicon glyphicon-pencil"></span></div>
+                <div class="accordion-content">
+                  <div class="accordion-heading">Current Node Actions</div>
+                  <div class="accordion-inner">{{> AdventureEditNodeActions getCurrentNode }}</div>
+                </div>
+              </div>
+
+              <div class="accordion-group" data-accordion-name="raw-command">
+                <div class="accordion-icon"><span class="glyphicon glyphicon-play"></span></div>
+                <div class="accordion-content">
+                  <div class="accordion-heading">Raw Command</div>
+                  <div class="accordion-inner">{{> AdventureCommandEditor }}</div>
+                </div>
+              </div>
+
+              <div class="accordion-group" data-accordion-name="command-history">
+                <div class="accordion-icon"><span class="glyphicon glyphicon-list"></span></div>
+                <div class="accordion-content">
+                  <div class="accordion-heading">Command History</div>
+                  <div class="accordion-inner accordion-sticky">{{> AdventureCommandHistory }}</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-
-        <div class="accordion-group" data-accordion-name="adventure-route">
-          <div class="accordion-icon"><span class="glyphicon glyphicon-picture"></span></div>
-          <div class="accordion-content">
-            <div class="accordion-heading">Adventure Route</div>
-            <div class="accordion-inner">{{> AdventureRoute adventure }}</div>
-          </div>
-        </div>
-
-        <div class="accordion-group accordion-grey" data-accordion-name="current-node">
-          <div class="accordion-icon"><span class="glyphicon glyphicon-pencil"></span></div>
-          <div class="accordion-content">
-            <div class="accordion-heading">Current Node</div>
-            <div class="accordion-inner full-width">{{> AdventureContext }}</div>
-          </div>
-        </div>
-
-        <div class="accordion-group accordion-grey" data-accordion-name="current-node-actions">
-          <div class="accordion-icon"><span class="glyphicon glyphicon-pencil"></span></div>
-          <div class="accordion-content">
-            <div class="accordion-heading">Current Node Actions</div>
-            <div class="accordion-inner">{{> AdventureEditNodeActions getCurrentNode }}</div>
-          </div>
-        </div>
-
-        <div class="accordion-group" data-accordion-name="raw-command">
-          <div class="accordion-icon"><span class="glyphicon glyphicon-play"></span></div>
-          <div class="accordion-content">
-            <div class="accordion-heading">Raw Command</div>
-            <div class="accordion-inner">{{> AdventureCommandEditor }}</div>
-          </div>
-        </div>
-
-        <div class="accordion-group" data-accordion-name="command-history">
-          <div class="accordion-icon"><span class="glyphicon glyphicon-list"></span></div>
-          <div class="accordion-content">
-            <div class="accordion-heading">Command History</div>
-            <div class="accordion-inner accordion-sticky">{{> AdventureCommandHistory }}</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  {{/with}}
+      {{/with}}
+    {{else}}
+      {{> CustomSpinner }}
+    {{/if}}
+  {{/NoMenuLayout}}
 </template>

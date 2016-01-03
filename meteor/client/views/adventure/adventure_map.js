@@ -1,21 +1,10 @@
 /**
- * AdventureMap
- *
- * Created by austinsand on 3/28/15
- *
- */
-
-/**
  * Template Helpers
  */
 Template.AdventureMap.helpers({
-  isLoaded: function () {
-    var instance = Template.instance();
-    return instance.nodesLoaded.get() && instance.actionsLoaded.get();
-  },
   getCurrentNode: function () {
-    if(this.currentNode){
-      return this.currentNode.get();
+    if(this.currentNodeId){
+      return this.currentNodeId.get();
     }
   }
 });
@@ -31,18 +20,10 @@ Template.AdventureMap.events({});
 Template.AdventureMap.created = function () {
   var instance = this;
 
-  // create a loading status variable
-  instance.nodesLoaded = new ReactiveVar(false);
-  instance.actionsLoaded = new ReactiveVar(false);
-
-  // subscribe to all of the nodes for this project version
-  instance.subscribe("nodes", [instance.data.adventure.projectId, instance.data.adventure.projectVersionId], function () {
-    instance.nodesLoaded.set(true);
-  });
-
-  // subscribe to all of the actions for this project version
-  instance.subscribe("actions", [instance.data.adventure.projectId, instance.data.adventure.projectVersionId], function () {
-    instance.actionsLoaded.set(true);
+  instance.autorun(function () {
+    var data = Template.currentData();
+    instance.subscribe("nodes", data.adventure.projectId, data.adventure.projectVersionId);
+    instance.subscribe("actions", data.adventure.projectId, data.adventure.projectVersionId);
   });
 };
 

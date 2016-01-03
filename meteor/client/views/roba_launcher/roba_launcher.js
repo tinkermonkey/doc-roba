@@ -138,7 +138,7 @@ Template.roba_launcher.events({
               Dialog.error("Failed to update adventure route: " + error.message);
             } else {
               // Create the Adventure State record so the console functions properly
-              Collections.AdventureStates.insert({adventureId: adventureId}, function (error) {
+              Collections.AdventureStates.insert({adventureId: adventureId, projectId: instance.data.projectId}, function (error) {
                 if(error){
                   Meteor.log.error("Failed to create adventure state: " + error.message);
                   Dialog.error("Failed to create adventure state: " + error.message);
@@ -169,6 +169,13 @@ Template.roba_launcher.events({
 Template.roba_launcher.created = function () {
   var instance = Template.instance();
 
+  instance.autorun(function () {
+    instance.subscribe("nodes", instance.data.projectId, instance.data.projectVersionId);
+    instance.subscribe("actions", instance.data.projectId, instance.data.projectVersionId);
+    instance.subscribe("servers", instance.data.projectId, instance.data.projectVersionId);
+    instance.subscribe("test_systems", instance.data.projectId, instance.data.projectVersionId);
+    instance.subscribe("test_agents", instance.data.projectId, instance.data.projectVersionId);
+  });
 };
 
 /**

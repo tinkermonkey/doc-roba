@@ -109,7 +109,7 @@ Template.MapTree.rendered = function () {
     instance.autorun(function () {
       console.log("responding to current node change");
       var data = Template.currentData(),
-        node = data.currentNode;
+        node = data.currentNodeId;
       if(node){
         instance.mapLayout.centerNode(node, 0.66);
         instance.mapLayout.showNodeActions(node);
@@ -125,7 +125,7 @@ Template.MapTree.rendered = function () {
     instance.mapLayout.init();
 
     // zoom all if there is nothing to zoom to
-    if(!instance.data.currentNode){
+    if(!instance.data.currentNodeId){
       instance.mapLayout.zoomAll();
       instance.mapLayout.showLocationUnknown();
     }

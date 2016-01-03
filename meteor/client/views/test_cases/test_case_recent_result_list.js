@@ -19,7 +19,7 @@ Template.TestCaseRecentResultList.helpers({
 Template.TestCaseRecentResultList.events({
   "click .test-result-row": function (e, instance) {
     var testResult = this;
-    Router.go("test_result", {projectId: testResult.projectId, _id: testResult._id});
+    Router.go("test_result", {projectId: testResult.projectId, projectVersionId: testResult.projectVersionId, _id: testResult._id});
   }
 });
 

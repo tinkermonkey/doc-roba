@@ -38,7 +38,7 @@ Meteor.startup(function () {
     if(Auth.hasProjectAccess(this.userId, projectId) && projectVersionId){
       return Collections.Nodes.find({projectVersionId: projectVersionId});
     }
-    Meteor.log.warn("Publish: nodes returning nothing");
+    Meteor.log.warn("Publish: nodes returning nothing for [" + projectId + "], [" + projectVersionId + "], " + this.userId);
     return [];
   });
   Meteor.publish("actions", function (projectId, projectVersionId) {
@@ -47,7 +47,7 @@ Meteor.startup(function () {
     if(Auth.hasProjectAccess(this.userId, projectId) && projectVersionId){
       return Collections.Actions.find({projectVersionId: projectVersionId});
     }
-    Meteor.log.warn("Publish: actions returning nothing");
+    Meteor.log.warn("Publish: actions returning nothing for [" + projectId + "], [" + projectVersionId + "], " + this.userId);
     return [];
   });
 

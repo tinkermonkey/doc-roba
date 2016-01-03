@@ -130,22 +130,26 @@ NodeSearch = {
   checkAdventureLocation: function (instance) {
     check(instance, Blaze.TemplateInstance);
 
-    var data = instance.data,
-      node = Collections.Nodes.findOne({staticId: data.adventure.lastKnownNode});
+    var adventure = instance.adventure.get(),
+        state = instance.state.get();
 
-    // check the local url
-    if(node && node.url && data.state && data.state.url){
-      var result = NodeSearch.compareNode(data.state.url, data.state.title, node);
+    if(adventure && state){
+      var node = Collections.Nodes.findOne({staticId: adventure.lastKnownNode});
 
-      if(result.url.match && result.params.match && result.title.match){
-        //console.log("checkCurrentLocation, param match, location known");
-        instance.currentNode.set(node.staticId);
+      // check the local url
+      if(node && node.url && state.url){
+        var result = NodeSearch.compareNode(state.url, state.title, node);
+
+        if(result.url.match && result.params.match && result.title.match){
+          //console.log("checkCurrentLocation, param match, location known");
+          instance.currentNodeId.set(node.staticId);
+        } else {
+          //console.log("checkCurrentLocation, no param match, location unknown");
+          instance.currentNodeId.set();
+        }
       } else {
-        //console.log("checkCurrentLocation, no param match, location unknown");
-        instance.currentNode.set();
+        instance.currentNodeId.set();
       }
-    } else {
-      instance.currentNode.set();
     }
   },
 

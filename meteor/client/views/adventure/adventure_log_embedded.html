@@ -1,5 +1,20 @@
 <template name="AdventureLogEmbedded">
   <div style="width: 100%; height: 100%; overflow-x: hidden; overflow-y: hidden; min-height: 500px;">
-    {{> AdventureLogTable adventure}}
+    <table class="adventure-log-table">
+      {{#each messages}}
+        <tr>
+          <td class="adventure-log-time">{{renderLogTime time}}</td>
+          <td class="adventure-log-level log-level-{{level}}">{{level}}</td>
+          <td class="adventure-log-sender no-wrap">{{sender}}</td>
+          <td class="adventure-log-message">
+            <div>
+              {{#with data}}
+                {{> Template.dynamic template=getLogDataTemplate}}
+              {{/with}}
+            </div>
+          </td>
+        </tr>
+      {{/each}}
+    </table>
   </div>
 </template>

@@ -17,7 +17,7 @@ ProcessLauncher = {
    */
   init: function () {
     this.baseLogPath       = path.join(DocRoba.rootPath, Meteor.settings.paths.automation_logs);
-    this.launcherLogPath   = path.join(DocRoba.rootPath, Meteor.settings.paths.automation, "launcher");
+    this.launcherLogPath   = path.join(DocRoba.rootPath, Meteor.settings.paths.automation_logs, "launcher");
     this.automationPath    = path.join(DocRoba.rootPath, Meteor.settings.paths.automation);
     this.imageAnalysisPath = path.join(DocRoba.rootPath, Meteor.settings.paths.image_analysis);
 
@@ -47,14 +47,14 @@ ProcessLauncher = {
     Meteor.log.info("ProcessLauncher.launchAutomation: " + command);
 
     // create a log file path
-    var logFilePath = this.launcherLogPath + logFileName,
+    var logFilePath = path.join(this.launcherLogPath, logFileName),
       out = fs.openSync(logFilePath, "a"),
       err = fs.openSync(logFilePath, "a");
 
     // if the helper is not running, launch locally
     var script = command.split(" ")[0],
       args = command.split(" ").slice(1),
-      proc = childProcess.spawn("node", [this.automationPath + script].concat(args), {
+      proc = childProcess.spawn("node", [path.join(this.automationPath, script)].concat(args), {
       stdio: [ 'ignore', out, err ]
     });
 
@@ -84,14 +84,14 @@ ProcessLauncher = {
     Meteor.log.info("ProcessLauncher.launchImageTask: " + command);
 
     // create a log file path
-    var logFilePath = this.launcherLogPath + logFileName,
+    var logFilePath = path.join(this.launcherLogPath, logFileName),
       out = fs.openSync(logFilePath, "w"),
       err = fs.openSync(logFilePath, "a");
 
     // if the helper is not running, launch locally
     var script = command.split(" ")[0],
       args = command.split(" ").slice(1),
-      proc = childProcess.spawn("python", [this.imageAnalysisPath + script].concat(args), {
+      proc = childProcess.spawn("python", [path.join(this.imageAnalysisPath, script)].concat(args), {
       stdio: [ 'ignore', out, err ]
     });
 

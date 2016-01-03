@@ -50,18 +50,17 @@ Meteor.startup(function () {
      * @param adventureId
      */
     launchAdventure: function (adventureId) {
-      check(adventureId, String);
+      if(!adventureId) { throw new Meteor.Error("launchAdventure failed: no adventureId specified")}
 
       Meteor.log.debug("launchAdventure: " + adventureId);
       var adventure = Collections.Adventures.findOne(adventureId);
-      check(adventure, Object);
-      check(adventure._id, String);
+      if(!adventure) { throw new Meteor.Error("launchAdventure failed: adventure [" + adventureId + "] not found")}
 
       // Queue the adventure
       Collections.Adventures.update(adventureId, {$set: {status: AdventureStatus.staged }});
       Collections.AdventureSteps.update({adventureId: adventureId }, {$set: {status: AdventureStepStatus.staged }});
 
-      var token = Accounts.singleUseAuth.generate({ expires: { seconds: 5 } }),
+      var token = Accounts.singleUseAuth.generate({ expires: { seconds: 5 } }, Meteor.user()),
         command = [ProcessLauncher.adventureScript, "--adventureId", adventureId, "--token", token].join(" "),
         logFile = ["adventure_", adventureId, ".log"].join(""),
         proc = ProcessLauncher.launchAutomation(command, logFile, function (code) {

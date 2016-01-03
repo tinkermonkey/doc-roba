@@ -2,7 +2,21 @@
  * Simple system for accordion elements
  */
 Accordion = {
-  init: function (instance) {
+  init: function (instance, retry) {
+    // Add a retry mechanism to hide timing sensitivities
+    if(!instance.$(".accordion-heading").get(0)){
+      retry = retry || 0;
+      if(retry > 10){
+        Meteor.log.error("Accordion.init failed after " + (retry-1) + " retries");
+        return;
+      }
+      Meteor.log.debug("Accordion.init retry " + retry);
+      setTimeout(function () {
+        Accordion.init(instance, retry + 1);
+      }, 250);
+      return;
+    }
+
     // Setup the tab event listeners
     instance.$(".accordion-heading").click(function (e) {
       var content = $(e.target).next(".accordion-inner");

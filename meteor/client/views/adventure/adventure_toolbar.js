@@ -49,7 +49,7 @@ Template.AdventureToolbar.helpers({
     }
   },
   getCurrentNode: function () {
-    var nodeId = this.currentNode.get();
+    var nodeId = this.currentNodeId.get();
     if(nodeId){
       return Collections.Nodes.findOne({ staticId: nodeId, projectVersionId: this.adventure.projectVersionId });
     }

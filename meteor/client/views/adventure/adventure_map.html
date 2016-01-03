@@ -1,9 +1,9 @@
 <template name="AdventureMap">
   <div class="adventure-map-container">
-  {{#if isLoaded }}
-    {{> MapTree projectVersionId=adventure.projectVersionId currentNode=getCurrentNode }}
-  {{else}}
-    {{> CustomSpinner }}
-  {{/if}}
+    {{#if ready }}
+      {{> MapTree projectVersionId=adventure.projectVersionId currentNodeId=getCurrentNode }}
+    {{else}}
+      {{> CustomSpinner }}
+    {{/if}}
   </div>
 </template>
