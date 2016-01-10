@@ -192,7 +192,7 @@ Template.registerHelper("renderLogTime", function (value) {
 Template.registerHelper("userProjects", function () {
   var user = Meteor.user();
   if(user && user.projectList){
-    return Collections.Projects.find({_id: {$in: user.projectList}});
+    return Collections.Projects.find({_id: {$in: user.projectList}, active: true}, {sort: {title: 1}});
   }
   console.log("userProjects:", user);
 });

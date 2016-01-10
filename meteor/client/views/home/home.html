@@ -6,6 +6,9 @@
 
       <h1>Personal Dashboard</h1>
 
+      {{#if showProjectList}}
+        {{> ProjectList }}
+      {{/if}}
     {{else}}
       {{> CustomSpinner }}
     {{/if}}

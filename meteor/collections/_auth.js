@@ -8,14 +8,16 @@ Auth = {
    * Global helper for methods to require authentication
    * @param userId
    */
-  requireAuthentication: function (userId) {
+  requireAuthentication: function () {
+    var userId = Meteor.userId();
     if(!userId){
-      if(!Meteor.userId()){
-        throw new Meteor.Error(403);
-      }
-      return Meteor.users.findOn(Meteor.userId());
+      throw new Meteor.Error(403);
     }
-    return Meteor.users.findOn(userId);
+    var user = Meteor.users.findOne(userId);
+    if(user){
+      return user
+    }
+    throw new Meteor.Error(403);
   },
 
   /**
@@ -40,6 +42,13 @@ Auth = {
    */
   allowIfAuthenticated: function (userId, doc) {
     return userId !== null;
+  },
+
+  /**
+   * Operation not permitted client-side
+   */
+  denyAlways: function () {
+    return true;
   },
 
   /**
@@ -82,6 +91,20 @@ Auth = {
       return !user.hasTesterAccess(doc.projectId);
     }
     return true;
+  },
+
+  /**
+   * Deny if the user does not have access to create a project
+   * @param userId
+   * @param doc
+   * @returns {boolean}
+   */
+  denyIfNoProjectCreation: function (userId) {
+    var user = Meteor.users.findOne(userId);
+    if(userId && user){
+      return !(user.isSystemAdmin || Meteor.settings.allowPersonalProjects)
+    }
+    return true;
   }
 };
 
@@ -100,6 +123,13 @@ Auth.ruleSets = {
     }
   },
   deny: {
+    // No client-side changes
+    always: {
+      insert: Auth.denyAlways,
+      update: Auth.denyAlways,
+      remove: Auth.denyAlways,
+      fetch: []
+    },
     // Require only basic authentication
     ifNoProjectAccess: {
       insert: Auth.denyIfNoProjectAccess,

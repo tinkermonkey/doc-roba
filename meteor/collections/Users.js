@@ -1,5 +1,6 @@
 // Quick alias for normalizing the users collection
 Collections.Users = Meteor.users;
+Collections.Users.deny(Auth.ruleSets.deny.always);
 
 /**
  * Helpers for the project permissions
@@ -111,7 +112,7 @@ Collections.Users.helpers({
       actor = Meteor.user();
 
     // make sure the actor has project admin privileges
-    if(actor.hasProjectRole(projectId, RoleTypes.admin)){
+    if(actor.hasAdminAccess(projectId)){
       projectList.push(projectId);
       if(projects[projectId] && projects[projectId].roles){
         projects[projectId].roles.push(role);
@@ -124,6 +125,57 @@ Collections.Users.helpers({
       Collections.Users.update(user._id, {$set: {projectList: projectList, projects: projects}});
     } else {
       console.error("Users.addProjectRole failed: user [" + actor.username + "] does not have project admin privileges");
+    }
+  },
+
+  /**
+   * Remove a project role from a user
+   * @param projectId
+   * @param role
+   */
+  removeProjectRole: function (projectId, role) {
+    var user = this,
+        projects = user.projects || {},
+        projectList = user.projectList || [],
+        actor = Meteor.user();
+
+    // make sure the actor has project admin privileges
+    if(actor.hasAdminAccess(projectId)){
+      if(projects[projectId] && projects[projectId].roles && _.contains(projects[projectId].roles, role)){
+        if(projects[projectId].roles.length == 1){
+          // If the user only has a single role, remove their access to the project
+          projectList = _.without(projectList, projectId);
+          delete projects[projectId];
+        } else {
+          // Otherwise, just remove the role
+          projects[projectId].roles = _.without(projects[projectId].roles, role);
+        }
+        Collections.Users.update(user._id, {$set: {projectList: projectList, projects: projects}});
+      }
+    } else {
+      console.error("Users.removeProjectRole failed: user [" + actor.username + "] does not have project admin privileges");
+    }
+  },
+
+  /**
+   * Remove a user's access to a project
+   * @param projectId
+   */
+  removeProjectAccess: function (projectId) {
+    var user = this,
+        projects = user.projects || {},
+        projectList = user.projectList || [],
+        actor = Meteor.user();
+
+    // make sure the actor has project admin privileges
+    if(actor.hasAdminAccess(projectId)){
+      if(projects[projectId] || _.contains(projectList, projectId)){
+        projectList = _.without(projectList, projectId);
+        delete projects[projectId];
+        Collections.Users.update(user._id, {$set: {projectList: projectList, projects: projects}});
+      }
+    } else {
+      console.error("Users.removeProjectAccess failed: user [" + actor.username + "] does not have project admin privileges");
     }
   }
 });

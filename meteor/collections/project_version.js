@@ -11,6 +11,10 @@ Schemas.ProjectVersion = new SimpleSchema({
   version: {
     type: String
   },
+  active: {
+    type: Boolean,
+    defaultValue: true
+  },
   // Standard tracking fields
   dateCreated: {
     type: Date,

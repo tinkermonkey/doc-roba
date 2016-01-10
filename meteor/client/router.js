@@ -10,7 +10,7 @@ FlowRouter.route("/", {
   action: function(params) {
     BlazeLayout.render("BaseLayout", {
       content: "Home",
-      header: "CurrentProjectHeader",
+      header: "CurrentUserHeader",
       nav: "HomeNav"
     });
   }
@@ -36,7 +36,7 @@ FlowRouter.route("/home/", {
   action: function(params) {
     BlazeLayout.render("BaseLayout", {
       content: "Home",
-      header: "CurrentProjectHeader",
+      header: "CurrentUserHeader",
       nav: "HomeNav"
     });
   }

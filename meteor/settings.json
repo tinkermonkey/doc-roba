@@ -4,35 +4,5 @@
     "automation": "../automation",
     "image_analysis": "../image-analysis/scripts"
   },
-  "trail": {
-    "transports": [
-      {
-        "type": "console",
-        "options": {
-          "meta": false,
-          "level": "DEBUG"
-        }
-      },
-      {
-        "type": "mongo",
-        "options": {
-          "level": "ERROR",
-          "collection": "error_log"
-        }
-      }
-    ]
-  },
-  "public": {
-    "trail": {
-      "transports": [
-        {
-          "type": "console",
-          "options": {
-            "meta": false,
-            "level": "DEBUG"
-          }
-        }
-      ]
-    }
-  }
+  "allowPersonalProjects": true
 }

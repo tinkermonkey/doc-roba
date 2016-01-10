@@ -11,13 +11,13 @@ Meteor.startup(function () {
     console.debug("Publish: user_data");
     if (this.userId) {
       return Meteor.users.find({_id: this.userId},
-        {fields: {projectList: 1, projects: 1}});
+        {fields: {projectList: 1, projects: 1, isSystemAdmin: 1}});
     } else {
       this.ready();
       return [];
     }
   });
-  Meteor.publish("user_peers", function () {
+  Meteor.publish("user_peers", function (projectList) {
     console.debug("Publish: user_peers");
     if (this.userId && this.projectList && this.projectList.length) {
       var user = this;
@@ -66,25 +66,27 @@ Meteor.startup(function () {
    * Basic User data-set: projects, versions, roles, changes
    * ============================================================================
    */
-  Meteor.publish("projects", function () {
+
+  // All active project
+  Meteor.publish("projects", function (projectList) {
     console.debug("Publish: projects");
     if(this.userId){
       var user = Meteor.users.findOne(this.userId);
-      return Collections.Projects.find({_id: {$in: user.projectList }});
+      return Collections.Projects.find({_id: {$in: user.projectList }, active: true});
     }
     console.warn("Publish: projects returning nothing");
     return [];
   });
-  Meteor.publish("project_versions", function () {
+  Meteor.publish("project_versions", function (projectList) {
     console.debug("Publish: project_versions");
     if(this.userId){
       var user = Meteor.users.findOne(this.userId);
-      return Collections.ProjectVersions.find({projectId: {$in: user.projectList }});
+      return Collections.ProjectVersions.find({projectId: {$in: user.projectList }, active: true});
     }
     console.warn("Publish: project_versions returning nothing");
     return [];
   });
-  Meteor.publish("changes", function (limit) {
+  Meteor.publish("changes", function (projectList, limit) {
     console.debug("Publish: changes");
     if(this.userId){
       var user = Meteor.users.findOne(this.userId),
@@ -92,6 +94,17 @@ Meteor.startup(function () {
       return Collections.RecordChanges.find({projectId: {$in: user.projectList}}, {limit: limit});
     }
     console.warn("Publish: changes returning nothing");
+    return [];
+  });
+
+  // All projects the user has a role for
+  Meteor.publish("all_projects", function (projectList) {
+    console.debug("Publish: all_projects");
+    if(this.userId){
+      var user = Meteor.users.findOne(this.userId);
+      return Collections.Projects.find({_id: {$in: user.projectList }});
+    }
+    console.warn("Publish: all_projects returning nothing");
     return [];
   });
 

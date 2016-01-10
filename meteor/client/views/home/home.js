@@ -1,7 +1,12 @@
 /**
  * Template Helpers
  */
-Template.Home.helpers({});
+Template.Home.helpers({
+  showProjectList: function () {
+    var user = Meteor.user();
+    return user.projectList.length > 1 || user.isSystemAdmin || Meteor.settings.allowPersonalProjects;
+  }
+});
 
 /**
  * Event Handlers

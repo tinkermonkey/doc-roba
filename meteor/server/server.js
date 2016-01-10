@@ -19,15 +19,15 @@ DocRoba = {
 Meteor.startup(function () {
   Meteor.methods({
     echo: function () {
-      // Require authentication
-      if(!this.userId){
-        throw new Meteor.Error("User is not authenticated");
-      }
+      var user = Auth.requireAuthentication();
 
-      console.debug("Echo called by user " + this.userId);
-      return { user: this.userId, argv: arguments };
+      console.debug("Echo called by user " + user._id);
+      return { user: user._id, argv: arguments };
     },
+
     updateNodePlatform: function () {
+      var user = Auth.requireAuthentication();
+
       var setData = function (parentId, versionId, userTypeId, platformId) {
         console.log("setData: ", parentId, versionId, userTypeId, platformId);
         Collections.Nodes.find({parentId: parentId, projectVersionId: versionId}).forEach(function (node) {
@@ -50,15 +50,77 @@ Meteor.startup(function () {
     },
 
     /**
+     * Create a new project
+     * @param title
+     */
+    createProject: function (title) {
+      var user = Auth.requireAuthentication();
+
+      if(user && title){
+        if(user.isSystemAdmin || Meteor.settings.allowPersonalProjects){
+          console.info("Creating project [" + title + "] for user", user._id);
+
+          // Create the project
+          var projectId = Collections.Projects.insert({
+            owner: user._id,
+            title: title
+          });
+
+          // Add the project to the user's record
+          user.addProjectRole(projectId, RoleTypes.owner);
+          return projectId;
+        } else {
+          throw new Meteor.Error("createProject failed: user not authorized");
+        }
+      } else {
+        throw new Meteor.Error("createProject failed: no title specified");
+      }
+    },
+
+    /**
+     * Delete a project
+     * This actually deletes the data, for real, permanently aside from your backups
+     * @param projectId
+     */
+    deleteProject: function (projectId) {
+      var user = Auth.requireAuthentication();
+
+      if(user && projectId){
+        if(user.isSystemAdmin || user.hasAdminAccess(projectId)){
+          console.info("Deleting project " + projectId + " for user", user._id);
+
+          // First remove everyone's access to the project
+          Collections.Users.find({projectList: projectId, _id: {$ne: user._id}}).forEach(function (projectUser) {
+            console.debug("Removing project " + projectId + " access for " + projectUser._id);
+            projectUser.removeProjectAccess(projectId);
+          });
+
+          // Remove all of the records pertaining to this project
+          _.without(_.keys(Collections), "Users", "Projects").forEach(function (collectionKey) {
+            console.info("Removing records for project " + projectId + " from " + collectionKey);
+            Collections[collectionKey].remove({projectId: projectId});
+          });
+
+          // Remove the project record
+          Collections.Projects.remove(projectId);
+
+          // Remove the current user's access to the project
+          user.removeProjectAccess(projectId);
+        } else {
+          throw new Meteor.Error("deleteProject failed: user not authorized");
+        }
+      } else {
+        throw new Meteor.Error("deleteProject failed: no project specified");
+      }
+    },
+
+    /**
      * Delete a node from a project version (and only from this version!)
      * Also delete items linking to this node (Actions, variants, etc)
      * @param node
      */
     deleteNode: function (nodeId) {
-      // Require authentication
-      if(!this.userId){
-        throw new Meteor.Error("Authentication Failed", "User is not authenticated");
-      }
+      var user = Auth.requireAuthentication();
 
       console.debug("deleteNode: " + nodeId);
       if(nodeId){
