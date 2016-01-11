@@ -1,9 +1,16 @@
 <template name="ProjectVersions">
   <h2>Project Versions</h2>
-  <h4>Versions of the Software Under Test currently documented</h4>
+  <h4>Versions of {{title}} currently documented</h4>
   <hr>
   {{#each projectVersions}}
-    <div>Version {{version}} created {{dateFormat dateCreated}} by {{renderUserDisplayName createdBy}}</div>
+    <div>
+      Version {{version}} created {{dateFormat dateCreated}} by {{renderUserDisplayName createdBy}}
+      {{#if active}}
+        <span class="label label-primary">Active</span>
+      {{else}}
+        <span class="label label-info">Deactivated</span>
+      {{/if}}
+    </div>
   {{/each}}
   <hr>
   <div>

@@ -4,6 +4,9 @@
 Template.ProjectVersions.helpers({
   projectVersions: function () {
     return Collections.ProjectVersions.find({ projectId: this._id }, { sort: { version: -1 } });
+  },
+  project: function () {
+    return Collections.Projects.findOne(this.projectId);
   }
 });
 

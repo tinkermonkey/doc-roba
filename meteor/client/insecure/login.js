@@ -98,7 +98,7 @@ Template.Login.events({
       d3.select(".login-spinner").classed("hide", false);
 
       setTimeout( function () {
-        console.nWithPassword(email, password, function (error) {
+        Meteor.loginWithPassword(email, password, function (error) {
           if(error){
             console.log("Login Error: ", error);
             setTimeout(function () {
@@ -111,6 +111,9 @@ Template.Login.events({
             }, Math.max(500 - (Date.now() - submitTime), 0));
           } else {
             console.log("Logged In");
+            if(FlowRouter.current().route.name.match(/login/i)){
+              FlowRouter.go("/home");
+            }
           }
         });
       }, 500);
@@ -125,7 +128,6 @@ Template.Login.rendered = function () {
   // check if the user is logged in
   if(Meteor.userId()){
     console.info("User logged in already, logging out");
-    console.ut();
   }
 
   setTimeout(function () {

@@ -9,7 +9,7 @@ Meteor.startup(function () {
    */
   Meteor.publish("user_data", function () {
     console.debug("Publish: user_data");
-    if (this.userId) {
+    if(this.userId) {
       return Meteor.users.find({_id: this.userId},
         {fields: {projectList: 1, projects: 1, isSystemAdmin: 1}});
     } else {
@@ -19,12 +19,21 @@ Meteor.startup(function () {
   });
   Meteor.publish("user_peers", function (projectList) {
     console.debug("Publish: user_peers");
-    if (this.userId && this.projectList && this.projectList.length) {
-      var user = this;
-      return Meteor.users.find({projectList: {$in: user.projectList}});
+    var user = Meteor.users.findOne(this.userId);
+    if(user && user.projectList && user.projectList.length) {
+      console.log("user_peers:", user.projectList);
+      return Meteor.users.find({projectList: user.projectList}, {
+        fields: {
+          profile: 1,
+          emails: 1,
+          projectList: 1,
+          projects: 1
+        }
+      });
     } else {
-      this.ready();
+      console.log("user_peers fail:", user);
     }
+    return []
   });
 
   /**
@@ -72,7 +81,7 @@ Meteor.startup(function () {
     console.debug("Publish: projects");
     if(this.userId){
       var user = Meteor.users.findOne(this.userId);
-      return Collections.Projects.find({_id: {$in: user.projectList }, active: true});
+      return Collections.Projects.find({_id: {$in: user.projectList || [] }, active: true});
     }
     console.warn("Publish: projects returning nothing");
     return [];
@@ -81,7 +90,7 @@ Meteor.startup(function () {
     console.debug("Publish: project_versions");
     if(this.userId){
       var user = Meteor.users.findOne(this.userId);
-      return Collections.ProjectVersions.find({projectId: {$in: user.projectList }, active: true});
+      return Collections.ProjectVersions.find({projectId: {$in: user.projectList || [] }, active: true});
     }
     console.warn("Publish: project_versions returning nothing");
     return [];
@@ -91,7 +100,7 @@ Meteor.startup(function () {
     if(this.userId){
       var user = Meteor.users.findOne(this.userId),
         limit = limit || 25;
-      return Collections.RecordChanges.find({projectId: {$in: user.projectList}}, {limit: limit});
+      return Collections.RecordChanges.find({projectId: {$in: user.projectList || []}}, {limit: limit});
     }
     console.warn("Publish: changes returning nothing");
     return [];
@@ -102,9 +111,30 @@ Meteor.startup(function () {
     console.debug("Publish: all_projects");
     if(this.userId){
       var user = Meteor.users.findOne(this.userId);
-      return Collections.Projects.find({_id: {$in: user.projectList }});
+      return Collections.Projects.find({_id: {$in: user.projectList || [] }});
     }
     console.warn("Publish: all_projects returning nothing");
+    return [];
+  });
+
+  // Invitations to join other projects
+  Meteor.publish("user_invitations", function () {
+    console.debug("Publish: user_invitations");
+    if(this.userId){
+      var user = Meteor.users.findOne(this.userId);
+      return Collections.ProjectInvitations.find({inviteeEmail: {$in: _.map(user.emails, function (email) {return email.address}) }});
+    }
+    console.warn("Publish: user_invitations returning nothing");
+    return [];
+  });
+
+  // Invitations sent for a project
+  Meteor.publish("invitations_sent", function (projectId) {
+    console.debug("Publish: invitations_sent");
+    if(Auth.hasProjectAccess(this.userId, projectId)){
+      return Collections.ProjectInvitations.find({projectId: projectId});
+    }
+    console.warn("Publish: user_invitations returning nothing");
     return [];
   });
 

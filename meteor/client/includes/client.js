@@ -173,6 +173,16 @@ Template.registerHelper("dateFormat", function (date, format) {
 });
 
 /**
+ * Render a formatted date
+ */
+Template.registerHelper("dateFromNow", function (date, hideSuffix) {
+  hideSuffix = hideSuffix === true;
+  if(date){
+    return moment(date).fromNow(hideSuffix);
+  }
+});
+
+/**
  * Render a formatted number
  */
 Template.registerHelper("numberFormat", function (value, format) {

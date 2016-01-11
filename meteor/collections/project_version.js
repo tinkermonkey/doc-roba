@@ -37,7 +37,18 @@ Schemas.ProjectVersion = new SimpleSchema({
 });
 Collections.ProjectVersions = new Mongo.Collection("project_versions");
 Collections.ProjectVersions.attachSchema(Schemas.ProjectVersion);
-Collections.ProjectVersions.deny(Auth.ruleSets.deny.ifNotAdmin);
+Collections.ProjectVersions.deny({
+  insert: Auth.denyAlways,
+  update: function (userId, doc) {
+    var user = Meteor.users.findOne(userId);
+    if(userId && user && doc && doc._id){
+      return !user.hasAdminAccess(doc._id);
+    }
+    return true;
+  },
+  remove: Auth.denyAlways,
+  fetch: ['projectId']
+});
 Collections.ProjectVersions.allow(Auth.ruleSets.allow.ifAuthenticated);
 trackChanges(Collections.ProjectVersions, "project_versions");
 

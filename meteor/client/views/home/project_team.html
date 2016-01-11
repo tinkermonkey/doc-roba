@@ -1,3 +1,52 @@
 <template name="ProjectTeam">
-  <h2>Project Team</h2>
+  {{#if ready}}
+    <h2>Project Team</h2>
+    <table class="table data-store-table">
+      <tr class="data-store-table-header">
+        <td>Name</td>
+        <td>Email</td>
+        <td>Roles</td>
+        <td></td>
+      </tr>
+      <tr class="data-store-table-divider">
+        <td colspan="4"><div></div></td>
+      </tr>
+      {{#each projectUsers}}
+        <tr class="data-store-table-row">
+          <td>{{profile.name}}</td>
+          <td>
+            {{#each emails}}
+              {{address}}
+            {{/each}}
+          </td>
+          <td>
+            {{#each projectRoles}}
+              <div>
+                {{renderLookup "RoleTypesLookup" this}}
+                <button class="btn btn-xs btn-primary btn-remove-role">
+                  <span class="glyphicon glyphicon-remove-circle"></span>
+                </button>
+              </div>
+            {{/each}}
+          </td>
+          <td>
+            {{#if userIsAdmin}}
+              <button class="btn btn-xs btn-info btn-revoke-access">
+                <span class="glyphicon glyphicon-remove"></span>
+                Revoke Access
+              </button>
+            {{/if}}
+          </td>
+        </tr>
+      {{/each}}
+    </table>
+
+    {{> ProjectInvitationsSent }}
+
+    {{#if userIsAdmin}}
+      <div>
+        <button class="btn btn-warning btn-invite-user">Invite Someone To Join This Project</button>
+      </div>
+    {{/if}}
+  {{/if}}
 </template>

@@ -115,6 +115,142 @@ Meteor.startup(function () {
     },
 
     /**
+     * Invite a user to a project
+     * @param userEmail The email address to send the invitation to
+     * @param userName The name of the person being invited
+     * @param projectId The id of the project the person is being invited to
+     */
+    inviteUser: function (userEmail, userName, role, projectId) {
+      console.debug("inviteUser:", userEmail, userName, role, projectId);
+      var user = Auth.requireAuthentication();
+
+      if(user && projectId){
+        if(user.isSystemAdmin || user.hasAdminAccess(projectId)) {
+          // get the project record
+          var project = Collections.Projects.findOne(projectId);
+          if(!project){
+            throw new Meteor.Error("inviteUser failed: project not found");
+          }
+
+          // Create the invitation record
+          var invitationId = Collections.ProjectInvitations.insert({
+            projectId: projectId,
+            projectTitle: project.title,
+            invitorId: user._id,
+            invitorName: user.profile.name,
+            projectRole: role,
+            inviteeEmail: userEmail,
+            inviteeName: userName
+          });
+          var invitation = Collections.ProjectInvitations.findOne(invitationId);
+
+          // Send the invitation email
+          console.debug("inviteUser to project [", invitation.projectId, "] to ", invitation.inviteeName + " <" + invitation.inviteeEmail + ">");
+          Mailer.send({
+            to: userName + "<" + userEmail + ">",
+            subject: "Invitation to join " + project.title + " on DocRoba",
+            template: "ProjectInvitation",
+            data: {
+              project: project,
+              invitation: invitation
+            }
+          });
+
+          // Mark the invitation sent
+          Collections.ProjectInvitations.update(invitationId, {$set: {invitationSent: true}});
+        }
+      }
+    },
+
+    /**
+     * Resend an invitation
+     * @param invitationId
+     */
+    resendInvitation: function (invitationId) {
+      var user = Auth.requireAuthentication(),
+          invitation = Collections.ProjectInvitations.findOne(invitationId);
+
+      if(invitation && user.hasAdminAccess(invitation.projectId)){
+        // get the project record
+        var project = Collections.Projects.findOne(invitation.projectId);
+        if(!project){
+          throw new Meteor.Error("resendInvitation failed: project not found");
+        }
+
+        // Send the invitation email
+        console.debug("resendInvitation to project [", invitation.projectId, "] to ", invitation.inviteeName + " <" + invitation.inviteeEmail + ">");
+        Mailer.send({
+          to: invitation.inviteeName + " <" + invitation.inviteeEmail + ">",
+          subject: "Invitation to join " + project.title + " on DocRoba",
+          template: "ProjectInvitation",
+          data: {
+            project: project,
+            invitation: invitation
+          }
+        });
+
+        // Mark the invitation sent
+        Collections.ProjectInvitations.update(invitationId, {$set: {invitationSent: true}});
+      }
+    },
+
+    /**
+     * Accept an invitation
+     * @param invitationId
+     */
+    acceptInvitation: function (invitationId) {
+      var user = Auth.requireAuthentication(),
+          invitation = Collections.ProjectInvitations.findOne(invitationId),
+          userEmails = _.map(user.emails, function (email) { return email.address});
+
+      if(invitation && _.contains(userEmails, invitation.inviteeEmail)) {
+        console.debug("acceptInvitation to project [", invitation.projectId, "] to ", invitation.inviteeName + " <" + invitation.inviteeEmail + ">");
+
+        // Add this project and role the users's projectList and project roles
+        var projects = user.projects || {},
+            projectList = user.projectList || [];
+
+        projectList.push(invitation.projectId);
+        if(projects[invitation.projectId] && projects[invitation.projectId].roles){
+          projects[invitation.projectId].roles.push(invitation.projectRole);
+        } else {
+          projects[invitation.projectId] = projects[invitation.projectId] || {};
+          projects[invitation.projectId].roles = [invitation.projectRole];
+        }
+        projectList = _.uniq(projectList);
+        projects[invitation.projectId].roles = _.uniq(projects[invitation.projectId].roles);
+
+        // Update the user record
+        Collections.Users.update(user._id, {$set: {projectList: projectList, projects: projects}});
+
+        // remove the invite
+        Collections.ProjectInvitations.remove(invitationId);
+      }
+    },
+
+    /**
+     * Delete an invitation
+     * @param invitationId
+     */
+    deleteInvitation: function (invitationId) {
+      var user = Auth.requireAuthentication(),
+          invitation = Collections.ProjectInvitations.findOne(invitationId),
+          userEmails = _.map(user.emails, function (email) { return email.address});
+
+      if(invitation && _.contains(userEmails, invitation.inviteeEmail)) {
+        console.debug("deleteInvitation to project [", invitation.projectId, "] to ", invitation.inviteeName + " <" + invitation.inviteeEmail + ">");
+        Collections.ProjectInvitations.remove(invitationId);
+      }
+    },
+
+    /**
+     * Remove a project role from a user
+     */
+    removeRole: function () {
+      
+    },
+
+    /**
      * Delete a node from a project version (and only from this version!)
      * Also delete items linking to this node (Actions, variants, etc)
      * @param node
