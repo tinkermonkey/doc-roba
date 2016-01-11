@@ -29,7 +29,26 @@ Tabs = {
       }
     });
 
-    // Make the active tab visible
+    // Check for a tab selection in the URL
+    var tabGroup = instance.$("ul.nav").attr("data-tab-group");
+    if(tabGroup){
+      var selectedTab = FlowRouter.getQueryParam(tabGroup);
+      if(selectedTab){
+        console.debug("Tabs.init making tab [", selectedTab, "] active for group", tabGroup);
+        instance.$("ul.nav > li > a[data-tab-name='" + selectedTab + "']").each(function (i, el) {
+          if(el){
+            //console.log("Making tab active: ", el);
+            Tabs.setActive({
+              target: el
+            });
+          }
+        });
+        return this;
+      }
+    }
+
+    // Otherwise default to the tab marked active by the template
+    console.debug("Tabs.init making default tab active");
     instance.$("ul.nav > li.active > a").each(function (i, el) {
       if(el){
         //console.log("Making tab active: ", el);
@@ -52,7 +71,7 @@ Tabs = {
     if(tabName){
       //console.log("Setting tab: ", tabName);
       var nav = $(event.target).closest(".nav"),
-        tabContainer = nav.nextAll(".tab-container");
+          tabContainer = nav.nextAll(".tab-container");
 
       if(!tabContainer.length){
         tabContainer = nav.closest(".vert-nav").prev(".vert-tab-container").children(".tab-container");
@@ -65,6 +84,14 @@ Tabs = {
       // update the tabs
       tabContainer.children(".tab.active").removeClass("active");
       tabContainer.children(".tab[data-tab-name='" + tabName + "']").addClass("active");
+
+      // update the url
+      var groupName = nav.attr("data-tab-group");
+      if(groupName){
+        var query = {};
+        query[groupName] = tabName;
+        FlowRouter.setQueryParams(query);
+      }
     }
   },
 
