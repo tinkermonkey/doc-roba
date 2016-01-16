@@ -129,6 +129,31 @@ Collections.Users.helpers({
   },
 
   /**
+   * Set the role for a project for the user
+   * @param projectId
+   * @param role
+   */
+  setProjectRole: function (projectId, role) {
+    var user = this,
+      projects = user.projects || {},
+      projectList = user.projectList || [],
+      actor = Meteor.user();
+
+    // make sure the actor has project admin privileges
+    if(actor.hasAdminAccess(projectId)){
+      projectList.push(projectId);
+      if(!projects[projectId] || !projects[projectId].roles){
+        projects[projectId] = projects[projectId] || {};
+      }
+      projects[projectId].roles = [role];
+      projectList = _.uniq(projectList);
+      Collections.Users.update(user._id, {$set: {projectList: projectList, projects: projects}});
+    } else {
+      console.error("Users.addProjectRole failed: user [" + actor.username + "] does not have project admin privileges");
+    }
+  },
+
+  /**
    * Remove a project role from a user
    * @param projectId
    * @param role

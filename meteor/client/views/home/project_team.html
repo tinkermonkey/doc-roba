@@ -12,7 +12,7 @@
         <td colspan="4"><div></div></td>
       </tr>
       {{#each projectUsers}}
-        <tr class="data-store-table-row">
+        <tr class="data-store-table-row" data-user-id="{{_id}}">
           <td>{{profile.name}}</td>
           <td>
             {{#each emails}}
@@ -23,18 +23,26 @@
             {{#each projectRoles}}
               <div>
                 {{renderLookup "RoleTypesLookup" this}}
-                <button class="btn btn-xs btn-primary btn-remove-role">
-                  <span class="glyphicon glyphicon-remove-circle"></span>
-                </button>
+                {{#if userIsAdmin}}
+                  <button class="btn btn-xs btn-primary btn-remove-role">
+                    <span class="glyphicon glyphicon-remove-circle"></span>
+                  </button>
+                {{/if}}
               </div>
             {{/each}}
           </td>
           <td>
             {{#if userIsAdmin}}
-              <button class="btn btn-xs btn-info btn-revoke-access">
-                <span class="glyphicon glyphicon-remove"></span>
-                Revoke Access
+              <button class="btn btn-xs btn-primary btn-add-role">
+                <span class="glyphicon glyphicon-plus"></span>
+                Add Role
               </button>
+              {{#unless isCurrentUser _id}}
+                <button class="btn btn-xs btn-info btn-remove-access">
+                  <span class="glyphicon glyphicon-remove"></span>
+                  Revoke Access
+                </button>
+              {{/unless}}
             {{/if}}
           </td>
         </tr>

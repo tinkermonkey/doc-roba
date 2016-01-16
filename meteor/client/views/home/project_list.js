@@ -93,6 +93,7 @@ Template.ProjectList.events({
   },
   "click .btn-deactivate-project": function (e, instance) {
     var project = this;
+
     Dialog.show({
       contentData: { text: "Deactivating this project will remove all user's access to it. Only project adminstrators will be able to see it. Are you sure this is what you want to do?" },
       callback: function (btn) {

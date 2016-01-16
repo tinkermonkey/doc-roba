@@ -15,7 +15,7 @@ Template.DataStoreRowForm.rendered = function () {
   var instance = this;
 
   setTimeout(function () {
-    instance.$("input").get(0).focus()
+    instance.$("input").first().focus()
   }, 200);
 };
 

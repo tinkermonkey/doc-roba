@@ -121,6 +121,27 @@ Dialog = {
   },
 
   /**
+   *
+   * @param title
+   * @param text
+   * @param okCallback Callback function to execute if the OK button is pressed
+   */
+  ask: function (title, text, okCallback) {
+    Dialog.show({
+      contentData: { text: text },
+      title: title,
+      callback: function (btn) {
+        Dialog.hide();
+        if(btn == "OK"){
+          if(okCallback) {
+            okCallback();
+          };
+        }
+      }
+    });
+  },
+
+  /**
    * Hide the dialog and call a function upon completion
    * @param callback
    */

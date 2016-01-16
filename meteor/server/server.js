@@ -1,20 +1,5 @@
 /**
- * npm packages
- */
-fs            = Npm.require("fs");
-path          = Npm.require("path");
-childProcess  = Npm.require("child_process");
-AdmZip        = Npm.require("adm-zip");
-console.debug = console.log;
-/**
- * Top level configuration data
- */
-DocRoba = {
-  rootPath: fs.realpathSync(process.env.PWD)
-};
-
-/**
- * Expose these for the client to call
+ * Core methods
  */
 Meteor.startup(function () {
   Meteor.methods({
@@ -25,40 +10,17 @@ Meteor.startup(function () {
       return { user: user._id, argv: arguments };
     },
 
-    updateNodePlatform: function () {
-      var user = Auth.requireAuthentication();
-
-      var setData = function (parentId, versionId, userTypeId, platformId) {
-        console.log("setData: ", parentId, versionId, userTypeId, platformId);
-        Collections.Nodes.find({parentId: parentId, projectVersionId: versionId}).forEach(function (node) {
-          console.log("setData Update: ", node._id, userTypeId, platformId);
-          Collections.Nodes.update(node._id, {$set: {userTypeId: userTypeId, platformId: platformId}});
-          setData(node.staticId, versionId, userTypeId, platformId);
-        });
-      };
-      Collections.Nodes.find({type: NodeTypes.userType}).forEach(function (userType) {
-        // get all of the childNodes
-        Collections.Nodes.find({parentId: userType.staticId, projectVersionId: userType.projectVersionId}).forEach(function (node) {
-          var platformId;
-          if(node.type == NodeTypes.platform){
-            platformId = node.staticId;
-          }
-          Collections.Nodes.update(node._id, {$set: {userTypeId: userType.staticId}});
-          setData(node.staticId, userType.projectVersionId, userType.staticId, platformId);
-        })
-      });
-    },
-
     /**
      * Create a new project
      * @param title
      */
     createProject: function (title) {
+      console.debug("createProject:", title);
       var user = Auth.requireAuthentication();
 
       if(user && title){
         if(user.isSystemAdmin || Meteor.settings.allowPersonalProjects){
-          console.info("Creating project [" + title + "] for user", user._id);
+          console.info("createProject: ", title, "for user", user._id);
 
           // Create the project
           var projectId = Collections.Projects.insert({
@@ -70,7 +32,7 @@ Meteor.startup(function () {
           user.addProjectRole(projectId, RoleTypes.owner);
           return projectId;
         } else {
-          throw new Meteor.Error("createProject failed: user not authorized");
+          throw new Meteor.Error(403);
         }
       } else {
         throw new Meteor.Error("createProject failed: no title specified");
@@ -83,11 +45,12 @@ Meteor.startup(function () {
      * @param projectId
      */
     deleteProject: function (projectId) {
+      console.debug("deleteProject:", projectId);
       var user = Auth.requireAuthentication();
 
       if(user && projectId){
         if(user.isSystemAdmin || user.hasAdminAccess(projectId)){
-          console.info("Deleting project " + projectId + " for user", user._id);
+          console.info("deleteProject: authorized by user", user._id, ", performing delete");
 
           // First remove everyone's access to the project
           Collections.Users.find({projectList: projectId, _id: {$ne: user._id}}).forEach(function (projectUser) {
@@ -107,7 +70,7 @@ Meteor.startup(function () {
           // Remove the current user's access to the project
           user.removeProjectAccess(projectId);
         } else {
-          throw new Meteor.Error("deleteProject failed: user not authorized");
+          throw new Meteor.Error(403);
         }
       } else {
         throw new Meteor.Error("deleteProject failed: no project specified");
@@ -124,7 +87,7 @@ Meteor.startup(function () {
       console.debug("inviteUser:", userEmail, userName, role, projectId);
       var user = Auth.requireAuthentication();
 
-      if(user && projectId){
+      if(user && userEmail && userName && role && projectId){
         if(user.isSystemAdmin || user.hasAdminAccess(projectId)) {
           // get the project record
           var project = Collections.Projects.findOne(projectId);
@@ -158,7 +121,11 @@ Meteor.startup(function () {
 
           // Mark the invitation sent
           Collections.ProjectInvitations.update(invitationId, {$set: {invitationSent: true}});
+        } else {
+          throw new Meteor.Error(403);
         }
+      } else {
+        throw new Meteor.Error("inviteUser failed: missing required information");
       }
     },
 
@@ -167,30 +134,37 @@ Meteor.startup(function () {
      * @param invitationId
      */
     resendInvitation: function (invitationId) {
+      console.debug("resendInvitation:", invitationId);
       var user = Auth.requireAuthentication(),
           invitation = Collections.ProjectInvitations.findOne(invitationId);
 
-      if(invitation && user.hasAdminAccess(invitation.projectId)){
-        // get the project record
-        var project = Collections.Projects.findOne(invitation.projectId);
-        if(!project){
-          throw new Meteor.Error("resendInvitation failed: project not found");
-        }
-
-        // Send the invitation email
-        console.debug("resendInvitation to project [", invitation.projectId, "] to ", invitation.inviteeName + " <" + invitation.inviteeEmail + ">");
-        Mailer.send({
-          to: invitation.inviteeName + " <" + invitation.inviteeEmail + ">",
-          subject: "Invitation to join " + project.title + " on DocRoba",
-          template: "ProjectInvitation",
-          data: {
-            project: project,
-            invitation: invitation
+      if(invitation) {
+        if (user.hasAdminAccess(invitation.projectId)) {
+          // get the project record
+          var project = Collections.Projects.findOne(invitation.projectId);
+          if (!project) {
+            throw new Meteor.Error("resendInvitation failed: project not found");
           }
-        });
 
-        // Mark the invitation sent
-        Collections.ProjectInvitations.update(invitationId, {$set: {invitationSent: true}});
+          // Send the invitation email
+          console.debug("resendInvitation to project [", invitation.projectId, "] to ", invitation.inviteeName + " <" + invitation.inviteeEmail + ">");
+          Mailer.send({
+            to: invitation.inviteeName + " <" + invitation.inviteeEmail + ">",
+            subject: "Invitation to join " + project.title + " on DocRoba",
+            template: "ProjectInvitation",
+            data: {
+              project: project,
+              invitation: invitation
+            }
+          });
+
+          // Mark the invitation sent
+          Collections.ProjectInvitations.update(invitationId, {$set: {invitationSent: true}});
+        } else {
+          throw new Meteor.Error(403);
+        }
+      } else {
+        throw new Meteor.Error("resendInvitation failed: invitation not found");
       }
     },
 
@@ -199,32 +173,39 @@ Meteor.startup(function () {
      * @param invitationId
      */
     acceptInvitation: function (invitationId) {
+      console.debug("acceptInvitation:", invitationId);
       var user = Auth.requireAuthentication(),
           invitation = Collections.ProjectInvitations.findOne(invitationId),
           userEmails = _.map(user.emails, function (email) { return email.address});
 
-      if(invitation && _.contains(userEmails, invitation.inviteeEmail)) {
-        console.debug("acceptInvitation to project [", invitation.projectId, "] to ", invitation.inviteeName + " <" + invitation.inviteeEmail + ">");
+      if(invitation) {
+        if(_.contains(userEmails, invitation.inviteeEmail)) {
+          console.debug("acceptInvitation to project [", invitation.projectId, "] to ", invitation.inviteeName + " <" + invitation.inviteeEmail + ">");
 
-        // Add this project and role the users's projectList and project roles
-        var projects = user.projects || {},
-            projectList = user.projectList || [];
+          // Add this project and role the users's projectList and project roles
+          var projects = user.projects || {},
+              projectList = user.projectList || [];
 
-        projectList.push(invitation.projectId);
-        if(projects[invitation.projectId] && projects[invitation.projectId].roles){
-          projects[invitation.projectId].roles.push(invitation.projectRole);
+          projectList.push(invitation.projectId);
+          if(projects[invitation.projectId] && projects[invitation.projectId].roles){
+            projects[invitation.projectId].roles.push(invitation.projectRole);
+          } else {
+            projects[invitation.projectId] = projects[invitation.projectId] || {};
+            projects[invitation.projectId].roles = [invitation.projectRole];
+          }
+          projectList = _.uniq(projectList);
+          projects[invitation.projectId].roles = _.uniq(projects[invitation.projectId].roles);
+
+          // Update the user record
+          Collections.Users.update(user._id, {$set: {projectList: projectList, projects: projects}});
+
+          // remove the invite
+          Collections.ProjectInvitations.remove(invitationId);
         } else {
-          projects[invitation.projectId] = projects[invitation.projectId] || {};
-          projects[invitation.projectId].roles = [invitation.projectRole];
+          throw new Meteor.Error(403);
         }
-        projectList = _.uniq(projectList);
-        projects[invitation.projectId].roles = _.uniq(projects[invitation.projectId].roles);
-
-        // Update the user record
-        Collections.Users.update(user._id, {$set: {projectList: projectList, projects: projects}});
-
-        // remove the invite
-        Collections.ProjectInvitations.remove(invitationId);
+      } else {
+        throw new Meteor.Error("acceptInvitation failed: invitation not found");
       }
     },
 
@@ -233,21 +214,78 @@ Meteor.startup(function () {
      * @param invitationId
      */
     deleteInvitation: function (invitationId) {
+      console.debug("deleteInvitation:", invitationId);
       var user = Auth.requireAuthentication(),
           invitation = Collections.ProjectInvitations.findOne(invitationId),
           userEmails = _.map(user.emails, function (email) { return email.address});
 
-      if(invitation && _.contains(userEmails, invitation.inviteeEmail)) {
-        console.debug("deleteInvitation to project [", invitation.projectId, "] to ", invitation.inviteeName + " <" + invitation.inviteeEmail + ">");
-        Collections.ProjectInvitations.remove(invitationId);
+      if(invitation) {
+        if(_.contains(userEmails, invitation.inviteeEmail)) {
+          console.debug("deleteInvitation to project [", invitation.projectId, "] to ", invitation.inviteeName + " <" + invitation.inviteeEmail + ">");
+          Collections.ProjectInvitations.remove(invitationId);
+        } else {
+          throw new Meteor.Error(403);
+        }
+      } else {
+        throw new Meteor.Error("deleteInvitation failed: invitation not found");
+      }
+    },
+
+    /**
+     * Add a project role to a user
+     */
+    addProjectRole: function (userId, projectId, role) {
+      console.debug("addProjectRole:", userId, projectId, role);
+      var actor = Auth.requireAuthentication(),
+          user = Collections.Users.findOne(userId);
+
+      if(actor.isSystemAdmin || actor.hasAdminAccess(projectId)) {
+        if(!user.hasProjectRole(projectId, role)) {
+          user.addProjectRole(projectId, role);
+        } else {
+          throw new Meteor.Error("addProjectRole failed: user already has role");
+        }
+      } else {
+        throw new Meteor.Error(403);
       }
     },
 
     /**
      * Remove a project role from a user
      */
-    removeRole: function () {
-      
+    removeProjectRole: function (userId, projectId, role) {
+      console.debug("removeProjectRole:", userId, projectId, role);
+      var actor = Auth.requireAuthentication(),
+          user = Collections.Users.findOne(userId);
+
+      if(actor.isSystemAdmin || actor.hasAdminAccess(projectId)) {
+        if(user.hasProjectRole(projectId, role)) {
+          user.removeProjectRole(projectId, role);
+        } else {
+          throw new Meteor.Error("removeProjectRole failed: user doesn't have the role");
+        }
+      } else {
+        throw new Meteor.Error(403);
+      }
+    },
+
+    /**
+     * Remove project access from a user
+     */
+    removeProjectAccess: function (userId, projectId) {
+      console.debug("removeProjectAccess:", userId, projectId);
+      var actor = Auth.requireAuthentication(),
+          user = Collections.Users.findOne(userId);
+
+      if(actor.isSystemAdmin || actor.hasAdminAccess(projectId)) {
+        if(user.hasProjectAccess(projectId)) {
+          user.removeProjectAccess(projectId);
+        } else {
+          throw new Meteor.Error("removeProjectAccess failed: user doesn't have project access");
+        }
+      } else {
+        throw new Meteor.Error(403);
+      }
     },
 
     /**
@@ -256,9 +294,9 @@ Meteor.startup(function () {
      * @param node
      */
     deleteNode: function (nodeId) {
+      console.debug("deleteNode:" + nodeId);
       var user = Auth.requireAuthentication();
 
-      console.debug("deleteNode: " + nodeId);
       if(nodeId){
         var node = Collections.Nodes.findOne(nodeId),
           actionRemoveList = [];
@@ -306,6 +344,7 @@ Meteor.startup(function () {
      * @param versionString
      */
     createVersion: function (sourceVersionId, versionString) {
+      console.debug("createVersion:", sourceVersionId, versionString);
       // Require authentication
       if(!this.userId){
         throw new Meteor.Error("createVersion: not authenticated");
