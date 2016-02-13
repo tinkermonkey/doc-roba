@@ -1,10 +1,15 @@
 **Current Status:** Not quite ready to use, proof-of-concept that is 80% complete
 
 # DocRoba
-**DocRoba** is a platform for Selenium & Appium based automated testing well suited for large applications.
+**DocRoba** is a Selenium IDE whose goal is to provide a beautiful and easy to use interface for managing and analaysing test data. The key features are:
+
+* Integrated Selenium/Appium recorder / interrogator / command tester
+* Basic visual comparison analysis of screen captures
+* Integrated test data managment (test accounts, credentials, etc)
+* Structural model of the application under test
 
 ## Introduction
-DocRoba is intended to smooth over some of the more cumbersome aspects of test automation while maintaining the fidelity of the testing. There tends to be a lot of supporting data related to testing (credentials & accounts, reference documents, log files, screen shots, servers, server configuration) and keeping track of and making use of this data can often eclipse the effort required for the actual development and maintenance of the automation tools (or even just test documentation). This data is also very valuable to not only the testers, but also to the broader organization. Questions like "Did this page always look like that?" can (and should) be an easy question for a computer to answer, but often end up resulting in a test engineer pouring over logs or test results or spending time manually researching the answer. The data can easily become a burden instead of a goldmine.
+There tends to be a lot of supporting data related to testing (credentials & accounts, reference documents, log files, screen shots, servers, server configuration) and keeping track of and making use of this data can often eclipse the effort required for the actual development and maintenance of the automation tools (or even just test documentation). This data is also very valuable to not only the testers, but also to the broader organization. Questions like "Did this page always look like that?" can (and should) be an easy question for a computer to answer, but often end up resulting in a test engineer pouring over logs or test results or spending time manually researching the answer. The data can easily become a burden instead of a goldmine.
 
 * The goal of DocRoba is to make this information accessible and usable
 * It is a tool for organizing and analyzing information centered around automated information gathering & analysis (testing) 
@@ -17,8 +22,8 @@ DocRoba is designed for testing large complex systems with variant configuration
 There are three guiding concepts to DocRoba:
 
 * Test scripts can do more if they have knowledge of some basic context
-* Having a good UI to easily enter this context will make managing the system much easier
-* If this context is human readable, it can serve as reasonably complete documentation of the product
+* Having a good UI to easily enter this context will make managing the system easier
+* If this context is human readable, it can serve as reasonably complete documentation of the product for development teams
 
 From those three ideas we can dive into a bit of detail:
 
@@ -42,7 +47,7 @@ Each *Node* has a set of discrete *Actions* which lead to other nodes. A single 
 Navigational elements that appear throughout a product can be modeled as special *Nodes* (called *Nav Menus*). The *Actions* for the *Nav Menu* are mapped out like standard *Actions*. Normal *Nodes* can then include the *Nav Menu* (or multiple menus). All of the *Nav Menu* *Actions* and the logic that goes with them is then accessible from that node.
 
 ## Automation Framework
-There are roughly 1,000,000 options and opinions regarding test automation languages and frameworks and all of them are fine. DocRoba's initial implementation is to use JavaScript for test scripting because it's simple, runs everywhere, and if you're testing a web app you have to at least having a passing familiarity with it. There are some nice synergies with having the same language everywhere.Specifically, DocRoba automation runs on [Node.js](https://nodejs.org) and interfaces with selenium servers/grids using [webdriver.io](http://webdriver.io/). The scripts use [fibers](https://github.com/laverdet/node-fibers) to keep the logic flow synchronous. Eventually I would expect to have the ablity to choose which language to work in.
+There are roughly 1,000,000 options and opinions regarding test automation languages and frameworks and all of them are fine. DocRoba's initial implementation is to use JavaScript for test scripting because it's simple, runs everywhere, and if you're testing a web app you have to at least having a passing familiarity with it. There are some nice synergies with having the same language everywhere.Specifically, DocRoba automation runs on [Node.js](https://nodejs.org) and interfaces with selenium servers/grids using [webdriver.io](http://webdriver.io/). The scripts use [fibers](https://github.com/laverdet/node-fibers) to keep the logic flow synchronous. A version 1.0 goal is to provide full support for multiple languages (python, java, etc).
 
 ### Automation Workflow
 At the end of the day automation comes down to:
