@@ -2,11 +2,18 @@
  * Template Helpers
  */
 Template.AdventureSelectorResult.helpers({
-  getCurrentNode: function () {
-    var currentNode = Util.findParentData("currentNode"),
-      adventure = Util.findParentData("adventure");
+  fullContext: function () {
+    var instance = Template.instance(),
+        selector = this,
+        currentNodeId = instance.data.currentNodeId,
+        adventure = instance.data.adventure;
+
     if(currentNodeId && adventure){
-      return Collections.Nodes.findOne({ staticId: currentNodeId.get(), projectVersionId: adventure.projectVersionId });
+      return {
+        selector: selector,
+        node: Collections.Nodes.findOne({ staticId: currentNodeId, projectVersionId: adventure.projectVersionId }),
+        adventure: adventure
+      };
     }
   }
 });

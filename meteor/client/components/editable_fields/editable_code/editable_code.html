@@ -1,7 +1,6 @@
 <template name="EditableCode">
-  <div class="{{cssClass}} editable editable-code"
-       data-key="{{dataKey}}">
-    <div class="{{#unless value}}hide{{/unless}}">
+  <div class="{{cssClass}} editable editable-code" data-key="{{dataKey}}">
+    <div class="editable-code-display {{#unless value}}hide{{/unless}}">
       {{constant}}
         <pre><code class="code javascript"></code></pre>
       {{constant}}

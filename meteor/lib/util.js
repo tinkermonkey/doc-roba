@@ -256,12 +256,13 @@ Util = {
     for(var i = 0; i < 20; i++){
       try {
         var data = Template.parentData(i);
-        if(data.hasOwnProperty(key)){
+        if(data && data.hasOwnProperty(key)){
+          console.log("findParentData", "[" + key + "] found at depth", i);
           //console.log("findParentData", "[" + key + "] found at depth", i, ":", data[key]);
           return data[key];
         }
       } catch (e) {
-        console.error("findParentData failed: " + e.toString);
+        console.error("findParentData failed for key [" + key + "]: " + e.toString());
       }
     }
   },

@@ -168,6 +168,7 @@ Dialog = {
    * Show a standard error dialog
    */
   error: function (message, callback) {
+    console.error(message);
     Dialog.show({
       title: "Error",
       text: message,

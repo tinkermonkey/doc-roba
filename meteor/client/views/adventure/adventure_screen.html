@@ -12,20 +12,8 @@
         </div>
         {{/with}}
       </div>
-      <div class="live-adventure-toolbar">
-          {{> AdventureToolbar fullContext}}
-      </div>
-        {{#if getCheckResult}}
-          {{#with getCheckResult}}
-            <div class="well">
-              {{> AdventureSelectorResult }}
-              {{#each selectors}}
-                {{> AdventureSelectorResult }}
-              {{/each}}
-            </div>
-          {{/with}}
-        {{/if}}
     {{/if}}
+
     {{#if state.screenshot}}
       {{updateViewport}}
       <img class="remote-screen" src="data:image/png;base64,{{state.screenshot}}">
@@ -47,7 +35,7 @@
         </div>
       {{/with}}
 
-        <div class="adventure-hover-element-highlight" style="visibility: hidden;"></div>
+      <div class="adventure-hover-element-highlight" style="visibility: hidden;"></div>
 
       {{> AdventureHoverControls fullContext}}
 
@@ -66,6 +54,20 @@
       {{/each}}
     </div>
 
+    <div class="live-adventure-toolbar">
+      {{> AdventureToolbar fullContext}}
+    </div>
+    {{#if getCheckResult}}
+      {{#with getCheckResult}}
+        <div class="well">
+          {{> AdventureSelectorResult }}
+          {{#each selectors}}
+            {{> AdventureSelectorResult }}
+          {{/each}}
+        </div>
+      {{/with}}
+    {{/if}}
+
     {{#each getHighlightElements}}
       {{#with processHighlightElement}}
         {{> AdventureHighlightDetail }}
@@ -80,7 +82,7 @@
       {{/each}}
     {{/each}}
 
-    <div class="adventure-highlight-list" style="top: {{getListTop}}px;">
+    <div class="adventure-highlight-list">
       {{#if getHighlightElements ..}}
         <div class="">
           <table class="table table-striped">
@@ -102,10 +104,7 @@
                     <div class="">
                       <h4>Selectors</h4>
                         {{#each selectors}}
-                          <div>
-                            {{this}}
-                            <span class="label label-success">Matched a single element</span>
-                          </div>
+                          {{> AdventureSelectorResult selector=this currentNodeId=../currentNodeId adventure=../adventure}}
                         {{/each}}
                       <h4>Text</h4>
                       <div>{{text}}</div>

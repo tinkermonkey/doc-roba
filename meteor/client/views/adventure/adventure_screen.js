@@ -51,16 +51,17 @@ Template.AdventureScreen.helpers({
    */
   getMousePosition: function () {
     var instance = Template.instance(),
-      coords;
-    if(instance.data.state && instance.data.state.mouse && instance.data.state.mouse.x >= 0 && instance.viewport.get() && instance.data.state.viewportSize){
-      var remoteViewport  = instance.data.state.viewportSize,
+        state = instance.data.state,
+        coords;
+    if(state && state.mouse && state.mouse.x >= 0 && instance.viewport.get() && state.viewportSize){
+      var remoteViewport  = state.viewportSize,
         localViewport     = instance.viewport.get(),
         ratio             = (localViewport.width / remoteViewport.width),
         adjust            = $(".remote-screen").parent().offset();
 
       coords = {
-        x: parseInt(instance.data.state.mouse.x * ratio + adjust.left),
-        y: parseInt(instance.data.state.mouse.y * ratio + adjust.top)
+        x: parseInt(state.mouse.x * ratio + adjust.left),
+        y: parseInt(state.mouse.y * ratio + adjust.top)
       };
 
     }
@@ -121,8 +122,12 @@ Template.AdventureScreen.helpers({
     if(el.bounds && localViewport && remoteViewport){
       var ratio = (localViewport.width / remoteViewport.width);
 
-      // attache the local viewport
+      // attach the local viewport
       el.localViewport = localViewport;
+
+      // add in the adventure and nodeId context
+      el.adventure = instance.data.adventure;
+      el.currentNodeId = instance.data.currentNodeId.get();
 
       // setup the local position of the highlight element
       el.localBounds = {

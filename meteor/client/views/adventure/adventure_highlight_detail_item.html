@@ -13,7 +13,7 @@
 	<div class="adventure-highlight-hierarchy-content" style="padding-left: {{getLeftPadding}}px;">
         <h4>Selectors</h4>
         {{#each selectors}}
-          {{> AdventureSelectorResult }}
+          {{> AdventureSelectorResult selector=this currentNodeId=../currentNodeId adventure=../adventure}}
         {{/each}}
 
         {{#if text}}

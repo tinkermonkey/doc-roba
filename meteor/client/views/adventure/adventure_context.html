@@ -87,13 +87,14 @@
       <div>
         {{> edit_node_url_parameters }}
       </div>
+
+      <h3 class="section grey">Node Ready Code</h3>
+      {{> RobaAce value=readyCode dataKey="readyCode" emptyText="Code to validate that the node is ready" color="grey" minLines=3 maxLines=20}}
+
+      <h3 class="section grey">Node Valid Code</h3>
+      {{> RobaAce value=validationCode dataKey="validationCode" emptyText="Code to validate the node is correct" color="grey" minLines=3 maxLines=20}}
+
     </div>
-
-    <h4 class="section blue">Node Ready Code</h4>
-    {{> EditableCode value=readyCode dataKey="readyCode" emptyText="Code to validate that the node is ready" }}
-
-    <h4 class="section blue">Node Valid Code</h4>
-    {{> EditableCode value=validationCode dataKey="validationCode" emptyText="Code to validate the node is correct" }}
   {{else}}
     <div class="{{#unless adventureIsStill}}hide{{/unless}}">
       <div class="full-width align-center">

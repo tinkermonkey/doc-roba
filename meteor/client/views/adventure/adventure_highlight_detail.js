@@ -22,6 +22,8 @@ Template.AdventureHighlightDetail.helpers({
           height: parseInt( e.bounds.height * ratio ),
           width: parseInt( e.bounds.width * ratio )
         };
+        e.currentNodeId = el.currentNodeId;
+        e.adventure = el.adventure;
       });
       return elements;
     }

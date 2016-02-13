@@ -279,7 +279,7 @@ abortAdventure = function (adventureId) {
 
           // make sure it's dead
           console.debug("Killing adventure " + adventure._id + ", " + adventure.pid);
-          exec("kill " + adventure.pid, function (error, stdout, stderr) {
+          childProcess.exec("kill " + adventure.pid, function (error, stdout, stderr) {
             if(error){
               console.error("Killing adventure failed: ", error);
             } else {

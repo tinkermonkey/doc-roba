@@ -160,17 +160,17 @@ NodeSearch = {
    * @param node
    */
   compareNode: function (url, title, node) {
-    check(url, String);
-    check(title, String);
-    check(node, Object);
-
     // check the local url
-    var result = {
+    if(url && title && node){
+      var result = {
         url:    NodeSearch.compareUrl(url, node.url),
         params: NodeSearch.compareParams(url, node.urlParameters),
         title:  NodeSearch.compareTitle(title, node.pageTitle)
       };
-    return result;
+      return result;
+    } else {
+      console.error("compareNode check failed:", url, title, node);
+    }
   },
 
   /**
@@ -200,25 +200,29 @@ NodeSearch = {
       //console.log("compareUrl, pieceCount: ", pieceCount);
       for(i = 0; i < pieceCount; i++){
         //if(pathPieces[i].match(new RegExp("^" + nodeUrlPieces[i] + "$"))){
-        if(pathPieces[i].match(nodeUrlPieces[i])){
-          result.pieces.push({
-            index: i,
-            status: NodeSearchStatus.match,
-            search: nodeUrlPieces[i],
-            value: pathPieces[i]
-          });
-          result.score += NodeSearch.score.url;
-          //console.log("compareUrl, url match: ", nodeUrlPieces[i]);
-        } else {
-          result.pieces.push({
-            index: i,
-            status: NodeSearchStatus.noMatch,
-            search: nodeUrlPieces[i],
-            value: pathPieces[i]
-          });
-          //result.score -= NodeSearch.score.url;
-          result.match = false;
-          //console.log("compareUrl, url noMatch: ", nodeUrlPieces[i]);
+        try {
+          if(pathPieces[i].match(nodeUrlPieces[i])){
+            result.pieces.push({
+              index: i,
+              status: NodeSearchStatus.match,
+              search: nodeUrlPieces[i],
+              value: pathPieces[i]
+            });
+            result.score += NodeSearch.score.url;
+            //console.log("compareUrl, url match: ", nodeUrlPieces[i]);
+          } else {
+            result.pieces.push({
+              index: i,
+              status: NodeSearchStatus.noMatch,
+              search: nodeUrlPieces[i],
+              value: pathPieces[i]
+            });
+            //result.score -= NodeSearch.score.url;
+            result.match = false;
+            //console.log("compareUrl, url noMatch: ", nodeUrlPieces[i]);
+          }
+        } catch(e) {
+          console.error("Failure in NodeSearch.compareUrl:", e);
         }
       }
 

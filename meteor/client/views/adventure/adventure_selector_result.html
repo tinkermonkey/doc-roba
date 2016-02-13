@@ -1,21 +1,25 @@
 <template name="AdventureSelectorResult">
-  <div>
-    <span>{{selector}}</span>
-    {{#if match}}
-      <span class="label label-success">Matched a single element</span>
-      <div class="btn-group">
-        <button class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown">
-          <span class="glyphicon glyphicon-plus"></span>
-          <span class="caret"></span>
-        </button>
-        {{> AdventureSelectorActionMenu selector=this node=getCurrentNode}}
-      </div>
-    {{else}}
-      {{#if matchCount}}
-        <span class="label label-warning">Matched multiple elements</span>
+  {{#with selector}}
+    <div>
+      <span>{{selector}}</span>
+      {{#if match}}
+        <span class="label label-success">Matched a single element</span>
+        <div class="btn-group">
+          <button class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown">
+            <span class="glyphicon glyphicon-plus"></span>
+            <span class="caret"></span>
+          </button>
+          {{#with fullContext}}
+            {{> AdventureSelectorActionMenu }}
+          {{/with}}
+        </div>
       {{else}}
-        <span class="label label-default">Matched no elements</span>
+        {{#if matchCount}}
+          <span class="label label-warning">Matched multiple elements</span>
+        {{else}}
+          <span class="label label-default">Matched no elements</span>
+        {{/if}}
       {{/if}}
-    {{/if}}
-  </div>
+    </div>
+  {{/with}}
 </template>

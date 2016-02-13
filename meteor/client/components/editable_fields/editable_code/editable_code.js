@@ -9,31 +9,43 @@ Template.EditableCode.helpers({
  */
 Template.EditableCode.events({
   "click .code, click .empty-text": function (e, instance) {
+
     console.log("Node: ", $(e.target).closest(".code,.empty-text").get(0));
-    Popover.show({
-      contentTemplate: "EditableCodeEditor",
-      contentData: instance.data,
-      sourceElement: $(e.target).closest(".code,.empty-text").get(0),
-      placement: "auto",
-      size: "maximize",
-      buttons: [
-        { text: "Cancel" },
-        { text: "Save" }
-      ],
-      callback: function (btn, popover) {
-        console.log("Popover Closed: ", btn);
-        if(btn && btn.toLowerCase() == "save"){
-          var editor = Blaze.getView(popover.$(".roba-ace").get(0)).templateInstance().editor;
-          if(editor){
-            instance.$(".editable-code").trigger("edited", [editor.getValue() || ""]);
-          } else {
-            console.error("Failed to get EditableCode.editor");
-            Dialog.error("Failed to get EditableCode.editor");
+
+    //if(instance.data.popup){
+      Popover.show({
+        contentTemplate: "EditableCodeEditor",
+        contentData: instance.data,
+        sourceElement: $(e.target).closest(".code,.empty-text").get(0),
+        placement: "auto",
+        size: "maximize",
+        buttons: [
+          { text: "Cancel" },
+          { text: "Save" }
+        ],
+        callback: function (btn, popover) {
+          console.log("Popover Closed: ", btn);
+          if(btn && btn.toLowerCase() == "save"){
+            var editor = Blaze.getView(popover.$(".roba-ace").get(0)).templateInstance().editor;
+            if(editor){
+              instance.$(".editable-code").trigger("edited", [editor.getValue() || ""]);
+            } else {
+              console.error("Failed to get EditableCode.editor");
+              Dialog.error("Failed to get EditableCode.editor");
+            }
           }
+          Popover.hide();
         }
-        Popover.hide();
-      }
-    });
+      });
+    /*
+    } else {
+      $(e.target).closest(".code,.empty-text").toggleClass("hide");
+      var context = instance.data;
+      context.minLines = 10;
+      context.maxLines = 30;
+      Blaze.renderWithData(Template.RobaAce, context, instance.$(".editable-code").get(0));
+    }
+    */
   }
 });
 

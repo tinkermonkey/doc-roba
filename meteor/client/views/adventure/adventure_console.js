@@ -39,7 +39,6 @@ Template.AdventureConsole.events({
   "click .btn-unpause-adventure": function (e, instance) {
     Collections.Adventures.update(FlowRouter.getParam("adventureId"), {$set: {status: instance.prePauseStatus || AdventureStatus.awaitingCommand}}, function (error, result) {
       if(error){
-        console.error("Un-Pause failed: " + error.message);
         Dialog.error("Un-Pause failed: " + error.message);
       }
     });
@@ -48,7 +47,6 @@ Template.AdventureConsole.events({
     instance.prePauseStatus = instance.data.adventure.status;
     Collections.Adventures.update(FlowRouter.getParam("adventureId"), {$set: {status: AdventureStatus.paused}}, function (error, result) {
       if(error){
-        console.error("Pause failed: " + error.message);
         Dialog.error("Pause failed: " + error.message);
       }
     });
@@ -56,7 +54,6 @@ Template.AdventureConsole.events({
   "click .btn-end-adventure": function (e, instance) {
     Meteor.call("abortAdventure", FlowRouter.getParam("adventureId"), function (error, result) {
       if(error){
-        console.error("End Adventure failed: " + error.message);
         Dialog.error("End Adventure failed: " + error.message);
       }
     });
