@@ -17,7 +17,7 @@ Tabs = {
       setTimeout(function () {
         Tabs.init(instance, retry + 1);
       }, 250);
-      return;
+      return this;
     }
 
     // Setup the tab event listeners

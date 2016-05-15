@@ -12,7 +12,12 @@ Collections = {
 FS.debug = true;
 
 // TODO: Make this dynamic or a setting
-FS.basePath = "/Users/austinsand/Workspace/doc-roba/files/";
+if(Meteor.isServer){
+  Meteor.startup(function () {
+    FS.basePath = fs.realpathSync(path.join(process.env.PWD, "..", "files"));
+  });
+}
+
 
 /**
  * Thumbnail processor

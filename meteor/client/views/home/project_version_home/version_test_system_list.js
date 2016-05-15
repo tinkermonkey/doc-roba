@@ -3,7 +3,7 @@
  */
 Template.VersionTestSystemList.helpers({
   sortedTestSystems: function () {
-    return Collections.TestSystems.find({projectVersionId: this.version._id}, {sort: {order: 1}}).fetch();
+    return Collections.TestSystems.find({projectVersionId: this._id}, {sort: {order: 1}}).fetch();
   }
 });
 
@@ -11,12 +11,13 @@ Template.VersionTestSystemList.helpers({
  * Template Helpers
  */
 Template.VersionTestSystemList.events({
-  "click .btn-add-test-system": function () {
-    var instance = Template.instance(),
-      order = instance.$(".sortable-table-row").length;
+  "click .btn-add-test-system": function (e, instance) {
+    var order = instance.$(".sortable-table-row").length,
+        projectVersion = this;
+
     Collections.TestSystems.insert({
-      projectId: this.project._id,
-      projectVersionId: this.version._id,
+      projectId: projectVersion.projectId,
+      projectVersionId: projectVersion._id,
       title: "New Test System",
       type: TestAgentTypes.selenium,
       hostname: "test.test.com",
@@ -34,7 +35,7 @@ Template.VersionTestSystemList.events({
       }
     });
   },
-  "click .sortable-table-row .btn-delete": function () {
+  "click .sortable-table-row .btn-delete": function (e, instance) {
     var testSystem = this;
 
     Dialog.show({
@@ -62,6 +63,7 @@ Template.VersionTestSystemList.events({
     });
   },
   "edited .editable": function (e, instance, newValue) {
+    e.stopImmediatePropagation();
     var testSystemId = $(e.target).closest(".sortable-table-row").attr("data-pk"),
       dataKey = $(e.target).attr("data-key"),
       update = {$set: {}};

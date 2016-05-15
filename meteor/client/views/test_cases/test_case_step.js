@@ -45,9 +45,9 @@ Template.TestCaseStep.events({
     }
   },
   "edited .editable": function (e, instance, newValue) {
+    e.stopImmediatePropagation();
     var testCaseStep = instance.data,
       dataKey = $(e.target).attr("data-key");
-    e.stopImmediatePropagation();
 
     if(testCaseStep){
       var stepData = testCaseStep.data || {};
@@ -66,6 +66,12 @@ Template.TestCaseStep.events({
         }
       });
     }
+  },
+  "click .test-case-step-error": function (e, instance) {
+    var editable = instance.$(".editable");
+    console.log("Editable: ", editable.get(0));
+    $(e.target).closest(".test-case-step-body").addClass("hide");
+    editable.parent(".hide").removeClass("hide");
   }
 });
 

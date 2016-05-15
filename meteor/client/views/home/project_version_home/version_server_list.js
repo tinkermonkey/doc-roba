@@ -55,6 +55,8 @@ Template.VersionServerList.events({
     });
   },
   "edited .editable": function (e, instance, newValue) {
+    e.stopImmediatePropagation();
+    
     var serverId = $(e.target).closest(".server-list-row").attr("data-pk"),
       dataKey = $(e.target).attr("data-key"),
       update = {$set: {}};
@@ -120,10 +122,12 @@ Template.VersionServerList.rendered = function () {
     //instance.$(".sortable-table").sortable("refresh");
   });
 
-  // Setup the config schema initial valur
+  // Setup the config schema initial value
   var ds = Collections.DataStores.findOne({dataKey: "server_config_" + instance.data._id});
-  DataStoreSchemas[ds._id] = DSUtil.simpleSchema(ds.schema);
-  instance.configSchema.set(DataStoreSchemas[ds._id]);
+  if(ds.schema){
+    DataStoreSchemas[ds._id] = DSUtil.simpleSchema(ds.schema);
+    instance.configSchema.set(DataStoreSchemas[ds._id]);
+  }
 
   // Keep the server config simple schema up to date
   instance.configObservation = Collections.DataStores.find({dataKey: "server_config_" + instance.data._id}).observeChanges({

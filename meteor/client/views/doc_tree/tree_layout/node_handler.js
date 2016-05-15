@@ -75,6 +75,8 @@ TreeNodeHandler.prototype.addNode = function(parent, dir){
   var self = this,
     tree = self.treeLayout;
 
+  console.log("addNode:", parent, dir);
+
   // update the node state cache for the parent so that the child is visible
   tree.nodeStateCache[parent._id].logExpanded = true;
   tree.nodeStateCache[parent._id].visExpanded = true;
@@ -94,17 +96,14 @@ TreeNodeHandler.prototype.addNode = function(parent, dir){
       config.title = "New Platform";
       break;
     case NodeTypes.platform:
-      if(parent.config && parent.config.type){
-        if(parent.config.type == PlatformTypes.email){
-          config.type = NodeTypes.email;
-          config.title = "New Email";
-          break;
-        }
+      if(parent.config && parent.config.type && parent.config.type == PlatformTypes.email){
+        config.type = NodeTypes.email;
+        config.title = "New Email";
       } else {
         config.type = NodeTypes.page;
         config.title = "New Login";
-        break;
       }
+      break;
     default:
       if(dir === "right"){
         config.type = NodeTypes.view;

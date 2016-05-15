@@ -34,10 +34,15 @@ Template.TestCaseList.events({
     }
   },
   "click .btn-search": function (e, instance) {
-    var search = instance.$(".add-item-form input").val();
+    var search = instance.$(".add-item-form input").val(),
+        projectVersionId = FlowRouter.getParam("projectVersionId");
 
     if(search.length < 2){
       return;
+    }
+
+    if(!projectVersionId){
+      console.error("Search failed: no project version id found");
     }
 
     // show the clear button
@@ -58,8 +63,8 @@ Template.TestCaseList.events({
         }
       });
     };
-    Collections.TestCases.find({ title: {$regex: search, $options: "i"}, projectVersionId: this.version._id }).forEach(highlight);
-    Collections.TestGroups.find({ title: {$regex: search, $options: "i"}, projectVersionId: this.version._id }).forEach(highlight);
+    Collections.TestCases.find({ title: {$regex: search, $options: "i"}, projectVersionId: projectVersionId }).forEach(highlight);
+    Collections.TestGroups.find({ title: {$regex: search, $options: "i"}, projectVersionId: projectVersionId }).forEach(highlight);
 
     // show no results if nothing matched
     if(!instance.$(".test-case-list-selectable.highlight").length){

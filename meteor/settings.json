@@ -5,6 +5,7 @@
     "image_analysis": "../image-analysis/scripts"
   },
   "allowPersonalProjects": true,
+  "allowUninvitedAccess": true,
   "email": {
     "replyTo": "No Reply <no-reply@docroba.com>",
     "from": "No Reply <no-reply@docroba.com>"

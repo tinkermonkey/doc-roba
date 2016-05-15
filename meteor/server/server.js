@@ -14,11 +14,11 @@ Meteor.startup(function () {
      * Create a new project
      * @param title
      */
-    createProject: function (title) {
-      console.debug("createProject:", title);
+    createProject: function (title, initialVersion) {
+      console.debug("createProject:", title, initialVersion);
       var user = Auth.requireAuthentication();
 
-      if(user && title){
+      if(user && title && initialVersion){
         if(user.isSystemAdmin || Meteor.settings.allowPersonalProjects){
           console.info("createProject: ", title, "for user", user._id);
 
@@ -30,12 +30,27 @@ Meteor.startup(function () {
 
           // Add the project to the user's record
           user.addProjectRole(projectId, RoleTypes.owner);
+
+          // Create the project version
+          var projectVersionId = Collections.ProjectVersions.insert({
+            projectId: projectId,
+            version: initialVersion
+          });
+
+          // Create the root node
+          var rootNodeId = Collections.Nodes.insert({
+            projectId: projectId,
+            projectVersionId: projectVersionId,
+            title: title,
+            type: NodeTypes.root
+          });
+
           return projectId;
         } else {
           throw new Meteor.Error(403);
         }
       } else {
-        throw new Meteor.Error("createProject failed: no title specified");
+        throw new Meteor.Error("createProject failed: either title or version missing");
       }
     },
 

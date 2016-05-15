@@ -1,6 +1,12 @@
 /**
  * Editor Styling
  */
+.x-editable-ace .roba-ace {
+  min-width: 300px;
+  min-height: 200px;
+  width: 100%;
+  height: 100%;
+}
 
 .editable-code-editor {
   width: 100%;

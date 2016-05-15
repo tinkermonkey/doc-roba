@@ -9,6 +9,7 @@ Template.EditableCode.helpers({
  */
 Template.EditableCode.events({
   "click .code, click .empty-text": function (e, instance) {
+    return;
 
     console.log("Node: ", $(e.target).closest(".code,.empty-text").get(0));
 
@@ -23,7 +24,7 @@ Template.EditableCode.events({
           { text: "Cancel" },
           { text: "Save" }
         ],
-        callback: function (btn, popover) {
+        callback: function (btn, popover) { 
           console.log("Popover Closed: ", btn);
           if(btn && btn.toLowerCase() == "save"){
             var editor = Blaze.getView(popover.$(".roba-ace").get(0)).templateInstance().editor;
@@ -61,6 +62,35 @@ Template.EditableCode.created = function () {
  */
 Template.EditableCode.rendered = function () {
   var instance = this;
+
+  instance.$(".editable").editable({
+    type: "editableAce",
+    mode: instance.data.mode || "popup",
+    placement: instance.data.placement || "auto",
+    data: instance.data,
+    parentInstance: instance,
+    highlight: false,
+    onblur: "ignore",
+    display: function () {},
+    success: function (response, newValue) {
+      var editedElement = this;
+      $(editedElement).trigger("edited", [newValue]);
+      setTimeout(function () {
+        $(editedElement).removeClass('editable-unsaved');
+      }, 10);
+    }
+  });
+
+  // this event listener needs to be registered directly
+  instance.$(".editable").on("hidden", function(e, reason) {
+    if(instance.formView){
+      setTimeout(function () {
+        Blaze.remove(instance.formView);
+      }, 100);
+    }
+  });
+
+  // watch for data changes and re-render
   instance.autorun(function () {
     var data = Template.currentData();
     if(data.value){

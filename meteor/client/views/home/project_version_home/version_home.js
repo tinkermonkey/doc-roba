@@ -13,7 +13,24 @@ Template.VersionHome.helpers({
 /**
  * Template Event Handlers
  */
-Template.VersionHome.events({});
+Template.VersionHome.events({
+  "edited .editable": function (e, instance, newValue) {
+    console.log("Edited:", $(e.target).attr("data-key"), e.target);
+    e.stopImmediatePropagation();
+  
+    var dataStoreId = $(e.target).closest(".user-type-data-store").attr("data-pk"),
+        dataKey = $(e.target).attr("data-key"),
+        update = {$set: {}};
+    update["$set"][dataKey] = newValue;
+
+    Collections.DataStores.update(dataStoreId, update, function (error) {
+      if(error){
+        console.error("DataStore update failed: " + error.message);
+        Dialog.error("DataStore update failed: " + error.message);
+      }
+    });
+  }
+});
 
 /**
  * Template Created

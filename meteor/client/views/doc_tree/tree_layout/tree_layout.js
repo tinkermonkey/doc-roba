@@ -894,7 +894,7 @@ TreeLayout.prototype.nodeClickFilter = function (d) {
 TreeLayout.prototype.nodeClickHandler = function(e, d){
   var self = this;
 
-  console.debug("TreeLayout nodeClickHandler: " + d._id + " (" +  d.title + ")");
+  console.debug("TreeLayout nodeClickHandler: " + d._id + " (" +  d.title + ")", d);
 
   // fetch the node fresh, sometimes the click events get stale data
   var node = self.nodeHandler.getNode(d._id),
@@ -1127,7 +1127,7 @@ TreeLayout.prototype.cacheNodeState = function(){
 TreeLayout.prototype.restoreCachedNodeState = function(){
   var self = this;
 
-  console.debug("TreeLayout restoring cached node state");
+  console.debug("TreeLayout restoring cached node state:", self.nodeStateCache);
   _.each(self.nodeHandler.getNodes(), function (node) {
     if(self.nodeStateCache[ node._id ] !== undefined){
       node.visExpanded = self.nodeStateCache[ node._id ].visExpanded;

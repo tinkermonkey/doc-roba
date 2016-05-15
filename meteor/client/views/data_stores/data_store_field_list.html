@@ -12,20 +12,28 @@
     <tr class="sortable-table-divider">
       <td colspan="7"><div class="divider"></div></td>
     </tr>
-    {{#each getFields}}
-      <tr class="sortable-table-row data-store-field" data-pk="{{_id}}" data-field-order="{{order}}" data-store-id="{{../_id}}">
-        <td class="drag-handle"><span class="glyphicon glyphicon-record"></span></td>
-        <td>{{> EditableTextField value=title dataKey="title"}}</td>
-        <td><small>{{dataKey}}</small></td>
-        <td>
-          {{> EditableFieldType type=type dataKey="type" }}
-          {{> EditableCustomFieldType type=type customFieldType=customFieldType projectVersionId=../projectVersionId dataKey="customFieldType" }}
+    {{#if getFields.count}}
+      {{#each getFields}}
+        <tr class="sortable-table-row data-store-field" data-pk="{{_id}}" data-field-order="{{order}}" data-store-id="{{../_id}}">
+          <td class="drag-handle"><span class="glyphicon glyphicon-record"></span></td>
+          <td>{{> EditableTextField value=title dataKey="title"}}</td>
+          <td><small>{{dataKey}}</small></td>
+          <td>
+            {{> EditableFieldType type=type dataKey="type" }}
+            {{> EditableCustomFieldType type=type customFieldType=customFieldType projectVersionId=../projectVersionId dataKey="customFieldType" }}
+          </td>
+          <td>{{> EditableFieldShape fieldIsArray=fieldIsArray dataKey="fieldIsArray"}}</td>
+          <td>{{> EditableTextField dataKey="defaultValue" value=defaultValue emptyText="none"}}</td>
+          <td class="btn-delete"><span class="glyphicon glyphicon-remove"></span></td>
+        </tr>
+      {{/each}}
+    {{else}}
+      <tr>
+        <td colspan="7">
+          <i>Click Add Field to configure a custom field</i>
         </td>
-        <td>{{> EditableFieldShape fieldIsArray=fieldIsArray dataKey="fieldIsArray"}}</td>
-        <td>{{> EditableTextField dataKey="defaultValue" value=defaultValue emptyText="none"}}</td>
-        <td class="btn-delete"><span class="glyphicon glyphicon-remove"></span></td>
       </tr>
-    {{/each}}
+    {{/if}}
     <tr class="sortable-table-divider">
       <td colspan="7"><div class="divider"></div></td>
     </tr>

@@ -55,6 +55,8 @@ Template.data_store_data_table.events({
       rowData: {}
     };
 
+    console.log("Add Row: ", dataStoreId, formContext);
+
     // render the form
     Dialog.show({
       contentTemplate: 'DataStoreRowForm',

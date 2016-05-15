@@ -49,7 +49,7 @@ Template.ProjectTeam.events({
 
     // render the form
     Dialog.show({
-      contentTemplate: 'DataStoreRowForm',
+      contentTemplate: 'DataStoreRowFormVert',
       contentData: formContext,
       title: "Send project invitation",
       buttons: [
@@ -115,7 +115,7 @@ Template.ProjectTeam.events({
 
     // render the form
     Dialog.show({
-      contentTemplate: 'DataStoreRowForm',
+      contentTemplate: 'DataStoreRowFormVert',
       contentData: formContext,
       title: "Add project role",
       callback: function (btn) {

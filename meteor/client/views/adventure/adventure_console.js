@@ -99,7 +99,7 @@ Template.AdventureConsole.created = function () {
 
       instance.adventure.set(adventure);
       instance.state.set(state);
-      instance.testSystem.set(Collections.TestSystems.findOne({ staticId: adventure.testSystemId, projectVersionId: adventureId }));
+      instance.testSystem.set(Collections.TestSystems.findOne({ staticId: adventure.testSystemId, projectVersionId: adventure.projectVersionId }));
 
       // pick up any updates to the last known node
       Collections.Adventures.find({_id: adventureId}).observeChanges({

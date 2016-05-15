@@ -10,10 +10,10 @@
 }
 
 .adventure-sidebar {
-  position: fixed;
+  /*position: fixed;*/
   display: inline-block;
   width: 39%;
-  overflow-y: auto;
+  /*overflow-y: auto;*/
   padding-right: 10px !important;
   -webkit-transition: height 0.25s, width 0.25s;
   transition: height 0.25s, width 0.25s;

@@ -38,8 +38,9 @@ Template.DataStoreFieldList.events({
     });
   },
   "click .sortable-table-row .btn-delete": function (e, instance) {
+    console.log("Delete Field: ", field);
+
     var field = this;
-    console.log("Field: ", field);
     Dialog.show({
       title: "Delete Field?",
       text: "Are you sure that you want to delete the field <span class='label label-primary'>" + field.title + "</span> from this version?",
@@ -65,6 +66,9 @@ Template.DataStoreFieldList.events({
   },
   "edited .editable": function (e, instance, newValue) {
     console.log("Data Store Field update: ", $(e.target).attr("data-key"));
+
+    e.stopImmediatePropagation();
+
     var fieldId = $(e.target).closest(".sortable-table-row").attr("data-pk"),
       dataKey = $(e.target).attr("data-key"),
       update = {$set: {}};

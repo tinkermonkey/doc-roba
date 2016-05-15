@@ -47,6 +47,10 @@
   display: block;
 }
 
+.accordion-inner-padded {
+  padding: 10px;
+}
+
 .accordion-grey {
   background-color: rgb(165, 165, 165);
 }

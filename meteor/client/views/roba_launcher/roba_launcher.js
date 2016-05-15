@@ -45,15 +45,17 @@ Template.roba_launcher.helpers({
     return this.testSystem.get();
   },
   getTestAgent: function () {
-    var testSystemId = this.testSystem.get();
-    var testAgentId = this.testAgent.get();
+    var testSystemId = this.testSystem.get(),
+        testAgentId = this.testAgent.get(),
+        launchData = this;
     if(!testAgentId && testSystemId){
       var testSystem = Collections.TestSystems.findOne({
-        projectVersionId: this.projectVersionId,
+        projectVersionId: launchData.projectVersionId,
         staticId: testSystemId
       });
+      console.log("getTestAgent:", testSystem);
       if(testSystem && testSystem.testAgents && testSystem.testAgents.length){
-        //console.log("Test Agent selected: ", testSystem.testAgents[0]);
+        console.log("Test Agent selected: ", testSystem.testAgents[0]);
         this.testAgent.set(testSystem.testAgents[0]);
       }
     }
@@ -66,6 +68,7 @@ Template.roba_launcher.helpers({
  */
 Template.roba_launcher.events({
   "edited .editable": function (e, instance, newValue) {
+    e.stopImmediatePropagation();
     var dataKey = $(e.target).attr("data-key");
 
     // if it's not a data variable, it goes in the data context
@@ -88,23 +91,24 @@ Template.roba_launcher.events({
   },
   "click .btn-launch-drone": function (e, instance) {
     // get the server
-    var server = Collections.Servers.findOne({staticId: instance.data.server.get(), projectVersionId: instance.data.projectVersionId}),
-      route = instance.data.route.get();
+    var adventureData = instance.data,
+        server = Collections.Servers.findOne({staticId: adventureData.server.get(), projectVersionId: adventureData.projectVersionId}),
+      route = adventureData.route.get();
 
     if(server){
       // assemble the data context
-      var dataContext = instance.data.dataContext.get();
+      var dataContext = adventureData.dataContext.get();
       if(dataContext.account){
         dataContext.account = Collections.DataStoreRows.findOne(dataContext.account);
       }
 
       // Create the adventure
       var adventureId = Collections.Adventures.insert({
-        projectId: instance.data.projectId,
-        projectVersionId: instance.data.projectVersionId,
-        testSystemId: instance.data.testSystem.get(),
-        testAgentId: instance.data.testAgent.get(),
-        serverId: instance.data.server.get(),
+        projectId: adventureData.projectId,
+        projectVersionId: adventureData.projectVersionId,
+        testSystemId: adventureData.testSystem.get(),
+        testAgentId: adventureData.testAgent.get(),
+        serverId: adventureData.server.get(),
         route: route,
         dataContext: dataContext,
         waitForCommands: true,
@@ -118,7 +122,7 @@ Template.roba_launcher.events({
           _.each(route.steps, function (step, stepIndex) {
             console.log("Creating route step: ", step, stepIndex);
             step.stepId = Collections.AdventureSteps.insert({
-              projectId: instance.data.projectId,
+              projectId: adventureData.projectId,
               adventureId: adventureId,
               actionId: step.action ? step.action._id : null,
               nodeId: step.node._id,
@@ -138,7 +142,7 @@ Template.roba_launcher.events({
               Dialog.error("Failed to update adventure route: " + error.message);
             } else {
               // Create the Adventure State record so the console functions properly
-              Collections.AdventureStates.insert({adventureId: adventureId, projectId: instance.data.projectId}, function (error) {
+              Collections.AdventureStates.insert({adventureId: adventureId, projectId: adventureData.projectId}, function (error) {
                 if(error){
                   console.error("Failed to create adventure state: " + error.message);
                   Dialog.error("Failed to create adventure state: " + error.message);
@@ -150,7 +154,7 @@ Template.roba_launcher.events({
                       Dialog.error("Failed to launch adventure " + adventureId + ": " + error.message);
                     } else {
                       // open the live console
-                      window.open("/adventure_console/" + instance.data.projectId + "/" + instance.data.projectVersionId + "/" + adventureId, "_blank");
+                      window.open("/adventure_console/" + adventureData.projectId + "/" + adventureData.projectVersionId + "/" + adventureId, "_blank");
                     }
                   });
                 }
@@ -167,14 +171,15 @@ Template.roba_launcher.events({
  * Template Created
  */
 Template.roba_launcher.created = function () {
-  var instance = Template.instance();
+  var instance = Template.instance(),
+      adventureData = instance.data;
 
   instance.autorun(function () {
-    instance.subscribe("nodes", instance.data.projectId, instance.data.projectVersionId);
-    instance.subscribe("actions", instance.data.projectId, instance.data.projectVersionId);
-    instance.subscribe("servers", instance.data.projectId, instance.data.projectVersionId);
-    instance.subscribe("test_systems", instance.data.projectId, instance.data.projectVersionId);
-    instance.subscribe("test_agents", instance.data.projectId, instance.data.projectVersionId);
+    instance.subscribe("nodes", adventureData.projectId, adventureData.projectVersionId);
+    instance.subscribe("actions", adventureData.projectId, adventureData.projectVersionId);
+    instance.subscribe("servers", adventureData.projectId, adventureData.projectVersionId);
+    instance.subscribe("test_systems", adventureData.projectId, adventureData.projectVersionId);
+    instance.subscribe("test_agents", adventureData.projectId, adventureData.projectVersionId);
   });
 };
 

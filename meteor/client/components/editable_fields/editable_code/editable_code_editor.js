@@ -37,6 +37,7 @@ Template.EditableCodeEditor.rendered = function () {
     if(instance.data.minLines){
       editor.setOption("minLines", instance.data.minLines);
     }
+    console.log("minLines", instance.data.minLines);
 
     // Setup the autocomplete
     ace.config.loadModule("ace/ext/language_tools", function () {

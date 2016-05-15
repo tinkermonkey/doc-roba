@@ -6,7 +6,8 @@
       <tr>
         <td class="field-label">Parent Node</td>
         <td>
-          {{> EditableNodeSelector value=parentId projectVersionId=../adventure.projectVersionId dataKey="parentId" emptyText="Select Parent Node"}}
+          {{debug "Node Selector Context" this}}
+          {{> EditableNodeSelector value=parentId projectVersionId=adventure.projectVersionId dataKey="parentId" emptyText="Select Parent Node"}}
         </td>
       </tr>
       <tr>

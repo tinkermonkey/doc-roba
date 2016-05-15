@@ -183,6 +183,7 @@ Template.AdventureContext.events({
     }
   },
   "edited .current-node-selector": function (e, instance, newValue) {
+    e.stopImmediatePropagation();
     if(newValue){
       console.log("Node Selected: ", newValue);
       instance.data.currentNodeId.set(newValue)

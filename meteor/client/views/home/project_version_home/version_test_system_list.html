@@ -20,13 +20,14 @@
       </tr>
     {{/unless}}
     {{#each sortedTestSystems}}
+      {{debug "TestAgentList" this}}
       <tr class="sortable-table-row" data-pk="{{_id}}" data-sort-order="{{order}}">
         <td class="drag-handle"><span class="glyphicon glyphicon-record"></span></td>
         <td>{{> EditableTextField value=title      dataKey="title"}}</td>
         <td>{{> EditableTestAgentType value=type       dataKey="type"}}</td>
         <td>{{> EditableTextField value=hostname   dataKey="hostname"}}</td>
         <td>{{> EditableTextField value=port       dataKey="port" emptyText="default"}}</td>
-        <td>{{> EditableTestAgentList value=testAgents dataKey="testAgents" type=type projectVersionId=../version._id}}</td>
+        <td>{{> EditableTestAgentList value=testAgents dataKey="testAgents" type=type projectVersionId=projectVersionId}}</td>
         <td>{{> EditableTextField value=config     dataKey="config" emptyText="-"}}</td>
         <td>{{> EditableFieldYesNo value=active     dataKey="active"}}</td>
         <td class="btn-delete"><span class="glyphicon glyphicon-remove"></span></td>

@@ -34,6 +34,9 @@ Template.ProjectList.events({
       rowSchema: new SimpleSchema({
         title: {
           type: String
+        },
+        initialVersion: {
+          type: String
         }
       }),
       rowData: {}
@@ -41,7 +44,7 @@ Template.ProjectList.events({
 
     // render the form
     Dialog.show({
-      contentTemplate: 'DataStoreRowForm',
+      contentTemplate: 'DataStoreRowFormVert',
       contentData: formContext,
       title: "Create Project",
       buttons: [
@@ -53,10 +56,10 @@ Template.ProjectList.events({
         if(btn == "Create"){
           // grab the form data
           var formId = Dialog.currentInstance.$("form").attr("id");
-          if(formId){
+          if(formId && AutoForm.validateForm(formId)){
             var newProject = _.clone(AutoForm.getFormValues(formId).insertDoc);
 
-            Meteor.call("createProject", newProject.title, function (error) {
+            Meteor.call("createProject", newProject.title, newProject.initialVersion, function (error) {
               Dialog.hide(function () {
                 if(error){
                   Dialog.error("Creating project failed: " + error.toString());

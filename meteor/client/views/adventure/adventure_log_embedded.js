@@ -4,8 +4,10 @@
 Template.AdventureLogEmbedded.helpers({
   messages: function () {
     var instance = Template.instance();
+    var adventure = this.adventure;
+    console.log("AdventureLogEmbedded messages: ", instance.data, adventure);
     return Collections.LogMessages.find({
-      "context.adventureId": instance.data._id
+      "context.adventureId": adventure._id
     }, {
       sort: { time: -1 },
       limit: 1000
