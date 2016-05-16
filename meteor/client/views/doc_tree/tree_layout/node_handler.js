@@ -129,6 +129,13 @@ TreeNodeHandler.prototype.addNode = function(parent, dir){
         logExpanded: false,
         visExpanded: false
       };
+
+      try {
+        var node = self.getNode(nodeId);
+        tree.nodeControls.show(node);
+      } catch (e) {
+        tree.nodeControls.hide();
+      }
     } else {
       console.error("Node insert failed: ", error);
     }
@@ -693,27 +700,10 @@ TreeNodeHandler.prototype.editNode = function (node) {
   var self = this,
     tree = self.treeLayout;
 
-  var drawerHeight = tree.config.bottomDrawerHeight;
-  if(drawerHeight.match(/\%/)){
-    drawerHeight = parseFloat(drawerHeight) / 100 * tree.height;
-    console.log("drawerHeight: ", drawerHeight);
-  }
-
-  // Zoom to focus on the node
-  tree.zoomAndCenterNodes([node], { bottom: drawerHeight + tree.config.yMargin });
-
   // show the bottom drawer
-  BottomDrawer.show({
-    height: drawerHeight,
+  tree.popover([node], {
+    width: 700,
     contentTemplate: "edit_node",
-    contentData: {_id: node._id},
-    callback: function () {
-      this.treeLayout.nodeControls.unlock();
-      this.treeLayout.nodeControls.hide();
-      this.treeLayout.restoreCachedView(this.treeLayout.config.stepDuration);
-    }.bind(self)
-  });
-
-  // lock the node controls
-  tree.nodeControls.lock();
+    contentData: {_id: node._id}
+  }, tree.nodeControls);
 };

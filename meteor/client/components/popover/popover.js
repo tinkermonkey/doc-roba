@@ -67,14 +67,23 @@ Template.popover.helpers({
    * Get the position of the popover within the envelope
    */
   getPosition: function () {
-    // autoposition if there is a source-element
+    // auto-position if there is a source-element
     if (this.sourceElement) {
+      console.log("popover getPosition:", this);
       var position = {
-        width: this.width,
-        height: this.height
-      }, margin   = this.margin || 20,
-        bounds    = Util.getScreenBounds(this.sourceElement),
-        placement = this.placement || "right";
+            width: this.width,
+            height: this.height,
+            "min-width": this.minWidth,
+            "min-height": this.minHeight,
+            "max-width": this.maxWidth,
+            "max-height": this.maxHeight
+          },
+          margin    = this.margin || 20,
+          bounds    = Util.getScreenBounds(this.sourceElement),
+          placement = this.placement || "right";
+
+      position["max-width"]  = position["max-width"]  || this.envelope.width - bounds.left - margin;
+      position["max-height"] = position["max-height"] || this.envelope.height - bounds.top - margin;
 
       if(this.size == "maximize"){
         position.height = this.envelope.height;
@@ -100,10 +109,26 @@ Template.popover.helpers({
       }
     } else {
       // otherwise center it
-      return "top:50%; left:50%; margin-left:-" + (this.width / 2) + "px; margin-top:-150px;";
+      position = {
+        top: "50%",
+        left: "50%",
+        "margin-left": -1 * (this.width / 2) + "px",
+        "margin-top": "-150px"
+      };
+      //return "top:50%; left:50%; margin-left:-" + (this.width / 2) + "px; margin-top:-150px;";
     }
 
-    return _.map(position, function (value, key) { return key + ": " + parseInt(value) + "px;" });
+    return _.map(position, function (value, key) {
+      if(value){
+        if(typeof value == "string"){
+          return key + ": " + value + ";";
+        } else {
+          return key + ": " + parseInt(value) + "px;";
+        }
+      } else {
+        return '';
+      }
+    });
   }
 });
 
@@ -163,7 +188,6 @@ Popover = {
     // Combine the options with the defaults
     _.defaults(options, {
       width: 400,
-      maxWidth: 1000,
       envelope: {},
       callback: function () {
         console.log("Popover closed");

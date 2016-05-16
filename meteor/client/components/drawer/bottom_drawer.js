@@ -1,17 +1,17 @@
 /**
  * Template Helpers
  */
-Template.drawer_bottom.helpers({});
+Template.BottomDrawer.helpers({});
 
 /**
  * Template Helpers
  */
-Template.drawer_bottom.events({
+Template.BottomDrawer.events({
   "click .expander": function (e) {
     //console.log("Expand!");
     var instance = Template.instance();
 
-    instance.$(".drawer-bottom").animate({
+    instance.$(".bottom-drawer").animate({
       height: window.innerHeight - 140 // keep it below the main navigation menu
     }, instance.data.slideTime, function () {
       instance.$(".expander").css("display", "none");
@@ -24,7 +24,7 @@ Template.drawer_bottom.events({
     //console.log("Contract!");
     var instance = Template.instance();
 
-    instance.$(".drawer-bottom").animate({
+    instance.$(".bottom-drawer").animate({
       height: instance.data.height
     }, instance.data.slideTime, function () {
       instance.$(".contractor").css("display", "none");
@@ -42,11 +42,11 @@ Template.drawer_bottom.events({
 /**
  * Template Rendered
  */
-Template.drawer_bottom.rendered = function () {
+Template.BottomDrawer.rendered = function () {
   var instance = BottomDrawer.currentInstance = Template.instance();
 
   // Slide the drawer open
-  $(".drawer-bottom")
+  $(".bottom-drawer")
     .css("display", "block")
     .animate({
       height: instance.data.height
@@ -58,7 +58,7 @@ Template.drawer_bottom.rendered = function () {
 /**
  * Template Destroyed
  */
-Template.drawer_bottom.destroyed = function () {
+Template.BottomDrawer.destroyed = function () {
   Session.set("drawerVisible", false);
 };
 
@@ -80,25 +80,25 @@ BottomDrawer = {
     });
 
     // hide the drawer if it's shown
-    if($(".drawer-bottom").get(0)){
+    if($(".bottom-drawer").get(0)){
       // Slide the drawer open
-      $(".drawer-bottom")
+      $(".bottom-drawer")
         .animate({
           height: 0
         }, options.slideTime / 2, function(){
           BottomDrawer.hide(function (){
-            Blaze.renderWithData(Template.drawer_bottom, options, $("body")[0]);
+            Blaze.renderWithData(Template.BottomDrawer, options, $("body")[0]);
           });
         });
     } else {
-      Blaze.renderWithData(Template.drawer_bottom, options, $("body")[0]);
+      Blaze.renderWithData(Template.BottomDrawer, options, $("body")[0]);
     }
   },
   hide: function (callback) {
     console.log("BottomDrawer.hide");
     if(BottomDrawer.currentInstance){
       // Fade out and destroy the template
-      BottomDrawer.currentInstance.$(".drawer-bottom")
+      BottomDrawer.currentInstance.$(".bottom-drawer")
         .animate({
           height: 0
         }, BottomDrawer.currentInstance.data.slideTime / 2, function(){

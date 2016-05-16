@@ -16,6 +16,8 @@ Template.edit_node.helpers({
         return "UserTypeEditPanel";
       case NodeTypes.platform:
         return "PlatformEditPanel";
+      case NodeTypes.navMenu:
+        return "NavMenuEditPanel";
       case NodeTypes.page:
       case NodeTypes.view:
         return "PageViewEditPanel";

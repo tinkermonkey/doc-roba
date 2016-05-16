@@ -13,12 +13,12 @@
 
   box-shadow: 0px 0px 35px 1px rgba(128, 128, 128, 0.25);
   background-color: #fff;
-  overflow: hidden;
   position: relative;
   min-height: 100px;
   min-width: 300px;
   z-index: 100;
   width: auto;
+  overflow: auto;
 }
 
 .dr-popover .content {
@@ -30,6 +30,10 @@
 
 .dr-popover .content-with-buttons {
   padding-bottom: 55px;
+}
+
+.dr-popover .content-with-padding {
+  padding: 10px;
 }
 
 /**

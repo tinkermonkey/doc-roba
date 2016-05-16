@@ -5,7 +5,7 @@ Template.AdventureEditNodeActions.helpers({
   getActions: function () {
     return Collections.Actions.find({nodeId: this.staticId, projectVersionId: this.projectVersionId}, {sort: {title: 1}})
   },
-  getNavMenus: function () {
+  getNodeNavMenus: function () {
     var navs = [],
       node = this;
     _.each(node.navMenus, function (navMenuId) {
@@ -32,7 +32,7 @@ Template.AdventureEditNodeActions.events({
 
     formContainer.addClass("hide");
     actionRow.find(".btn-edit-action").removeAttr("disabled");
-    actionRow.removeClass("hide");
+    actionRow.removeClass("disabled");
 
     Blaze.remove(view);
   },

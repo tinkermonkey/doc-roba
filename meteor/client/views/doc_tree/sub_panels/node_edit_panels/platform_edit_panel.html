@@ -1,14 +1,15 @@
 <template name="PlatformEditPanel">
-  <div class="col-xs-3 full-height">
-    <h2>
-      {{> EditableTextField cssClass="" value=title dataKey="title" }}
-    </h2>
-
+  <div class="full-width">
+    <div>
+      <span class="field-label">Platform Type:</span>
+    </div>
     <div>
       {{> EditablePlatformType value=this.config.type dataKey="config.type" emptyText="Platform Type"}}
     </div>
     <div>
-      <label>Platform Configuration:</label>
+      <span class="field-label">Platform Configuration:</span>
+    </div>
+    <div>
       <td>{{> EditableAutoform data=config.platformConfig schema=getPlatformSchema emptyText="none" dataKey="config.platformConfig"}}</td>
     </div>
   </div>

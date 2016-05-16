@@ -1,24 +1,11 @@
 
 /**
-  Drawer styling
-**/
+ * Bottom Drawer
+ */
 .drawer-container {
 }
 
-.drawer-right {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 0;
-  height: 100%;
-  max-height: 100%;
-  border-left: 3px solid #50d7ff;
-  background-color: #fff;
-  display: none;
-  box-shadow: 0px 0px 10px #888888;
-}
-
-.drawer-bottom {
+.bottom-drawer {
   position: fixed;
   bottom: 0;
   left: 0;
@@ -31,18 +18,18 @@
   box-shadow: 0px 0px 10px #888888;
 }
 
-.drawer-bottom-content {
+.bottom-drawer-content {
   height: 100%;
   width: 100%;
 }
 
-.drawer-bottom-controls {
+.bottom-drawer-controls {
   float: right;
   border-bottom-left-radius: 5px;
   background-color: #50d7ff;
 }
 
-.drawer-bottom-controls > .drawer-control {
+.bottom-drawer-controls > .drawer-control {
   color: #fff;
   display: inline-block;
   padding: 3px 6px 3px 6px;
@@ -50,6 +37,47 @@
   height: 25px;
 }
 
-.drawer-bottom-controls > .drawer-control:hover {
+.bottom-drawer-controls > .drawer-control:hover {
   color: #ffff00;
+}
+
+/**
+ * Right Drawer
+ */
+.right-drawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 100%;
+  max-height: 100%;
+  border-left: 3px solid #50d7ff;
+  background-color: #fff;
+  display: none;
+  box-shadow: 0px 0px 10px #888888;
+}
+
+.right-drawer-controls {
+  float: left;
+  border-bottom-right-radius: 5px;
+  background-color: #50d7ff;
+}
+
+.right-drawer-controls > .drawer-control {
+  color: #fff;
+  display: inline-block;
+  padding: 3px 6px 3px 6px;
+  width: 25px;
+  height: 25px;
+}
+
+.right-drawer-controls > .drawer-control:hover {
+  color: #ffff00;
+}
+
+.right-drawer-content {
+  height: 100%;
+  width: 100%;
+  padding-left: 10px;
+  padding-top: 20px;
 }

@@ -800,36 +800,24 @@ TreeActionHandler.prototype.editAction = function (d) {
   tree.layoutRoot.select("#node_" + d.source._id + " .node").classed("node-selected", true);
   tree.layoutRoot.select("#node_" + d.destination._id + " .node").classed("node-selected", true);
 
-  // Show the drawer with the edit action template
-  var drawerHeight = tree.config.bottomDrawerHeight;
-  if(drawerHeight.match(/\%/)){
-    drawerHeight = parseFloat(drawerHeight) / 100 * tree.height;
-    console.log("drawerHeight: ", drawerHeight);
-  }
-  tree.zoomAndCenterNodes([d.source, d.destination], {bottom: drawerHeight});
-
   // lock the action hover state and the node controls
   self.hoverLayerFront.select(".action-label-" + d._id).classed("action-label-edit", true);
   self.lock();
   if(tree.actionControls){
     tree.actionControls.show(d);
-    tree.actionControls.lock();
   }
 
   // Show the drawer with the edit action template
-  BottomDrawer.show({
-    height: drawerHeight,
+  tree.popover([
+      tree.nodeHandler.getNode(d.source._id),
+      tree.nodeHandler.getNode(d.destination._id)
+  ], {
+    width: 700,
     contentTemplate: 'edit_action',
-    contentData: { _id: d._id },
-    callback: function () {
-      this.hoverLayerFront.select(".action-label-edit").classed("action-label-edit", false);
-      this.unlock();
-      this.hideHover();
-      if(this.treeLayout.actionControls) {
-        this.treeLayout.actionControls.unlock();
-        this.treeLayout.actionControls.hide();
-      }
-      this.treeLayout.restoreCachedView(this.treeLayout.config.stepDuration);
-    }.bind(self)
+    contentData: { _id: d._id }
+  }, tree.actionControls, function () {
+    tree.actionControls.hide();
+    self.unlock();
+    self.hoverLayerFront.select(".action-label-edit").classed("action-label-edit", false);
   });
 };

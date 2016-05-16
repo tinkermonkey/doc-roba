@@ -21,7 +21,8 @@ Template.EditableCodeEditor.created = function () {
 Template.EditableCodeEditor.rendered = function () {
   var instance = this;
   if(!instance.editor) {
-    console.log("Creating editor:", instance.data);
+    //console.log("Creating editor:", instance.data);
+
     var editor = instance.editor = ace.edit(instance.elementId);
     editor.setTheme("ace/theme/chrome");
     editor.getSession().setMode("ace/mode/javascript");
@@ -37,7 +38,6 @@ Template.EditableCodeEditor.rendered = function () {
     if(instance.data.minLines){
       editor.setOption("minLines", instance.data.minLines);
     }
-    console.log("minLines", instance.data.minLines);
 
     // Setup the autocomplete
     ace.config.loadModule("ace/ext/language_tools", function () {
@@ -61,5 +61,5 @@ Template.EditableCodeEditor.rendered = function () {
  * Template Destroyed
  */
 Template.EditableCodeEditor.destroyed = function () {
-  
+  console.log("EditableCodeEditor.destroyed");
 };

@@ -20,7 +20,6 @@
       </tr>
     {{/unless}}
     {{#each sortedTestSystems}}
-      {{debug "TestAgentList" this}}
       <tr class="sortable-table-row" data-pk="{{_id}}" data-sort-order="{{order}}">
         <td class="drag-handle"><span class="glyphicon glyphicon-record"></span></td>
         <td>{{> EditableTextField value=title      dataKey="title"}}</td>

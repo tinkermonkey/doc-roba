@@ -64,9 +64,6 @@ Template.AdventureContext.helpers({
  */
 Template.AdventureContext.events({
   "click .btn-add-node": function (e, instance) {
-    // Transition the page layout
-    $(".adventure-main-view, .adventure-sidebar").addClass("adventure-focus-form");
-
     // Show the form
     instance.$(".add-node-form").removeClass("hide");
 
@@ -78,10 +75,7 @@ Template.AdventureContext.events({
 
     // update the map view
     try {
-      var mapInstance = Blaze.getView($(".map-tree-base").get(0)).templateInstance(),
-        finalWidth = mapInstance.$(".map-tree-base").closest(".row").width() / 2,
-        finalHeight = mapInstance.$(".map-tree-base").height();
-      //mapInstance.mapLayout.transitionZoomAll(finalWidth, finalHeight, 250);
+      var mapInstance = Blaze.getView($(".map-tree-base").get(0)).templateInstance();
       setTimeout(function () {
         mapInstance.mapLayout.zoomAll(250);
       }, 250);
@@ -94,9 +88,6 @@ Template.AdventureContext.events({
     }
   },
   "click .btn-cancel-node": function (e, instance) {
-    // transition back to the normal layout
-    $(".adventure-focus-form").removeClass("adventure-focus-form");
-
     // Hide the form
     instance.$(".add-node-form").addClass("hide");
 
@@ -153,9 +144,6 @@ Template.AdventureContext.events({
 
       // create the record
       Collections.Nodes.insert(record);
-
-      // transition back to the normal layout
-      $(".adventure-focus-form").removeClass("adventure-focus-form");
     } catch (e) {
       console.error("Failed to load new record: " + e.message);
     }
@@ -167,7 +155,7 @@ Template.AdventureContext.events({
       dataKey = target.attr("data-key"),
       update = {$set: {}};
 
-    console.log("update: ", dataKey, nodeId);
+    console.log("NodeEditForm update: ", dataKey, nodeId);
     if(dataKey){
       update["$set"][dataKey] = newValue;
       //console.log("Edited: ", dataKey, newValue, node);

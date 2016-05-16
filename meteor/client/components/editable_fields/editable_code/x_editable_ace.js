@@ -15,21 +15,23 @@
   $.fn.editableutils.inherit(EditableAce, $.fn.editabletypes.abstractinput);
 
   $.extend(EditableAce.prototype, {
+    /**
+     * Render the editor control
+     */
     render: function() {
-      console.log("EditableAce.render: ", this.$input, this.options);
+      var self  = this,
+          data  = self.data || this.options.parentInstance.data,
+          width = self.options.parentInstance.$(".editable").width() - 110;
 
+      console.log("EditableAce.render: ", self.options.parentInstance.$(".editable").width());
       Blaze.renderWithData(Template.EditableCodeEditor, {
-        value: this.options.parentInstance.data.value,
-        minLines: this.options.parentInstance.data.minLines,
-        maxLines: this.options.parentInstance.data.maxLines
+        value: data.value,
+        width: width,
+        minLines: data.minLines,
+        maxLines: data.maxLines
       }, this.$input.get(0));
 
-      // get the editor from the
-      //this.editorView = Blaze.getView(this.$input.find(".roba-ace").get(0));
-      //this.editor = this.editorView.templateInstance().editor;
-
       if(this.options.parentInstance){
-        console.log("EditableAce.render: ", Blaze.getView(this.$input.find(".roba-ace").get(0)));
         this.options.parentInstance.formView = Blaze.getView(this.$input.find(".roba-ace").get(0));
       }
     },
@@ -38,10 +40,16 @@
      Sets value of input.
 
      @method value2input(value)
-     @param {mixed} value
+     @param {mixed} data
      **/
-    value2input: function(value) {
+    value2input: function(data) {
       // this is handled by the editor template
+      var editor = Blaze.getView(this.$input.find(".roba-ace").get(0)).templateInstance().editor;
+      if(editor){
+        //console.log("xEditableAce.value2input:", data.value);
+        editor.setValue(data.value);
+        this.data = data;
+      }
     },
 
     /**
@@ -50,8 +58,9 @@
      @method input2value()
      **/
     input2value: function() {
-      console.log("input2value: ", Blaze.getView(this.$input.find(".roba-ace").get(0)).templateInstance().editor.getValue());
-      return Blaze.getView(this.$input.find(".roba-ace").get(0)).templateInstance().editor.getValue();
+      var value = Blaze.getView(this.$input.find(".roba-ace").get(0)).templateInstance().editor.getValue();
+      //console.log("xEditableAce.input2value: ", value);
+      return value;
     }
   });
 

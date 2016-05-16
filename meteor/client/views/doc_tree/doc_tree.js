@@ -124,9 +124,9 @@ Template.DocTree.rendered = function () {
  * Setup the tree display once the template is rendered
  */
 Template.DocTree.destroyed = function () {
-  this.treeLayout.destroy();
-
   if(Session.get("drawerVisible")){
-    BottomDrawer.hide();
+    this.treeLayout.hide();
   }
+
+  this.treeLayout.destroy();
 };

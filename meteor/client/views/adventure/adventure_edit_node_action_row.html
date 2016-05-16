@@ -1,8 +1,8 @@
 <template name="AdventureEditNodeActionRow">
   <div class="edit-node-action-row">
-    <div style="flex: 2 2 300px;">{{title}}</div>
-    <div style="text-align: right; flex-basis: 200px;">{{> ActionRouteSnippet actionWithScale }}</div>
-    <div style="text-align: right; flex-basis: 100px;">
+    <div class="title-cell">{{title}}</div>
+    <div class="route-cell">{{> ActionRouteSnippet actionWithScale }}</div>
+    <div class="action-cell">
       <div class="btn-group action-control-buttons" role="group" data-action-id="{{_id}}">
         {{#unless adventureIsComplete getAdventureContext}}
           <button type="button" class="btn btn-xs btn-success btn-execute-action" disabled="{{#unless code}}disabled{{/unless}}">

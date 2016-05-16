@@ -207,36 +207,14 @@ TreeNodeControls.prototype.create = function () {
     .attr("class", "roba-button control-button")
     .attr("transform", "translate(0, 0)")
     .on('click', function(d){
-      //console.log("ClickRoba: ", self.node);
-      //tree.robaHandler.show(self.node);
-      var bounds = treeUtils.nodeListBounds([self.node], tree.config.highlightSurroundMargin),
-        insetX = tree.insetLayout.config.radius * 2 + tree.insetLayout.config.margin,
-        scale = tree.scale;
-      tree.cacheView();
-      tree.scaleAndTranslate(scale, [
-        insetX - bounds.x * scale,
-        tree.insetLayout.config.margin - bounds.y * scale,
-      ], function () {
-        self.lock();
-        tree.lock();
-        setTimeout(function () {
-          Popover.show({
-            width: 700,
-            contentTemplate: 'roba_launcher',
-            contentData: new RobaContext({
-              route: RobaRouter.routeFromStart(self.node._id)
-            }),
-            sourceElement: $(".node-controls-back").get(0),
-            callback: function () {
-              console.log("Popover Closed");
-              self.unlock();
-              tree.unlock();
-              tree.restoreCachedView(tree.config.viewTransitionTime);
-            }
-          });
-        }, tree.config.viewTransitionTime / 3);
-      }, tree.config.viewTransitionTime);
-
+      tree.popover([self.node], {
+        width: 700,
+        contentTemplate: 'roba_launcher',
+        contentData: new RobaContext({
+          route: RobaRouter.routeFromStart(self.node._id)
+        }),
+        sourceElement: $(".node-controls-back").get(0)
+      });
     });
 
   self.robaButton.append("circle")
@@ -919,4 +897,11 @@ TreeNodeControls.prototype.addActionDragEnd = function () {
       self.update();
       self.considerHiding();
     }));
+};
+
+/**
+ * Return the controls attach point for the popover
+ */
+TreeNodeControls.prototype.attachPoint = function () {
+  return $(".node-controls-back").get(0);
 };

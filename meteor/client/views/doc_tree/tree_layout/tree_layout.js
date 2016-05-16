@@ -351,11 +351,13 @@ TreeLayout.prototype.confirmDeleteNodes = function (nodeList) {
  * @param node
  */
 TreeLayout.prototype.deleteNode = function(node){
+  var self = this;
   console.debug("TreeLayout deleting node: " + node._id + " (" + node.title + ")");
 
   Meteor.call("deleteNode", node._id, function (error, response) {
     if(!error){
       console.info("TreeLayout deleted node: " + node._id);
+      self.nodeControls.hide();
     } else {
       console.error("TreeLayout error deleting node: " + error);
     }
@@ -844,10 +846,7 @@ TreeLayout.prototype.baseClickHandler = function(e){
 
     // hide the drawers if they're shown
     if($(".drawer-right").css("display") !== "none"){
-      //hideRightDrawer();
-    }
-    if($(".drawer-bottom").css("display") !== "none"){
-      BottomDrawer.hide();
+      RightDrawer.hide();
     }
 
     // hide the node controls
@@ -1127,11 +1126,74 @@ TreeLayout.prototype.cacheNodeState = function(){
 TreeLayout.prototype.restoreCachedNodeState = function(){
   var self = this;
 
-  console.debug("TreeLayout restoring cached node state:", self.nodeStateCache);
+  //console.debug("TreeLayout restoring cached node state:", self.nodeStateCache);
   _.each(self.nodeHandler.getNodes(), function (node) {
     if(self.nodeStateCache[ node._id ] !== undefined){
       node.visExpanded = self.nodeStateCache[ node._id ].visExpanded;
       node.logExpanded = self.nodeStateCache[ node._id ].logExpanded;
     }
   });
+};
+
+/**
+ * Show a popover auto-centered on a node
+ * @param node
+ */
+TreeLayout.prototype.popover = function (nodeList, popoverConfig, controls, popoverCallback) {
+  var self = this;
+  //console.log("popover: ", nodeList);
+
+  var bounds = treeUtils.nodeListBounds(nodeList, self.config.highlightSurroundMargin),
+      insetX = self.insetLayout.config.radius * 2 + self.insetLayout.config.margin * 2,
+      insetY = $(".main-nav-menu").height() + $(".main-nav-menu").position().top + self.insetLayout.config.margin * 2,
+      scale  = self.scale;
+
+  if(nodeList.length > 1){
+    // Auto-scale based on the bounds of the nodes being operated on
+  }
+
+  self.cacheView();
+  self.scaleAndTranslate(scale, [
+    insetX - bounds.x * scale,
+    insetY - bounds.y * scale
+  ], function () {
+    try {
+      controls.lock();
+    } catch (e) {
+      console.error("Popover failed to lock controls");
+    }
+
+    // lock the layout to prevent unwanted closing
+    self.lock();
+
+    // setup the popover config
+    popoverConfig.callback = function () {
+      console.log("Popover Closed");
+      try {
+        controls.unlock();
+      } catch (e) {
+        console.error("Popover failed to unlock controls");
+      }
+      self.unlock();
+      self.restoreCachedView(self.config.popover.transitionTime);
+      if(popoverCallback){
+        popoverCallback();
+      }
+    };
+    popoverConfig.minHeight = self.config.popover.minHeight;
+    popoverConfig.minWidth = self.config.popover.minWidth;
+
+
+    try {
+      popoverConfig.sourceElement = controls.attachPoint();
+    } catch (e) {
+      console.error("Popover failed to obtain control attach point");
+    }
+
+    // Wait until the scaleAndTranslate is complete so that the placement is correct
+    setTimeout(function () {
+      // Show the popover
+      Popover.show(popoverConfig);
+    }, self.config.popover.transitionTime);
+  }, self.config.popover.transitionTime);
 };

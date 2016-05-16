@@ -1,21 +1,18 @@
 <template name="edit_action">
-  {{#with getActionRecord}}
-  <div class="container-fluid full-height">
-    <div class="row full-height">
-      <div class="col-xs-3 full-height">
-        <h2>
-          {{> EditableTextField cssClass="action-editable" value=title dataKey="title" }}
-        </h2>
-        <a class="delete-action-link">Delete Action</a>
-        {{> ActionRouteSnippet }}
-      </div>
-      <div class="col-xs-6 full-height">
-        <ul class="nav nav-pills full-height" style="padding-top: 10px;">
+  <div class="content-with-padding">
+    {{#with getActionRecord}}
+      <h2>
+        {{> EditableTextField cssClass="action-editable" value=title dataKey="title" }}
+      </h2>
+      <a class="delete-action-link">Delete Action</a>
+
+      <div class="full-width">
+        <ul class="nav nav-pills">
           <li role="presentation"><a data-tab-name="code">Code</a></li>
           <li role="presentation"><a data-tab-name="variables">Variables</a></li>
           <li role="presentation"><a data-tab-name="routes">Routes</a></li>
         </ul>
-        <div class="tab-container full-height">
+        <div class="tab-container">
           <div class="tab auto-scroll" style="padding-bottom: 5px;" data-tab-name="code">
             {{> EditableCode cssClass="action-editable" dataKey="code" value=code emptyText="Click to edit Action code"}}
           </div>
@@ -23,10 +20,6 @@
           <div class="tab auto-scroll" style="padding-bottom: 5px;" data-tab-name="routes">{{> action_edit_routes }}</div>
         </div>
       </div>
-      <div class="col-xs-3 full-height">
-        Command Reference
-      </div>
-    </div>
+    {{/with}}
   </div>
-  {{/with}}
 </template>

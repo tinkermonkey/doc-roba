@@ -1,6 +1,7 @@
 .editable-click, a.editable-click, a.editable-click:hover {
   border: none;
   color: #666;
+  cursor: pointer;
 }
 
 .editable-unsaved {

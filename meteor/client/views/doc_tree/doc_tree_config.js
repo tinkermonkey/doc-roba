@@ -13,8 +13,12 @@ DocTreeConfig = {
     dialogWidth: 360,
     dialogHeight: 100,
     dblClickTimeout: 250,
-    bottomDrawerHeight: "33.33%",
-    viewTransitionTime: 333
+    viewTransitionTime: 333,
+    popover: {
+      transitionTime: 200,
+      minHeight: "30%",
+      minWidth: "30%"
+    }
   },
 
   /**

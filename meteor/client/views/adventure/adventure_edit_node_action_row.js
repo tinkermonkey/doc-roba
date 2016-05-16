@@ -27,7 +27,7 @@ Template.AdventureEditNodeActionRow.events({
       formRow = actionRow.next();
 
     if(formRow.hasClass("hide")){
-      actionRow.addClass("hide");
+      actionRow.addClass("disabled");
       formRow.removeClass("hide");
       Blaze.renderWithData(Template.AdventureEditActionForm, action, formRow.get(0));
       $(e.target).closest("button").attr("disabled", "disabled");

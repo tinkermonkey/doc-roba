@@ -24,15 +24,6 @@
   margin-bottom: 5px;
 }
 
-.adventure-focus-form {
-  width: 50% !important;
-}
-
-.adventure-focus-form .adventure-map-container {
-  height: 30%;
-  min-height: 300px;
-}
-
 /**
  * map container
  */
@@ -391,6 +382,24 @@
   align-items: center;
 }
 
+.edit-node-action-row.disabled {
+  opacity: 0.5;
+}
+
 .edit-node-action-row > div {
   flex: 1 1 auto;
+}
+
+.edit-node-action-row .title-cell {
+  flex: 2 2 300px;
+}
+
+.edit-node-action-row .route-cell {
+  text-align: right;
+  flex-basis: 200px;
+}
+
+.edit-node-action-row .action-cell {
+  text-align: right;
+  flex-basis: 100px;
 }

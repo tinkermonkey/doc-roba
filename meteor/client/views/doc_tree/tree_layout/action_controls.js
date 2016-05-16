@@ -523,3 +523,10 @@ TreeActionControls.prototype.addActionDragEnd = function () {
       self.considerHiding();
     }));
 };
+
+/**
+ * Return the controls attach point for the popover
+ */
+TreeActionControls.prototype.attachPoint = function () {
+  return $(".action-controls-layer-back").get(0);
+};
