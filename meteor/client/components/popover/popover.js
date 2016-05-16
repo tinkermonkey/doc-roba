@@ -59,6 +59,13 @@ Template.popover.helpers({
           this.envelope.width = bounds.left - 2 * margin;
           break;
       }
+    } else if(this.top != undefined && this.left != undefined) {
+      this.envelope = {
+        top: this.top,
+        left: this.left,
+        width: screenSize.width - this.left - margin,
+        height: screenSize.height - this.top - margin
+      };
     }
 
     return _.map(this.envelope, function (value, key) { return key + ": " + parseInt(value) + "px;" });
@@ -82,8 +89,8 @@ Template.popover.helpers({
           bounds    = Util.getScreenBounds(this.sourceElement),
           placement = this.placement || "right";
 
-      position["max-width"]  = position["max-width"]  || this.envelope.width - bounds.left - margin;
-      position["max-height"] = position["max-height"] || this.envelope.height - bounds.top - margin;
+      position["max-width"]  = position["max-width"]  || this.envelope.width - margin;
+      position["max-height"] = position["max-height"] || this.envelope.height - margin;
 
       if(this.size == "maximize"){
         position.height = this.envelope.height;
@@ -107,6 +114,9 @@ Template.popover.helpers({
             break;
         }
       }
+    } else if(this.top != undefined && this.left != undefined) {
+      position.top  = this.top;
+      position.left = this.left;
     } else {
       // otherwise center it
       position = {
@@ -115,7 +125,6 @@ Template.popover.helpers({
         "margin-left": -1 * (this.width / 2) + "px",
         "margin-top": "-150px"
       };
-      //return "top:50%; left:50%; margin-left:-" + (this.width / 2) + "px; margin-top:-150px;";
     }
 
     return _.map(position, function (value, key) {
@@ -234,7 +243,7 @@ Popover = {
    * @param e
    */
   clickHandler: function (e) {
-    console.log("popover click handler: ");
+    //console.log("popover click handler: ");
     var container = $(".dr-popover");
     if(!container.is(e.target) && container.has(e.target).length === 0 && Popover.currentInstance){
       Popover.hide(Popover.currentInstance.data.callback);

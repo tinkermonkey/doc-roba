@@ -55,7 +55,6 @@ Template.edit_action.events({
               Dialog.error("Failed to delete action: " + error.message);
             } else {
               console.debug("Action deleted: " + result);
-              RightDrawer.hide();
             }
             Dialog.hide();
           });

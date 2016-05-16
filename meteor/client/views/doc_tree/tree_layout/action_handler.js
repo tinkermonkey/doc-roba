@@ -791,7 +791,9 @@ TreeActionHandler.prototype.unlock = function () {
  */
 TreeActionHandler.prototype.editAction = function (d) {
   var self = this,
-    tree = self.treeLayout;
+      tree = self.treeLayout,
+      action = Collections.Actions.findOne(d._id),
+      nodeList, nodeIds;
 
   // Clear the selected nodes
   tree.layoutRoot.selectAll('.node-selected').classed("node-selected", false);
@@ -807,12 +809,12 @@ TreeActionHandler.prototype.editAction = function (d) {
     tree.actionControls.show(d);
   }
 
+  // get the list of nodes for all routes
+  nodeList = _.map(action.routes, function (route) { return tree.nodeHandler.getByStaticId(route.nodeId); });
+  nodeList.push(tree.nodeHandler.getNode(d.source._id));
+
   // Show the drawer with the edit action template
-  tree.popover([
-      tree.nodeHandler.getNode(d.source._id),
-      tree.nodeHandler.getNode(d.destination._id)
-  ], {
-    width: 700,
+  tree.popover(nodeList, {
     contentTemplate: 'edit_action',
     contentData: { _id: d._id }
   }, tree.actionControls, function () {

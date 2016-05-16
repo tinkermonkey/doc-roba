@@ -16,8 +16,10 @@ DocTreeConfig = {
     viewTransitionTime: 333,
     popover: {
       transitionTime: 200,
-      minHeight: "30%",
-      minWidth: "30%"
+      targetHeight: 450,
+      targetWidth: 800,
+      minHeight: 500,
+      minWidth: 700
     }
   },
 

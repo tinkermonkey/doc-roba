@@ -80,7 +80,6 @@ Template.AdventureEditNodeActionRow.events({
               Dialog.error("Failed to delete action: " + error.message);
             } else {
               console.debug("Action deleted: " + result);
-              BottomDrawer.hide();
             }
             Dialog.hide();
           });

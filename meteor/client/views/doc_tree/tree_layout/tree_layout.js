@@ -844,11 +844,6 @@ TreeLayout.prototype.baseClickHandler = function(e){
     // clear the shown actions
     self.actionHandler.clearVisibleActions();
 
-    // hide the drawers if they're shown
-    if($(".drawer-right").css("display") !== "none"){
-      RightDrawer.hide();
-    }
-
     // hide the node controls
     self.nodeControls.hide();
   }
@@ -1141,22 +1136,29 @@ TreeLayout.prototype.restoreCachedNodeState = function(){
  */
 TreeLayout.prototype.popover = function (nodeList, popoverConfig, controls, popoverCallback) {
   var self = this;
-  //console.log("popover: ", nodeList);
+  console.log("Popover nodes:", nodeList);
 
   var bounds = treeUtils.nodeListBounds(nodeList, self.config.highlightSurroundMargin),
       insetX = self.insetLayout.config.radius * 2 + self.insetLayout.config.margin * 2,
       insetY = $(".main-nav-menu").height() + $(".main-nav-menu").position().top + self.insetLayout.config.margin * 2,
       scale  = self.scale;
 
-  if(nodeList.length > 1){
-    // Auto-scale based on the bounds of the nodes being operated on
-  }
+  // Auto-scale based on the bounds of the nodes being operated on
+  console.log("Popover bounds:", bounds, insetX, insetY, scale);
+  console.log("Popover Scale: ", (self.width - insetX - self.config.popover.targetWidth) / bounds.width, (self.height - insetY) / bounds.height, scale);
+  scale = Math.min(
+      (self.width - insetX - self.config.popover.targetWidth) / bounds.width,
+      (self.height - insetY) / bounds.height,
+      scale
+  );
+  console.log("Popover Transition:", insetX - bounds.x * scale, insetY - bounds.y * scale);
 
   self.cacheView();
   self.scaleAndTranslate(scale, [
     insetX - bounds.x * scale,
     insetY - bounds.y * scale
   ], function () {
+    // attempt to lock the controls
     try {
       controls.lock();
     } catch (e) {
@@ -1180,18 +1182,33 @@ TreeLayout.prototype.popover = function (nodeList, popoverConfig, controls, popo
         popoverCallback();
       }
     };
-    popoverConfig.minHeight = self.config.popover.minHeight;
-    popoverConfig.minWidth = self.config.popover.minWidth;
 
+    // calculate the minimum widths
+    popoverConfig.minHeight = Math.min(self.config.popover.minHeight, self.height * 0.4);
+    popoverConfig.minWidth = Math.min(self.config.popover.minWidth, self.width * 0.6);
 
+    // set the target size
+    popoverConfig.height = self.config.popover.targetHeight;
+    popoverConfig.width = self.config.popover.targetWidth;
+
+    // attempt to get the controls attach point
     try {
-      popoverConfig.sourceElement = controls.attachPoint();
+      //popoverConfig.sourceElement = controls.attachPoint();
     } catch (e) {
       console.error("Popover failed to obtain control attach point");
     }
 
     // Wait until the scaleAndTranslate is complete so that the placement is correct
     setTimeout(function () {
+      // get the final popover position
+      var corner = self.localToScreenCoordinates({
+            x: bounds.x + bounds.width,
+            y: bounds.y
+          });
+      console.log("Popover final bounds: ", bounds, corner);
+      popoverConfig.top = corner.y;
+      popoverConfig.left = corner.x;
+
       // Show the popover
       Popover.show(popoverConfig);
     }, self.config.popover.transitionTime);
