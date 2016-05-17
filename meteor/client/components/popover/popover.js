@@ -74,18 +74,21 @@ Template.popover.helpers({
    * Get the position of the popover within the envelope
    */
   getPosition: function () {
+    var position = {
+          width: this.width,
+          height: this.height,
+          "min-width": this.minWidth,
+          "min-height": this.minHeight,
+          "max-width": this.maxWidth,
+          "max-height": this.maxHeight
+        };
     // auto-position if there is a source-element
-    if (this.sourceElement) {
+    if(this.top != undefined && this.left != undefined) {
+      //position.top  = this.top;
+      //position.left = this.left;
+    } else if (this.sourceElement) {
       console.log("popover getPosition:", this);
-      var position = {
-            width: this.width,
-            height: this.height,
-            "min-width": this.minWidth,
-            "min-height": this.minHeight,
-            "max-width": this.maxWidth,
-            "max-height": this.maxHeight
-          },
-          margin    = this.margin || 20,
+      var margin    = this.margin || 20,
           bounds    = Util.getScreenBounds(this.sourceElement),
           placement = this.placement || "right";
 
@@ -114,9 +117,6 @@ Template.popover.helpers({
             break;
         }
       }
-    } else if(this.top != undefined && this.left != undefined) {
-      position.top  = this.top;
-      position.left = this.left;
     } else {
       // otherwise center it
       position = {

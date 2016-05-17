@@ -1136,7 +1136,7 @@ TreeLayout.prototype.restoreCachedNodeState = function(){
  */
 TreeLayout.prototype.popover = function (nodeList, popoverConfig, controls, popoverCallback) {
   var self = this;
-  console.log("Popover nodes:", nodeList);
+  //console.log("Popover nodes:", nodeList);
 
   var bounds = treeUtils.nodeListBounds(nodeList, self.config.highlightSurroundMargin),
       insetX = self.insetLayout.config.radius * 2 + self.insetLayout.config.margin * 2,
@@ -1144,14 +1144,14 @@ TreeLayout.prototype.popover = function (nodeList, popoverConfig, controls, popo
       scale  = self.scale;
 
   // Auto-scale based on the bounds of the nodes being operated on
-  console.log("Popover bounds:", bounds, insetX, insetY, scale);
-  console.log("Popover Scale: ", (self.width - insetX - self.config.popover.targetWidth) / bounds.width, (self.height - insetY) / bounds.height, scale);
+  //console.log("Popover bounds:", bounds, insetX, insetY, scale);
+  //console.log("Popover Scale: ", (self.width - insetX - self.config.popover.targetWidth) / bounds.width, (self.height - insetY) / bounds.height, scale);
   scale = Math.min(
-      (self.width - insetX - self.config.popover.targetWidth) / bounds.width,
-      (self.height - insetY) / bounds.height,
+      (self.width - insetX - self.config.popover.targetWidth - self.insetLayout.config.margin) / bounds.width,
+      (self.height - insetY - self.insetLayout.config.margin) / bounds.height,
       scale
   );
-  console.log("Popover Transition:", insetX - bounds.x * scale, insetY - bounds.y * scale);
+  //console.log("Popover Transition:", insetX - bounds.x * scale, insetY - bounds.y * scale);
 
   self.cacheView();
   self.scaleAndTranslate(scale, [
@@ -1202,10 +1202,10 @@ TreeLayout.prototype.popover = function (nodeList, popoverConfig, controls, popo
     setTimeout(function () {
       // get the final popover position
       var corner = self.localToScreenCoordinates({
-            x: bounds.x + bounds.width,
-            y: bounds.y
-          });
-      console.log("Popover final bounds: ", bounds, corner);
+        x: bounds.x + bounds.width,
+        y: bounds.y
+      });
+      //console.log("Popover final bounds: ", bounds, corner);
       popoverConfig.top = corner.y;
       popoverConfig.left = corner.x;
 

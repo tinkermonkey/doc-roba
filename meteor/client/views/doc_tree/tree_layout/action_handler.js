@@ -320,9 +320,11 @@ TreeActionHandler.prototype.getRouteIdentifier = function (d) {
  * Clear the list of visible actions
  */
 TreeActionHandler.prototype.clearVisibleActions = function () {
+  console.log("clearVisibleActions");
   var self = this;
 
   self.visibleActionList = [];
+  self.hoverActions = [];
   self.updateActionDisplay();
 };
 
@@ -728,6 +730,7 @@ TreeActionHandler.prototype.considerHiding = function () {
 
   // make sure it's not locked
   if(self.locked){
+    console.log("considerHiding: locked");
     return;
   }
 
@@ -793,7 +796,7 @@ TreeActionHandler.prototype.editAction = function (d) {
   var self = this,
       tree = self.treeLayout,
       action = Collections.Actions.findOne(d._id),
-      nodeList, nodeIds;
+      nodeList;
 
   // Clear the selected nodes
   tree.layoutRoot.selectAll('.node-selected').classed("node-selected", false);
@@ -818,8 +821,12 @@ TreeActionHandler.prototype.editAction = function (d) {
     contentTemplate: 'edit_action',
     contentData: { _id: d._id }
   }, tree.actionControls, function () {
-    tree.actionControls.hide();
     self.unlock();
+    tree.actionControls.unlock();
     self.hoverLayerFront.select(".action-label-edit").classed("action-label-edit", false);
+
+    self.clearVisibleActions();
+    self.hideHover();
+    tree.actionControls.hide();
   });
 };
