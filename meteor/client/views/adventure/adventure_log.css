@@ -161,3 +161,7 @@
   vertical-align: top;
   margin: 1px;
 }
+
+.editable-filter-filtered {
+  color: #0A7BFF;
+}

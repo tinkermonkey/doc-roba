@@ -40,3 +40,4 @@ twbs:bootstrap
 kadira:flow-router
 kadira:blaze-layout
 lookback:emails
+reactive-dict

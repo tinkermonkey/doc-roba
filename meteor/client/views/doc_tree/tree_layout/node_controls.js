@@ -208,13 +208,13 @@ TreeNodeControls.prototype.create = function () {
     .attr("transform", "translate(0, 0)")
     .on('click', function(d){
       tree.popover([self.node], {
-        width: 700,
-        contentTemplate: 'roba_launcher',
-        contentData: new RobaContext({
-          route: RobaRouter.routeFromStart(self.node._id)
-        }),
-        sourceElement: $(".node-controls-back").get(0)
-      });
+            contentTemplate: 'roba_launcher',
+            contentData: new RobaContext({
+              route: RobaRouter.routeFromStart(self.node._id)
+            })
+          },
+          tree.nodeControls
+      );
     });
 
   self.robaButton.append("circle")
