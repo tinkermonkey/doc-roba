@@ -1,7 +1,7 @@
 /**
  * Template Helpers
  */
-Template.EditableFilterSource.helpers({
+Template.EditableFilterOption.helpers({
   hasValue: function () {
     var value = Template.instance().value.get();
     return value != null;
@@ -11,12 +11,12 @@ Template.EditableFilterSource.helpers({
 /**
  * Template Event Handlers
  */
-Template.EditableFilterSource.events({});
+Template.EditableFilterOption.events({});
 
 /**
  * Template Created
  */
-Template.EditableFilterSource.created = function () {
+Template.EditableFilterOption.created = function () {
   var instance = this;
   instance.value = new ReactiveVar();
 };
@@ -24,17 +24,17 @@ Template.EditableFilterSource.created = function () {
 /**
  * Template Rendered
  */
-Template.EditableFilterSource.rendered = function () {
+Template.EditableFilterOption.rendered = function () {
   var instance = Template.instance();
   
   instance.autorun(function () {
     var data = Template.currentData(),
         currentValue = instance.value.get(),
-        options =  _.map(_.uniq(data.messages.map(function (message) { return message.source })), function (source) {
-          return { value: source, text: source };
+        options =  _.map(_.uniq(data.messages.map(function (message) { return message[data.dataKey] })), function (option) {
+          return { value: option, text: option };
         });
     
-    console.log("EditableFilterSource:", options);
+    console.log("EditableFilterOption:", options);
     if(!instance.editable){
       instance.editable = instance.$('.editable').editable({
         mode: data.mode || "popup",
@@ -61,6 +61,6 @@ Template.EditableFilterSource.rendered = function () {
 /**
  * Template Destroyed
  */
-Template.EditableFilterSource.destroyed = function () {
+Template.EditableFilterOption.destroyed = function () {
   
 };

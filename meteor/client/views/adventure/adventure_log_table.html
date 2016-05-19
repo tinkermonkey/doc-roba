@@ -3,9 +3,11 @@
     <thead>
       <tr>
         <th><div>{{> EditableFilterTime dataKey="time"}}</div></th>
-        <th><div>Level</div></th>
-        <th><div>Source</div></th>
-        <th><div>Message</div></th>
+        <th><div>{{> EditableFilterOption dataKey="level"  label="Level"  messages=messages}}</div></th>
+        <th><div>{{> EditableFilterOption dataKey="sender" label="Source" messages=messages}}</div></th>
+        <th style="width: 80%;">
+          <div>Message</div>
+        </th>
       </tr>
     </thead>
     <tbody>

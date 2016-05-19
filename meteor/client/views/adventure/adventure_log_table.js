@@ -53,7 +53,7 @@ Template.AdventureLogTable.created = function () {
       "context.adventureId": FlowRouter.getParam("adventureId")
     };
 
-    // setup the query for the filter
+    // setup the query for the time filter
     if(filter.time && (filter.time.start != null || filter.time.end != null)){
       query.time = {};
       if(filter.time.start != null){
@@ -64,7 +64,15 @@ Template.AdventureLogTable.created = function () {
       }
     }
 
-    console.log("message: ", filter, query);
+    // setup the query for the level and sender filters
+    if(filter.level && filter.level.length){
+      query.level = {$in: filter.level}
+    }
+    if(filter.sender && filter.sender.length){
+      query.sender = {$in: filter.sender}
+    }
+
+    console.log("AdventureLogTable messages: ", filter, query);
     return Collections.LogMessages.find(query, {
       sort: { time: -1 },
       limit: instance.loaded.get()

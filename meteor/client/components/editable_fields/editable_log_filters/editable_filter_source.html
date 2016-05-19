@@ -1,3 +1,5 @@
 <template name="EditableFilterSource">
-  editable_filter_source
+  <div class="{{cssClass}} editable" style="width: 4em;" data-key="{{dataKey}}">
+    <div class="{{#if hasValue}}editable-filter-filtered{{/if}}">Source</div>
+  </div>
 </template>
