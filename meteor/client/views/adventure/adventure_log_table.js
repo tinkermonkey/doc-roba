@@ -6,6 +6,11 @@ Template.AdventureLogTable.helpers({
     var filter = Template.instance().filter.get();
     return Template.instance().messages();
   },
+  unfilteredMessages: function () {
+    return Collections.LogMessages.find({
+      "context.adventureId": FlowRouter.getParam("adventureId")
+    });
+  },
   hasMoreMessages: function () {
     var limit = Template.instance().limit.get();
     if(limit > 0){
