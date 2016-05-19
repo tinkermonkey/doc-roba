@@ -22,7 +22,6 @@ numeral:numeral
 cfs:ui
 cfs:graphicsmagick
 simple:highlight.js
-standard-minifiers
 meteor-base
 mongo
 blaze-html-templates
@@ -40,4 +39,5 @@ twbs:bootstrap
 kadira:flow-router
 kadira:blaze-layout
 lookback:emails
-reactive-dict
+standard-minifier-css
+standard-minifier-js
