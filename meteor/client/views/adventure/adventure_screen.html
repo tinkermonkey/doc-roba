@@ -17,6 +17,45 @@
     {{#if state.screenshot}}
       {{updateViewport}}
       <img class="remote-screen" src="data:image/png;base64,{{state.screenshot}}">
+      <div class="remote-screen-mask" style="{{#with getScreenMaskPosition}}top: {{top}}px; left: {{left}}px; height: {{height}}px; width: {{width}}px;{{/with}}">
+        {{#with getMousePosition}}
+          <div class="remote-screen-pointer" style="top: {{y}}px; left: {{x}}px;">
+            <span class="glyphicon glyphicon-screenshot"></span>
+          </div>
+        {{/with}}
+
+        <div class="adventure-hover-element-highlight" style="visibility: hidden;"></div>
+
+        {{> AdventureHoverControls fullContext}}
+
+        {{#each getHighlightElements}}
+          {{#with processHighlightElement}}
+            {{> AdventureHighlightElement }}
+          {{/with}}
+        {{/each}}
+
+        {{#each getPreviewElements}}
+          {{#each getPreviewMatches}}
+            {{#with processHighlightElement}}
+              {{> AdventurePreviewElement }}
+            {{/with}}
+          {{/each}}
+        {{/each}}
+      </div>
+
+      <div class="live-adventure-toolbar">
+        {{> AdventureToolbar fullContext}}
+      </div>
+      {{#if getCheckResult}}
+        {{#with getCheckResult}}
+          <div class="well">
+            {{> AdventureSelectorResult }}
+            {{#each selectors}}
+              {{> AdventureSelectorResult }}
+            {{/each}}
+          </div>
+        {{/with}}
+      {{/if}}
     {{else}}
       <div class="remote-screen remote-screen-loading">
         <div class="remote-screen-loading-log">
@@ -28,45 +67,6 @@
       </div>
     {{/if}}
 
-    <div class="remote-screen-mask" style="{{#with getScreenMaskPosition}}top: {{top}}px; left: {{left}}px; height: {{height}}px; width: {{width}}px;{{/with}}">
-      {{#with getMousePosition}}
-        <div class="remote-screen-pointer" style="top: {{y}}px; left: {{x}}px;">
-          <span class="glyphicon glyphicon-screenshot"></span>
-        </div>
-      {{/with}}
-
-      <div class="adventure-hover-element-highlight" style="visibility: hidden;"></div>
-
-      {{> AdventureHoverControls fullContext}}
-
-      {{#each getHighlightElements}}
-        {{#with processHighlightElement}}
-          {{> AdventureHighlightElement }}
-        {{/with}}
-      {{/each}}
-
-      {{#each getPreviewElements}}
-        {{#each getPreviewMatches}}
-          {{#with processHighlightElement}}
-            {{> AdventurePreviewElement }}
-          {{/with}}
-        {{/each}}
-      {{/each}}
-    </div>
-
-    <div class="live-adventure-toolbar">
-      {{> AdventureToolbar fullContext}}
-    </div>
-    {{#if getCheckResult}}
-      {{#with getCheckResult}}
-        <div class="well">
-          {{> AdventureSelectorResult }}
-          {{#each selectors}}
-            {{> AdventureSelectorResult }}
-          {{/each}}
-        </div>
-      {{/with}}
-    {{/if}}
 
     {{#each getHighlightElements}}
       {{#with processHighlightElement}}
