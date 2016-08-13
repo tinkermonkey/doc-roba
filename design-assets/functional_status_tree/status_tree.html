@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DocRoba Functional Status</title>
+  <link rel="stylesheet" type="text/css" href="./status_tree.css"/>
+  <script src="./jquery-3.1.0.min.js"></script>
+  <script src="./underscore-min.js"></script>
+  <script src="https://d3js.org/d3.v3.min.js"></script>
+  <script src="./status_tree_globals.js"></script>
+  <script src="./status_tree_utils.js"></script>
+  <script src="./status_tree_data.js"></script>
+  <script src="./status_tree_config.js"></script>
+  <script src="./status_tree_inset_layout.js"></script>
+  <script src="./status_tree_node_handler.js"></script>
+  <script src="./status_tree_link_handler.js"></script>
+  <script src="./status_tree.js"></script>
+  <script>
+    $(document).ready(function () {
+      console.log("statusTreeData:", statusTreeData);
+      var tree = new StatusTree("status-tree");
+      tree.nodeHandler.setNodesFromMap(statusTreeData);
+      tree.init();
+      tree.update();
+    });
+  </script>
+</head>
+
+<body>
+  <div id="status-tree">
+    <svg id="global-defs-svg">
+      <defs>
+        <filter id="outer-glow" color-interpolation-filters="sRGB" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="5" result="outerGlowOut1"></feGaussianBlur>
+          <feColorMatrix result="matrixOut" in="outerGlowOut1" type="matrix" values="0.2 1 0 0 0 0 0.2 0 0 0 0 0 0.2 0 0 0 0 0 1 0"></feColorMatrix>
+          <feComposite in="SourceGraphic" in2="outerGlowOut1" operator="over"></feComposite>
+        </filter>
+        <filter id="shadow" color-interpolation-filters="sRGB" x="-30%" y="-30%" width="160%" height="160%">
+          <feOffset result="offOut" in="SourceAlpha" dx="1" dy="1"></feOffset>
+          <feGaussianBlur result="blurOut" in="offOut" stdDeviation="8"></feGaussianBlur>
+          <feComponentTransfer>
+            <feFuncA type="linear" slope="0.3"></feFuncA>
+          </feComponentTransfer>
+          <feMerge>
+            <feMergeNode></feMergeNode>
+            <feMergeNode in="SourceGraphic"></feMergeNode>
+          </feMerge>
+        </filter>
+        <filter id="crisp-shadow" color-interpolation-filters="sRGB" x="-300%" y="-300%" width="600%" height="600%">
+          <feOffset result="offOut" in="SourceAlpha" dx="1" dy="1"></feOffset>
+          <feGaussianBlur result="blurOut" in="offOut" stdDeviation="4"></feGaussianBlur>
+          <feComponentTransfer>
+            <feFuncA type="linear" slope="0.5"></feFuncA>
+          </feComponentTransfer>
+          <feMerge>
+            <feMergeNode></feMergeNode>
+            <feMergeNode in="SourceGraphic"></feMergeNode>
+          </feMerge>
+        </filter>
+        <clipPath id="node-clip-path">
+          <rect x="0" y="0" width="80" height="60" rx="10" ry="10"></rect>
+        </clipPath>
+        <clipPath id="root-clip-path">
+          <circle cx="100" cy="100" r="99"></circle>
+        </clipPath>
+        <clipPath id="inset-clip-path">
+          <circle cx="100" cy="100" r="99"></circle>
+        </clipPath>
+        <filter id="node-hover" color-interpolation-filters="sRGB" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="5 5" result="outerGlowOut1"></feGaussianBlur>
+          <feComposite in="SourceGraphic" in2="outerGlowOut1" operator="over"></feComposite>
+        </filter>
+        <radialGradient id="node-control-back" cx="0.5" cy="0.5" r="0.8" fx="0.25" fy="0.25">
+          <stop offset="  0%" style="stop-color: #ffffff;"></stop>
+          <stop offset="100%" style="stop-color: #e1e1e1;"></stop>
+        </radialGradient>
+        <pattern id="node-control-back-roba" width="100%" height="100%">
+          <rect height="40" width="40" fill="#298cff"></rect>
+        </pattern>
+        <radialGradient id="node-control-back-page" cx="0.5" cy="0.5" r="0.8" fx="0.25" fy="0.25">
+          <stop offset="  0%" style="stop-color: #ccf4ff;"></stop>
+          <stop offset="100%" style="stop-color: #80e5ff;"></stop>
+        </radialGradient>
+        <radialGradient id="node-control-back-view" cx="0.5" cy="0.5" r="0.8" fx="0.25" fy="0.25">
+          <stop offset="  0%" style="stop-color: #ffffff;"></stop>
+          <stop offset="100%" style="stop-color: #e1e1e1;"></stop>
+        </radialGradient>
+        <radialGradient id="node-control-back-navMenu" cx="0.5" cy="0.5" r="0.8" fx="0.25" fy="0.25">
+          <stop offset="  0%" style="stop-color: #e8ccff;"></stop>
+          <stop offset="100%" style="stop-color: #DEB3FF;"></stop>
+        </radialGradient>
+        <radialGradient id="root-node-back">
+          <stop offset="  0%" style="stop-color: #59a7ff;"></stop>
+          <stop offset=" 90%" style="stop-color: #298cff;"></stop>
+          <stop offset="100%" style="stop-color: #1a85ff;"></stop>
+        </radialGradient>
+        <radialGradient id="node-back" cx="0.5" cy="0.5" r="0.8" fx="0.25" fy="0.25">
+          <stop offset="  0%" style="stop-color: #e6e6e6;"></stop>
+          <stop offset=" 90%" style="stop-color: #cccccc;"></stop>
+          <stop offset="100%" style="stop-color: #b3b3b3;"></stop>
+        </radialGradient>
+        <radialGradient id="page-back" cx="0.5" cy="0.5" r="0.8" fx="0.25" fy="0.25">
+          <stop offset="  0%" style="stop-color: #80e3ff;"></stop>
+          <stop offset=" 90%" style="stop-color: #50d7ff;"></stop>
+          <stop offset="100%" style="stop-color: #26d0ff;"></stop>
+        </radialGradient>
+        <radialGradient id="node-controls-back-gradient">
+          <stop offset="75%" style="stop-color: #e6e6e6; stop-opacity:0"></stop>
+          <stop offset="80%" style="stop-color: #999999; stop-opacity:0.1"></stop>
+          <stop offset="100%" style="stop-color: #000000; stop-opacity:0.35"></stop>
+        </radialGradient>
+        <marker id="action-arrow" markerWidth="5" markerHeight="5" refX="3.5" refY="2.5" orient="auto">
+          <path d="M0,0 Q1,2.5 0,5 Q2.5,3 5,2.5 Q2.5,2 0,0"></path>
+        </marker>
+        <marker id="action-arrow-blunt" markerWidth="5" markerHeight="5" refX="5" refY="2.5" orient="auto">
+          <circle r="2.5" cx="2.5" cy="2.5"></circle>
+        </marker>
+        <marker id="action-arrow-hover" markerWidth="5" markerHeight="5" refX="3.5" refY="2.5" orient="auto">
+          <path d="M0,0 Q1,2.5 0,5 Q2.5,3 5,2.5 Q2.5,2 0,0"></path>
+        </marker>
+        <marker id="action-arrow-blunt-hover" markerWidth="5" markerHeight="5" refX="5" refY="2.5" orient="auto">
+          <circle r="2.5" cx="2.5" cy="2.5"></circle>
+        </marker>
+      </defs>
+    </svg>
+    <svg id="doc-tree-base" class="doc-tree-svg">
+      <g class="global-layer">
+        <g class="link-layer"></g>
+      </g>
+    </svg>
+    <div style="position: fixed; top:0px; left: 0px;">
+      <div id="tree-html-layer">
+      </div>
+    </div>
+    <svg class="doc-tree-svg no-mouse">
+      <g class="global-layer" style="pointer-events: auto;">
+        <g class="action-link-layer"></g>
+        <g class="node-controls-layer-back"></g>
+        <g class="node-controls-layer"></g>
+        <g class="node-layer" style="display: inherit;"></g>
+        <g class="node-controls-layer-front"></g>
+        <g class="action-hover-layer-back"></g>
+        <g class="action-controls-layer-back"></g>
+        <g class="action-hover-layer-front"></g>
+        <g class="action-controls-layer-front"></g>
+        <g class="drop-node-layer"></g>
+      </g>
+      <g class="inset-layer">
+        <circle class="inset-frame" cx="100" cy="100" r="100"></circle>
+        <g class="inset-clip" style="clip-path: url(#inset-clip-path);">
+          <g class="inset-content">
+            <g class="inset-link-layer"></g>
+            <g class="inset-node-layer"></g>
+          </g>
+          <rect class="inset-viewport" x="0" y="0" width="0" height="0"></rect>
+        </g>
+      </g>
+      <g id="highlight-layer"></g>
+    </svg>
+  </div>
+</body>
+</html>
