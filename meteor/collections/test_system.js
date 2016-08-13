@@ -52,13 +52,20 @@ Schemas.TestSystem = new SimpleSchema({
   },
   // Sort order
   active: {
-    type: Boolean
+    type: Boolean,
+    defaultValue: false
   },
   // Status of the test system process
   status: {
     type: Number,
     allowedValues: _.map(TestSystemStatus, function (d) { return d; }),
     defaultValue: TestSystemStatus.notRunning
+  },
+  // The response returned from the system
+  statusResponse: {
+    type: Object,
+    blackbox: true,
+    optional: true
   },
   // Sort order
   order: {

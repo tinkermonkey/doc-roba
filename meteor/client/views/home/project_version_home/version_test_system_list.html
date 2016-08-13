@@ -7,8 +7,8 @@
       <td>Hostname</td>
       <td>Port</td>
       <td>Agents</td>
-      <td>Config</td>
       <td>Active</td>
+      <td></td>
       <td></td>
     </tr>
     <tr class="sortable-table-divider">
@@ -22,13 +22,17 @@
     {{#each sortedTestSystems}}
       <tr class="sortable-table-row" data-pk="{{_id}}" data-sort-order="{{order}}">
         <td class="drag-handle"><span class="glyphicon glyphicon-record"></span></td>
-        <td>{{> EditableTextField value=title      dataKey="title"}}</td>
+        <td>{{> EditableTextField     value=title      dataKey="title"}}</td>
         <td>{{> EditableTestAgentType value=type       dataKey="type"}}</td>
-        <td>{{> EditableTextField value=hostname   dataKey="hostname"}}</td>
-        <td>{{> EditableTextField value=port       dataKey="port" emptyText="default"}}</td>
+        <td>{{> EditableTextField     value=hostname   dataKey="hostname"}}</td>
+        <td>{{> EditableTextField     value=port       dataKey="port" emptyText="default"}}</td>
         <td>{{> EditableTestAgentList value=testAgents dataKey="testAgents" type=type projectVersionId=projectVersionId}}</td>
-        <td>{{> EditableTextField value=config     dataKey="config" emptyText="-"}}</td>
-        <td>{{> EditableFieldYesNo value=active     dataKey="active"}}</td>
+        <td>{{> EditableFieldYesNo    value=active     dataKey="active"}}</td>
+        <td>
+          <button class="btn btn-xs btn-primary">
+            <span class="glyphicon glyphicon-check"></span>
+          </button>
+        </td>
         <td class="btn-delete"><span class="glyphicon glyphicon-remove"></span></td>
       </tr>
     {{/each}}
