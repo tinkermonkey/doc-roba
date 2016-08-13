@@ -2,6 +2,7 @@
  * Constructor for custom d3 tree layout
  */
 TreeLayout = function (elementId, context, config) {
+  console.debug("TreeLayout constructor");
   var self = this;
 
   // store the project context
@@ -45,6 +46,16 @@ TreeLayout = function (elementId, context, config) {
   $("#" + elementId)
     .height(self.height)
     .width(self.width);
+
+  // make sure that the dom is correct
+  console.debug("self.layoutRoot:", self.layoutRoot);
+  try {
+    self.layoutRoot.attr("id");
+  } catch (e) {
+    console.error("TreeLayout setup failed:", e);
+    console.debug("TreeLayout root:", $("#" + elementId).get(0), d3.select("#" + elementId));
+    throw new Error("TreeLayout constructor failed: element #" + elementId);
+  }
 
   // Setup the panning-zoomer
   console.debug("TreeLayout Configuring zoomer");
@@ -120,10 +131,10 @@ TreeLayout = function (elementId, context, config) {
  * Setup the initial view
  */
 TreeLayout.prototype.init = function () {
+  console.debug("TreeLayout.init");
   var self = this;
 
-  console.info("TreeLayout init");
-  self.scaleAndTranslate(self.scale, self.translation);
+  //self.scaleAndTranslate(self.scale, self.translation);
 
   // figure out the max depth that we need to expand to
   var maxDepth = treeUtils.getMaxDepth(self.nodeHandler.getNodes(), function (d) { return d.logExpanded && !d.visExpanded; }) + 1,
@@ -172,9 +183,9 @@ TreeLayout.prototype.prepData = function () {
  * Resize to fix the window
  */
 TreeLayout.prototype.resize = function () {
+  console.debug("TreeLayout.resize");
   var self = this;
 
-  console.debug("TreeLayout resize");
   // Measure the new dimensions
   self.width = $(window).innerWidth() - parseInt($("body").css("margin-right")) - parseInt($("body").css("margin-left"));
   self.height = $(window).innerHeight() - parseInt($("body").css("margin-top")) - parseInt($("body").css("margin-bottom"));
@@ -231,7 +242,7 @@ TreeLayout.prototype.unlock = function () {
  * Destroy!
  */
 TreeLayout.prototype.destroy = function () {
-  console.info("TreeLayout destroy called, removing event handlers");
+  console.debug("TreeLayout.destroy");
   $(window).unbind("mousemove");
   $(document).unbind("keydown");
   $(".doc-tree-svg").unbind("click");
@@ -251,7 +262,7 @@ TreeLayout.prototype.mouseMove = function (e) {
  * @param node
  */
 TreeLayout.prototype.getSelectedNodes = function () {
-  console.info("TreeLayout getSelectedNodes");
+  console.debug("TreeLayout.getSelectedNodes");
   var selectedNodes = [];
   this.nodeHandler.layer.selectAll(".node-selected").each(function (d, i) {
     if (d) {
@@ -269,7 +280,7 @@ TreeLayout.prototype.getSelectedNodes = function () {
  * @param node
  */
 TreeLayout.prototype.confirmDeleteNodes = function (nodeList) {
-  console.info("TreeLayout confirmDeleteNodes: " + nodeList.length);
+  console.debug("TreeLayout.confirmDeleteNodes: " + nodeList.length);
   var self = this,
     rootList = [].concat(nodeList);
 
@@ -351,8 +362,8 @@ TreeLayout.prototype.confirmDeleteNodes = function (nodeList) {
  * @param node
  */
 TreeLayout.prototype.deleteNode = function(node){
+  console.debug("TreeLayout.deleteNode: " + node._id + " (" + node.title + ")");
   var self = this;
-  console.debug("TreeLayout deleting node: " + node._id + " (" + node.title + ")");
 
   Meteor.call("deleteNode", node._id, function (error, response) {
     if(!error){
@@ -369,6 +380,7 @@ TreeLayout.prototype.deleteNode = function(node){
  * @param nodeList
  */
 TreeLayout.prototype.highlightNodes = function(nodeList, forceExpand){
+  console.debug("TreeLayout.highlightNodes");
   var self = this;
 
   // clean up
@@ -376,7 +388,6 @@ TreeLayout.prototype.highlightNodes = function(nodeList, forceExpand){
   forceExpand = forceExpand || false;
 
   // create the background
-  console.debug("TreeLayout highlightNodes creating background");
   this.highlightLayer.append("rect")
     .attr("class", "background")
     .attr("x", -10000)
@@ -385,7 +396,7 @@ TreeLayout.prototype.highlightNodes = function(nodeList, forceExpand){
     .attr("height", 20000);
 
   // get the bounding box for the selected nodes
-  console.debug("TreeLayout highlightNodes getting bounding box");
+  console.debug("TreeLayout.highlightNodes: getting bounding box");
   var bounds = treeUtils.nodeListBounds(nodeList, this.config.highlightSurroundMargin);
   //console.debug("Bounds: " + JSON.stringify(bounds));
 
@@ -406,7 +417,7 @@ TreeLayout.prototype.highlightNodes = function(nodeList, forceExpand){
       // Clone the main group
       this.highlightLayer.node().appendChild(node.cloneNode(true));
     } catch(e) {
-      console.error("TreeLayout error Cloning node: " + e.toString());
+      console.error("TreeLayout.highlightNodes: error Cloning node: " + e.toString());
       console.log(e);
     }
   }
@@ -435,6 +446,7 @@ TreeLayout.prototype.highlightNodes = function(nodeList, forceExpand){
  * Get rid of the highlight overlay
  */
 TreeLayout.prototype.removeHighlight = function(){
+  console.debug("TreeLayout.removeHighlight");
   this.highlightLayer.attr("style", "");
   $(this.highlightLayer.node()).empty();
 };
@@ -443,6 +455,7 @@ TreeLayout.prototype.removeHighlight = function(){
  * Cache the current view settings
  */
 TreeLayout.prototype.cacheView = function () {
+  console.debug("TreeLayout.cacheView");
   this.viewCache = {
     scale: this.scale,
     translation: this.translation.slice()
@@ -453,6 +466,7 @@ TreeLayout.prototype.cacheView = function () {
  * Restore the cached view settings
  */
 TreeLayout.prototype.restoreCachedView = function (duration, callback) {
+  console.debug("TreeLayout.restoreCachedView");
   if(this.viewCache){
     this.scaleAndTranslate(this.viewCache.scale, this.viewCache.translation, callback, duration);
     delete this.viewCache;
@@ -465,6 +479,7 @@ TreeLayout.prototype.restoreCachedView = function (duration, callback) {
  * @param duration The overall duration of the expand, will be split for each step
  */
 TreeLayout.prototype.startExpand = function(node, duration){
+  console.debug("TreeLayout.startExpand");
   var nodeList = [node].concat(this.nodeHandler.getDescendants(node, function(d){ return d.parent.logExpanded; })),
     maxDepth = treeUtils.getMaxDepth(nodeList, function(d){ return d.logExpanded && !d.visExpanded; }) + 1;
 
@@ -484,6 +499,7 @@ TreeLayout.prototype.startExpand = function(node, duration){
  * @param duration The duration of the expand step
  */
 TreeLayout.prototype.expand = function(nodeList, depth, duration, rootNode){
+  //console.debug("TreeLayout.expand");
   // search for unexpanded (visually) nodes that should be (logically)
   var depthNodes    = treeUtils.getAtDepth(nodeList, depth),
     anotherLevel  = false;
@@ -519,7 +535,7 @@ TreeLayout.prototype.expand = function(nodeList, depth, duration, rootNode){
  * @param duration The overall duration of the collapse
  */
 TreeLayout.prototype.startCollapse = function(node, duration){
-  console.log("StartCollapse: ", duration);
+  //console.debug("TreeLayout.startCollapse");
   var nodeList = this.nodeHandler.getDescendants(node, function(d){ return d.parent.visExpanded; }),
     maxDepth = treeUtils.getMaxDepth(nodeList);
 
@@ -540,7 +556,7 @@ TreeLayout.prototype.startCollapse = function(node, duration){
  * @param duration The duration of each collapse step
  */
 TreeLayout.prototype.collapse = function(nodeList, fromDepth, toDepth, duration){
-  console.debug("TreeLayout collapsing nodes from depth: " + fromDepth + " to: " + toDepth + " in " + duration);
+  console.debug("TreeLayout.collapse nodes from depth: " + fromDepth + " to: " + toDepth + " in " + duration);
 
   // search for unexpanded (visually) nodes that should be (logically)
   var depthNodes      = treeUtils.getAtDepth(nodeList, fromDepth),
@@ -631,9 +647,9 @@ TreeLayout.prototype.localToScreenCoordinates = function(point){
  * @param rect
  */
 TreeLayout.prototype.fitAndCenter = function(rect, callback){
+  console.debug("TreeLayout.fitAndCenter");
   var self = this;
 
-  console.debug("TreeLayout fit and center");
   var r = this.localToScreenCoordinates(rect),
     contentWindow = {
       x: self.insetLayout.config.radius * 2 + self.insetLayout.config.margin * 2,
@@ -1121,7 +1137,7 @@ TreeLayout.prototype.cacheNodeState = function(){
 TreeLayout.prototype.restoreCachedNodeState = function(){
   var self = this;
 
-  //console.debug("TreeLayout restoring cached node state:", self.nodeStateCache);
+  console.debug("TreeLayout restoring cached node state:", self.nodeStateCache);
   _.each(self.nodeHandler.getNodes(), function (node) {
     if(self.nodeStateCache[ node._id ] !== undefined){
       node.visExpanded = self.nodeStateCache[ node._id ].visExpanded;
