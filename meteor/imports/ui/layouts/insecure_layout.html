@@ -1,0 +1,14 @@
+<template name="InsecureLayout">
+  <div class="main-logo-container">
+    <img class="logo" src="/roba_logo.svg">
+  </div>
+  
+  <svg class="login-container login-svg {{#if intro}}login-intro{{/if}}">
+    <defs>
+      {{> LoginSvgDefs }}
+    </defs>
+    <circle class="login-frame" r="45%" cx="50%" cy="50%" fill="url(#inset-shadow-gradient)"></circle>
+  </svg>
+  
+  {{> Template.contentBlock }}
+</template>

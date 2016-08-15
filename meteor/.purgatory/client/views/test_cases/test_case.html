@@ -1,0 +1,47 @@
+<template name="TestCase">
+  {{#if ready}}
+    <h1>
+      Test Case
+      <small>
+        {{> EditableTextField value=title dataKey="title" emptyText="Enter Title" cssClass="inline"}}
+      </small>
+    </h1>
+    <h4>{{> EditableTextArea value=description dataKey="description" emptyText="No Description"}}</h4>
+
+    <h2>Test Roles</h2>
+
+
+    <div class="test-case-roles">
+      {{#if roles.count}}
+        {{#each roles}}
+          <div class="test-case-role-container">
+            {{> TestCaseRole }}
+          </div>
+        {{/each}}
+      {{else}}
+        <div class="test-case-role-container">
+          <h4>This Test Case has no roles</h4>
+        </div>
+      {{/if}}
+
+      <div class="add-role-container">
+        <button class="btn btn-xs btn-primary btn-add-role">
+          <span class="glyphicon glyphicon-user"></span>
+          Add Role
+        </button>
+      </div>
+    </div>
+
+    <h2>Recent Results</h2>
+    <div class="test-case-recent-result-container">
+      {{> TestCaseRecentResultList }}
+    </div>
+
+    <h2><span class="glyphicon glyphicon-send"></span> Launcher</h2>
+    <div class="test-case-launcher-container">
+      {{> TestCaseLauncher }}
+    </div>
+  {{else}}
+    {{> RobaSpinner inline=true }}
+  {{/if}}
+</template>

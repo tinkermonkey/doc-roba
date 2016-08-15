@@ -1,0 +1,51 @@
+<template name="AdventureLogTable">
+  <table class="adventure-log-table">
+    <thead>
+      <tr>
+        <th><div>{{> EditableFilterTime dataKey="time"}}</div></th>
+        <th><div>{{> EditableFilterOption dataKey="level"  label="Level"  messages=unfilteredMessages}}</div></th>
+        <th><div>{{> EditableFilterOption dataKey="sender" label="Source" messages=unfilteredMessages}}</div></th>
+        <th style="width: 80%;">
+          <div>Message</div>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each messages}}
+        <tr>
+          <td class="adventure-log-time">{{renderLogTime time}}</td>
+          <td class="adventure-log-level log-level-{{level}}">{{level}}</td>
+          <td class="adventure-log-sender no-wrap">{{sender}}</td>
+          <td class="adventure-log-message">
+            <div>
+              {{#with data}}
+                {{> Template.dynamic template=getLogDataTemplate}}
+              {{/with}}
+            </div>
+          </td>
+        </tr>
+      {{/each}}
+      {{#if hasMoreMessages}}
+        <tr>
+          <td colspan="4" class="adventure-load-more">
+            <button class="btn btn-primary btn-load-more">
+              <span class="glyphicon glyphicon-forward"></span>
+              Load More
+            </button>
+            <button class="btn btn-primary btn-load-all">
+              <span class="glyphicon glyphicon-fast-forward"></span>
+              Load All
+            </button>
+          </td>
+        </tr>
+      {{/if}}
+      {{#unless ready}}
+        <tr>
+          <td colspan="4" class="adventure-loading">
+            {{> RobaSpinner inline=true }}
+          </td>
+        </tr>
+      {{/unless}}
+    </tbody>
+  </table>
+</template>

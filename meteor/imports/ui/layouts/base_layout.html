@@ -1,0 +1,12 @@
+<template name="BaseLayout">
+  {{#if ready }}
+    <svg id="global-defs-svg">
+      <defs>
+        {{> Template.dynamic template=svgDefs}}
+      </defs>
+    </svg>
+    {{> Template.dynamic template=content }}
+  {{else}}
+    {{> RobaSpinner }}
+  {{/if}}
+</template>

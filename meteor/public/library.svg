@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+  xmlns:svg="http://www.w3.org/2000/svg"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  version="1.1">
+  <defs>
+    <!-- action arrow -->
+    <marker id="action-arrow" markerWidth="5" markerHeight="5" refx="3.5" refy="2.5" orient="auto">
+      <path d="M0,0 Q1,2.5 0,5 Q2.5,3 5,2.5 Q2.5,2 0,0" />
+    </marker>
+    
+    <!-- action arrow blunt -->
+    <marker id="action-arrow-blunt" markerWidth="5" markerHeight="5" refx="5" refy="2.5" orient="auto">
+      <circle r="2.5" cx="2.5" cy="2.5"></circle>
+    </marker>
+
+    <!-- action arrow blunt hover -->
+    <marker id="action-arrow-blunt-hover" markerWidth="5" markerHeight="5" refx="5" refy="2.5" orient="auto">
+      <circle r="2.5" cx="2.5" cy="2.5"></circle>
+    </marker>
+
+    <!-- action arrow hover -->
+    <marker id="action-arrow-hover" markerWidth="5" markerHeight="5" refx="3.5" refy="2.5" orient="auto">
+      <path d="M0,0 Q1,2.5 0,5 Q2.5,3 5,2.5 Q2.5,2 0,0" />
+    </marker>
+  
+    <!-- crisp shadow -->
+    <filter id="crisp-shadow" color-interpolation-filters="sRGB" x="-300%" y="-300%" width="600%" height="600%">
+      <feOffset result="offOut" in="SourceAlpha" dx="1" dy="1" />
+      <feGaussianBlur result="blurOut" in="offOut" stdDeviation="4" />
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.5"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- inset clip path -->
+    <clipPath id="inset-clip-path">
+      <circle cx="100" cy="100" r="99"></circle>
+    </clipPath>
+
+    <!-- inset shadow gradient -->
+    <radialGradient id="inset-shadow-gradient" cx="52%" cy="52%" r="55%" fx="50%" fy="50%">
+      <stop offset="80%" style="stop-color: #0A7BFF; stop-opacity:0" />
+      <stop offset="85%" style="stop-color: #004599; stop-opacity:0.2" />
+      <stop offset="100%" style="stop-color: #000000; stop-opacity:0.99" />
+    </radialGradient>
+  
+    <!-- login clip -->
+    <clipPath id="login-clip" clipPathUnits="objectBoundingBox" clipPathContentUnits="objectBoundingBox">
+      <circle fill="white" r="0.45" cx="0.5" cy="0.5"></circle>
+    </clipPath>
+  
+    <!-- logout clip -->
+    <clipPath id="logout-clip" clipPathUnits="objectBoundingBox" clipPathContentUnits="objectBoundingBox">
+      <circle fill="white" r="0.45" cx="0.5" cy="0.5"></circle>
+    </clipPath>
+  
+    <!-- node back -->
+    <radialGradient id="node-back" cx="0.5" cy="0.5" r="0.8" fx="0.25" fy="0.25">
+      <stop offset="  0%" style="stop-color: #e6e6e6;" />
+      <stop offset=" 90%" style="stop-color: #cccccc;" />
+      <stop offset="100%" style="stop-color: #b3b3b3;" />
+    </radialGradient>
+  
+    <!-- node clip path -->
+    <clipPath id="node-clip-path">
+      <rect x="0" y="0" width="{{nodeConfig 'width'}}" height="{{nodeConfig 'height'}}" rx="{{nodeConfig 'cornerRadius'}}" ry="{{nodeConfig 'cornerRadius'}}"></rect>
+    </clipPath>
+  
+    <!-- node control back -->
+    <radialGradient id="node-control-back" cx="0.5" cy="0.5" r="0.8" fx="0.25" fy="0.25">
+      <stop offset="  0%" style="stop-color: #ffffff;" />
+      <stop offset="100%" style="stop-color: #e1e1e1;" />
+    </radialGradient>
+  
+    <!-- node control back nav menu -->
+    <radialGradient id="node-control-back-navMenu" cx="0.5" cy="0.5" r="0.8" fx="0.25" fy="0.25">
+      <stop offset="  0%" style="stop-color: #e8ccff;" />
+      <stop offset="100%" style="stop-color: #DEB3FF;" />
+    </radialGradient>
+  
+    <!-- node control back page -->
+    <radialGradient id="node-control-back-page" cx="0.5" cy="0.5" r="0.8" fx="0.25" fy="0.25">
+      <stop offset="  0%" style="stop-color: #ccf4ff;" />
+      <stop offset="100%" style="stop-color: #80e5ff;" />
+    </radialGradient>
+  
+    <!-- node control back roba -->
+    <pattern id="node-control-back-roba" width="100%" height="100%">
+      <rect height="40" width="40" fill="#298cff" />
+      <image xlink:href="/roba_stripe.svg" x="0" y="0" width="40" height="40" />
+    </pattern>
+  
+    <!-- node control back view -->
+    <radialGradient id="node-control-back-view" cx="0.5" cy="0.5" r="0.8" fx="0.25" fy="0.25">
+      <stop offset="  0%" style="stop-color: #ffffff;" />
+      <stop offset="100%" style="stop-color: #e1e1e1;" />
+    </radialGradient>
+  
+    <!-- node controls back gradient -->
+    <radialGradient id="node-controls-back-gradient">
+      <stop offset="75%" style="stop-color: #e6e6e6; stop-opacity:0" />
+      <stop offset="80%" style="stop-color: #999999; stop-opacity:0.1" />
+      <stop offset="100%" style="stop-color: #000000; stop-opacity:0.35" />
+    </radialGradient>
+  
+    <!-- node hover -->
+    <filter id="node-hover" color-interpolation-filters="sRGB" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="5 5" result="outerGlowOut1"></feGaussianBlur>
+      <feComposite in="SourceGraphic" in2="outerGlowOut1" operator="over"></feComposite>
+    </filter>
+  
+    <!-- outer glow -->
+    <filter id="outer-glow" color-interpolation-filters="sRGB" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="5" result="outerGlowOut1"></feGaussianBlur>
+      <feColorMatrix result = "matrixOut" in = "outerGlowOut1" type = "matrix" values = "0.2 1 0 0 0 0 0.2 0 0 0 0 0 0.2 0 0 0 0 0 1 0"/>
+      <feComposite in="SourceGraphic" in2="outerGlowOut1" operator="over"></feComposite>
+    </filter>
+  
+    <!-- page back -->
+    <radialGradient id="page-back" cx="0.5" cy="0.5" r="0.8" fx="0.25" fy="0.25">
+      <stop offset="  0%" style="stop-color: #80e3ff;" />
+      <stop offset=" 90%" style="stop-color: #50d7ff;" />
+      <stop offset="100%" style="stop-color: #26d0ff;" />
+    </radialGradient>
+  
+    <!-- root clip path -->
+    <clipPath id="root-clip-path">
+      <circle cx="100" cy="100" r="99"></circle>
+    </clipPath>
+  
+    <!-- root node back -->
+    <radialGradient id="root-node-back">
+      <stop offset="  0%" style="stop-color: #59a7ff;" />
+      <stop offset=" 90%" style="stop-color: #298cff;" />
+      <stop offset="100%" style="stop-color: #1a85ff;" />
+    </radialGradient>
+  
+    <!-- shadow -->
+    <filter id="shadow" color-interpolation-filters="sRGB" x="-30%" y="-30%" width="160%" height="160%">
+      <feOffset result="offOut" in="SourceAlpha" dx="1" dy="1" />
+      <feGaussianBlur result="blurOut" in="offOut" stdDeviation="8" />
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.3"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+</svg>

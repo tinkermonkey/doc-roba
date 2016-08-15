@@ -1,0 +1,30 @@
+<template name="TestRunTemplateList">
+  {{#if ready}}
+    <div class="test-run-template-list-header">
+      <h3>Test Run Templates</h3>
+      <div class="input-group input-group-sm add-item-form">
+        <input type="text" class="form-control" placeholder="Enter a run name">
+        <div class="input-group-btn">
+          <button type="button" class="btn btn-primary dropdown-toggle" disabled="disabled" data-toggle="dropdown">
+            Add <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-right">
+            <li>
+              <a href="#" data-name="roottestrun">
+                <span class="glyphicon glyphicon-folder-open"></span>
+                Test Run
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="test-run-template-list">
+      {{#each testRunTemplates}}
+        {{> TestRunTemplateListItem }}
+      {{/each}}
+    </div>
+  {{else}}
+    {{> RobaSpinner inline=true }}
+  {{/if}}
+</template>

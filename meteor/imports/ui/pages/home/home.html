@@ -1,0 +1,16 @@
+<template name="Home" xmlns="http://www.w3.org/1999/html">
+  {{#CenterPoleLayout}}
+    {{#if ready}}
+      {{setTitle "Home"}}
+      {{setNavTitle currentUser.profile.name}}
+
+      <h1>Personal Dashboard</h1>
+
+      {{> ProjectInvitations }}
+
+      {{> ProjectList }}
+    {{else}}
+      {{> RobaSpinner }}
+    {{/if}}
+  {{/CenterPoleLayout}}
+</template>

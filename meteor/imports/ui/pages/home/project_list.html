@@ -1,0 +1,91 @@
+<template name="ProjectList">
+  {{#if ready}}
+    <h2>Your Active Project Roles</h2>
+
+    {{#if userProjects.count}}
+      <table class="table data-store-table">
+        <tr class="data-store-table-header">
+          <td>Project</td>
+          <td>Roles</td>
+          <td></td>
+        </tr>
+        <tr class="data-store-table-divider">
+          <td colspan="3"><div></div></td>
+        </tr>
+        {{#each userProjects}}
+          <tr class="data-store-table-row">
+            <td>{{title}}</td>
+            <td>
+              {{#each projectRoles}}
+                <div>
+                  {{renderLookup "ProjectRolesLookup" this}}
+                  <button class="btn btn-xs btn-primary btn-remove-role">
+                    <span class="glyphicon glyphicon-remove-circle"></span>
+                  </button>
+                </div>
+              {{/each}}
+            </td>
+            <td>
+              {{#if user.hasAdminAccess _id}}
+                <button class="btn btn-xs btn-info btn-deactivate-project">
+                  <span class="glyphicon glyphicon-pause"></span>
+                  Deactivate Project
+                </button>
+                <button class="btn btn-xs btn-danger btn-delete-project">
+                  <span class="glyphicon glyphicon-remove"></span>
+                  Delete Project
+                </button>
+              {{/if}}
+            </td>
+          </tr>
+        {{/each}}
+      </table>
+    {{else}}
+      You currently are not a member of any projects. Contact a project administrator to be invited to a project.
+    {{/if}}
+
+    {{#if canCreateProjects}}
+      <div>
+        <button class="btn btn-warning btn-create-project">Create Project</button>
+      </div>
+    {{/if}}
+
+    {{#if inactiveProjects.count}}
+      <h2>Inactive Projects</h2>
+      <table class="table data-store-table">
+        <tr class="data-store-table-header">
+          <td>Project</td>
+          <td>Roles</td>
+          <td></td>
+        </tr>
+        <tr class="data-store-table-divider">
+          <td colspan="3"><div></div></td>
+        </tr>
+        {{#each inactiveProjects}}
+          <tr class="data-store-table-row">
+            <td>{{title}}</td>
+            <td>
+              {{#each projectRoles}}
+                <div>{{renderLookup "ProjectRolesLookup" this}}</div>
+              {{/each}}
+            </td>
+            <td>
+              {{#if user.hasAdminAccess _id}}
+                <button class="btn btn-xs btn-info btn-activate-project">
+                  <span class="glyphicon glyphicon-pause"></span>
+                  Activate Project
+                </button>
+                <button class="btn btn-xs btn-danger btn-delete-project">
+                  <span class="glyphicon glyphicon-remove"></span>
+                  Delete Project
+                </button>
+              {{/if}}
+            </td>
+          </tr>
+        {{/each}}
+      </table>
+    {{/if}}
+  {{else}}
+    {{> RobaSpinner inline=true }}
+  {{/if}}
+</template>

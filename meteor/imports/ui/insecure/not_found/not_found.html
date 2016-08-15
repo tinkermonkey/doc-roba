@@ -1,0 +1,17 @@
+<template name="NotFound">
+  {{#InsecureLayout}}
+    {{setTitle "DocRoba :: 404"}}
+  
+    <div class="login-container login-html" style="clip-path: url('#logout-clip') !important; -webkit-clip-path: url('#logout-clip') !important;">
+      <div class="login-slide">
+        <div id="login-form-container">
+          <div style="width: 100%; color:#fff; text-align: center; top: 25%; position: absolute;">
+            <h1>404<br>Not Found</h1>
+            <h4>Not really sure what you`re looking for.</h4>
+            <a href="{{pathFor 'Home'}}" style="color: #fff; text-decoration: underline;">Go home</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  {{/InsecureLayout}}
+</template>

@@ -1,0 +1,24 @@
+.map-tree-base {
+  width: 100%;
+  height: 100%;
+}
+
+.location-unknown {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.5s;
+  -webkit-transform: opacity 0.5s;
+}
+
+.location-unknown.show {
+  display: block;
+  opacity: 1;
+}
+
+.location-unknown text {
+  font-size: 150px;
+  fill: #298cff;
+  stroke: #efff29;
+  filter: url(imports.svg#node-hover);
+  text-anchor: middle;
+}

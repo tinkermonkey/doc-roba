@@ -1,0 +1,63 @@
+<template name="TestCaseRecentResultList">
+  {{#if ready}}
+    {{#if results.count}}
+      <table class="sortable-table">
+        <thead>
+          <tr>
+            <th><div>Date</div></th>
+            <th><div>Server</div></th>
+            <th><div>Agents</div></th>
+            <th><div>Status</div></th>
+            <th><div>Result</div></th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each results}}
+            <tr class="sortable-table-row test-result-row">
+              <td>
+                <div>{{dateFormat dateCreated}}</div>
+              </td>
+              <td>
+                <div>{{renderServerNameFromStaticId serverId projectVersionId}}</div>
+              </td>
+              <td>
+                {{#each roleResults}}
+                  <div class="inline-block">
+                    <i>{{role.title}}</i>:
+                    <div>{{testSystem.title}}</div>
+                    <div>{{testAgent.title}}</div>
+                  </div>
+                {{/each}}
+              </td>
+              <td>
+                <div>{{renderLookup "TestResultStatusLookup" status}}</div>
+              </td>
+              <td>
+                <div>{{renderLookup "TestResultCodesLookup" resultCode}}</div>
+              </td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    {{else}}
+      <div>This test case has not been run</div>
+    {{/if}}
+
+    {{#if hasMoreResults}}
+      <div class="load-more">
+        <button class="btn btn-primary btn-load-more">
+          <span class="glyphicon glyphicon-forward"></span>
+          Load More
+        </button>
+        <button class="btn btn-primary btn-load-all">
+          <span class="glyphicon glyphicon-fast-forward"></span>
+          Load All
+        </button>
+      </div>
+    {{/if}}
+  {{else}}
+    <div class="loading">
+      {{> RobaSpinner inline=true }}
+    </div>
+  {{/if}}
+</template>
