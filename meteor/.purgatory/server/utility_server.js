@@ -8,11 +8,11 @@ Meteor.startup(function () {
       if (docs) {
         _.each(docs, function (doc) {
           // check to see if the doc exists
-          var exists = Collections.DriverCommands.find({name: doc.name}).count();
+          var exists = DriverCommands.find({name: doc.name}).count();
           if (exists) {
-            Collections.DriverCommands.update({name: doc.name}, {$set: doc});
+            DriverCommands.update({name: doc.name}, {$set: doc});
           } else {
-            Collections.DriverCommands.insert(doc);
+            DriverCommands.insert(doc);
           }
         });
       }

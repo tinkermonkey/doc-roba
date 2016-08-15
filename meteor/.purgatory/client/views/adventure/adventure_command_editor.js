@@ -35,7 +35,7 @@ Template.AdventureCommandEditor.events({
 
     console.log("runCommand: ", code);
     if(code.length){
-      Collections.AdventureCommands.insert({
+      AdventureCommands.insert({
         projectId: instance.data.adventure.projectId,
         adventureId: instance.data.adventure._id,
         code: code

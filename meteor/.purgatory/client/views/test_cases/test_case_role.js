@@ -25,7 +25,7 @@ Template.TestCaseRole.events({
         update["$set"][dataKey] = newValue;
       }
 
-      Collections.TestCaseRoles.update(testCaseRoleId, update, function (error) {
+      TestCaseRoles.update(testCaseRoleId, update, function (error) {
         if(error){
           console.error("Failed to update test case role value: " + error.message);
           console.log(update);
@@ -39,11 +39,11 @@ Template.TestCaseRole.events({
   },
   "click .btn-add-step": function (e, instance) {
     var testCaseRole = this,
-      order = Collections.TestCaseSteps.find({testCaseRoleId: testCaseRole.staticId }).count(),
+      order = TestCaseSteps.find({testCaseRoleId: testCaseRole.staticId }).count(),
       type = $(e.target).closest("button").attr("data-type");
 
     if(type && testCaseRole){
-      Collections.TestCaseSteps.insert({
+      TestCaseSteps.insert({
         projectId: testCaseRole.projectId,
         projectVersionId: testCaseRole.projectVersionId,
         testCaseId: testCaseRole.testCaseId,
@@ -120,7 +120,7 @@ Template.TestCaseRole.rendered = function () {
           oldOrder = step.attr("data-order");
 
         if(oldOrder !== newOrder){
-          Collections.TestCaseSteps.update(stepId, {$set: {order: newOrder}}, function (error, result) {
+          TestCaseSteps.update(stepId, {$set: {order: newOrder}}, function (error, result) {
             if(error){
               console.error("Failed to update step order: " + error.message);
               Dialog.error("Failed to update step order: " + error.message);
@@ -132,7 +132,7 @@ Template.TestCaseRole.rendered = function () {
   }).disableSelection();
 
   // Listen for changes and refresh the sortable
-  Collections.TestCaseSteps.find({testCaseRoleId: instance.data.staticId}).observeChanges({
+  TestCaseSteps.find({testCaseRoleId: instance.data.staticId}).observeChanges({
     added: function () {
       instance.$(".test-role-steps").sortable("refresh");
     }

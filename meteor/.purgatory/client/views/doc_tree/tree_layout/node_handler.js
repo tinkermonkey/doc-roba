@@ -122,7 +122,7 @@ TreeNodeHandler.prototype.addNode = function(parent, dir){
   config.projectVersionId = parent.projectVersionId;
 
   // Create the record
-  Collections.Nodes.insert(config, function (error, nodeId) {
+  Nodes.insert(config, function (error, nodeId) {
     if(!error && nodeId){
       console.debug("Node inserted: " + nodeId);
       tree.nodeStateCache[nodeId] = {

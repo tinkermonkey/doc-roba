@@ -30,7 +30,7 @@ Template.TestCaseLauncher.helpers({
     var config = Template.instance().config.get(),
       role = this;
     if(!(config.roles[role.staticId] && config.roles[role.staticId].testSystemId)){
-      var testSystem = Collections.TestSystems.findOne({ projectVersionId: role.projectVersionId, active: true });
+      var testSystem = TestSystems.findOne({ projectVersionId: role.projectVersionId, active: true });
       if(testSystem){
         config.roles[role.staticId] = config.roles[role.staticId] || {};
         config.roles[role.staticId].testSystemId = testSystem.staticId;
@@ -45,7 +45,7 @@ Template.TestCaseLauncher.helpers({
     var config = Template.instance().config.get(),
       role = this;
     if(!(config.roles[role.staticId] && config.roles[role.staticId].testAgentId && config.roles[role.staticId].testSystemId)){
-      var testSystem = Collections.TestSystems.findOne({ projectVersionId: role.projectVersionId, staticId: config.roles[role.staticId].testSystemId});
+      var testSystem = TestSystems.findOne({ projectVersionId: role.projectVersionId, staticId: config.roles[role.staticId].testSystemId});
       if(testSystem && testSystem.testAgents && testSystem.testAgents.length){
         config.roles[role.staticId] = config.roles[role.staticId] || {};
         config.roles[role.staticId].testAgentId = testSystem.testAgents[0];
@@ -113,7 +113,7 @@ Template.TestCaseLauncher.created = function () {
     instance.subscribe("data_stores", instance.data.projectId, instance.data.projectVersionId);
 
     if(instance.subscriptionsReady()){
-      var server = Collections.Servers.findOne({projectVersionId: instance.data.projectVersionId, active: true});
+      var server = Servers.findOne({projectVersionId: instance.data.projectVersionId, active: true});
       if(server){
         instance.config.set({
           serverId: server.staticId,

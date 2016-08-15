@@ -3,7 +3,7 @@
  */
 Template.TestRunTemplateList.helpers({
   testRunTemplates: function () {
-    return Collections.TestRunTemplates.find({ projectVersionId: FlowRouter.getParam("projectVersionId")}, { sort: { title: 1 } });
+    return TestPlans.find({ projectVersionId: FlowRouter.getParam("projectVersionId")}, { sort: { title: 1 } });
   }
 });
 
@@ -31,7 +31,7 @@ Template.TestRunTemplateList.events({
       versionId = FlowRouter.getParam("projectVersionId");
 
     if(itemType && itemName && itemName.length){
-      Collections.TestRunTemplates.insert({
+      TestPlans.insert({
         projectId: projectId,
         projectVersionId: versionId,
         title: itemName
@@ -63,7 +63,7 @@ Template.TestRunTemplateList.created = function () {
     var projectId = FlowRouter.getParam("projectId"),
         projectVersionId = FlowRouter.getParam("projectVersionId");
 
-    instance.subscribe("test_run_templates", projectId, projectVersionId);
+    instance.subscribe("test_plans", projectId, projectVersionId);
   });
 };
 

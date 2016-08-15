@@ -3,6 +3,12 @@ import {FS} from 'meteor/cfs:base-package';
 let fs = require('fs'),
     path = require('path');
 
+console.log("DocRoba initializing...");
+
+// get better server side logging
+console.debug = console.log;
+
+
 /**
  * Enable debug for the moment
  */
@@ -23,3 +29,5 @@ FS.createThumb = function(fileObj, readStream, writeStream) {
   // Transform the image into a 200x200px thumbnail
   gm(readStream, fileObj.name()).resize("200", "200").stream().pipe(writeStream);
 };
+
+console.log("...complete");

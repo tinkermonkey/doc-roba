@@ -11,7 +11,7 @@ Template.AdventureSelectorResult.helpers({
     if(currentNodeId && adventure){
       return {
         selector: selector,
-        node: Collections.Nodes.findOne({ staticId: currentNodeId, projectVersionId: adventure.projectVersionId }),
+        node: Nodes.findOne({ staticId: currentNodeId, projectVersionId: adventure.projectVersionId }),
         adventure: adventure
       };
     }

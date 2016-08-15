@@ -1,7 +1,7 @@
 import {Mongo} from 'meteor/mongo';
 import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import {ChangeTypes} from './change_types.js';
-import {SchemaHelpers} from '../_lib/schema_helpers.js';
+import {SchemaHelpers} from '../schema_helpers.js';
 
 /**
  * Track changes to records to provide a history of edits

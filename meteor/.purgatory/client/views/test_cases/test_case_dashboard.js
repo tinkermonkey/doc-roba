@@ -15,7 +15,7 @@ Template.TestCaseDashboard.helpers({
     var testCaseId = FlowRouter.getQueryParam("testCaseId"),
         projectVersionId = FlowRouter.getParam("projectVersionId");
     if(testCaseId && projectVersionId){
-      return Collections.TestCases.findOne(testCaseId);
+      return TestCases.findOne(testCaseId);
     }
   }
 });
@@ -43,8 +43,8 @@ Template.TestCaseDashboard.created = function () {
     instance.subscribe("nodes", projectId, projectVersionId);
 
     // pull in the project and project version records
-    instance.project.set(Collections.Projects.findOne(projectId));
-    instance.version.set(Collections.ProjectVersions.findOne(projectVersionId));
+    instance.project.set(Projects.findOne(projectId));
+    instance.version.set(ProjectVersions.findOne(projectVersionId));
   });
 };
 

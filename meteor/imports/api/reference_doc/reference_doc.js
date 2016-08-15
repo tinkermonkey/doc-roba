@@ -1,5 +1,5 @@
 import {FS} from 'meteor/cfs:base-package';
-import {Auth} from '../_lib/auth.js';
+import {Auth} from '../auth.js';
 
 /**
  * Node Reference Documentation

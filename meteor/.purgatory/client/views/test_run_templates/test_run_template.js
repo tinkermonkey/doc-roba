@@ -1,12 +1,12 @@
 /**
  * Template Helpers
  */
-Template.TestRunTemplate.helpers({});
+Template.TestPlan.helpers({});
 
 /**
  * Template Event Handlers
  */
-Template.TestRunTemplate.events({
+Template.TestPlan.events({
   "edited .editable": function (e, instance, newValue) {
     e.stopImmediatePropagation();
     var dataKey = $(e.target).attr("data-key"),
@@ -21,7 +21,7 @@ Template.TestRunTemplate.events({
         update["$set"][dataKey] = newValue;
       }
 
-      Collections.TestRunTemplates.update(templateId, update, function (error) {
+      TestPlans.update(templateId, update, function (error) {
         if(error){
           console.error("Failed to update test run template value: " + error.message);
           console.log(update);
@@ -38,13 +38,13 @@ Template.TestRunTemplate.events({
 /**
  * Template Created
  */
-Template.TestRunTemplate.created = function () {
+Template.TestPlan.created = function () {
 };
 
 /**
  * Template Rendered
  */
-Template.TestRunTemplate.rendered = function () {
+Template.TestPlan.rendered = function () {
   var instance = this;
 
   instance.$(".test-run-add-item-list > .test-run-new-item").draggable({
@@ -64,6 +64,6 @@ Template.TestRunTemplate.rendered = function () {
 /**
  * Template Destroyed
  */
-Template.TestRunTemplate.destroyed = function () {
+Template.TestPlan.destroyed = function () {
   
 };

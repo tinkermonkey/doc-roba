@@ -31,7 +31,7 @@ Template.TestRunItemList.created = function () {
   var instance = this;
 
   // Setup the collection based on whether this is a template or not
-  instance.collection = Collections.TestRunTemplateItems;
+  instance.collection = TestPlanItems;
   if(instance.data && instance.data.isTemplate){
 
   }

@@ -4,7 +4,7 @@
 Template.AdventureEditActionForm.helpers({
   // sometimes the action record end up being non-reactive
   getActionRecord: function () {
-    return Collections.Actions.findOne(this._id);
+    return Actions.findOne(this._id);
   }
 });
 
@@ -21,7 +21,7 @@ Template.AdventureEditActionForm.events({
     if(dataKey){
       update["$set"][dataKey] = newValue;
       //console.log("Edited: ", dataKey, newValue, update, instance.data);
-      Collections.Actions.update(instance.data._id, update, function (error) {
+      Actions.update(instance.data._id, update, function (error) {
         if(error){
           console.error("Failed to update action value: " + error.message);
           Dialog.error("Failed to update action value: " + error.message);

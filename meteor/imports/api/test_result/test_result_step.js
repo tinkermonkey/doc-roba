@@ -1,6 +1,6 @@
 import {Mongo} from 'meteor/mongo';
 import {SimpleSchema} from 'meteor/aldeed:simple-schema';
-import {Auth} from '../_lib/auth.js';
+import {Auth} from '../auth.js';
 import {TestCaseStepTypes} from '../test_case/test_case_step_types.js';
 import {TestResultCodes} from './test_result_codes.js';
 import {TestResultStatus} from './test_result_status.js';

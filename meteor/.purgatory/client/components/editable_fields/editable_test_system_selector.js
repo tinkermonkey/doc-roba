@@ -31,7 +31,7 @@ Template.EditableTestSystemSelector.rendered = function () {
 
     //console.log("test system selector query: ", query);
 
-    var testSystems = Collections.TestSystems.find(query, {sort: {title: 1}}).map(function (testSystem) {
+    var testSystems = TestSystems.find(query, {sort: {title: 1}}).map(function (testSystem) {
         return { value: testSystem.staticId, text: testSystem.title };
       });
 

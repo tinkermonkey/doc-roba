@@ -14,7 +14,7 @@ Template.TestRunTemplateDashboard.helpers({
   testRunTemplate: function () {
     var testRunTemplateId = FlowRouter.getQueryParam("testRunTemplateId");
     if(testRunTemplateId){
-      return Collections.TestRunTemplates.findOne(testRunTemplateId);
+      return TestPlans.findOne(testRunTemplateId);
     }
   }
 });
@@ -38,12 +38,12 @@ Template.TestRunTemplateDashboard.created = function () {
 
     instance.subscribe("test_cases", projectId, projectVersionId);
     instance.subscribe("test_groups", projectId, projectVersionId);
-    instance.subscribe("test_run_templates", projectId, projectVersionId);
-    instance.subscribe("test_run_template_items", projectId, projectVersionId);
+    instance.subscribe("test_plans", projectId, projectVersionId);
+    instance.subscribe("test_plan_items", projectId, projectVersionId);
 
     // pull in the project and project version records
-    instance.project.set(Collections.Projects.findOne(projectId));
-    instance.version.set(Collections.ProjectVersions.findOne(projectVersionId));
+    instance.project.set(Projects.findOne(projectId));
+    instance.version.set(ProjectVersions.findOne(projectVersionId));
   });
 };
 

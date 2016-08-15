@@ -1,12 +1,17 @@
+import {Mongo} from 'meteor/mongo';
+import {SimpleSchema} from 'meteor/aldeed:simple-schema';
+import {SchemaHelpers} from '../schema_helpers.js';
+import {Auth} from '../auth.js';
+
 /**
  * Test Run Template - A named template for a test run
  */
-TestRunTemplate = new SimpleSchema({
+export const TestPlan = new SimpleSchema({
   // Static ID field that will be constant across versions of the project
   staticId: {
     type: String,
     index: true,
-    autoValue: autoValueObjectId,
+    autoValue: SchemaHelpers.autoValueObjectId,
     denyUpdate: true
   },
   // Link to the project to which this test belongs
@@ -46,16 +51,16 @@ TestRunTemplate = new SimpleSchema({
   // Standard tracking fields
   dateCreated: {
     type: Date,
-    autoValue: autoValueDateCreated,
+    autoValue: SchemaHelpers.autoValueDateCreated,
     denyUpdate: true
   },
   createdBy: {
     type: String,
-    autoValue: autoValueCreatedBy,
+    autoValue: SchemaHelpers.autoValueCreatedBy,
     denyUpdate: true
   }
 });
-TestRunTemplates = new Mongo.Collection("test_run_templates");
-TestRunTemplates.attachSchema(TestRunTemplate);
-TestRunTemplates.deny(Auth.ruleSets.deny.ifNotTester);
-TestRunTemplates.allow(Auth.ruleSets.allow.ifAuthenticated);
+export const TestPlans = new Mongo.Collection("test_plan");
+TestPlans.attachSchema(TestPlan);
+TestPlans.deny(Auth.ruleSets.deny.ifNotTester);
+TestPlans.allow(Auth.ruleSets.allow.ifAuthenticated);

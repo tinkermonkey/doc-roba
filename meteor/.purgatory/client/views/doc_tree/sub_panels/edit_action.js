@@ -3,7 +3,7 @@
  */
 Template.edit_action.helpers({
   getActionRecord: function () {
-    return Collections.Actions.findOne({_id: this._id});
+    return Actions.findOne({_id: this._id});
   }
 });
 
@@ -20,7 +20,7 @@ Template.edit_action.events({
     if(dataKey){
       update["$set"][dataKey] = newValue;
       console.log("Updating action record: ", dataKey, newValue, update);
-      Collections.Actions.update(instance.data._id, update, function (error) {
+      Actions.update(instance.data._id, update, function (error) {
         if(error){
           console.error("Failed to update action value: " + error.message);
           console.log(update);
@@ -48,7 +48,7 @@ Template.edit_action.events({
       callback: function (btn) {
         //console.log("Dialog button pressed: ", btn);
         if(btn == "Delete"){
-          Collections.Actions.remove(action._id, function (error, result) {
+          Actions.remove(action._id, function (error, result) {
             if(error) {
               console.error("Failed to delete action: " + error.message);
               Dialog.hide();

@@ -33,7 +33,7 @@ Template.EditableTestAgentList.rendered = function () {
         break;
     }
 
-    var testAgents = Collections.TestAgents.find(query, {sort: {type: 1, order: 1}}).map(function (testAgent) {
+    var testAgents = TestAgents.find(query, {sort: {type: 1, order: 1}}).map(function (testAgent) {
         return { value: testAgent.staticId, text: Util.getTestAgentNameWithVersion(testAgent) };
       });
 

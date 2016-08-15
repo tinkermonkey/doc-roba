@@ -22,7 +22,7 @@ Template.TestCase.events({
         update["$set"][dataKey] = newValue;
       }
 
-      Collections.TestCases.update(testCaseId, update, function (error) {
+      TestCases.update(testCaseId, update, function (error) {
         if(error){
           console.error("Failed to update test case value: " + error.message);
           console.log(update);
@@ -37,7 +37,7 @@ Template.TestCase.events({
   "click .btn-add-role": function (e, instance) {
     var testCase = instance.data,
       order = testCase.roles().count();
-    Collections.TestCaseRoles.insert({
+    TestCaseRoles.insert({
       projectId: testCase.projectId,
       projectVersionId: testCase.projectVersionId,
       testCaseId: testCase.staticId,
@@ -94,7 +94,7 @@ Template.TestCase.created = function () {
     } else {
       // clean up the waitId
       var stepId = stepList.find(".draggable-wait").attr("data-step-id");
-      Collections.TestCaseSteps.update(stepId, {$unset: {"data.waitId": true}}, function (error) {
+      TestCaseSteps.update(stepId, {$unset: {"data.waitId": true}}, function (error) {
         if(error){
           console.error("Failed to update step: " + error.message);
           Dialog.error("Failed to update step: " + error.message);
@@ -111,7 +111,7 @@ Template.TestCase.created = function () {
     }
     instance.updateTimeout = setTimeout(function () {
       //console.log("updateAlignment");
-      var waitIds = _.uniq(Collections.TestCaseSteps.find({
+      var waitIds = _.uniq(TestCaseSteps.find({
         testCaseId: instance.data.staticId,
         type: TestCaseStepTypes.wait,
         "data.waitId": {$exists: true }
@@ -156,7 +156,7 @@ Template.TestCase.rendered = function () {
       instance.testCaseObserver.stop();
     }
 
-    instance.testCaseObserver = Collections.TestCaseSteps.find({testCaseId: data.staticId}).observe({
+    instance.testCaseObserver = TestCaseSteps.find({testCaseId: data.staticId}).observe({
       added: function (doc) {
         //console.log("Test case step added: ", doc._id);
         instance.updateAlignment();

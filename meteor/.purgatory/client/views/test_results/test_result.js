@@ -9,7 +9,7 @@ Template.TestResult.helpers({
     return Template.instance().testCase.get()
   },
   roleResults: function () {
-    return Collections.TestResultRoles.find({testResultId: FlowRouter.getParam("testResultId")});
+    return TestResultRoles.find({testResultId: FlowRouter.getParam("testResultId")});
   }
 });
 
@@ -33,7 +33,7 @@ Template.TestResult.created = function () {
         testResultId = FlowRouter.getParam("testResultId");
 
     instance.subscribe("test_result", projectId, testResultId, function () {
-      var testResult = Collections.TestResults.findOne(testResultId);
+      var testResult = TestResults.findOne(testResultId);
       if(testResult){
         instance.testResult.set(testResult);
         instance.subscribe("test_case",       projectId, projectVersionId, testResult.testCaseId);
@@ -53,7 +53,7 @@ Template.TestResult.created = function () {
   instance.autorun(function () {
     if(instance.subscriptionsReady()){
       var testResult = instance.testResult.get();
-      var testCase = Collections.TestCases.findOne({
+      var testCase = TestCases.findOne({
         staticId: testResult.testCaseId,
         projectVersionId: testResult.projectVersionId});
       instance.testCase.set(testCase);

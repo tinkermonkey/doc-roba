@@ -23,7 +23,7 @@ Template.EditableNavMenuList.rendered = function () {
       query = { type: NodeTypes.navMenu, projectVersionId: instance.data.projectVersionId };
 
     // TODO: this needs to be restricted to a platform/user domain
-    var navMenus = Collections.Nodes.find(query, {sort: {title: 1}}).map(function (nav) {
+    var navMenus = Nodes.find(query, {sort: {title: 1}}).map(function (nav) {
         return { value: nav.staticId, text: nav.title };
       });
 

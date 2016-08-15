@@ -1,5 +1,5 @@
 import {Meteor} from 'meteor/meteor';
-import {Auth} from '../../_lib/auth.js';
+import {Auth} from '../../auth.js';
 import {Actions} from '../action.js';
 
 Meteor.publish("actions", function (projectId, projectVersionId) {

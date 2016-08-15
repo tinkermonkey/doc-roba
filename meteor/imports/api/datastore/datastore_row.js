@@ -1,5 +1,5 @@
-import {SchemaHelpers} from '../_lib/schema_helpers.js';
-import {Auth} from '../_lib/auth.js';
+import {SchemaHelpers} from '../schema_helpers.js';
+import {Auth} from '../auth.js';
 import {ChangeTracker} from '../change_tracker/change_tracker.js';
 
 /**

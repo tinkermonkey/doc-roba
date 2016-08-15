@@ -7,7 +7,7 @@ Template.AdventureLogTable.helpers({
     return Template.instance().messages();
   },
   unfilteredMessages: function () {
-    return Collections.LogMessages.find({
+    return LogMessages.find({
       "context.adventureId": FlowRouter.getParam("adventureId")
     });
   },
@@ -78,7 +78,7 @@ Template.AdventureLogTable.created = function () {
     }
 
     console.log("AdventureLogTable messages: ", filter, query);
-    return Collections.LogMessages.find(query, {
+    return LogMessages.find(query, {
       sort: { time: -1 },
       limit: instance.loaded.get()
     });
@@ -101,7 +101,7 @@ Template.AdventureLogTable.created = function () {
       if(limit > 0){
         instance.loaded.set(limit);
       } else {
-        var count = Collections.LogMessages.find({"context.adventureId": adventureId}).count();
+        var count = LogMessages.find({"context.adventureId": adventureId}).count();
         //console.log("Limit:", limit, "Count:", count);
         instance.loaded.set(count);
       }

@@ -3,10 +3,10 @@
  */
 Template.TestCaseList.helpers({
   baseGroups: function () {
-    return Collections.TestGroups.find({ parentGroupId: null, projectVersionId: FlowRouter.getParam("projectVersionId") }, { sort: { title: 1 } });
+    return TestGroups.find({ parentGroupId: null, projectVersionId: FlowRouter.getParam("projectVersionId") }, { sort: { title: 1 } });
   },
   baseTestCases: function () {
-    return Collections.TestCases.find({ testGroupId: null, projectVersionId: FlowRouter.getParam("projectVersionId") }, { sort: { title: 1 } });
+    return TestCases.find({ testGroupId: null, projectVersionId: FlowRouter.getParam("projectVersionId") }, { sort: { title: 1 } });
   }
 });
 
@@ -63,8 +63,8 @@ Template.TestCaseList.events({
         }
       });
     };
-    Collections.TestCases.find({ title: {$regex: search, $options: "i"}, projectVersionId: projectVersionId }).forEach(highlight);
-    Collections.TestGroups.find({ title: {$regex: search, $options: "i"}, projectVersionId: projectVersionId }).forEach(highlight);
+    TestCases.find({ title: {$regex: search, $options: "i"}, projectVersionId: projectVersionId }).forEach(highlight);
+    TestGroups.find({ title: {$regex: search, $options: "i"}, projectVersionId: projectVersionId }).forEach(highlight);
 
     // show no results if nothing matched
     if(!instance.$(".test-case-list-selectable.highlight").length){
@@ -87,7 +87,7 @@ Template.TestCaseList.events({
 
     if(itemType && itemName && itemName.length){
       if(itemType == "testcase"){
-        Collections.TestCases.insert({
+        TestCases.insert({
           projectId: projectId,
           projectVersionId: versionId,
           testGroupId: groupId,
@@ -101,7 +101,7 @@ Template.TestCaseList.events({
           }
         });
       } else if(itemType == "testgroup") {
-        Collections.TestGroups.insert({
+        TestGroups.insert({
           projectId: projectId,
           projectVersionId: versionId,
           parentGroupId: groupId,
@@ -194,14 +194,14 @@ Template.TestCaseList.rendered = function () {
         console.log("Drop: ", itemId, "on", groupId);
         if (groupId && itemId) {
           if (itemIsGroup) {
-            Collections.TestGroups.update(itemId, {$set: {parentGroupId: groupId}}, function (error) {
+            TestGroups.update(itemId, {$set: {parentGroupId: groupId}}, function (error) {
               if (error) {
                 console.error("Failed to update parent group: " + error.message);
                 Dialog.error("Failed to update parent group: " + error.message);
               }
             });
           } else {
-            Collections.TestCases.update(itemId, {$set: {testGroupId: groupId}}, function (error) {
+            TestCases.update(itemId, {$set: {testGroupId: groupId}}, function (error) {
               if (error) {
                 console.error("Failed to update test group: " + error.message);
                 Dialog.error("Failed to update test group: " + error.message);

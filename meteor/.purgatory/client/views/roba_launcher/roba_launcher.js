@@ -9,8 +9,8 @@ Template.roba_launcher.helpers({
     var dataContext = this.dataContext.get();
     if(!dataContext.account && this.route){
       var userTypeId = this.route.get().userType._id,
-        dataStore = Collections.DataStores.findOne({ dataKey: userTypeId }),
-        account = Collections.DataStoreRows.findOne({dataStoreId: dataStore._id}, {sort: {dateCreated: 1}});
+        dataStore = DataStores.findOne({ dataKey: userTypeId }),
+        account = DataStoreRows.findOne({dataStoreId: dataStore._id}, {sort: {dateCreated: 1}});
       if(account){
         dataContext.account = account._id;
         this.dataContext.set(dataContext);
@@ -20,7 +20,7 @@ Template.roba_launcher.helpers({
   },
   getServer: function () {
     if(!this.server.get()){
-      var server = Collections.Servers.findOne({
+      var server = Servers.findOne({
         projectVersionId: this.projectVersionId,
         active: true
       });
@@ -33,7 +33,7 @@ Template.roba_launcher.helpers({
   getTestSystem: function () {
     var testSystemId = this.testSystem.get();
     if(!testSystemId){
-      var testSystem = Collections.TestSystems.findOne({
+      var testSystem = TestSystems.findOne({
         projectVersionId: this.projectVersionId,
         active: true
       });
@@ -49,7 +49,7 @@ Template.roba_launcher.helpers({
         testAgentId = this.testAgent.get(),
         launchData = this;
     if(!testAgentId && testSystemId){
-      var testSystem = Collections.TestSystems.findOne({
+      var testSystem = TestSystems.findOne({
         projectVersionId: launchData.projectVersionId,
         staticId: testSystemId
       });
@@ -92,18 +92,18 @@ Template.roba_launcher.events({
   "click .btn-launch-drone": function (e, instance) {
     // get the server
     var adventureData = instance.data,
-        server = Collections.Servers.findOne({staticId: adventureData.server.get(), projectVersionId: adventureData.projectVersionId}),
+        server = Servers.findOne({staticId: adventureData.server.get(), projectVersionId: adventureData.projectVersionId}),
       route = adventureData.route.get();
 
     if(server){
       // assemble the data context
       var dataContext = adventureData.dataContext.get();
       if(dataContext.account){
-        dataContext.account = Collections.DataStoreRows.findOne(dataContext.account);
+        dataContext.account = DataStoreRows.findOne(dataContext.account);
       }
 
       // Create the adventure
-      var adventureId = Collections.Adventures.insert({
+      var adventureId = Adventures.insert({
         projectId: adventureData.projectId,
         projectVersionId: adventureData.projectVersionId,
         testSystemId: adventureData.testSystem.get(),
@@ -121,7 +121,7 @@ Template.roba_launcher.events({
           // Create the adventure step and link them into the route
           _.each(route.steps, function (step, stepIndex) {
             console.log("Creating route step: ", step, stepIndex);
-            step.stepId = Collections.AdventureSteps.insert({
+            step.stepId = AdventureSteps.insert({
               projectId: adventureData.projectId,
               adventureId: adventureId,
               actionId: step.action ? step.action._id : null,
@@ -136,13 +136,13 @@ Template.roba_launcher.events({
           });
 
           // Update the adventure with the linked route steps
-          Collections.Adventures.update(adventureId, {$set: {route: route}}, function (error) {
+          Adventures.update(adventureId, {$set: {route: route}}, function (error) {
             if(error){
               console.error("Failed to update adventure route: " + error.message);
               Dialog.error("Failed to update adventure route: " + error.message);
             } else {
               // Create the Adventure State record so the console functions properly
-              Collections.AdventureStates.insert({adventureId: adventureId, projectId: adventureData.projectId}, function (error) {
+              AdventureStates.insert({adventureId: adventureId, projectId: adventureData.projectId}, function (error) {
                 if(error){
                   console.error("Failed to create adventure state: " + error.message);
                   Dialog.error("Failed to create adventure state: " + error.message);

@@ -10,7 +10,7 @@ Template.edit_node_url_parameters.helpers({
 Template.edit_node_url_parameters.events({
   "click .btn-add-url-parameter": function (e, instance) {
     var node = this;
-    Collections.Nodes.update(instance.data._id, {
+    Nodes.update(instance.data._id, {
       $push: {
         urlParameters: {
           order: node.urlParameters ? node.urlParameters.length : 0,
@@ -40,7 +40,7 @@ Template.edit_node_url_parameters.events({
       callback: function (btn) {
         //console.log("Dialog button pressed: ", btn);
         if(btn == "Delete"){
-          Collections.Nodes.update(instance.data._id, { $pull: { urlParameters: {order: parameter.order} } }, function (error) {
+          Nodes.update(instance.data._id, { $pull: { urlParameters: {order: parameter.order} } }, function (error) {
             Dialog.hide();
             if(error){
               console.error("Delete failed: " + error.message);
@@ -84,7 +84,7 @@ Template.edit_node_url_parameters.rendered = function () {
         });
 
         console.log("Update pre-send: ",  instance.data._id, update);
-        Collections.Nodes.update( instance.data._id, update, function (error) {
+        Nodes.update( instance.data._id, update, function (error) {
           if(error){
             console.error("Node url parameter order update failed: " + error.message);
             Dialog.error("Node url parameter order update failed: " + error.message);

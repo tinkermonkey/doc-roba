@@ -1,8 +1,8 @@
 import {Meteor} from 'meteor/meteor';
 import {Mongo} from 'meteor/mongo';
 import {SimpleSchema} from 'meteor/aldeed:simple-schema';
-import {SchemaHelpers} from '../_lib/schema_helpers.js';
-import {Auth} from '../_lib/auth.js';
+import {SchemaHelpers} from '../schema_helpers.js';
+import {Auth} from '../auth.js';
 import {ChangeTracker} from '../change_tracker/change_tracker.js';
 import {ProjectVersions} from './project_version.js';
 

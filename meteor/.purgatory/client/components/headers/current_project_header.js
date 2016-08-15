@@ -27,10 +27,10 @@ Template.CurrentProjectHeader.created = function () {
     var projectId = FlowRouter.getParam("projectId"),
         projectVersionId = FlowRouter.getParam("projectVersionId");
     if(projectId){
-      instance.project.set(Collections.Projects.findOne(projectId));
+      instance.project.set(Projects.findOne(projectId));
     }
     if(projectVersionId){
-      instance.version.set(Collections.ProjectVersions.findOne(projectVersionId));
+      instance.version.set(ProjectVersions.findOne(projectVersionId));
     }
   });
 

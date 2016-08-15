@@ -6,7 +6,7 @@ Template.AdventureLogEmbedded.helpers({
     var instance = Template.instance();
     var adventure = this.adventure;
     console.log("AdventureLogEmbedded messages: ", instance.data, adventure);
-    return Collections.LogMessages.find({
+    return LogMessages.find({
       "context.adventureId": adventure._id
     }, {
       sort: { time: -1 },

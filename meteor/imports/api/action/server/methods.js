@@ -1,5 +1,5 @@
 import {Meteor} from 'meteor/meteor';
 
-Meteor.startup(() => {
-  Meteor.methods({});
+Meteor.methods({
+  
 });

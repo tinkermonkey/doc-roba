@@ -1,7 +1,7 @@
 import {Mongo} from 'meteor/mongo';
 import {SimpleSchema} from 'meteor/aldeed:simple-schema';
-import {SchemaHelpers} from '../_lib/schema_helpers.js';
-import {Auth} from '../_lib/auth.js';
+import {SchemaHelpers} from '../schema_helpers.js';
+import {Auth} from '../auth.js';
 import {TestResultCodes} from './test_result_codes.js';
 import {TestResultStatus} from './test_result_status.js';
 

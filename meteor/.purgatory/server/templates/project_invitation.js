@@ -4,8 +4,8 @@ EmailTemplates.ProjectInvitation = {
     path: "/project_invitation/:invitationId",
     data: function (params) {
       console.log("Invitation Preview: ", params);
-      var invitation = Collections.ProjectInvitations.findOne(params.invitationId),
-          project = Collections.Projects.findOne(invitation.projectId);
+      var invitation = ProjectInvitations.findOne(params.invitationId),
+          project = Projects.findOne(invitation.projectId);
       console.log("Invitation Preview: ", invitation);
       /*
       return invitation

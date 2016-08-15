@@ -9,9 +9,9 @@ Template.XEditableActionRouteSelector.helpers({
     var filter = Template.instance().filter.get();
     if(this.staticId && this.projectVersionId){
       if(filter && filter.length > 1){
-        return Collections.Actions.find({nodeId: this.staticId, projectVersionId: this.projectVersionId, title: {$regex: filter, $options: "i"}}, {sort: {title: 1}});
+        return Actions.find({nodeId: this.staticId, projectVersionId: this.projectVersionId, title: {$regex: filter, $options: "i"}}, {sort: {title: 1}});
       } else {
-        return Collections.Actions.find({nodeId: this.staticId, projectVersionId: this.projectVersionId}, {sort: {title: 1}});
+        return Actions.find({nodeId: this.staticId, projectVersionId: this.projectVersionId}, {sort: {title: 1}});
       }
     }
   },

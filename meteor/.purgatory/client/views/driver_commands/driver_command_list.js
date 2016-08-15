@@ -3,7 +3,7 @@
  */
 Template.DriverCommandList.helpers({
   commands: function () {
-    return Collections.DriverCommands.find({}, {sort: {type: 1, name: 1}})
+    return DriverCommands.find({}, {sort: {type: 1, name: 1}})
   }
 });
 

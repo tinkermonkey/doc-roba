@@ -1,6 +1,6 @@
 import {Meteor} from 'meteor/meteor';
 import {SimpleSchema} from 'meteor/aldeed:simple-schema';
-import {Auth} from '../_lib/auth.js';
+import {Auth} from '../auth.js';
 import {ProjectRoles} from '../project/project_roles.js';
 import {ProjectVersions} from '../project/project_version.js';
 

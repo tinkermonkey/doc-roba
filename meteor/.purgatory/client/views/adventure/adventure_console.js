@@ -27,7 +27,7 @@ Template.AdventureConsole.helpers({
   getCurrentNode: function () {
     var nodeId = Template.instance().currentNodeId.get();
     if(nodeId){
-      return Collections.Nodes.findOne({ staticId: nodeId, projectVersionId: this.adventure.projectVersionId });
+      return Nodes.findOne({ staticId: nodeId, projectVersionId: this.adventure.projectVersionId });
     }
   }
 });
@@ -37,7 +37,7 @@ Template.AdventureConsole.helpers({
  */
 Template.AdventureConsole.events({
   "click .btn-unpause-adventure": function (e, instance) {
-    Collections.Adventures.update(FlowRouter.getParam("adventureId"), {$set: {status: instance.prePauseStatus || AdventureStatus.awaitingCommand}}, function (error, result) {
+    Adventures.update(FlowRouter.getParam("adventureId"), {$set: {status: instance.prePauseStatus || AdventureStatus.awaitingCommand}}, function (error, result) {
       if(error){
         Dialog.error("Un-Pause failed: " + error.message);
       }
@@ -45,7 +45,7 @@ Template.AdventureConsole.events({
   },
   "click .btn-pause-adventure": function (e, instance) {
     instance.prePauseStatus = instance.data.adventure.status;
-    Collections.Adventures.update(FlowRouter.getParam("adventureId"), {$set: {status: AdventureStatus.paused}}, function (error, result) {
+    Adventures.update(FlowRouter.getParam("adventureId"), {$set: {status: AdventureStatus.paused}}, function (error, result) {
       if(error){
         Dialog.error("Pause failed: " + error.message);
       }
@@ -94,15 +94,15 @@ Template.AdventureConsole.created = function () {
         ready = instance.subscriptionsReady();
 
     if(ready){
-      var adventure = Collections.Adventures.findOne(adventureId),
-          state = Collections.AdventureStates.findOne({adventureId: adventureId});
+      var adventure = Adventures.findOne(adventureId),
+          state = AdventureStates.findOne({adventureId: adventureId});
 
       instance.adventure.set(adventure);
       instance.state.set(state);
-      instance.testSystem.set(Collections.TestSystems.findOne({ staticId: adventure.testSystemId, projectVersionId: adventure.projectVersionId }));
+      instance.testSystem.set(TestSystems.findOne({ staticId: adventure.testSystemId, projectVersionId: adventure.projectVersionId }));
 
       // pick up any updates to the last known node
-      Collections.Adventures.find({_id: adventureId}).observeChanges({
+      Adventures.find({_id: adventureId}).observeChanges({
         changed: function (id, fields) {
           //console.log("Adventure changed: ", fields);
           if(_.contains(_.keys(fields), "lastKnownNode")){
@@ -115,7 +115,7 @@ Template.AdventureConsole.created = function () {
       });
 
       // React to changes in the url
-      Collections.AdventureStates.find({_id: state._id}).observeChanges({
+      AdventureStates.find({_id: state._id}).observeChanges({
         changed: function (id, fields) {
           //console.log("Adventure State changed: ", _.keys(fields));
           if(_.contains(_.keys(fields), "url") || _.contains(_.keys(fields), "title")){

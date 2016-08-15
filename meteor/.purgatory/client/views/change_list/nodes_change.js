@@ -7,8 +7,8 @@ Template.nodes_change.helpers({
    */
   combineData: function () {
     var change = this;
-    change.project = Collections.Projects.findOne({ _id: change.projectId });
-    change.projectVersion = Collections.ProjectVersions.findOne({ _id: change.projectVersionId });
+    change.project = Projects.findOne({ _id: change.projectId });
+    change.projectVersion = ProjectVersions.findOne({ _id: change.projectVersionId });
     return change;
   },
   isUpdated: function () {

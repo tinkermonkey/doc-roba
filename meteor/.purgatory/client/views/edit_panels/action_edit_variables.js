@@ -20,7 +20,7 @@ Template.action_edit_variables.events({
       order = action.variables ? action.variables.length - 1 : 0;
 
     if(action){
-      Collections.Actions.update(action._id, {
+      Actions.update(action._id, {
         $push: {
           variables: {
             order: order,
@@ -60,7 +60,7 @@ Template.action_edit_variables.events({
       callback: function (btn) {
         //console.log("Dialog button pressed: ", btn);
         if(btn == "Delete"){
-          Collections.Actions.update(variable.actionId, { $pull: { variables: {order: variable.order} } }, function (error, response) {
+          Actions.update(variable.actionId, { $pull: { variables: {order: variable.order} } }, function (error, response) {
             Dialog.hide();
             if(error){
               console.error("Delete Variable failed: " + error.message);
@@ -95,7 +95,7 @@ Template.action_edit_variables.events({
       }
     }
 
-    Collections.Actions.update(actionId, update, function (error) {
+    Actions.update(actionId, update, function (error) {
       if(error){
         console.error("Action Variable update failed: " + error.message);
         Dialog.error("Action Variable update failed: " + error.message);
@@ -134,7 +134,7 @@ Template.action_edit_variables.rendered = function () {
         });
 
         //console.log("Update pre-send: ", update);
-        Collections.Actions.update(actionId, update, function (error) {
+        Actions.update(actionId, update, function (error) {
           if(error){
             console.error("Action Variable order update failed: " + error.message);
             Dialog.error("Action Variable order update failed: " + error.message);

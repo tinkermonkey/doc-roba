@@ -36,8 +36,8 @@ Template.DocTree.created = function () {
     instance.subscribe("test_agents", projectId, projectVersionId);// TODO: Move to lower level template
 
     // pull in the project and project version records
-    instance.project.set(Collections.Projects.findOne(projectId));
-    instance.version.set(Collections.ProjectVersions.findOne(projectVersionId));
+    instance.project.set(Projects.findOne(projectId));
+    instance.version.set(ProjectVersions.findOne(projectVersionId));
   });
 
   /**
@@ -140,20 +140,20 @@ Template.DocTree.created = function () {
     var instance = this;
 
     // get fresh node data
-    instance.treeLayout.nodeHandler.setNodes(Collections.Nodes.find({projectVersionId: version._id}).fetch());
-    instance.treeLayout.actionHandler.setActions(Collections.Actions.find({projectVersionId: version._id}).fetch());
+    instance.treeLayout.nodeHandler.setNodes(Nodes.find({projectVersionId: version._id}).fetch());
+    instance.treeLayout.actionHandler.setActions(Actions.find({projectVersionId: version._id}).fetch());
 
     // get the mesh of navMenu actions
-    instance.treeLayout.actionHandler.setNavActions(Collections.Nodes.find({
+    instance.treeLayout.actionHandler.setNavActions(Nodes.find({
       type: NodeTypes.navMenu, projectVersionId: version._id
     }).map(function (navMenu) {
       return {
         menu: navMenu,
-        actions: Collections.Actions.find({
+        actions: Actions.find({
           projectVersionId: version._id,
           nodeId: navMenu.staticId
         }).fetch(),
-        nodes: Collections.Nodes.find({
+        nodes: Nodes.find({
           projectVersionId: version._id,
           navMenus: navMenu.staticId
         }).map(function (node) { return node.staticId })
@@ -208,8 +208,8 @@ Template.DocTree.rendered = function () {
   instance.autorun(function () {
     var version = instance.version.get(),
         project = instance.project.get(),
-        nodes   = Collections.Nodes.find({projectVersionId: version._id}),
-        actions = Collections.Actions.find({projectVersionId: version._id});
+        nodes   = Nodes.find({projectVersionId: version._id}),
+        actions = Actions.find({projectVersionId: version._id});
 
     // Maintain the tree
     instance.maintainTree(project, version, nodes, actions);

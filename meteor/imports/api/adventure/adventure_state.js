@@ -1,5 +1,5 @@
 import {Mongo} from 'meteor/mongo';
-import {Auth} from '../_lib/auth.js';
+import {Auth} from '../auth.js';
 
 /**
  * The current state of an adventure (url, screenshot, etc)

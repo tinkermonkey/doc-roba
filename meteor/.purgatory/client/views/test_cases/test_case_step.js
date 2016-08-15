@@ -36,7 +36,7 @@ Template.TestCaseStep.events({
     var step = instance.data;
     if(step && step._id){
       e.stopImmediatePropagation();
-      Collections.TestCaseSteps.remove(step._id, function (error) {
+      TestCaseSteps.remove(step._id, function (error) {
         if(error){
           console.error("Failed to delete test step: " + error.message);
           Dialog.error("Failed to delete test step: " + error.message);
@@ -59,7 +59,7 @@ Template.TestCaseStep.events({
       }
 
       console.log("TestCaseStep data update: ", stepData, newValue);
-      Collections.TestCaseSteps.update(testCaseStep._id, {$set: {data: stepData}}, function (error) {
+      TestCaseSteps.update(testCaseStep._id, {$set: {data: stepData}}, function (error) {
         if(error){
           console.error("Failed to update step: " + error.message);
           Dialog.error("Failed to update step: " + error.message);

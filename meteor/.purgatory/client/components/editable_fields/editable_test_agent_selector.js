@@ -16,7 +16,7 @@ Template.EditableTestAgentSelector.rendered = function () {
 
   instance.autorun(function () {
     var data = Template.currentData(),
-      testAgents = Collections.TestAgents.find({
+      testAgents = TestAgents.find({
         projectVersionId: instance.data.projectVersionId
       }, {sort: {title: 1}}).map(function (testAgent) {
         return { value: testAgent.staticId, text: Util.getTestAgentNameWithVersion(testAgent) };

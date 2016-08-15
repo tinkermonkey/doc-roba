@@ -46,7 +46,7 @@ Template.TestRunItem.events({
         update["$set"][dataKey] = newValue;
       }
 
-      Collections.TestRunTemplateItems.update(itemId, update, function (error) {
+      TestPlanItems.update(itemId, update, function (error) {
         if(error){
           console.error("Failed to update test run template item value: " + error.message);
           console.log(update);

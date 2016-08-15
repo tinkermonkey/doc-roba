@@ -45,7 +45,7 @@ Template.AdventureEditNodeActionRow.events({
 
     console.log("Execute Action: ", code);
     if(code.length){
-      Collections.AdventureCommands.insert({
+      AdventureCommands.insert({
         projectId: adventure.projectId,
         adventureId: adventure._id,
         code: code
@@ -73,7 +73,7 @@ Template.AdventureEditNodeActionRow.events({
       callback: function (btn) {
         //console.log("Dialog button pressed: ", btn);
         if(btn == "Delete"){
-          Collections.Actions.remove(action._id, function (error, result) {
+          Actions.remove(action._id, function (error, result) {
             if(error) {
               console.error("Failed to delete action: " + error.message);
               Dialog.hide();

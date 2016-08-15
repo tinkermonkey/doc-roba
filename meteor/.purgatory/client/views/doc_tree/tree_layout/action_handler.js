@@ -89,7 +89,7 @@ TreeActionHandler.prototype.addAction = function (sourceNode, destinationNode) {
       title: 'New Action'
     };
 
-  Collections.Actions.insert(actionConfig, function (error, response) {
+  Actions.insert(actionConfig, function (error, response) {
     if(error){
       console.error("Failed to create Action: ", error);
     } else {
@@ -104,7 +104,7 @@ TreeActionHandler.prototype.addAction = function (sourceNode, destinationNode) {
 TreeActionHandler.prototype.addRoute = function (action, destinationNode) {
   console.debug("addRoute: ", action, destinationNode);
 
-  Collections.Actions.update({_id: action._id }, {
+  Actions.update({_id: action._id }, {
     $push: { routes: {
       order: action.routes.length,
       nodeId: destinationNode.staticId,
@@ -795,7 +795,7 @@ TreeActionHandler.prototype.unlock = function () {
 TreeActionHandler.prototype.editAction = function (d) {
   var self = this,
       tree = self.treeLayout,
-      action = Collections.Actions.findOne(d._id),
+      action = Actions.findOne(d._id),
       nodeList;
 
   // Clear the selected nodes

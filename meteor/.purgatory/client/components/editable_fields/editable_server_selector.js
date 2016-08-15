@@ -16,7 +16,7 @@ Template.EditableServerSelector.rendered = function () {
 
   instance.autorun(function () {
     var data = Template.currentData(),
-      servers = Collections.Servers.find({
+      servers = Servers.find({
         projectVersionId: instance.data.projectVersionId,
         active: true
       }, {sort: {title: 1}}).map(function (server) {

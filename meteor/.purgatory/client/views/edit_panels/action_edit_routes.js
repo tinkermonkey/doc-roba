@@ -38,8 +38,8 @@ Template.action_edit_routes.events({
   },
   "click .btn-delete": function (e, instance) {
     var route = this,
-      source = Collections.Nodes.findOne({staticId: instance.data.nodeId, projectVersionId: instance.data.projectVersionId}),
-      destination = Collections.Nodes.findOne({staticId: route.nodeId, projectVersionId: instance.data.projectVersionId});
+      source = Nodes.findOne({staticId: instance.data.nodeId, projectVersionId: instance.data.projectVersionId}),
+      destination = Nodes.findOne({staticId: route.nodeId, projectVersionId: instance.data.projectVersionId});
 
     Dialog.show({
       title: "Delete Route?",
@@ -53,7 +53,7 @@ Template.action_edit_routes.events({
       callback: function (btn) {
         //console.log("Dialog button pressed: ", btn);
         if(btn == "Delete"){
-          Collections.Actions.update(instance.data._id, { $pull: { routes: {order: route.order} } }, function (error, response) {
+          Actions.update(instance.data._id, { $pull: { routes: {order: route.order} } }, function (error, response) {
             Dialog.hide();
             if(error){
               console.error("Delete failed: ", error);
@@ -72,7 +72,7 @@ Template.action_edit_routes.events({
       action = this;
 
     if(action && action.routes && action.routes.length){
-      Collections.Actions.update(action._id, {
+      Actions.update(action._id, {
         $push: {
           routes: {
             order: action.routes.length,
@@ -129,7 +129,7 @@ Template.action_edit_routes.rendered = function () {
           update["$set"][updateKey] = i;
         });
 
-        Collections.Actions.update(actionId, update, function (error, response) {
+        Actions.update(actionId, update, function (error, response) {
           if(error){
             console.error("Action route order update failed: ", error);
             Dialog.error("Action route order update failed: " + error.message);

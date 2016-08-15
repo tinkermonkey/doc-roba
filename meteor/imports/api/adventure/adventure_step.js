@@ -1,6 +1,6 @@
 import {Mongo} from 'meteor/mongo';
 import {SimpleSchema} from 'meteor/aldeed:simple-schema';
-import {Auth} from '../_lib/auth.js';
+import {Auth} from '../auth.js';
 import {AdventureStepStatus} from './adventure_step_status.js';
 
 /**

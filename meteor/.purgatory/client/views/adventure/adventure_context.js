@@ -5,7 +5,7 @@ Template.AdventureContext.helpers({
   getNode: function () {
     //console.log("AdventureContext: ", this);
     if(this.currentNodeId && this.currentNodeId.get()){
-      var node = Collections.Nodes.findOne({staticId: this.currentNodeId.get(), projectVersionId: this.adventure.projectVersionId});
+      var node = Nodes.findOne({staticId: this.currentNodeId.get(), projectVersionId: this.adventure.projectVersionId});
       //console.log("AdventureContext, node: ", node);
       if(node){
         // clear the ignore list once a node is found
@@ -133,7 +133,7 @@ Template.AdventureContext.events({
       }
 
       // Get the parent node to figure out the platform and user type
-      var parent = Collections.Nodes.findOne({staticId: record.parentId, projectVersionId: record.projectVersionId});
+      var parent = Nodes.findOne({staticId: record.parentId, projectVersionId: record.projectVersionId});
       if(!parent){
         console.error("Create node failed: could not find parent node " + record.parentId + " for project " + record.projectVersionId);
         Dialog.error("Create node failed: could not find parent node " + record.parentId + " for project " + record.projectVersionId);
@@ -143,7 +143,7 @@ Template.AdventureContext.events({
       record.platformId = parent.platformId;
 
       // create the record
-      Collections.Nodes.insert(record);
+      Nodes.insert(record);
     } catch (e) {
       console.error("Failed to load new record: " + e.message);
     }
@@ -159,7 +159,7 @@ Template.AdventureContext.events({
     if(dataKey){
       update["$set"][dataKey] = newValue;
       //console.log("Edited: ", dataKey, newValue, node);
-      Collections.Nodes.update(nodeId, update, function (error) {
+      Nodes.update(nodeId, update, function (error) {
         if(error){
           console.error("Failed to update node value: " + error.message);
           Dialog.error("Failed to update node value: " + error.message);
@@ -185,7 +185,7 @@ Template.AdventureContext.events({
 
     // send the command to get information about the "clicked" element
     if(field && node[field] && _.contains([AdventureStatus.awaitingCommand], adventureContext.adventure.status)){
-      Collections.AdventureCommands.insert({
+      AdventureCommands.insert({
         projectId: adventureContext.adventure.projectId,
         adventureId: adventureContext.adventure._id,
         updateState: false,

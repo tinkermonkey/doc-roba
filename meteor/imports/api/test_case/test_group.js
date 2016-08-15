@@ -1,12 +1,19 @@
+import {Mongo} from 'meteor/mongo';
+import {SimpleSchema} from 'meteor/aldeed:simple-schema';
+import {SchemaHelpers} from '../schema_helpers.js';
+import {Auth} from '../auth.js';
+import {ChangeTracker} from '../change_tracker/change_tracker.js';
+import {TestCases} from './test_case.js';
+
 /**
  * A simple means of grouping tests
  */
-TestGroup = new SimpleSchema({
+export const TestGroup = new SimpleSchema({
   // Static ID field that will be constant across versions of the project
   staticId: {
     type: String,
     index: true,
-    autoValue: autoValueObjectId,
+    autoValue: SchemaHelpers.autoValueObjectId,
     denyUpdate: true
   },
   // Link to the project to which this group belongs
@@ -36,24 +43,24 @@ TestGroup = new SimpleSchema({
   // Standard tracking fields
   dateCreated: {
     type: Date,
-    autoValue: autoValueDateCreated,
+    autoValue: SchemaHelpers.autoValueDateCreated,
     denyUpdate: true
   },
   createdBy: {
     type: String,
-    autoValue: autoValueCreatedBy,
+    autoValue: SchemaHelpers.autoValueCreatedBy,
     denyUpdate: true
   },
   dateModified: {
     type: Date,
-    autoValue: autoValueDateModified
+    autoValue: SchemaHelpers.autoValueDateModified
   },
   modifiedBy: {
     type: String,
-    autoValue: autoValueModifiedBy
+    autoValue: SchemaHelpers.autoValueModifiedBy
   }
 });
-TestGroups = new Mongo.Collection("test_groups");
+export const TestGroups = new Mongo.Collection("test_groups");
 TestGroups.attachSchema(TestGroup);
 TestGroups.deny(Auth.ruleSets.deny.ifNotTester);
 TestGroups.allow(Auth.ruleSets.allow.ifAuthenticated);
