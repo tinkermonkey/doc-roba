@@ -1,6 +1,6 @@
 import {Meteor} from 'meteor/meteor';
 import {Auth} from '../../auth.js';
-import {Nodes} from '../nodes.js';
+import {Nodes} from '../node.js';
 import {NodeTypes} from '../node_types.js';
 
 Meteor.publish("nodes", (projectId, projectVersionId) => {

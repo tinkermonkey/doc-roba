@@ -1,7 +1,7 @@
 import {Meteor} from 'meteor/meteor';
 import {Mailer} from 'meteor/lookback:emails';
 import {Projects} from '../project.js';
-import {ProjectRoles} from '../project_roles.js';
+import {ProjectRoles, ProjectRolesLookup} from '../project_roles.js';
 import {ProjectVersions} from '../project_version.js';
 import {ProjectInvitations} from '../project_invitations.js';
 import {Nodes} from '../../node/node.js';
@@ -282,7 +282,20 @@ Meteor.methods({
       throw new Meteor.Error(403);
     }
   },
-  
+    
+  /**
+   * Give a user a role for a project
+   * @param projectId
+   * @param userId
+   * @param role
+   */
+  grantProjectRole(projectId, userId, role) {
+    console.debug("grantProjectRole: " + projectId + ", " + userId + ", " + role);
+    var user = Meteor.users.findOne(userId);
+    if(user && ProjectRolesLookup[role]){
+      user.addProjectRole(projectId, role);
+    }
+  },
   /**
    * Remove project access from a user
    */

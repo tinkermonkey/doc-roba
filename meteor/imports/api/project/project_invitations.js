@@ -9,7 +9,7 @@ import {Users} from '../users/users.js';
 /**
  *  Project Invitations
  */
-export const ProjectInvitations = new SimpleSchema({
+export const ProjectInvitation = new SimpleSchema({
   projectId: {
     type: String,
     denyUpdate: true
@@ -59,7 +59,7 @@ export const ProjectInvitations = new SimpleSchema({
   }
 });
 export const ProjectInvitations = new Mongo.Collection("project_invitations");
-ProjectInvitations.attachSchema(ProjectInvitations);
+ProjectInvitations.attachSchema(ProjectInvitation);
 ProjectInvitations.deny(Auth.ruleSets.deny.always);
 ProjectInvitations.allow(Auth.ruleSets.allow.ifAuthenticated);
 

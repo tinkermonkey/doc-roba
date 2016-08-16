@@ -1,3 +1,5 @@
+import {Accounts} from 'meteor/accounts-base';
+
 Accounts.singleUseAuth = {
   /**
    * Generate and store a one-time password

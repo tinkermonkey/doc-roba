@@ -34,3 +34,12 @@ Meteor.publish("screenshot_comparison", function (baseScreenshotId, compareScree
     });
   }
 });
+
+Meteor.publish("test_result_screenshots", function (projectId, testResultId) {
+  console.debug("Publish: test_result_screenshots:", projectId, testResultId);
+  // check that there is a project role for the current user
+  if(Auth.hasProjectAccess(this.userId, projectId)){
+    return Screenshots.find({testResultId: testResultId});
+  }
+  return [];
+});

@@ -3,7 +3,6 @@ import {Auth} from '../../auth.js';
 import {TestResults} from '../test_result.js';
 import {TestResultRoles} from '../test_result_role.js';
 import {TestResultSteps} from '../test_result_step.js';
-import {LogMessages} from '../../log_message/log_message.js';
 import {Screenshots} from '../../screenshot/screenshot.js';
 
 Meteor.publish("test_case_results", function (projectId, testCaseId, limit) {
@@ -45,24 +44,6 @@ Meteor.publish("test_result_steps", function (projectId, testResultId) {
   // check that there is a project role for the current user
   if(Auth.hasProjectAccess(this.userId, projectId)){
     return TestResultSteps.find({testResultId: testResultId});
-  }
-  return [];
-});
-
-Meteor.publish("test_result_log", function (projectId, testResultId) {
-  console.debug("Publish: test_result_log:", projectId, testResultId);
-  // check that there is a project role for the current user
-  if(Auth.hasProjectAccess(this.userId, projectId)){
-    return LogMessages.find({"context.testResultId": testResultId});
-  }
-  return [];
-});
-
-Meteor.publish("test_result_screenshots", function (projectId, testResultId) {
-  console.debug("Publish: test_result_screenshots:", projectId, testResultId);
-  // check that there is a project role for the current user
-  if(Auth.hasProjectAccess(this.userId, projectId)){
-    return Screenshots.find({testResultId: testResultId});
   }
   return [];
 });

@@ -1,4 +1,7 @@
 import {Meteor} from 'meteor/meteor';
+import {check} from 'meteor/check';
+import {Accounts} from 'meteor/accounts-base';
+import {ProcessLauncher} from '../../process_launcher/process_launcher.js';
 var childProcess  = Npm.require("child_process");
 
 // Collections

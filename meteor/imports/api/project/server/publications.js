@@ -23,17 +23,6 @@ Meteor.publish("project_versions", (projectList) => {
   return [];
 });
 
-Meteor.publish("changes", (projectList, limit) => {
-  console.debug("Publish: changes");
-  if(this.userId){
-    let user = Meteor.users.findOne(this.userId),
-        limit = limit || 25;
-    return RecordChanges.find({projectId: {$in: user.projectList || []}}, {limit: limit});
-  }
-  console.warn("Publish: changes returning nothing");
-  return [];
-});
-
 // All projects the user has a role for
 Meteor.publish("all_projects", (projectList) => {
   console.debug("Publish: all_projects");

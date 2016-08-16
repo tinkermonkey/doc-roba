@@ -1,6 +1,8 @@
 import {Meteor} from 'meteor/meteor';
-var AdmZip = require('adm-zip');
-var JSON = require('json');
+import {DocRoba} from '../../api/doc_roba.js';
+var AdmZip = require('adm-zip'),
+    fs = require('fs'),
+    path = require('path');
 
 // Full collections
 import {Actions}                from '../../api/action/action.js';
@@ -27,10 +29,10 @@ import {TestRunStages}          from '../../api/test_run/test_run_stage.js';
 import {TestPlans}              from '../../api/test_plan/test_plan.js';
 import {TestPlanItems}          from '../../api/test_plan/test_plan_item.js';
 import {TestSystems}            from '../../api/test_system/test_system.js';
+import {Users}                  from '../../api/users/users.js';
 
 // Partial collection export
 import {LogMessages}            from '../../api/log_message/log_message.js';
-
 
 /**
  * On startup, check to see if the demo data should be loaded
@@ -67,6 +69,7 @@ var collectionList = {
       DataStoreFields: DataStoreFields,
       DataStoreRows: DataStoreRows,
       DriverCommands: DriverCommands,
+      LogMessages: LogMessages,
       Nodes: Nodes,
       Projects: Projects,
       ProjectVersions: ProjectVersions,
@@ -85,7 +88,8 @@ var collectionList = {
       TestRunStages: TestRunStages,
       TestPlans: TestPlans,
       TestPlanItems: TestPlanItems,
-      TestSystems: TestSystems
+      TestSystems: TestSystems,
+      Users: Users
     },
     DemoDataHandler = {
   // The location the files will be stored
@@ -104,6 +108,10 @@ var collectionList = {
         dataDir = path.join(DocRoba.rootPath, handler.dataPath);
     
     console.debug("DemoDataHandler.exportData data folder: " + dataDir);
+    
+    // remove log messages and users from the collections list because they'll be handled differently
+    delete collectionList.LogMessages;
+    delete collectionList.Users;
     
     // clear out the directory if it exists
     if(fs.existsSync(dataDir)){
@@ -180,7 +188,6 @@ var collectionList = {
     
     console.debug("DemoDataHandler.importData data folder: " + dataDir);
     
-    // clear out the directory if it exists
     if(fs.existsSync(dataDir)){
       console.debug("DemoDataHandler.importData scanning data files");
       fs.readdirSync(dataDir)
@@ -200,50 +207,60 @@ var collectionList = {
   
   /**
    * Export a particular collection
-   * @param zipFilePath Path to the zip file to import
+   * @param filePath Path to the zip file to import
    */
-  importRecords(zipFilePath) {
+  importRecords(filePath) {
     var handler = this,
-        input = "",
-        recordCount = 0;
+        data, collectionName;
     
-    console.info("DemoDataHandler.importRecords importing " + path.basename(zipFilePath) );
+    console.info("DemoDataHandler.importRecords importing " + path.basename(filePath) );
     
-    // Unzip it
-    var zipFile = new AdmZip(zipFilePath),
-        zipEntries = zipFile.getEntries();
-    if(zipEntries){
-      zipEntries.forEach((zipEntry) => {
-        if(zipEntry.entryName && zipEntry.entryName.match(/\.json$/)){
-          console.debug("DemoDataHandler.importRecords reading file " + zipEntry.entryName );
-          
-          var input = zipFile.readAsText(zipEntry, handler.encoding);
-          try {
-            var data = JSON.parse(input),
-                collectionName = zipEntry.entryName.replace(/\.json$/i, "");
-            console.debug("DemoDataHandler.importRecords found " + data.length + " records for " + collectionName );
-          } catch (e) {
-            console.error("DemoDataHandler.importRecords JSON parse failed: " + e.toString());
+    // Unzip it if needed
+    if(filePath.match(/\.zip$/)){
+      var zipFile = new AdmZip(filePath),
+          zipEntries = zipFile.getEntries();
+      if(zipEntries){
+        zipEntries.forEach((zipEntry) => {
+          if(zipEntry.entryName && zipEntry.entryName.match(/\.json$/)){
+            console.debug("DemoDataHandler.importRecords reading file " + zipEntry.entryName );
+        
+            var input = zipFile.readAsText(zipEntry, handler.encoding);
+            try {
+              data = JSON.parse(input);
+              collectionName = zipEntry.entryName.replace(/\.json$/i, "");
+              console.debug("DemoDataHandler.importRecords found " + data.length + " records for " + collectionName );
+            } catch (e) {
+              console.error("DemoDataHandler.importRecords JSON parse failed: " + e.toString());
+            }
           }
-          
-          if(collectionList[collectionName]){
-            data.forEach((record) => {
-              // Use the direct method to circumvent the collection hooks
-              if(collectionList[collectionName] && collectionList[collectionName].direct){
-                collectionList[collectionName].direct.insert(record);
-              } else {
-                // CollectionFS doesn't have hooks and I have to figure out how to encode the file data
-                //collectionList[collectionName].insert(record);
-                
-              }
-            });
-          } else {
-            console.error("DemoDataHandler.importRecords failed: collection [" + collectionName + "] not found");
-          }
+        });
+      } else {
+        console.error("Zip file didn't contain any zip entries: " + filePath);
+      }
+    } else {
+      // read a raw json file
+      try {
+        var input = fs.readFileSync(filePath, handler.encoding);
+        data = JSON.parse(input);
+        collectionName = path.basename(filePath).replace(/\.json$/i, "");
+      } catch (e) {
+        console.error("JSON file didn't contain any entries: " + filePath);
+      }
+    }
+    
+    if(data && collectionName && collectionList[collectionName]){
+      data.forEach((record) => {
+        // Use the direct method to circumvent the collection hooks
+        if(collectionList[collectionName] && collectionList[collectionName].direct){
+          collectionList[collectionName].direct.insert(record);
+        } else {
+          // CollectionFS doesn't have hooks and I have to figure out how to encode the file data
+          //collectionList[collectionName].insert(record);
+        
         }
       });
     } else {
-      console.error("Zip file didn't contain any zip entries: " + zipFilePath);
+      console.error("DemoDataHandler.importRecords failed: collection [" + collectionName + "] not found");
     }
   }
 };

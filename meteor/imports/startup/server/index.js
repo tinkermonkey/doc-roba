@@ -1,5 +1,5 @@
 // Load the demo data if needed
-import './fixutre.js';
+import './fixture.js';
 
 // Initialize libraries
 import './init.js';
