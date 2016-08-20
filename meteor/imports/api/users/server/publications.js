@@ -16,7 +16,7 @@ Meteor.publish("user_data", function () {
 });
 
 Meteor.publish("user_peers", function (projectList) {
-  console.debug("Publish: user_peers");
+  console.debug("Publish: user_peers", projectList);
   var user = Meteor.users.findOne(this.userId);
   if(user && user.projectList && user.projectList.length) {
     console.log("user_peers:", user.projectList);

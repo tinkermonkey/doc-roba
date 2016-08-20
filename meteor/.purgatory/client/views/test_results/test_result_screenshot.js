@@ -137,7 +137,7 @@ Template.TestResultScreenshot.events({
       // load the comparison
       Meteor.call("templateCompareScreenshots", instance.data.screenshot._id, screenshot._id, function (error, result) {
         if(error){
-          Dialog.error("Screenshot comparison failed: " + error);
+          RobaDialog.error("Screenshot comparison failed: " + error);
         } else {
           console.log("Screenshot comparison result: ", result);
           instance.subscribe("screenshot_comparison", instance.data.screenshot._id, screenshot._id);
@@ -160,7 +160,7 @@ Template.TestResultScreenshot.events({
     if(!layer.isBaseImage){
       Meteor.call("templateCompareScreenshots", instance.data.screenshot._id, layer.screenshot._id, true, function (error, result) {
         if(error){
-          Dialog.error("Screenshot comparison reload failed: " + error);
+          RobaDialog.error("Screenshot comparison reload failed: " + error);
         }
       });
     }

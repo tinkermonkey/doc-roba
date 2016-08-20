@@ -1,5 +1,6 @@
 import {Meteor} from 'meteor/meteor';
 import {Mailer} from 'meteor/lookback:emails';
+import {Auth} from '../../auth.js';
 import {Projects} from '../project.js';
 import {ProjectRoles, ProjectRolesLookup} from '../project_roles.js';
 import {ProjectVersions} from '../project_version.js';
@@ -254,11 +255,7 @@ Meteor.methods({
         user = Meteor.users.findOne(userId);
     
     if(actor.isSystemAdmin || actor.hasAdminAccess(projectId)) {
-      if(!user.hasProjectRole(projectId, role)) {
-        user.addProjectRole(projectId, role);
-      } else {
-        throw new Meteor.Error("addProjectRole failed: user already has role");
-      }
+      user.addProjectRole(projectId, role);
     } else {
       throw new Meteor.Error(403);
     }

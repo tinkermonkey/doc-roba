@@ -26,7 +26,7 @@ Template.AdventureCommandEditor.events({
       var editorInstance = Blaze.getView(instance.$(".roba-ace").get(0)).templateInstance();
     } catch (e) {
       console.error("Failed to get editor instance: " + e.message);
-      Dialog.error("Failed to get editor instance: " + e.message);
+      RobaDialog.error("Failed to get editor instance: " + e.message);
       return;
     }
 
@@ -42,7 +42,7 @@ Template.AdventureCommandEditor.events({
       }, function (error) {
         if(error){
           console.error("Error adding adventure command: " + error.message);
-          Dialog.error("Error adding adventure command: " + error.message);
+          RobaDialog.error("Error adding adventure command: " + error.message);
         } else {
           editorInstance.editor.setValue("");
         }

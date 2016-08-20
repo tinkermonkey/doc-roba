@@ -3,7 +3,9 @@ import './home.css';
 
 import {Template} from 'meteor/templating';
 
+import './home_nav.js';
 import './project_list.js';
+import './project_invitations.js';
 
 /**
  * Template Helpers

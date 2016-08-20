@@ -117,7 +117,7 @@ FlowRouter.route("/test_run_template_dashboard/:projectId/:projectVersionId", {
       content: "TestRunTemplateDashboard",
       svgDefs: "MinimalSvgDefs",
       header: "CurrentProjectHeader",
-      nav: "TestRunTemplateNav"
+      nav: "TestPlanNav"
     });
   }
 });

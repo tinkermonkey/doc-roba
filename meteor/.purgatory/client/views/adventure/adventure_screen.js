@@ -211,7 +211,7 @@ Template.AdventureScreen.events({
     }, function (error) {
       if(error){
         console.error("Error adding adventure command: " + error.message);
-        Dialog.error("Error adding adventure command: " + error.message);
+        RobaDialog.error("Error adding adventure command: " + error.message);
       }
     });
   },
@@ -261,7 +261,7 @@ Template.AdventureScreen.events({
           });
         } else {
           console.error("clickable failure: could not identify attribute or tag: " + el.text());
-          Dialog.error("clickable failure: could not identify attribute or tag: " + el.text());
+          RobaDialog.error("clickable failure: could not identify attribute or tag: " + el.text());
         }
       }
     });
@@ -392,7 +392,7 @@ Template.AdventureScreen.events({
             Nodes.update(nodeId, update, function (error, result) {
               if(error){
                 console.error("Failed to update node value: " + error.message);
-                Dialog.error("Failed to update node value: " + error.message);
+                RobaDialog.error("Failed to update node value: " + error.message);
                 console.log("Attempted update:", update);
               }
             });
@@ -418,7 +418,7 @@ Template.AdventureScreen.events({
               Actions.update(targetId, update, function (error, result) {
                 if(error){
                   console.error("Failed to update action value: " + error.message);
-                  Dialog.error("Failed to update action value: " + error.message);
+                  RobaDialog.error("Failed to update action value: " + error.message);
                   console.log("Attempted update:", update);
                 }
               });

@@ -84,7 +84,7 @@ Template.AdventureToolbar.events({
       }, function (error) {
         if(error){
           console.error("Error adding adventure command: " + error.message);
-          Dialog.error("Error adding adventure command: " + error.message);
+          RobaDialog.error("Error adding adventure command: " + error.message);
         } else {
           // wait for the command to return
           var cursor = AdventureCommands.find({_id: commandId}).observe({
@@ -122,7 +122,7 @@ Template.AdventureToolbar.events({
     }, function (error) {
       if(error){
         console.error("Error adding adventure command: " + error.message);
-        Dialog.error("Error adding adventure command: " + error.message);
+        RobaDialog.error("Error adding adventure command: " + error.message);
       }
     });
   },
@@ -168,7 +168,7 @@ Template.AdventureToolbar.events({
     }, function (error) {
       if(error){
         console.error("Error adding adventure command: " + error.message);
-        Dialog.error("Error adding adventure command: " + error.message);
+        RobaDialog.error("Error adding adventure command: " + error.message);
       }
     });
   },
@@ -195,7 +195,7 @@ Template.AdventureToolbar.events({
     }, function (error) {
       if(error){
         console.error("Error adding adventure command: " + error.message);
-        Dialog.error("Error adding adventure command: " + error.message);
+        RobaDialog.error("Error adding adventure command: " + error.message);
       }
     });
   }

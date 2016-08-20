@@ -118,17 +118,17 @@ Template.AdventureContext.events({
       instance.data.currentNodeId.set();
     } catch(e) {
       console.error("Failed to clear node context: " + e.message);
-      Dialog.error("Failed to clear node context: " + e.message);
+      RobaDialog.error("Failed to clear node context: " + e.message);
     }
   },
   "click .btn-create-node": function (e, instance) {
     try {
       var record = Blaze.getView($(".btn-create-node").get(0)).templateInstance().nodeRecord.get();
       if(!record.parentId){
-        Dialog.error("Please select a parent node for this node");
+        RobaDialog.error("Please select a parent node for this node");
         return;
       } else if (!record.title) {
-        Dialog.error("Please enter a name for this node");
+        RobaDialog.error("Please enter a name for this node");
         return;
       }
 
@@ -136,7 +136,7 @@ Template.AdventureContext.events({
       var parent = Nodes.findOne({staticId: record.parentId, projectVersionId: record.projectVersionId});
       if(!parent){
         console.error("Create node failed: could not find parent node " + record.parentId + " for project " + record.projectVersionId);
-        Dialog.error("Create node failed: could not find parent node " + record.parentId + " for project " + record.projectVersionId);
+        RobaDialog.error("Create node failed: could not find parent node " + record.parentId + " for project " + record.projectVersionId);
         return;
       }
       record.userTypeId = parent.userTypeId;
@@ -162,12 +162,12 @@ Template.AdventureContext.events({
       Nodes.update(nodeId, update, function (error) {
         if(error){
           console.error("Failed to update node value: " + error.message);
-          Dialog.error("Failed to update node value: " + error.message);
+          RobaDialog.error("Failed to update node value: " + error.message);
         }
       });
     } else {
       console.error("Failed to update node value: data-key not found");
-      Dialog.error("Failed to update node value: data-key not found");
+      RobaDialog.error("Failed to update node value: data-key not found");
     }
   },
   "edited .current-node-selector": function (e, instance, newValue) {
@@ -193,7 +193,7 @@ Template.AdventureContext.events({
       }, function (error) {
         if(error){
           console.error("Error adding adventure command: " + error.message);
-          Dialog.error("Error adding adventure command: " + error.message);
+          RobaDialog.error("Error adding adventure command: " + error.message);
         }
       });
     }

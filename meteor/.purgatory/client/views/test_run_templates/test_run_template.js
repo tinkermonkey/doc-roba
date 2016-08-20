@@ -25,12 +25,12 @@ Template.TestPlan.events({
         if(error){
           console.error("Failed to update test run template value: " + error.message);
           console.log(update);
-          Dialog.error("Failed to update test run template value: " + error.message);
+          RobaDialog.error("Failed to update test run template value: " + error.message);
         }
       });
     } else {
       console.error("Failed to update test run template value: data-key not found");
-      Dialog.error("Failed to update test run template value: data-key not found");
+      RobaDialog.error("Failed to update test run template value: data-key not found");
     }
   }
 });

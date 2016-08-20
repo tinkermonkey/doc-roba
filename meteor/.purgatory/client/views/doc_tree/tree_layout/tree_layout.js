@@ -323,7 +323,7 @@ TreeLayout.prototype.confirmDeleteNodes = function (nodeList) {
       var scaledBounds = treeUtils.nodeListBounds(nodeList, self.config.highlightSurroundMargin),
         screenBounds = self.localToScreenCoordinates(scaledBounds);
 
-      Dialog.show({
+      RobaDialog.show({
         top: screenBounds.y,
         left: screenBounds.x + screenBounds.width + self.config.highlightSurroundMargin,
         width: self.config.dialogWidth,
@@ -350,7 +350,7 @@ TreeLayout.prototype.confirmDeleteNodes = function (nodeList) {
             self.restoreCachedNodeState();
             self.update();
           }
-          Dialog.hide();
+          RobaDialog.hide();
         }
       });
     });

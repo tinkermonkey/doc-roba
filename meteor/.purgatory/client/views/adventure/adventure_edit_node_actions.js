@@ -53,12 +53,12 @@ Template.AdventureEditNodeActions.events({
       }, function (error, result) {
         if(error){
           console.error("Adding Action failed: " + error.message);
-          Dialog.error("Adding Action failed: " + error.message);
+          RobaDialog.error("Adding Action failed: " + error.message);
         }
       });
     } else {
       console.error("Adding Action failed, no node found");
-      Dialog.error("Adding Action failed, no node found");
+      RobaDialog.error("Adding Action failed, no node found");
     }
   }
 });

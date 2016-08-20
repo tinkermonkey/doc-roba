@@ -5,6 +5,7 @@ import {Auth} from '../auth.js';
 import {ChangeTracker} from '../change_tracker/change_tracker.js';
 import {Projects} from './project.js';
 import {Nodes} from '../node/node.js';
+import {NodeTypes} from '../node/node_types.js';
 
 /**
  * User Project Versions

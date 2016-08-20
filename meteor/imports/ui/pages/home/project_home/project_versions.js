@@ -1,12 +1,21 @@
+import './project_versions.html';
+
+import {Template} from 'meteor/templating';
+import {AutoForm} from 'meteor/aldeed:autoform';
+import {RobaDialog} from 'meteor/austinsand:roba-dialog';
+
+import {Projects} from '../../../../api/project/project.js';
+import {ProjectVersions} from '../../../../api/project/project_version.js';
+
 /**
  * Template Helpers
  */
 Template.ProjectVersions.helpers({
   projectVersions: function () {
-    return Collections.ProjectVersions.find({ projectId: this._id }, { sort: { version: -1 } });
+    return ProjectVersions.find({ projectId: this._id }, { sort: { version: -1 } });
   },
   project: function () {
-    return Collections.Projects.findOne(this.projectId);
+    return Projects.findOne(this.projectId);
   }
 });
 
@@ -26,7 +35,7 @@ Template.ProjectVersions.events({
           label: "Source Version",
           type: String,
           autoform: {
-            options: Collections.ProjectVersions.find({projectId: project._id}, {sort: {title: 1}}).map(function (version) { return {label: version.version, value: version._id}; })
+            options: ProjectVersions.find({projectId: project._id}, {sort: {title: 1}}).map(function (version) { return {label: version.version, value: version._id}; })
           }
         },
         versionString: {
@@ -38,7 +47,7 @@ Template.ProjectVersions.events({
     };
 
     // render the form
-    Dialog.show({
+    RobaDialog.show({
       contentTemplate: 'DataStoreRowFormVert',
       contentData: formContext,
       title: "Add Project Version",
@@ -50,22 +59,22 @@ Template.ProjectVersions.events({
         console.log("Dialog button pressed: ", btn);
         if(btn == "Add"){
           // grab the form data
-          var formId = Dialog.currentInstance.$("form").attr("id");
+          var formId = RobaDialog.currentInstance.$("form").attr("id");
           if(formId && AutoForm.validateForm(formId)){
             var versionInfo = _.clone(AutoForm.getFormValues(formId).insertDoc);
             console.log("versionInfo:", versionInfo);
 
             // send the invite
             Meteor.call("createVersion", versionInfo.sourceVersion, versionInfo.versionString, function (error) {
-              Dialog.hide(function () {
+              RobaDialog.hide(function () {
                 if(error) {
-                  Dialog.error("Creating Version Failed: " + error.toString());
+                  RobaDialog.error("Creating Version Failed: " + error.toString());
                 }
               });
             });
           }
         } else {
-          Dialog.hide();
+          RobaDialog.hide();
         }
       }
     });

@@ -21,7 +21,7 @@ Template.edit_node_url_parameters.events({
     }, function (error) {
       if(error){
         console.error("Failed to add node url parameter: " + error.message);
-        Dialog.error("Failed to add node url parameter: " + error.message);
+        RobaDialog.error("Failed to add node url parameter: " + error.message);
       }
     });
   },
@@ -29,7 +29,7 @@ Template.edit_node_url_parameters.events({
     var parameter = this,
       index = $(e.target).closest(".node-url-parameter").attr("data-index");
 
-    Dialog.show({
+    RobaDialog.show({
       title: "Delete Parameter?",
       text: "Are you sure you want to delete the identifying url parameter <span class='label label-primary'>" + parameter.param + "</span> from this node?",
       width: 400,
@@ -41,14 +41,14 @@ Template.edit_node_url_parameters.events({
         //console.log("Dialog button pressed: ", btn);
         if(btn == "Delete"){
           Nodes.update(instance.data._id, { $pull: { urlParameters: {order: parameter.order} } }, function (error) {
-            Dialog.hide();
+            RobaDialog.hide();
             if(error){
               console.error("Delete failed: " + error.message);
-              Dialog.error("Delete failed: " + error.message);
+              RobaDialog.error("Delete failed: " + error.message);
             }
           });
         } else {
-          Dialog.hide();
+          RobaDialog.hide();
         }
       }
     });
@@ -87,7 +87,7 @@ Template.edit_node_url_parameters.rendered = function () {
         Nodes.update( instance.data._id, update, function (error) {
           if(error){
             console.error("Node url parameter order update failed: " + error.message);
-            Dialog.error("Node url parameter order update failed: " + error.message);
+            RobaDialog.error("Node url parameter order update failed: " + error.message);
           }
         });
 

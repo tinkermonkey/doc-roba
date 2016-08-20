@@ -38,7 +38,7 @@ Template.TestRunTemplateList.events({
       }, function (error, result) {
         if(error){
           console.error("Failed to insert test run template: " + error.message);
-          Dialog.error("Failed to insert test run template: " + error.message);
+          RobaDialog.error("Failed to insert test run template: " + error.message);
         } else {
           $(".add-item-form input").val("")
         }

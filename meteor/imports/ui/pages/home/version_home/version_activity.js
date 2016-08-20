@@ -1,12 +1,18 @@
+import './version_activity.html';
+
+import {Template} from 'meteor/templating';
+
+import {RecordChanges} from '../../../../api/change_tracker/record_change.js';
+
 /**
  * Template Helpers
  */
 Template.VersionActivity.helpers({
   hasChanges: function () {
-    return Collections.RecordChanges.find({ projectVersionId: this._id }).count();
+    return RecordChanges.find({ projectVersionId: this._id }).count();
   },
   versionChanges: function () {
-    return Collections.RecordChanges.find({ projectVersionId: this._id }, { sort: { date: -1 } });
+    return RecordChanges.find({ projectVersionId: this._id }, { sort: { date: -1 } });
   }
 });
 

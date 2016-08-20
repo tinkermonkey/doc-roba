@@ -2,6 +2,13 @@ import './project_home.html';
 
 import {Template} from 'meteor/templating';
 
+import {Projects} from '../../../../api/project/project.js';
+
+import {Tabs} from '../../../components/tabs/tabs.js';
+import './project_activity.js';
+import './project_team.js';
+import './project_versions.js';
+
 /**
  * Template Helpers
  */
@@ -24,7 +31,7 @@ Template.ProjectHome.created = function () {
   instance.project = new ReactiveVar();
 
   instance.autorun(function () {
-    instance.project.set(Collections.Projects.findOne(FlowRouter.getParam("projectId")));
+    instance.project.set(Projects.findOne(FlowRouter.getParam("projectId")));
   });
 };
 

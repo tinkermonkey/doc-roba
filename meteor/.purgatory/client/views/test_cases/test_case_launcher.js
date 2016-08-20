@@ -69,15 +69,15 @@ Template.TestCaseLauncher.events({
     Meteor.call("validateTestCaseRunConfig", instance.data._id, instance.config.get(), function (error, result) {
       console.log("validateTestCaseRunConfig: ", error, result);
       if(error){
-        Dialog.error("Invalid test config: " + error.toString());
+        RobaDialog.error("Invalid test config: " + error.toString());
       } else {
         Meteor.call("prepareTestCaseRun", instance.data._id, instance.config.get(), function (error, testResultId) {
           if(error){
-            Dialog.error("prepareTestCaseRun failed: " + error.toString());
+            RobaDialog.error("prepareTestCaseRun failed: " + error.toString());
           } else if(testResultId) {
             Meteor.call("launchTestResult", testResultId, function (error, result) {
               if(error){
-                Dialog.error("Launching test failed: " + error.toString());
+                RobaDialog.error("Launching test failed: " + error.toString());
               } else {
                 // Open the test result
                 FlowRouter.go("TestResult", {
@@ -88,7 +88,7 @@ Template.TestCaseLauncher.events({
               }
             });
           } else {
-            Dialog.error("prepareTestCaseRun failed: null testResultId");
+            RobaDialog.error("prepareTestCaseRun failed: null testResultId");
           }
         });
       }

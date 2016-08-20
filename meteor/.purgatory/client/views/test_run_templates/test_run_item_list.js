@@ -47,7 +47,7 @@ Template.TestRunItemList.created = function () {
         instance.collection.update(itemId, {$set: {order: newOrder}}, function (error, response) {
           if(error){
             console.error("Test Run Item order update failed: " + error.message);
-            Dialog.error("Test Run Item order update failed: " + error.message);
+            RobaDialog.error("Test Run Item order update failed: " + error.message);
           }
         });
       }
@@ -67,7 +67,7 @@ Template.TestRunItemList.created = function () {
     instance.collection.remove(item._id, function (error) {
       if(error){
         console.error("Failed to delete test run item: " + error.message);
-        Dialog.error("Failed to delete test run item: " + error.message);
+        RobaDialog.error("Failed to delete test run item: " + error.message);
       } else {
         instance.reorderItems();
       }
@@ -149,7 +149,7 @@ Template.TestRunItemList.created = function () {
       instance.collection.insert(newItem, function (error) {
         if(error){
           console.error("Test Run Item insert failed: " + error.message);
-          Dialog.error("Test Run Item insert failed: " + error.message);
+          RobaDialog.error("Test Run Item insert failed: " + error.message);
         } else {
           instance.reorderItems();
         }
@@ -185,7 +185,7 @@ Template.TestRunItemList.rendered = function () {
         instance.collection.update(itemId, {$set: {parentId: parentId, order: newOrder}}, function (error) {
           if(error){
             console.error("Test Run Item update failed: " + error.message);
-            Dialog.error("Test Run Item update failed: " + error.message);
+            RobaDialog.error("Test Run Item update failed: " + error.message);
           } else {
             instance.reorderItems();
           }

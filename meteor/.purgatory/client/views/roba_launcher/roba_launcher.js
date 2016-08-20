@@ -116,7 +116,7 @@ Template.roba_launcher.events({
       }, function (error) {
         if(error){
           console.error("Failed to create adventure: " + error.message);
-          Dialog.error("Failed to create adventure: " + error.message);
+          RobaDialog.error("Failed to create adventure: " + error.message);
         } else {
           // Create the adventure step and link them into the route
           _.each(route.steps, function (step, stepIndex) {
@@ -130,7 +130,7 @@ Template.roba_launcher.events({
             }, function (error) {
               if(error){
                 console.error("Failed to update adventure route: " + error.message);
-                Dialog.error("Failed to update adventure route: " + error.message);
+                RobaDialog.error("Failed to update adventure route: " + error.message);
               }
             });
           });
@@ -139,19 +139,19 @@ Template.roba_launcher.events({
           Adventures.update(adventureId, {$set: {route: route}}, function (error) {
             if(error){
               console.error("Failed to update adventure route: " + error.message);
-              Dialog.error("Failed to update adventure route: " + error.message);
+              RobaDialog.error("Failed to update adventure route: " + error.message);
             } else {
               // Create the Adventure State record so the console functions properly
               AdventureStates.insert({adventureId: adventureId, projectId: adventureData.projectId}, function (error) {
                 if(error){
                   console.error("Failed to create adventure state: " + error.message);
-                  Dialog.error("Failed to create adventure state: " + error.message);
+                  RobaDialog.error("Failed to create adventure state: " + error.message);
                 } else {
                   // Launch the Adventure
                   Meteor.call("launchAdventure", adventureId, function (error) {
                     if(error){
                       console.error("Failed to launch adventure " + adventureId + ": " + error.message);
-                      Dialog.error("Failed to launch adventure " + adventureId + ": " + error.message);
+                      RobaDialog.error("Failed to launch adventure " + adventureId + ": " + error.message);
                     } else {
                       // open the live console
                       window.open("/adventure_console/" + adventureData.projectId + "/" + adventureData.projectVersionId + "/" + adventureId, "_blank");

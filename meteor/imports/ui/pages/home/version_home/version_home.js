@@ -1,6 +1,20 @@
 import './version_home.html';
+import '../home.css';
 
 import {Template} from 'meteor/templating';
+import {FlowRouter} from 'meteor/kadira:flow-router';
+import {RobaDialog} from 'meteor/austinsand:roba-dialog';
+
+import {DataStores} from '../../../../api/datastore/datastore.js';
+import {Projects} from '../../../../api/project/project.js';
+import {ProjectVersions} from '../../../../api/project/project_version.js';
+
+import {Tabs} from '../../../components/tabs/tabs.js';
+import './version_activity.js';
+import './version_credentials.js';
+import './version_credentials_config.js';
+import './version_servers.js';
+import './version_test_systems.js';
 
 /**
  * Template Helpers
@@ -27,10 +41,10 @@ Template.VersionHome.events({
         update = {$set: {}};
     update["$set"][dataKey] = newValue;
 
-    Collections.DataStores.update(dataStoreId, update, function (error) {
+    DataStores.update(dataStoreId, update, function (error) {
       if(error){
         console.error("DataStore update failed: " + error.message);
-        Dialog.error("DataStore update failed: " + error.message);
+        RobaDialog.error("DataStore update failed: " + error.message);
       }
     });
   }
@@ -58,8 +72,8 @@ Template.VersionHome.created = function () {
     instance.subscribe("test_agents", projectId, projectVersionId);// TODO: Move to lower level template
 
     // pull in the project and project version records
-    instance.project.set(Collections.Projects.findOne(projectId));
-    instance.version.set(Collections.ProjectVersions.findOne(projectVersionId));
+    instance.project.set(Projects.findOne(projectId));
+    instance.version.set(ProjectVersions.findOne(projectVersionId));
   });
 };
 

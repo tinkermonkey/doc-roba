@@ -41,7 +41,7 @@ Template.TestResult.created = function () {
         instance.subscribe("test_case_steps", projectId, projectVersionId, testResult.testCaseId);
         instance.subscribe("server",          projectId, projectVersionId, testResult.serverId);
       } else {
-        Dialog.error("Test result not found");
+        RobaDialog.error("Test result not found");
       }
     });
     instance.subscribe("test_result_roles",       projectId, testResultId);

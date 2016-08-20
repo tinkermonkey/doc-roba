@@ -24,12 +24,12 @@ Template.AdventureEditActionForm.events({
       Actions.update(instance.data._id, update, function (error) {
         if(error){
           console.error("Failed to update action value: " + error.message);
-          Dialog.error("Failed to update action value: " + error.message);
+          RobaDialog.error("Failed to update action value: " + error.message);
         }
       });
     } else {
       console.error("Failed to update action value: data-key not found");
-      Dialog.error("Failed to update action value: data-key not found");
+      RobaDialog.error("Failed to update action value: data-key not found");
     }
   }
 });

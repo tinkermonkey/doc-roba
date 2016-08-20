@@ -95,7 +95,7 @@ Template.TestCaseList.events({
         }, function (error, result) {
           if(error){
             console.error("Failed to insert test case: " + error.message);
-            Dialog.error("Failed to insert test case: " + error.message);
+            RobaDialog.error("Failed to insert test case: " + error.message);
           } else {
             $(".add-item-form input").val("")
           }
@@ -109,7 +109,7 @@ Template.TestCaseList.events({
         }, function (error, result) {
           if(error){
             console.error("Failed to insert test group: " + error.message);
-            Dialog.error("Failed to insert test group: " + error.message);
+            RobaDialog.error("Failed to insert test group: " + error.message);
           } else {
             $(".add-item-form input").val("")
           }
@@ -197,14 +197,14 @@ Template.TestCaseList.rendered = function () {
             TestGroups.update(itemId, {$set: {parentGroupId: groupId}}, function (error) {
               if (error) {
                 console.error("Failed to update parent group: " + error.message);
-                Dialog.error("Failed to update parent group: " + error.message);
+                RobaDialog.error("Failed to update parent group: " + error.message);
               }
             });
           } else {
             TestCases.update(itemId, {$set: {testGroupId: groupId}}, function (error) {
               if (error) {
                 console.error("Failed to update test group: " + error.message);
-                Dialog.error("Failed to update test group: " + error.message);
+                RobaDialog.error("Failed to update test group: " + error.message);
               }
             });
           }

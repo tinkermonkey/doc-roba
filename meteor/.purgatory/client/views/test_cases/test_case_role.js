@@ -29,12 +29,12 @@ Template.TestCaseRole.events({
         if(error){
           console.error("Failed to update test case role value: " + error.message);
           console.log(update);
-          Dialog.error("Failed to update test case role value: " + error.message);
+          RobaDialog.error("Failed to update test case role value: " + error.message);
         }
       });
     } else {
       console.error("Failed to update test case role value: data-key not found");
-      Dialog.error("Failed to update test case role value: data-key not found");
+      RobaDialog.error("Failed to update test case role value: data-key not found");
     }
   },
   "click .btn-add-step": function (e, instance) {
@@ -58,7 +58,7 @@ Template.TestCaseRole.events({
   "click .btn-delete-role": function (e, instance) {
     var testCaseRole = this;
 
-    Dialog.show({
+    RobaDialog.show({
       title: "Delete Role?",
       text: "Are you sure you want to delete this Test Case Role?",
       width: 400,
@@ -71,16 +71,16 @@ Template.TestCaseRole.events({
         if(btn == "Delete"){
           // Call the delete function, needs to happen server side
           Meteor.call("deleteTestCaseRole", testCaseRole, function (error, result) {
-            Dialog.hide();
+            RobaDialog.hide();
             if(error) {
               console.error("Failed to delete role: " + error.message);
-              Dialog.error("Failed to delete role: " + error.message);
+              RobaDialog.error("Failed to delete role: " + error.message);
             } else {
               console.debug("Role deleted: " + result);
             }
           });
         } else {
-          Dialog.hide();
+          RobaDialog.hide();
         }
       }
     });
@@ -123,7 +123,7 @@ Template.TestCaseRole.rendered = function () {
           TestCaseSteps.update(stepId, {$set: {order: newOrder}}, function (error, result) {
             if(error){
               console.error("Failed to update step order: " + error.message);
-              Dialog.error("Failed to update step order: " + error.message);
+              RobaDialog.error("Failed to update step order: " + error.message);
             }
           });
         }

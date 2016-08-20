@@ -24,19 +24,19 @@ Template.edit_action.events({
         if(error){
           console.error("Failed to update action value: " + error.message);
           console.log(update);
-          Dialog.error("Failed to update action value: " + error.message);
+          RobaDialog.error("Failed to update action value: " + error.message);
         }
       });
     } else {
       console.error("Failed to update action value: data-key not found");
-      Dialog.error("Failed to update action value: data-key not found");
+      RobaDialog.error("Failed to update action value: data-key not found");
     }
   },
   "click .delete-action-link": function () {
     var action = this;
     console.log("Delete Action: ", action);
 
-    Dialog.show({
+    RobaDialog.show({
       title: "Delete Action?",
       contentTemplate: "confirm_delete_action_modal",
       contentData: action,
@@ -51,15 +51,15 @@ Template.edit_action.events({
           Actions.remove(action._id, function (error, result) {
             if(error) {
               console.error("Failed to delete action: " + error.message);
-              Dialog.hide();
-              Dialog.error("Failed to delete action: " + error.message);
+              RobaDialog.hide();
+              RobaDialog.error("Failed to delete action: " + error.message);
             } else {
               console.debug("Action deleted: " + result);
             }
-            Dialog.hide();
+            RobaDialog.hide();
           });
         } else {
-          Dialog.hide();
+          RobaDialog.hide();
         }
       }
     });

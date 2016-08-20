@@ -79,7 +79,7 @@ Template.TestCaseStepNavigate.created = function () {
         TestCaseSteps.update(data._id, {$set: {data: stepData}}, function (error) {
           if(error){
             console.error("Failed to update navigation step: " + error.message);
-            Dialog.error("Failed to update navigation step: " + error.message);
+            RobaDialog.error("Failed to update navigation step: " + error.message);
           }
         });
       }

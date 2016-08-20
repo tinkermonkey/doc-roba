@@ -32,7 +32,7 @@ Template.action_edit_variables.events({
       }, function (error, response) {
         if(error){
           console.error("Variable insert failed: " + error.message);
-          Dialog.error("Variable insert failed: " + error.message);
+          RobaDialog.error("Variable insert failed: " + error.message);
         } else {
           // trigger editing on variable
           setTimeout(function () {
@@ -43,13 +43,13 @@ Template.action_edit_variables.events({
     } else {
       console.error("Add Action Variable failed: no action found");
       console.log(this);
-      Dialog.error("Add Action Variable failed: no action found");
+      RobaDialog.error("Add Action Variable failed: no action found");
     }
   },
   "click .btn-delete": function (e, instance) {
     var variable = this;
 
-    Dialog.show({
+    RobaDialog.show({
       title: "Delete Variable?",
       text: "Are you sure you want to delete the variable <span class='label label-primary'>" + variable.name + "</span> from this action?",
       width: 400,
@@ -61,14 +61,14 @@ Template.action_edit_variables.events({
         //console.log("Dialog button pressed: ", btn);
         if(btn == "Delete"){
           Actions.update(variable.actionId, { $pull: { variables: {order: variable.order} } }, function (error, response) {
-            Dialog.hide();
+            RobaDialog.hide();
             if(error){
               console.error("Delete Variable failed: " + error.message);
-              Dialog.error("Delete Variable failed: " + error.message);
+              RobaDialog.error("Delete Variable failed: " + error.message);
             }
           });
         } else {
-          Dialog.hide();
+          RobaDialog.hide();
         }
       }
     });
@@ -98,7 +98,7 @@ Template.action_edit_variables.events({
     Actions.update(actionId, update, function (error) {
       if(error){
         console.error("Action Variable update failed: " + error.message);
-        Dialog.error("Action Variable update failed: " + error.message);
+        RobaDialog.error("Action Variable update failed: " + error.message);
       }
     });
   }
@@ -137,7 +137,7 @@ Template.action_edit_variables.rendered = function () {
         Actions.update(actionId, update, function (error) {
           if(error){
             console.error("Action Variable order update failed: " + error.message);
-            Dialog.error("Action Variable order update failed: " + error.message);
+            RobaDialog.error("Action Variable order update failed: " + error.message);
           }
         });
 

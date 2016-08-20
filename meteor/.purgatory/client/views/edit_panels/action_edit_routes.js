@@ -41,7 +41,7 @@ Template.action_edit_routes.events({
       source = Nodes.findOne({staticId: instance.data.nodeId, projectVersionId: instance.data.projectVersionId}),
       destination = Nodes.findOne({staticId: route.nodeId, projectVersionId: instance.data.projectVersionId});
 
-    Dialog.show({
+    RobaDialog.show({
       title: "Delete Route?",
       contentTemplate: "confirm_delete_route_modal",
       contentData: { source: source, destination: destination },
@@ -54,14 +54,14 @@ Template.action_edit_routes.events({
         //console.log("Dialog button pressed: ", btn);
         if(btn == "Delete"){
           Actions.update(instance.data._id, { $pull: { routes: {order: route.order} } }, function (error, response) {
-            Dialog.hide();
+            RobaDialog.hide();
             if(error){
               console.error("Delete failed: ", error);
-              Dialog.error(error.message);
+              RobaDialog.error(error.message);
             }
           });
         } else {
-          Dialog.hide();
+          RobaDialog.hide();
         }
       }
     });
@@ -83,7 +83,7 @@ Template.action_edit_routes.events({
       }, function (error, response) {
         if(error){
           console.error("Route insert failed: " + error.message);
-          Dialog.error("Route insert failed: " + error.message);
+          RobaDialog.error("Route insert failed: " + error.message);
         } else {
           // trigger editing on the destination node
           setTimeout(function () {
@@ -94,7 +94,7 @@ Template.action_edit_routes.events({
     } else {
       console.error("Add Action Route failed: no action found");
       console.log(this);
-      Dialog.error("Add Action Route failed: no action found");
+      RobaDialog.error("Add Action Route failed: no action found");
     }
   }
 });
@@ -132,7 +132,7 @@ Template.action_edit_routes.rendered = function () {
         Actions.update(actionId, update, function (error, response) {
           if(error){
             console.error("Action route order update failed: ", error);
-            Dialog.error("Action route order update failed: " + error.message);
+            RobaDialog.error("Action route order update failed: " + error.message);
           }
         });
         instance.$(".sortable-table").sortable("cancel");

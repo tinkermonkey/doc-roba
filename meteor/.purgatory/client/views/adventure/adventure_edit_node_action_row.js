@@ -52,7 +52,7 @@ Template.AdventureEditNodeActionRow.events({
       }, function (error) {
         if(error){
           console.error("Error executing action: " + error.message);
-          Dialog.error("Error executing action: " + error.message);
+          RobaDialog.error("Error executing action: " + error.message);
         }
       });
     }
@@ -61,7 +61,7 @@ Template.AdventureEditNodeActionRow.events({
     var action = this;
     console.log("Delete Action: ", action);
 
-    Dialog.show({
+    RobaDialog.show({
       title: "Delete Action?",
       contentTemplate: "confirm_delete_action_modal",
       contentData: action,
@@ -76,15 +76,15 @@ Template.AdventureEditNodeActionRow.events({
           Actions.remove(action._id, function (error, result) {
             if(error) {
               console.error("Failed to delete action: " + error.message);
-              Dialog.hide();
-              Dialog.error("Failed to delete action: " + error.message);
+              RobaDialog.hide();
+              RobaDialog.error("Failed to delete action: " + error.message);
             } else {
               console.debug("Action deleted: " + result);
             }
-            Dialog.hide();
+            RobaDialog.hide();
           });
         } else {
-          Dialog.hide();
+          RobaDialog.hide();
         }
       }
     });

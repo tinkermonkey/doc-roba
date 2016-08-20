@@ -26,12 +26,12 @@ Template.TestCase.events({
         if(error){
           console.error("Failed to update test case value: " + error.message);
           console.log(update);
-          Dialog.error("Failed to update test case value: " + error.message);
+          RobaDialog.error("Failed to update test case value: " + error.message);
         }
       });
     } else {
       console.error("Failed to update test case value: data-key not found");
-      Dialog.error("Failed to update test case value: data-key not found");
+      RobaDialog.error("Failed to update test case value: data-key not found");
     }
   },
   "click .btn-add-role": function (e, instance) {
@@ -97,7 +97,7 @@ Template.TestCase.created = function () {
       TestCaseSteps.update(stepId, {$unset: {"data.waitId": true}}, function (error) {
         if(error){
           console.error("Failed to update step: " + error.message);
-          Dialog.error("Failed to update step: " + error.message);
+          RobaDialog.error("Failed to update step: " + error.message);
         }
       });
     }

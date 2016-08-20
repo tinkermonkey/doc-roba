@@ -20,9 +20,22 @@ import {TestAgents} from '../../api/test_agent/test_agent.js';
 import {TestSystems} from '../../api/test_system/test_system.js';
 
 // Enums
-import {AdventureStatus} from '../../api/adventure/adventure_status.js';
+import {AdventureStatus, AdventureStatusLookup} from '../../api/adventure/adventure_status.js';
+import {AdventureStepStatus, AdventureStepStatusLookup} from '../../api/adventure/adventure_step_status.js';
+import {ChangeTypes, ChangeTypesLookup} from '../../api/change_tracker/change_types.js';
+import {DataStoreCategories, DataStoreCategoriesLookup} from '../../api/datastore/datastore_catagories.js';
+import {FieldTypes, FieldTypesLookup} from '../../api/datastore/field_types.js';
+import {NodeTypes, NodeTypesLookup} from '../../api/node/node_types.js';
+import {NodeSearchStatus, NodeSearchStatusLookup} from '../../api/node_search/node_search_status.js';
 import {ProjectRoles, ProjectRolesLookup} from '../../api/project/project_roles.js';
-import {TestCaseStepTypesLookup} from '../../api/test_case/test_case_step_types.js';
+import {ReferenceTypes, ReferenceTypesLookup} from '../../api/reference_doc/reference_types.js';
+import {TestAgentOS, TestAgentOSLookup} from '../../api/test_agent/test_agent_os.js';
+import {TestAgentTypes, TestAgentTypesLookup} from '../../api/test_agent/test_agent_types.js';
+import {TestCaseStepTypes, TestCaseStepTypesLookup} from '../../api/test_case/test_case_step_types.js';
+import {TestResultCodes, TestResultCodesLookup} from '../../api/test_result/test_result_codes.js';
+import {TestResultStatus, TestResultStatusLookup} from '../../api/test_result/test_result_status.js';
+import {TestRunItemTypes, TestRunItemTypesLookup} from '../../api/test_run/test_run_item_types.js';
+import {TestSystemStatus, TestSystemStatusLookup} from '../../api/test_system/test_system_status.js';
 
 /**
  * Listen for page resize events

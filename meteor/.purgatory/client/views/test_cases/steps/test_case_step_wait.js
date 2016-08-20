@@ -92,7 +92,7 @@ Template.TestCaseStepWait.created = function () {
             TestCaseSteps.update(removeId, {$unset: {"data.waitId": true }}, function (error) {
               if(error){
                 console.error("Failed to update step: " + error.message);
-                Dialog.error("Failed to update step: " + error.message);
+                RobaDialog.error("Failed to update step: " + error.message);
               }
             });
           }
@@ -210,7 +210,7 @@ Template.TestCaseStepWait.rendered = function () {
           TestCaseSteps.update(update.stepId, {$set: {data: stepData }}, function (error) {
             if(error){
               console.error("Failed to update step: " + error.message);
-              Dialog.error("Failed to update step: " + error.message);
+              RobaDialog.error("Failed to update step: " + error.message);
             }
           });
         } else {

@@ -43,7 +43,7 @@ Template.AdventureCommandHistory.events({
       editorInstance.editor.insert(result.code);
     } catch (e) {
       console.error("Failed to insert command in editor: " + e.message);
-      Dialog.error("Failed to insert command in editor: " + e.message);
+      RobaDialog.error("Failed to insert command in editor: " + e.message);
     }
   }
 });

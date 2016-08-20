@@ -1,12 +1,18 @@
+import './project_activity.html';
+
+import {Template} from 'meteor/templating';
+
+import {RecordChanges} from '../../../../api/change_tracker/record_change.js';
+
 /**
  * Template Helpers
  */
 Template.ProjectActivity.helpers({
   hasChanges: function () {
-    return Collections.RecordChanges.find({ projectId: this._id }).count();
+    return RecordChanges.find({ projectId: this._id }).count();
   },
   projectChanges: function () {
-    return Collections.RecordChanges.find({ projectId: this._id }, { sort: { date: -1 } });
+    return RecordChanges.find({ projectId: this._id }, { sort: { date: -1 } });
   }
 });
 

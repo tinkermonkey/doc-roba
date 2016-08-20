@@ -10,6 +10,8 @@ import {TestAgents} from '../test_agent/test_agent.js';
 import {DataStoreRows} from '../datastore/datastore_row.js';
 import {Servers} from '../test_server/server.js';
 import {TestSystems} from '../test_system/test_system.js';
+import {TestResults} from '../test_result/test_result.js';
+import {TestResultRoles} from '../test_result/test_result_role.js';
 import {TestResultSteps} from '../test_result/test_result_step.js';
 
 /**

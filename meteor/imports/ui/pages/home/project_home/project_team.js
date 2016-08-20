@@ -1,9 +1,23 @@
+import './project_team.html';
+
+import {Meteor} from 'meteor/meteor';
+import {Template} from 'meteor/templating';
+import {AutoForm} from 'meteor/aldeed:autoform';
+import {FlowRouter} from 'meteor/kadira:flow-router';
+import {RobaDialog} from 'meteor/austinsand:roba-dialog';
+
+import {ProjectRoles, ProjectRolesLookup} from '../../../../api/project/project_roles.js';
+import {Users} from '../../../../api/users/users.js';
+
+import {Util} from '../../../../api/util.js';
+import './project_invitations_sent.js';
+
 /**
  * Template Helpers
  */
 Template.ProjectTeam.helpers({
   projectUsers: function () {
-    return Collections.Users.find({projectList: FlowRouter.getParam("projectId")}, {sort: {"profile.name": 1}});
+    return Users.find({projectList: FlowRouter.getParam("projectId")}, {sort: {"profile.name": 1}});
   },
   projectRoles: function () {
     var projectId = FlowRouter.getParam("projectId"),
@@ -48,7 +62,7 @@ Template.ProjectTeam.events({
     };
 
     // render the form
-    Dialog.show({
+    RobaDialog.show({
       contentTemplate: 'DataStoreRowFormVert',
       contentData: formContext,
       title: "Send project invitation",
@@ -60,21 +74,21 @@ Template.ProjectTeam.events({
         console.log("Dialog button pressed: ", btn);
         if(btn == "Send"){
           // grab the form data
-          var formId = Dialog.currentInstance.$("form").attr("id");
+          var formId = RobaDialog.currentInstance.$("form").attr("id");
           if(formId && AutoForm.validateForm(formId)){
             var invite = _.clone(AutoForm.getFormValues(formId).insertDoc);
 
             // send the invite
             Meteor.call("inviteUser", invite.email, invite.name, invite.role, instance.data._id, function (error) {
-              Dialog.hide(function () {
+              RobaDialog.hide(function () {
                 if(error) {
-                  Dialog.error("Sending invite failed: " + error.toString());
+                  RobaDialog.error("Sending invite failed: " + error.toString());
                 }
               });
             });
           }
         } else {
-          Dialog.hide();
+          RobaDialog.hide();
         }
       }
     });
@@ -84,10 +98,10 @@ Template.ProjectTeam.events({
         userId = $(e.target).closest(".data-store-table-row").attr("data-user-id"),
         projectId = instance.data._id;
 
-    Dialog.ask("Remove Role?", "Remove this role from this user?", function () {
+    RobaDialog.ask("Remove Role?", "Remove this role from this user?", function () {
       Meteor.call("removeProjectRole", userId, projectId, role, function (error) {
         if(error) {
-          Dialog.error("Removing role failed: " + error.toString());
+          RobaDialog.error("Removing role failed: " + error.toString());
         }
       });
     });
@@ -114,27 +128,27 @@ Template.ProjectTeam.events({
     };
 
     // render the form
-    Dialog.show({
+    RobaDialog.show({
       contentTemplate: 'DataStoreRowFormVert',
       contentData: formContext,
       title: "Add project role",
       callback: function (btn) {
         console.log("Dialog button pressed: ", btn);
         if(btn == "OK"){
-          var formId = Dialog.currentInstance.$("form").attr("id");
+          var formId = RobaDialog.currentInstance.$("form").attr("id");
           if(formId && AutoForm.validateForm(formId)) {
             var roleForm = _.clone(AutoForm.getFormValues(formId).insertDoc);
 
             Meteor.call("addProjectRole", userId, projectId, roleForm.role, function (error) {
-              Dialog.hide(function () {
+              RobaDialog.hide(function () {
                 if (error) {
-                  Dialog.error("Adding role failed: " + error.toString());
+                  RobaDialog.error("Adding role failed: " + error.toString());
                 }
               });
             });
           }
         } else {
-          Dialog.hide();
+          RobaDialog.hide();
         }
       }
     });
@@ -143,10 +157,10 @@ Template.ProjectTeam.events({
     var userId = $(e.target).closest(".data-store-table-row").attr("data-user-id"),
         projectId = instance.data._id;
 
-    Dialog.ask("Revoke Project Access?", "This user will no longer have any access to this project", function () {
+    RobaDialog.ask("Revoke Project Access?", "This user will no longer have any access to this project", function () {
       Meteor.call("removeProjectAccess", userId, projectId, function (error) {
         if(error) {
-          Dialog.error("Revoking access failed: " + error.toString());
+          RobaDialog.error("Revoking access failed: " + error.toString());
         }
       });
     });

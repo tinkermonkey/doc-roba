@@ -1,4 +1,5 @@
 import {Meteor} from 'meteor/meteor';
+import {Auth} from '../../auth.js';
 import {DataStores} from '../datastore.js';
 import {DataStoreFields} from '../datastore_field.js';
 import {DataStoreRows} from '../datastore_row.js';

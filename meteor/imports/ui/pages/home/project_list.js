@@ -2,6 +2,10 @@ import './project_list.html';
 
 import {Meteor} from 'meteor/meteor';
 import {Template} from 'meteor/templating';
+import {RobaDialog} from 'meteor/austinsand:roba-dialog';
+import {AutoForm} from 'meteor/aldeed:autoform';
+
+import {Projects} from '../../../api/project/project.js';
 
 /**
  * Template Helpers
@@ -10,7 +14,7 @@ Template.ProjectList.helpers({
   inactiveProjects: function () {
     var user = Meteor.user();
     if(user && user.projectList){
-      return Collections.Projects.find({_id: {$in: user.projectList}, active: false}, {sort: {title: 1}});
+      return Projects.find({_id: {$in: user.projectList}, active: false}, {sort: {title: 1}});
     }
   },
   user: function () {
@@ -48,7 +52,7 @@ Template.ProjectList.events({
     };
 
     // render the form
-    Dialog.show({
+    RobaDialog.show({
       contentTemplate: 'DataStoreRowFormVert',
       contentData: formContext,
       title: "Create Project",
@@ -60,14 +64,14 @@ Template.ProjectList.events({
         console.log("Dialog button pressed: ", btn);
         if(btn == "Create"){
           // grab the form data
-          var formId = Dialog.currentInstance.$("form").attr("id");
+          var formId = RobaDialog.currentInstance.$("form").attr("id");
           if(formId && AutoForm.validateForm(formId)){
             var newProject = _.clone(AutoForm.getFormValues(formId).insertDoc);
 
             Meteor.call("createProject", newProject.title, newProject.initialVersion, function (error) {
-              Dialog.hide(function () {
+              RobaDialog.hide(function () {
                 if(error){
-                  Dialog.error("Creating project failed: " + error.toString());
+                  RobaDialog.error("Creating project failed: " + error.toString());
                 }
               });
             });
@@ -75,26 +79,26 @@ Template.ProjectList.events({
             console.error("Creating project failed: could not find form");
           }
         } else {
-          Dialog.hide();
+          RobaDialog.hide();
         }
       }
     });
   },
   "click .btn-delete-project": function (e, instance) {
     var project = this;
-    Dialog.show({
+    RobaDialog.show({
       contentData: { text: "Deleting this project will permanently remove all data associated with this project. Are you sure this is what you want to do?" },
       callback: function (btn) {
         if(btn == "OK"){
           Meteor.call("deleteProject", project._id, function (error, result) {
-            Dialog.hide(function () {
+            RobaDialog.hide(function () {
               if(error){
-                Dialog.error("Deleting project failed: " + error.toString());
+                RobaDialog.error("Deleting project failed: " + error.toString());
               }
             });
           });
         } else {
-          Dialog.hide();
+          RobaDialog.hide();
         }
       }
     });
@@ -102,25 +106,25 @@ Template.ProjectList.events({
   "click .btn-deactivate-project": function (e, instance) {
     var project = this;
 
-    Dialog.show({
+    RobaDialog.show({
       contentData: { text: "Deactivating this project will remove all user's access to it. Only project adminstrators will be able to see it. Are you sure this is what you want to do?" },
       callback: function (btn) {
         if(btn == "OK"){
-          Collections.Projects.update(project._id, {$set: {active: false}});
+          Projects.update(project._id, {$set: {active: false}});
         }
-        Dialog.hide();
+        RobaDialog.hide();
       }
     });
   },
   "click .btn-activate-project": function (e, instance) {
     var project = this;
-    Dialog.show({
+    RobaDialog.show({
       contentData: { text: "Activating this project will restore user's access to it. Are you sure this is what you want to do?" },
       callback: function (btn) {
         if(btn == "OK"){
-          Collections.Projects.update(project._id, {$set: {active: true}});
+          Projects.update(project._id, {$set: {active: true}});
         }
-        Dialog.hide();
+        RobaDialog.hide();
       }
     });
   },

@@ -3,7 +3,6 @@ import {Auth} from '../../auth.js';
 import {TestResults} from '../test_result.js';
 import {TestResultRoles} from '../test_result_role.js';
 import {TestResultSteps} from '../test_result_step.js';
-import {Screenshots} from '../../screenshot/screenshot.js';
 
 Meteor.publish("test_case_results", function (projectId, testCaseId, limit) {
   console.debug("Publish: test_case_results:", testCaseId, limit);

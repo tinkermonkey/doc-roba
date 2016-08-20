@@ -1,0 +1,37 @@
+<template name="DataStoreChildTable">
+    {{#with getTableSchema }}
+      <table class="table data-store-table">
+        <tr class="data-store-table-header">
+            {{#each fields}}
+                {{#if isPrimaryColumn}}
+                  <td>{{title}}</td>
+                {{/if}}
+            {{/each}}
+        </tr>
+        <tr class="data-store-table-divider">
+          <td colspan="{{getPrimaryColumnCount}}"><div></div></td>
+        </tr>
+          {{#each getRows ..}}
+            <tr class="data-store-table-row">
+                {{#each ../fields}}
+                    {{#if isPrimaryColumn}}
+                      <td>{{getFieldValue this ..}}</td>
+                    {{/if}}
+                {{/each}}
+            </tr>
+              {{#each ../fields}}
+                  {{#if isChildColumn}}
+                      {{#if childHasValue this ..}}
+                        <tr class="data-store-table-child-header">
+                          <td>{{title}}</td>
+                          <td colspan="{{getChildColSpan ../..}}">
+                              {{> DataStoreChildTable getChildContext this ..}}
+                          </td>
+                        </tr>
+                      {{/if}}
+                  {{/if}}
+              {{/each}}
+          {{/each}}
+      </table>
+    {{/with}}
+</template>

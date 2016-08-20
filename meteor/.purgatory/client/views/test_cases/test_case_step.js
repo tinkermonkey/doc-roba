@@ -39,7 +39,7 @@ Template.TestCaseStep.events({
       TestCaseSteps.remove(step._id, function (error) {
         if(error){
           console.error("Failed to delete test step: " + error.message);
-          Dialog.error("Failed to delete test step: " + error.message);
+          RobaDialog.error("Failed to delete test step: " + error.message);
         }
       });
     }
@@ -62,7 +62,7 @@ Template.TestCaseStep.events({
       TestCaseSteps.update(testCaseStep._id, {$set: {data: stepData}}, function (error) {
         if(error){
           console.error("Failed to update step: " + error.message);
-          Dialog.error("Failed to update step: " + error.message);
+          RobaDialog.error("Failed to update step: " + error.message);
         }
       });
     }

@@ -33,7 +33,7 @@ Template.AdventureHoverControls.events({
       }, function (error) {
         if(error){
           console.error("Error adding adventure command: " + error.message);
-          Dialog.error("Error adding adventure command: " + error.message);
+          RobaDialog.error("Error adding adventure command: " + error.message);
         }
       });
     } else {
@@ -66,7 +66,7 @@ Template.AdventureHoverControls.events({
       }, function (error) {
         if(error){
           console.error("Error adding adventure command: " + error.message);
-          Dialog.error("Error adding adventure command: " + error.message);
+          RobaDialog.error("Error adding adventure command: " + error.message);
         }
       });
     } else {
@@ -109,7 +109,7 @@ Template.AdventureHoverControls.rendered = function () {
           instance.$(".hidden-editable").editable("setValue", "");
           if(error){
             console.error("Error adding adventure command: " + error.message);
-            Dialog.error("Error adding adventure command: " + error.message);
+            RobaDialog.error("Error adding adventure command: " + error.message);
           }
         });
       } else {
