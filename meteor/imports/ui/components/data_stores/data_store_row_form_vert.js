@@ -1,3 +1,7 @@
+import './data_store_row_form_vert.html';
+
+import {Template} from 'meteor/templating';
+
 /**
  * Template Helpers
  */

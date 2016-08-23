@@ -1,3 +1,8 @@
+import './data_store_row_form.html';
+
+import {Template} from 'meteor/templating';
+import {Autoform} from 'meteor/aldeed:autoform';
+
 /**
  * Template Helpers
  */

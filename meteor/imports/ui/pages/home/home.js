@@ -3,6 +3,7 @@ import './home.css';
 
 import {Template} from 'meteor/templating';
 
+import '../../components/page_headers/current_user_header.html';
 import './home_nav.js';
 import './project_list.js';
 import './project_invitations.js';

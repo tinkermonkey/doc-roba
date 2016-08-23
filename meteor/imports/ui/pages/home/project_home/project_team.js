@@ -3,6 +3,7 @@ import './project_team.html';
 import {Meteor} from 'meteor/meteor';
 import {Template} from 'meteor/templating';
 import {AutoForm} from 'meteor/aldeed:autoform';
+import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import {FlowRouter} from 'meteor/kadira:flow-router';
 import {RobaDialog} from 'meteor/austinsand:roba-dialog';
 
@@ -11,6 +12,7 @@ import {Users} from '../../../../api/users/users.js';
 
 import {Util} from '../../../../api/util.js';
 import './project_invitations_sent.js';
+import '../../../components/data_stores/data_store_row_form_vert.js';
 
 /**
  * Template Helpers

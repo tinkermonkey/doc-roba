@@ -1,3 +1,8 @@
+import {Template} from 'meteor/templating';
+import {Blaze} from 'meteor/blaze';
+
+import './editable_code_editor.js';
+
 /**
  Code editor input
 

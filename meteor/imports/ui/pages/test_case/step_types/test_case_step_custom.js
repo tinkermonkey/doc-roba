@@ -1,3 +1,10 @@
+import './test_case_step_custom.html';
+
+import {Template} from 'meteor/templating';
+import {Blaze} from 'meteor/blaze';
+
+import {TestCaseSteps} from '../../../../api/test_case/test_case_step.js';
+
 /**
  * Template Helpers
  */

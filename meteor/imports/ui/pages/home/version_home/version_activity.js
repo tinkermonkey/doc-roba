@@ -4,6 +4,8 @@ import {Template} from 'meteor/templating';
 
 import {RecordChanges} from '../../../../api/change_tracker/record_change.js';
 
+import '../../../components/change_list/change_list.js';
+
 /**
  * Template Helpers
  */

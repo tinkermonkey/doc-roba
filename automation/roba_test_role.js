@@ -175,8 +175,8 @@ function ExecuteTestRole () {
   account = test.role.dataContext.account;
   server = test.server;
 
-  // update the steps status' to queued
-  logger.trace("Setting steps to queued status");
+  // update the step_types status' to queued
+  logger.trace("Setting step_types to queued status");
   _.each(test.steps, function (step) {
     ddpLink.setTestResultStepStatus(step._id, TestResultStatus.queued);
   });
@@ -191,7 +191,7 @@ function ExecuteTestRole () {
     context.restore(); // erase any context from a previous step
     context.update({testResultStepId: step._id}); // each step handler should further update the context
 
-    // if the role is failed, skip over the rest of the steps
+    // if the role is failed, skip over the rest of the step_types
     if(!pass){
       ddpLink.setTestResultStepStatus(step._id, TestResultStatus.skipped);
       i++;
@@ -370,7 +370,7 @@ function ExecuteNavigationStep (step) {
   // Update the context
   context.milestone({ type: "route", data: route });
 
-  // Execute the route steps, but skip the last one because another step will validate that
+  // Execute the route step_types, but skip the last one because another step will validate that
   var i = 0, pass = true, routeStep, checks = [], error;
   while(i < route.steps.length - 1 && !resultLink.abort && !driverEnded && pass ){
     var actionExecuted = false, result = {};

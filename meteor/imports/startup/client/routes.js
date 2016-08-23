@@ -19,6 +19,7 @@ import '../../ui/insecure/not_found/not_found.js';
 import '../../ui/pages/home/home.js';
 import '../../ui/pages/home/project_home/project_home.js';
 import '../../ui/pages/home/version_home/version_home.js';
+import '../../ui/pages/test_case/test_case_dashboard.js';
 
 /**
  * Config
@@ -110,14 +111,25 @@ FlowRouter.route("/test_case_dashboard/:projectId/:projectVersionId", {
     });
   }
 });
-FlowRouter.route("/test_run_template_dashboard/:projectId/:projectVersionId", {
-  name: "TestRunTemplateDashboard",
+FlowRouter.route("/test_plan_dashboard/:projectId/:projectVersionId", {
+  name: "TestPlanDashboard",
   action: function(params) {
     BlazeLayout.render("BaseLayout", {
-      content: "TestRunTemplateDashboard",
+      content: "TestPlanDashboard",
       svgDefs: "MinimalSvgDefs",
       header: "CurrentProjectHeader",
       nav: "TestPlanNav"
+    });
+  }
+});
+FlowRouter.route("/test_result/:projectId/:projectVersionId/:testResultId", {
+  name: "TestResult",
+  action: function(params) {
+    BlazeLayout.render("BaseLayout", {
+      content: "TestResult",
+      svgDefs: "MinimalSvgDefs",
+      header: "CurrentProjectHeader",
+      nav: "TestResultNav"
     });
   }
 });
@@ -135,17 +147,6 @@ FlowRouter.route("/adventure_log/:projectId/:projectVersionId/:adventureId", {
   action: function(params) {
     BlazeLayout.render("BaseLayout", {
       content: "AdventureLog"
-    });
-  }
-});
-FlowRouter.route("/test_result/:projectId/:projectVersionId/:testResultId", {
-  name: "TestResult",
-  action: function(params) {
-    BlazeLayout.render("BaseLayout", {
-      content: "TestResult",
-      svgDefs: "MinimalSvgDefs",
-      header: "CurrentProjectHeader",
-      nav: "TestResultNav"
     });
   }
 });

@@ -1,3 +1,8 @@
+import {Template} from 'meteor/templating';
+import {Autoform} from 'meteor/aldeed:autoform';
+
+import './autoForm_dataStore.html';
+
 /**
  * Addapted from bootstrap3-inline and default bootstrap3 themes
  */

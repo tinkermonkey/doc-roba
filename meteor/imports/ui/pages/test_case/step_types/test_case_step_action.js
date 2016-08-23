@@ -1,3 +1,12 @@
+import './test_case_step_action.html';
+
+import {Template} from 'meteor/templating';
+
+import {Actions} from '../../../../api/action/action.js';
+import {Nodes} from '../../../../api/node/node.js';
+import {TestCaseSteps} from '../../../../api/test_case/test_case_step.js';
+import {TestCaseStepTypes} from '../../../../api/test_case/test_case_step_types.js';
+
 /**
  * Template Helpers
  */

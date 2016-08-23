@@ -1,3 +1,9 @@
+import './test_case_step_node.html';
+
+import {Template} from 'meteor/templating';
+
+import '../../../components/editable_fields/node_selector/editable_node_selector.js';
+
 /**
  * Template Helpers
  */

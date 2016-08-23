@@ -1,5 +1,5 @@
 <template name="TestCaseStep">
-  {{#RoundContainer title=testStepType cssClass=getStepClass icon=testStepTypeIcon removable=true dataPk=_id dataOrder=order}}
+  {{#RobaRoundContainer title=testStepType cssClass=getStepClass icon=testStepTypeIcon removable=true dataPk=_id dataOrder=order}}
     <div class="test-case-step-body auto-transition {{#if error}}hide{{/if}}">
       {{#with stepContext}}
         {{> Template.dynamic template=getStepTemplate }}
@@ -12,5 +12,5 @@
         </div>
       </div>
     {{/if}}
-  {{/RoundContainer}}
+  {{/RobaRoundContainer}}
 </template>

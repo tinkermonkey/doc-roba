@@ -2,7 +2,7 @@
  * Create a central location for all of the doc tree configuration
  * @type {{}}
  */
-DocTreeConfig = {
+export const DocTreeConfig = {
   /**
    * Tree display configuration
    */
@@ -82,10 +82,3 @@ DocTreeConfig = {
     tipCompensation: 3
   }
 };
-
-/**
- * Helpers to return configuration
- */
-Template.registerHelper("nodeConfig", function (key) {
-  return DocTreeConfig.nodes[key];
-});

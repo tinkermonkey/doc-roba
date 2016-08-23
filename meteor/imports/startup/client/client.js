@@ -8,6 +8,7 @@ import {numeral} from 'meteor/numeral:numeral';
 // Utils
 import {Util} from '../../api/util.js';
 import {DSUtil} from '../../api/datastore/ds_util.js';
+import {DocTreeConfig} from '../../ui/lib/doc_tree_config.js';
 
 // Collections
 import {Actions} from '../../api/action/action.js';
@@ -381,7 +382,7 @@ Template.registerHelper("renderTestSystemNameFromStaticId", function (staticId, 
 Template.registerHelper("getElementId", function () {
   var instance = Template.instance();
   if(!instance.elementId){
-    instance.elementId = "Element_" + new Mongo.ObjectID()._str;
+    instance.elementId = "Element_" + new Meteor.uuid();
     if(instance.elementIdReactor){
       instance.elementIdReactor.set(instance.elementId);
     }
@@ -394,7 +395,8 @@ Template.registerHelper("getElementId", function () {
  */
 Template.registerHelper("getDataName", function (value) {
   if(value){
-    return value.replace(/[\W]/g, "-").toLowerCase();
+    //return value.replace(/[\W]/g, "-").toLowerCase();
+    return Util.dataKey(value);
   }
 });
 
@@ -515,4 +517,11 @@ Template.registerHelper("btoa", function (value) {
 
 Template.registerHelper("atob", function (value) {
   return btoa(value);
+});
+
+/**
+ * Helpers to return configuration
+ */
+Template.registerHelper("nodeConfig", function (key) {
+  return DocTreeConfig.nodes[key];
 });

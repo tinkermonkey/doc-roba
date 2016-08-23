@@ -4,8 +4,11 @@ import {Meteor} from 'meteor/meteor';
 import {Template} from 'meteor/templating';
 import {RobaDialog} from 'meteor/austinsand:roba-dialog';
 import {AutoForm} from 'meteor/aldeed:autoform';
+import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 
 import {Projects} from '../../../api/project/project.js';
+
+import '../../components/data_stores/data_store_row_form_vert.js';
 
 /**
  * Template Helpers

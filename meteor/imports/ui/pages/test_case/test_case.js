@@ -1,3 +1,19 @@
+import './test_case.html';
+import './test_case.css';
+
+import {Template} from 'meteor/templating';
+import {RobaDialog} from 'meteor/austinsand:roba-dialog';
+
+import {TestCaseStepTypes} from '../../../api/test_case/test_case_step_types.js';
+
+import {TestCases} from '../../../api/test_case/test_case.js';
+import {TestCaseRoles} from '../../../api/test_case/test_case_role.js';
+import {TestCaseSteps} from '../../../api/test_case/test_case_step.js';
+
+import './test_case_recent_result_list.js';
+import './test_case_launcher.js';
+import './test_case_role.js';
+
 /**
  * Template Helpers
  */
@@ -63,7 +79,7 @@ Template.TestCase.created = function () {
     };
   }
 
-  // setup a function to align the wait steps
+  // setup a function to align the wait step_types
   instance.alignWaitSteps = function (waitId) {
     // get the elements at play
     var stepList = instance.$(".droppable-wait[data-wait-id='" + waitId + "']").closest(".test-case-step-body"),
@@ -73,10 +89,10 @@ Template.TestCase.created = function () {
       // get the alignment point
       var adjustmentList = [];
       stepList.each(function (i, el) {
-        var el = $(el),
-          stepOffset = el.offset(),
-          stepHeight = el.height(),
-          inflator = el.find(".wait-inflator"),
+        var stepEl = $(el),
+          stepOffset = stepEl.offset(),
+          stepHeight = stepEl.height(),
+          inflator = stepEl.find(".wait-inflator"),
           inflation = inflator.height(),
           stepFloor = stepOffset.top + (stepHeight - inflation);
 
@@ -103,7 +119,7 @@ Template.TestCase.created = function () {
     }
   };
 
-  // umbrella function for maintaining the wait steps
+  // umbrella function for maintaining the wait step_types
   instance.updateAlignment = function () {
     // buffer the requests to prevent thrashing
     if(instance.updateTimeout){
@@ -118,7 +134,7 @@ Template.TestCase.created = function () {
       }).map(function (step) { return step.data.waitId}));
       //console.log("waitIds: ", waitIds)
 
-      // clean up the inflation of steps without waitIds
+      // clean up the inflation of step_types without waitIds
       instance.$(".wait-inflator:not([data-wait-id])").height("0px");
 
       // clean up each of the waitIds

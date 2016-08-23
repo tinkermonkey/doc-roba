@@ -1,8 +1,9 @@
 import './editable_code_editor.html';
-import './x_editable_ace.js';
 
 import {Template} from 'meteor/templating';
-import {ace} from 'meteor/dcsan:reactive-ace';
+import 'meteor/dcsan:reactive-ace';
+
+import {RobaCompleter} from '../../ace_editor/roba_ace_autocomplete.js';
 
 /**
  * Template Helpers
@@ -53,7 +54,7 @@ Template.EditableCodeEditor.rendered = function () {
         enableLiveAutocompletion: true
       });
 
-      langTools.addCompleter(futureDriverCompleter);
+      langTools.addCompleter(RobaCompleter);
     });
 
     // give the editor focus

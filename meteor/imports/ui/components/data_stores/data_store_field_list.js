@@ -7,6 +7,7 @@ import {EditableTextField} from 'meteor/austinsand:editable-text-field';
 import {FieldTypes} from '../../../api/datastore/field_types.js';
 import {DataStoreFields} from '../../../api/datastore/datastore_field.js';
 
+import {Util} from '../../../api/util.js';
 import '../editable_fields/editable_field_type.js';
 import '../editable_fields/editable_custom_field_type.js';
 import '../editable_fields/editable_field_shape.js';

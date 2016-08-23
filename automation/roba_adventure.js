@@ -177,8 +177,8 @@ function ExecuteAdventure () {
   dataContext = adventure.dataContext;
   account = dataContext.account;
 
-  // update the steps status' to queued
-  logger.trace("Setting steps to queued status");
+  // update the step_types status' to queued
+  logger.trace("Setting step_types to queued status");
   _.each(adventure.route.steps, function (step) {
     ddpLink.setAdventureStepStatus(step.stepId, AdventureStepStatus.queued);
   });

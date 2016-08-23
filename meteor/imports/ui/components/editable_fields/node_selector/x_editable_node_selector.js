@@ -1,3 +1,8 @@
+import {Blaze} from 'meteor/blaze';
+import {Template} from 'meteor/templating';
+
+import './x_editable_node_search.js';
+
 /**
  Node selector input
 

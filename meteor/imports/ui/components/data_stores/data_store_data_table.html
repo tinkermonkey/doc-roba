@@ -14,32 +14,38 @@
         <tr class="data-store-table-divider">
           <td colspan="{{getPrimaryColumnCount}}"><div></div></td>
         </tr>
-        {{#each getRows}}
-          <tr class="data-store-table-row">
-            <td>
-              <button class="btn btn-xs btn-primary btn-edit-row">
-                <span class="glyphicon glyphicon-edit"></span>
-              </button>
-            </td>
+        {{#if getRows.count}}
+          {{#each getRows}}
+            <tr class="data-store-table-row">
+              <td class="btn-edit-row"><span class="glyphicon glyphicon-edit"></span></td>
+              {{#each ../fields}}
+                {{#if isPrimaryColumn}}
+                  <td>{{getFieldValue this ..}}</td>
+                {{/if}}
+              {{/each}}
+              <td class="btn-delete-row"><span class="glyphicon glyphicon-remove"></span></td>
+            </tr>
             {{#each ../fields}}
-              {{#if isPrimaryColumn}}
-                <td>{{getFieldValue this ..}}</td>
+              {{#if isChildColumn}}
+                {{#if childHasValue this ..}}
+                  <tr class="data-store-table-child-header">
+                    <td>{{title}}</td>
+                    <td colspan="{{getChildColSpan ../..}}">
+                      {{> DataStoreChildTable getChildContext this ..}}
+                    </td>
+                  </tr>
+                {{/if}}
               {{/if}}
             {{/each}}
-          </tr>
-          {{#each ../fields}}
-            {{#if isChildColumn}}
-              {{#if childHasValue this ..}}
-                <tr class="data-store-table-child-header">
-                  <td>{{title}}</td>
-                  <td colspan="{{getChildColSpan ../..}}">
-                    {{> DataStoreChildTable getChildContext this ..}}
-                  </td>
-                </tr>
-              {{/if}}
-            {{/if}}
           {{/each}}
-        {{/each}}
+        {{else}}
+          <tr class="data-store-table-empty">
+            <td colspan="{{getPrimaryColumnCount}}"><i>No Data</i></td>
+          </tr>
+        {{/if}}
+        <tr class="data-store-table-divider">
+          <td colspan="{{getPrimaryColumnCount}}"><div></div></td>
+        </tr>
       </table>
     {{/with}}
       <button class="btn btn-warning btn-add-ds-row" data-store-id="{{_id}}">Add Row</button>

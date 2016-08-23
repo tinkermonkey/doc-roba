@@ -1,3 +1,11 @@
+import './editable_node_selector.html';
+
+import {Blaze} from 'meteor/blaze';
+import {Template} from 'meteor/templating';
+
+import './x_editable_node_selector.js';
+import './x_editable_node_selector.css';
+
 /**
  * Template Helpers
  */

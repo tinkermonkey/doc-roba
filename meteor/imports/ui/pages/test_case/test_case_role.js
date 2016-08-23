@@ -1,3 +1,14 @@
+import './test_case_role.html';
+
+import {Meteor} from 'meteor/meteor';
+import {Template} from 'meteor/templating';
+import {RobaDialog} from 'meteor/austinsand:roba-dialog';
+
+import {TestCaseRoles} from '../../../api/test_case/test_case_role.js';
+import {TestCaseSteps} from '../../../api/test_case/test_case_step.js';
+
+import './test_case_step.js';
+
 /**
  * Template Helpers
  */
@@ -87,7 +98,7 @@ Template.TestCaseRole.events({
   },
   "mousedown .test-case-step-title": function (e, instance) {
     // because the page height is defined by this list, we need to pin it to prevent unwanted scrolling
-    instance.$(".test-role-steps").height(instance.$(".test-role-steps").outerHeight());
+    instance.$(".test-role-step_types").height(instance.$(".test-role-step_types").outerHeight());
   }
 });
 
@@ -104,8 +115,8 @@ Template.TestCaseRole.created = function () {
 Template.TestCaseRole.rendered = function () {
   var instance = this;
 
-  // make the steps sortable
-  instance.$(".test-role-steps").sortable({
+  // make the step_types sortable
+  instance.$(".test-role-step_types").sortable({
     axis: "y",
     distance: 5,
     handle: ".test-case-step-title",
@@ -113,7 +124,7 @@ Template.TestCaseRole.rendered = function () {
     forcePlaceholderSize: true,
     update: function (event, ui) {
       // restore the flexible height of the list
-      instance.$(".test-role-steps").height("auto");
+      instance.$(".test-role-step_types").height("auto");
       instance.$(".test-case-step").each(function (newOrder, el) {
         var step = $(el),
           stepId = step.attr("data-pk"),
@@ -134,13 +145,13 @@ Template.TestCaseRole.rendered = function () {
   // Listen for changes and refresh the sortable
   TestCaseSteps.find({testCaseRoleId: instance.data.staticId}).observeChanges({
     added: function () {
-      instance.$(".test-role-steps").sortable("refresh");
+      instance.$(".test-role-step_types").sortable("refresh");
     }
   });
 
-  // Animate the addition of role steps
+  // Animate the addition of role step_types
   /*
-  instance.find(".test-role-steps")._uihooks = {
+  instance.find(".test-role-step_types")._uihooks = {
     insertElement: function(node, next) {
       $(node)
         .hide()

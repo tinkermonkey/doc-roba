@@ -43,6 +43,39 @@
   padding: 3px;
 }
 
+/* Edit button */
+.data-store-table-row .btn-edit-row {
+  border-radius: 3px 0 0 3px;
+  width: 1.9em;
+  color: #ffffff;
+  cursor: pointer;
+}
+.data-store-table-row:hover .btn-edit-row {
+  color: #298cff;
+}
+.data-store-table-row:hover .btn-edit-row:hover {
+  background-color: #298cff;
+  color: #fff;
+}
+
+/* Delete Button */
+.data-store-table-row .btn-delete-row {
+  border-radius: 0 3px 3px 0;
+  width: 1.9em;
+  color: #ffffff;
+  cursor: pointer;
+}
+.data-store-table-row:hover .btn-delete-row {
+  color: #FF793E;
+}
+.data-store-table-row:hover .btn-delete-row:hover {
+  background-color: #FF793E;
+  color: #fff;
+}
+.drag-handle .glyphicon, .btn-delete-row .glyphicon {
+  margin-left:3px;
+}
+
 /* Sub Col Header */
 .data-store-table-child-header {
   font-weight: normal;

@@ -1,4 +1,5 @@
 <template name="TestCaseDashboard">
+  {{debug}}
   {{#CenterPoleLayout}}
     {{#if ready}}
       {{setTitle "Test Case Dashboard" }}
@@ -11,6 +12,8 @@
           <h2>Select a Test Case</h2>
         </div>
       {{/if}}
+    {{else}}
+      {{> RobaSpinner }}
     {{/if}}
   {{/CenterPoleLayout}}
 </template>

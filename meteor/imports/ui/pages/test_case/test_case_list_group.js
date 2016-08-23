@@ -1,3 +1,7 @@
+import './test_case_list_group.html';
+
+import {Template} from 'meteor/templating';
+
 /**
  * Template Helpers
  */

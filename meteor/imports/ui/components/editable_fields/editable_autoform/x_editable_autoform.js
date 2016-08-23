@@ -1,3 +1,8 @@
+import {Template} from 'meteor/templating';
+import {Blaze} from 'meteor/blaze';
+import {Autoform} from 'meteor/aldeed:autoform';
+import '../../data_stores/data_store_row_form_vert.js';
+
 /**
  Node selector input
 

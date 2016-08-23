@@ -1,3 +1,12 @@
+import './test_case_step_navigate.html';
+
+import {Template} from 'meteor/templating';
+
+import {Nodes} from '../../../../api/node/node.js';
+import {TestCaseSteps} from '../../../../api/test_case/test_case_step.js';
+
+import {RobaRouter} from '../../../../api/roba_router/roba_router.js';
+
 /**
  * Template Helpers
  */

@@ -232,7 +232,7 @@ Template.TestResultScreenshot.created = function () {
 Template.TestResultScreenshot.rendered = function () {
   var instance = this;
 
-  // make the steps sortable
+  // make the step_types sortable
   instance.$(".test-result-screenshot-comparitor-layers").sortable({
     items: "> .sortable-table-row",
     handle: ".drag-handle",

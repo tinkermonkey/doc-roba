@@ -1,3 +1,10 @@
+import './node_term_search_results.html';
+import './node_search.css';
+
+import {Template} from 'meteor/templating';
+
+import '../svg_snippets/standalone_node_snippet.js';
+
 /**
  * NodeTermSearchResults
  *

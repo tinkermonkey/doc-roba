@@ -1,3 +1,10 @@
+import './x_editable_node_search.html';
+
+import {Template} from 'meteor/templating';
+
+import {NodeSearch} from '../../../../api/node_search/node_search.js';
+import '../../node_search/node_term_search_results.js';
+
 /**
  * Template Helpers
  */
@@ -60,5 +67,5 @@ Template.XEditableNodeSearch.rendered = function () {
  * Template Destroyed
  */
 Template.XEditableNodeSearch.destroyed = function () {
-  console.log("XEditableNodeSearch: destroyed");
+
 };

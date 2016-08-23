@@ -6,20 +6,17 @@
       You can use custom field types to describe more complex data types to mimic linked records in your data.
     </div>
   {{/unless}}
-
-  <ul class="nav nav-tabs" data-tab-group="custom-field-tabs">
+  
+  {{#RobaTabGroup name="custom-field-tabs" navClass="nav-tabs"}}
     {{#each customTypes}}
-      <li role="presentation"><a data-tab-name="{{getDataName title}}">{{title}}</a></li>
-    {{/each}}
-  </ul>
-
-  <div class="tab-container">
-    {{#each customTypes}}
-      <div class="tab" data-tab-name="{{getDataName title}}">
+      {{#RobaTab name=getTabName title=title}}
         Fields describing <span class="data-store-name-editable" data-pk="{{_id}}">{{title}}</span>:
         {{> DataStoreFieldList }}
-        <button class="btn btn-danger btn-delete-custom-type" data-store-id="{{_id}}">Delete Custom Type</button>
-      </div>
+        <p>
+          <a href="#" class="btn-delete-custom-type" data-store-id="{{_id}}">Delete this custom type</a>
+        </p>
+      {{/RobaTab}}
     {{/each}}
-  </div>
+  {{/RobaTabGroup}}
+
 </template>

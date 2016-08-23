@@ -5,7 +5,7 @@ import {Template} from 'meteor/templating';
 import {DataStores} from '../../../../../api/datastore/datastore.js';
 import {DataStoreCategories} from '../../../../../api/datastore/datastore_catagories.js';
 
-import {Tabs} from '../../../../components/tabs/tabs.js';
+import {Util} from '../../../../../api/util.js';
 import '../../../../components/data_stores/data_store_field_list.js';
 
 
@@ -19,6 +19,9 @@ Template.VersionCustomFieldTypes.helpers({
       deleted: false,
       category: DataStoreCategories.userTypeCustom
     }, {sort: {title: 1}});
+  },
+  getTabName: function () {
+    return Util.dataKey(this.title);
   }
 });
 
@@ -68,8 +71,8 @@ Template.VersionCustomFieldTypes.rendered = function () {
     added: function () {
       updateDataStoreNameEditable(instance);
     },
-    changed: function () {  Tabs.init(instance).activateFirst(instance); },
-    removed: function () {  Tabs.init(instance).activateFirst(instance); }
+    changed: function () {  /*Tabs.init(instance).activateFirst(instance);*/ },
+    removed: function () {  /*Tabs.init(instance).activateFirst(instance);*/ }
   });
 };
 

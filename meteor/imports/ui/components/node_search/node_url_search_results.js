@@ -1,9 +1,9 @@
-/**
- * NodeUrlSearchResults
- *
- * Created by austinsand on 4/8/15
- *
- */
+import './node_url_search_results.html';
+import './node_search.css';
+
+import {Template} from 'meteor/templating';
+
+import '../svg_snippets/standalone_node_snippet.js';
 
 /**
  * Template Helpers

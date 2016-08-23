@@ -1,3 +1,19 @@
+import './test_case_step.html';
+
+import {Template} from 'meteor/templating';
+import {RobaDialog} from 'meteor/austinsand:roba-dialog';
+
+import {TestCaseStepTypes} from '../../../api/test_case/test_case_step_types.js';
+
+import {Util} from '../../../api/util.js';
+import {TestCaseSteps} from '../../../api/test_case/test_case_step.js';
+
+import './step_types/test_case_step_action.js';
+import './step_types/test_case_step_custom.js';
+import './step_types/test_case_step_navigate.js';
+import './step_types/test_case_step_node.js';
+import './step_types/test_case_step_wait.js';
+
 /**
  * Template Helpers
  */

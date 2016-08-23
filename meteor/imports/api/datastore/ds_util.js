@@ -1,3 +1,5 @@
+import {SimpleSchema} from 'meteor/aldeed:simple-schema';
+
 import {Util} from '../util.js';
 import {FieldTypes} from './field_types.js';
 import {DataStores} from './datastore.js';

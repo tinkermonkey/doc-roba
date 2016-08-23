@@ -57,8 +57,11 @@ var futureDriverAutocomplete = {
 // Update the key list
 futureDriverAutocomplete.keys = _.keys(futureDriverAutocomplete);
 
-// Create the completer
-futureDriverCompleter = {
+/**
+ * AceEditor autocomplete for driver functions
+ * @type {{getCompletions: futureDriverCompleter.getCompletions}}
+ */
+export const RobaCompleter = {
   getCompletions: function (editor, session, pos, prefix, callback) {
     if (prefix.length === 0) { callback(null, []); return }
 

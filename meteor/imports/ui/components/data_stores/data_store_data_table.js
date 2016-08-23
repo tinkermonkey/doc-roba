@@ -7,6 +7,8 @@ import {DSUtil, DataStoreSchemas} from '../../../api/datastore/ds_util.js';
 import {FieldTypes} from '../../../api/datastore/field_types.js';
 import {DataStoreRows} from '../../../api/datastore/datastore_row.js';
 
+import '../../components/data_stores/data_store_row_form.js';
+
 /**
  * Template Helpers
  */
@@ -22,7 +24,7 @@ Template.DataStoreDataTable.helpers({
     return this.type === FieldTypes.custom;
   },
   getPrimaryColumnCount: function () {
-    return _.filter(this.fields, function(field){return field.type !== FieldTypes.custom}).length + 1;
+    return _.filter(this.fields, function(field){return field.type !== FieldTypes.custom}).length + 2;
   },
   getRows: function () {
     return DataStoreRows.find({dataStoreId: this._id}, {sort: {dateCreated: 1}});
@@ -38,7 +40,7 @@ Template.DataStoreDataTable.helpers({
     return row.hasOwnProperty(field.dataKey);
   },
   getChildColSpan: function (schema) {
-    return _.filter(schema.fields, function(field){return field.type !== FieldTypes.custom}).length - 1;
+    return _.filter(schema.fields, function(field){return field.type !== FieldTypes.custom}).length - 2;
   },
   getChildContext: function (field, row) {
     var value = row[field.dataKey];
@@ -71,7 +73,6 @@ Template.DataStoreDataTable.events({
       contentTemplate: 'DataStoreRowForm',
       contentData: formContext,
       title: "New " + instance.data.title + " row",
-      //width: 600,
       buttons: [
         { text: "Cancel" },
         { text: "Save" }
@@ -162,20 +163,47 @@ Template.DataStoreDataTable.events({
         }
       }
     });
+  },
+  "click .btn-delete-row": function (e, instance) {
+    console.log("Delete: ", this);
+    var row = this,
+        rowTitle = DSUtil.renderRow(row._id);
+  
+    RobaDialog.show({
+      title: "Delete Field?",
+      text: "Are you sure that you want to delete the " + instance.data.title + " <span class='label label-primary'>" + rowTitle + "</span> from this version?",
+      width: 400,
+      buttons: [
+        {text: "Cancel"},
+        {text: "Delete"}
+      ],
+      callback: function (btn) {
+        if(btn == "Delete"){
+          DataStoreRows.remove(row._id, function (error, response) {
+            RobaDialog.hide();
+            if(error){
+              RobaDialog.error("Delete datastore row failed: " + error.message);
+            }
+          });
+        } else {
+          RobaDialog.hide();
+        }
+      }
+    });
   }
 });
 
 /**
  * Template Rendered
  */
-Template.DataStoreDataTable.rendered = function () {
-  var self = this;
+Template.DataStoreDataTable.onRendered(() => {
+  var self = Template.instance();
 
   // make sure the simple schema is up-to-date so that the forms works
-  if(self.data && self.data.schema){
+  if(self.data.schema){
     DataStoreSchemas[self.data._id] = DSUtil.simpleSchema(self.data.schema);
   }
-};
+});
 
 /**
  * Template Destroyed
