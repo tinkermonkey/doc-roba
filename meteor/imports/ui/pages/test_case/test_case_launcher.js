@@ -8,6 +8,11 @@ import {RobaDialog} from 'meteor/austinsand:roba-dialog';
 import {TestSystems} from '../../../api/test_system/test_system.js';
 import {Servers} from '../../../api/test_server/server.js';
 
+import '../../components/editable_fields/editable_server_selector.js';
+import '../../components/editable_fields/editable_user_account.js';
+import '../../components/editable_fields/editable_test_agent_selector.js';
+import '../../components/editable_fields/editable_test_system_selector.js';
+
 /**
  * Template Helpers
  */

@@ -4,6 +4,7 @@ import {Template} from 'meteor/templating';
 import {Blaze} from 'meteor/blaze';
 
 import {TestCaseSteps} from '../../../../api/test_case/test_case_step.js';
+import {TestCaseStepTypes} from '../../../../api/test_case/test_case_step_types.js';
 
 /**
  * Template Helpers

@@ -1,3 +1,9 @@
+import './route_map.html';
+
+import {Template} from 'meteor/templating';
+
+import '../../components/svg_snippets/vertical_route_snippet.js';
+
 /**
  * Template Helpers
  */

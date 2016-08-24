@@ -2,7 +2,9 @@
   {{#if ready}}
     <div class="test-case-list-header">
       <h3>Test Cases</h3>
-      <div class="input-group input-group-sm add-item-form">
+    </div>
+    <div id="{{getElementId}}" class="test-case-list">
+      <div class="input-group input-group-sm add-item-form test-case-list-search">
         <input type="text" class="form-control" placeholder="Enter a test or group name">
         <div class="input-group-btn">
           <span class="glyphicon glyphicon-remove-circle field-clear-btn"></span>
@@ -30,8 +32,6 @@
           {{/if}}
         </div>
       </div>
-    </div>
-    <div id="{{getElementId}}" class="test-case-list">
       {{#each baseGroups}}
         {{> TestCaseListGroup }}
       {{/each}}

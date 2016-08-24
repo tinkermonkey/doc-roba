@@ -1,3 +1,10 @@
+import './x_editable_action_route.css';
+
+import {Blaze} from 'meteor/blaze';
+import {Template} from 'meteor/templating';
+
+import './x_editable_action_route_selector.js';
+
 /**
  Node selector input
 

@@ -1,3 +1,10 @@
+import './editable_action_route_selector.html';
+
+import {Template} from 'meteor/templating';
+
+import '../../svg_snippets/vertical_route_snippet.js';
+import './x_editable_action_route.js';
+
 /**
  * Template Helpers
  */

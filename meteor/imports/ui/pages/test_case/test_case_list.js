@@ -1,3 +1,15 @@
+import './test_case_list.html';
+
+import {Blaze} from 'meteor/blaze';
+import {Template} from 'meteor/templating';
+import {FlowRouter} from 'meteor/kadira:flow-router';
+
+import {TestCases} from '../../../api/test_case/test_case.js';
+import {TestGroups} from '../../../api/test_case/test_group.js'
+
+import './test_case_list_group.js';
+import './test_case_list_item.js';
+
 /**
  * Template Helpers
  */

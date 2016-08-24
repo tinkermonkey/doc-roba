@@ -382,7 +382,7 @@ Template.registerHelper("renderTestSystemNameFromStaticId", function (staticId, 
 Template.registerHelper("getElementId", function () {
   var instance = Template.instance();
   if(!instance.elementId){
-    instance.elementId = "Element_" + new Meteor.uuid();
+    instance.elementId = "Element_" + Meteor.uuid();
     if(instance.elementIdReactor){
       instance.elementIdReactor.set(instance.elementId);
     }

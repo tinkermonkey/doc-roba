@@ -1,4 +1,4 @@
-import './test_case_list.html';
+import './test_case_list_item.html';
 
 import {Template} from 'meteor/templating';
 

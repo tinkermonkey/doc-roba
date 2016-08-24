@@ -6,11 +6,21 @@
 }
 
 .test-case-list-header {
- padding-bottom: 20px;
 }
 
 .test-case-list {
+  text-align: left;
+  padding-left: 5px;
+  padding-bottom: 10px;
+  border-top: 1px solid #0A7BFF;
+  border-bottom: 1px solid #0A7BFF;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
 
+.test-case-list-search {
+  padding-top: 10px;
+  margin-bottom: 10px;
 }
 
 /**

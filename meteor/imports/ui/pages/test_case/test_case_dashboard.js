@@ -1,4 +1,5 @@
 import './test_case_dashboard.html';
+import './test_case.css';
 
 import {Template} from 'meteor/templating';
 import {FlowRouter} from 'meteor/kadira:flow-router';
@@ -6,6 +7,10 @@ import {FlowRouter} from 'meteor/kadira:flow-router';
 import {Projects} from '../../../api/project/project.js';
 import {ProjectVersions} from '../../../api/project/project_version.js';
 import {TestCases} from '../../../api/test_case/test_case.js';
+
+import '../../components/page_headers/current_project_header.js';
+import '../../components/menus/test_case_nav.js';
+import './test_case.js';
 
 /**
  * Template Helpers

@@ -1,3 +1,9 @@
+import './test_result_step_map.html';
+
+import {Template} from 'meteor/templating';
+
+import {DocTreeConfig} from '../../lib/doc_tree_config.js';
+
 /**
  * Template Helpers
  */

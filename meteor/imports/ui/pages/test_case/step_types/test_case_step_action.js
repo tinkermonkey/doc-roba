@@ -7,6 +7,8 @@ import {Nodes} from '../../../../api/node/node.js';
 import {TestCaseSteps} from '../../../../api/test_case/test_case_step.js';
 import {TestCaseStepTypes} from '../../../../api/test_case/test_case_step_types.js';
 
+import '../../../components/editable_fields/action_route_selector/editable_action_route_selector.js';
+
 /**
  * Template Helpers
  */

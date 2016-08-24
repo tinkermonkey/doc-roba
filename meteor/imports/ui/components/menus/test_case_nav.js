@@ -2,6 +2,8 @@ import './test_case_nav.html';
 
 import {Template} from 'meteor/templating';
 
+import '../../pages/test_case/test_case_list.js';
+
 /**
  * Template Helpers
  */

@@ -37,6 +37,11 @@
 
 .center-pole-nav {
   text-align: right;
+  margin-right: -20px;
+}
+
+.center-pole-nav > * {
+  padding-right: 5px;
 }
 
 /**
