@@ -148,7 +148,7 @@ Template.TestCaseLauncher.rendered = function () {
   var instance = this;
   instance.autorun(function () {
     var config = instance.config.get();
-    console.log("config: ", config);
+    //console.log("config: ", config);
   });
 };
 
