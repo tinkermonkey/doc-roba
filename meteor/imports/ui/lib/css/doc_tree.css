@@ -137,12 +137,19 @@
 }
 
 .action-label-text {
-  fill: #999;
+  fill: #ffffff;
   font-family: "Helvetica Neue Light", "Lucida Grande", "Calibri", "Arial", sans-serif;
   font-size: 10px;
   text-anchor: middle;
   cursor: pointer;
+  dominant-baseline: hanging;
 }
+
+.action-label-text-back {
+  fill: #999999;
+  
+}
+
 /*
 .action-label-select .action-label-back, .action-label-hover .action-label-back {
   stroke: #a7ff00;

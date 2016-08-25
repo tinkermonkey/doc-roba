@@ -1,6 +1,14 @@
 <template name="ActionSnippet">
   <path class="action" d="m{{actionX}} 0 v0 {{actionY}}"></path>
-  <rect class="" fill="#fff" x="0" y="{{labelBackY}}" width="{{nodeConfig 'width'}}" height="{{nodeConfig 'headerHeight'}}"></rect>
+  {{constant}}
+  <rect class="action-label-text-back"
+        x="{{labelBackX}}"
+        y="{{labelBackY}}"
+        rx="{{labelBackBorderRadius}}"
+        ry="{{labelBackBorderRadius}}"
+        width="{{labelBackWidth}}"
+        height="{{labelBackHeight}}"></rect>
+  {{constant}}
   <text class="action-label-text dummy-label-text" x="-10000" y="-10000">{{title}}</text>
   <text class="action-label-text" x="{{actionX}}" y="{{labelY}}">{{title}}</text>
 </template>
