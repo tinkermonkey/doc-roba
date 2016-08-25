@@ -54,7 +54,7 @@ Template.TestCaseStepNavigate.created = function () {
         order: {$gt: data.order}
       }, {sort: {order: 1}}),
       sourceNode, destinationNode;
-
+    
     // clear the error
     data.error.set();
 
@@ -73,7 +73,7 @@ Template.TestCaseStepNavigate.created = function () {
       instance.destinationNode.set();
       data.error.set("This step requires a node to navigate to");
     }
-
+  
     // create the route
     if(sourceNode && destinationNode){
       // save the data if it changed
@@ -89,7 +89,6 @@ Template.TestCaseStepNavigate.created = function () {
         console.log("Saving navigation step data: ", stepData, data.data);
         TestCaseSteps.update(data._id, {$set: {data: stepData}}, function (error) {
           if(error){
-            console.error("Failed to update navigation step: " + error.message);
             RobaDialog.error("Failed to update navigation step: " + error.message);
           }
         });
@@ -103,6 +102,7 @@ Template.TestCaseStepNavigate.created = function () {
           var route = RobaRouter.nodeToNode(sourceNodeRecord, destinationNodeRecord);
           instance.route.set(route);
         } catch(e){
+          console.error("RobaRouter error:", e);
           data.error.set("There was no route found for this step");
         }
       } else {
