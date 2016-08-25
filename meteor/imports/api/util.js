@@ -340,24 +340,24 @@ export const Util = {
   testStepContainerClass: function (type, error) {
     var cssClass = "";
     if(error){
-      cssClass = "round-container-error";
+      cssClass = "roba-round-container-error";
     } else {
       if(type != null){
         switch (type) {
           case TestCaseStepTypes.node:
-            cssClass = "round-container-blue";
+            cssClass = "roba-round-container-blue";
             break;
           case TestCaseStepTypes.action:
-            cssClass = "round-container-green";
+            cssClass = "roba-round-container-green";
             break;
           case TestCaseStepTypes.navigate:
-            cssClass = "round-container-purple";
+            cssClass = "roba-round-container-purple";
             break;
           case TestCaseStepTypes.wait:
-            cssClass = "round-container-light-blue";
+            cssClass = "roba-round-container-light-blue";
             break;
           case TestCaseStepTypes.custom:
-            cssClass = "round-container-orange";
+            cssClass = "roba-round-container-orange";
             break;
         }
       }
@@ -385,5 +385,36 @@ export const Util = {
           return "glyphicon-ok-circle";
       }
     }
+  },
+  
+  /**
+   * SVG Text wrapping
+   * https://bl.ocks.org/mbostock/7555321
+   * @param text
+   * @param width
+   */
+  wrapSvgText: function (text, width) {
+    //console.log("wrapSvgText:", text, width);
+    text.each(function() {
+      var text = d3.select(this),
+          words = text.text().split(/\s+/).reverse(),
+          word,
+          line = [],
+          lineNumber = 0,
+          lineHeight = 1.1, // ems
+          y = text.attr("y"),
+          dy = parseFloat(text.attr("dy") || 0),
+          tspan = text.text(null).append("tspan").attr("x", text.attr("x")).attr("y", y).attr("dy", dy + "em");
+      while (word = words.pop()) {
+        line.push(word);
+        tspan.text(line.join(" "));
+        if (tspan.node().getComputedTextLength() > width) {
+          line.pop();
+          tspan.text(line.join(" "));
+          line = [word];
+          tspan = text.append("tspan").attr("x", text.attr("x")).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+        }
+      }
+    });
   }
 };
