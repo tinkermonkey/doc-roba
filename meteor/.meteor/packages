@@ -3,7 +3,6 @@
 # 'meteor add' and 'meteor remove' will edit this file for you,
 # but you can also edit it by hand.
 
-d3
 sacha:spin
 mizzao:jquery-ui
 dcsan:reactive-ace
@@ -51,3 +50,4 @@ austinsand:roba-accordion
 austinsand:roba-tabs
 shell-server
 austinsand:roba-round-container
+d3js:d3
