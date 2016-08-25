@@ -24,10 +24,8 @@ Template.BaseLayout.created = function () {
   instance.subscribe("user_data");
 
   instance.autorun(function () {
-    var user = Meteor.user();
-    console.log("BaseLayout user: ", user);
+    let user = Meteor.user();
     if(user && user.projectList){
-      console.log("BaseLayout user projectList:", user.projectList);
       // Need to pass in the projectList to maintain reactivity
       instance.subscribe("user_peers", user.projectList);
       instance.subscribe("projects", user.projectList);
