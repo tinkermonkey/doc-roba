@@ -23,7 +23,7 @@
 
  */
 
-DijkstraGraph = (function (undefined) {
+export const DijkstraGraph = (function (undefined) {
 
 	var extractKeys = function (obj) {
 		var keys = [], key;

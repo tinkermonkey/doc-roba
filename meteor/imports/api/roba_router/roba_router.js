@@ -1,5 +1,10 @@
+import {Meteor} from 'meteor/meteor';
+
 import {Nodes} from '../node/node.js';
 import {Actions} from '../action/action.js';
+
+import {NodeTypes} from '../node/node_types.js';
+import {DijkstraGraph} from './dijkstra/graph.js';
 
 /**
  * Service for determining routes between nodes
