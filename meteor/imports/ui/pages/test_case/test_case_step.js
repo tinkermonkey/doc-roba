@@ -48,7 +48,7 @@ Template.TestCaseStep.helpers({
  * Template Event Handlers
  */
 Template.TestCaseStep.events({
-  "click .round-container-delete": function (e, instance) {
+  "click .roba-round-container-delete": function (e, instance) {
     var step = instance.data;
     if(step && step._id){
       e.stopImmediatePropagation();

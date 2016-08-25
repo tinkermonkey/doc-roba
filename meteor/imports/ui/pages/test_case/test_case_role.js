@@ -117,10 +117,10 @@ Template.TestCaseRole.rendered = function () {
   var instance = this;
 
   // make the step_types sortable
-  instance.$(".test-role-step_types").sortable({
+  instance.$(".test-role-steps").sortable({
     axis: "y",
     distance: 5,
-    handle: ".test-case-step-title",
+    handle: ".roba-round-container-title",
     placeholder: "test-case-step-placeholder",
     forcePlaceholderSize: true,
     update: function (event, ui) {
