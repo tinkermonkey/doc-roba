@@ -54,11 +54,11 @@
 
 .node-selected {
   stroke: #efff29;
-  filter: url(imports.svg#node-hover);
+  filter: url(#node-hover);
 }
 
 .node-group:hover .node, .node-group-hover .node {
-  filter: url(imports.svg#node-hover);
+  filter: url(#node-hover);
 }
 
 /**
@@ -72,6 +72,11 @@
 
 .node-content .title-backround {
   fill: none;
+}
+
+.node-title {
+  text-anchor: middle;
+  font-weight: 100;
 }
 
 /**
@@ -98,7 +103,7 @@
   stroke: #50d7ff;
   stroke-width: 3;
   fill: none;
-  marker-end: url(imports.svg#action-arrow);
+  marker-end: url(#action-arrow);
 }
 
 .action-nav {
@@ -112,7 +117,7 @@
 }
 
 .action-blunt {
-  marker-end: url(imports.svg#action-arrow-blunt);
+  marker-end: url(#action-arrow-blunt);
 }
 
 .action-vis {
@@ -145,11 +150,11 @@
 */
 .action-link-select, .action-link-hover {
   stroke: #a7ff00;
-  marker-end: url(imports.svg#action-arrow-hover);
+  marker-end: url(#action-arrow-hover);
 }
 
 .action-link-blunt-select, .action-link-blunt-hover {
-  marker-end: url(imports.svg#action-arrow-blunt-hover);
+  marker-end: url(#action-arrow-blunt-hover);
 }
 
 .action-label-edit .action-label-back {
@@ -175,14 +180,14 @@
 }
 
 .inset-frame {
-  filter: url(imports.svg#shadow);
+  filter: url(#shadow);
 }
 
 .inset-viewport {
   stroke: rgb(220, 255, 0);
   stroke-width: 2;
   fill: none;
-  filter: url(imports.svg#crisp-shadow);
+  filter: url(#crisp-shadow);
 }
 
 /**
@@ -208,9 +213,9 @@
 .node-controls-back {
   stroke: #efff29;
   stroke-width: 2;
-  /*fill: url(imports.svg#node-controls-back-gradient);*/
+  /*fill: url(#node-controls-back-gradient);*/
   fill: rgba(255, 255, 255, 0.75);
-  filter: url(imports.svg#shadow);
+  filter: url(#shadow);
 }
 
 .node-controls-shield {
@@ -220,7 +225,7 @@
 
 .control-button .control-back, .dragger {
   cursor: pointer;
-  fill: url(imports.svg#node-control-back);
+  fill: url(#node-control-back);
   stroke: rgb(165, 165, 165);
   stroke-width: 2;
 }
@@ -239,23 +244,23 @@
 }
 
 .roba-button .control-back {
-  fill: url(imports.svg#node-control-back-roba);
+  fill: url(#node-control-back-roba);
 }
 
 .roba-button:hover .control-back {
-  fill: url(imports.svg#node-control-back-roba);
+  fill: url(#node-control-back-roba);
 }
 
 .add-page-button .control-back{
-  fill: url(imports.svg#node-control-back-page);
+  fill: url(#node-control-back-page);
 }
 
 .add-view-button .control-back{
-  fill: url(imports.svg#node-control-back-view);
+  fill: url(#node-control-back-view);
 }
 
 .add-navMenu-button .control-back{
-  fill: url(imports.svg#node-control-back-navMenu);
+  fill: url(#node-control-back-navMenu);
 }
 
 .inDrag .dragger {
