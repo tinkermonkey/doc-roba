@@ -1,5 +1,7 @@
 _Store
 .idea
 .logs
-files
-logs
+/files
+/logs
+automation/node_modules
+meteor/node_modules
