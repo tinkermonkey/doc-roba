@@ -140,6 +140,16 @@ export const Util = {
   },
 
   /**
+   * Convert words to a CamelCase string
+   * @param words
+   */
+  wordsToCamel: function (words) {
+    if(words){
+      return words.replace(/[\W]/g, " ").replace(/(^[a-z]|\s+[a-z])/g, (letter) => {return letter.trim().toUpperCase()})
+    }
+  },
+
+  /**
    * Get the name of a test agent with the versions
    * @param testAgent The testAgent record to build the name for
    */
