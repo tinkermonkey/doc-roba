@@ -1,7 +1,7 @@
 import {Template} from 'meteor/templating';
 import {Blaze} from 'meteor/blaze';
 
-import './editable_code_editor.js';
+import '../../roba_ace/roba_ace.js';
 
 /**
  Code editor input
@@ -28,8 +28,7 @@ import './editable_code_editor.js';
           data  = self.data || this.options.parentInstance.data,
           width = self.options.parentInstance.$(".editable").width() - 110;
 
-      console.log("EditableAce.render: ", self.options.parentInstance.$(".editable").width());
-      Blaze.renderWithData(Template.EditableCodeEditor, {
+      Blaze.renderWithData(Template.RobaAce, {
         value: data.value,
         width: width,
         minLines: data.minLines,
@@ -50,7 +49,7 @@ import './editable_code_editor.js';
     value2input: function(data) {
       // this is handled by the editor template
       var editor = Blaze.getView(this.$input.find(".roba-ace").get(0)).templateInstance().editor;
-      if(editor){
+      if(editor && data && data.value){
         //console.log("xEditableAce.value2input:", data.value);
         editor.setValue(data.value);
         this.data = data;

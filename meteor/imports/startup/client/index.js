@@ -2,7 +2,6 @@ import './routes.js';
 import './client.js';
 
 // Base CSS
-import '../../ui/lib/css/ace.css';
 import '../../ui/lib/css/base.css';
 import '../../ui/lib/css/bootstrap_overrides.css';
 import '../../ui/lib/css/bootstrap_submenu.css';

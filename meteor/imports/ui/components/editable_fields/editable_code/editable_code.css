@@ -2,8 +2,8 @@
  * Editor Styling
  */
 .x-editable-ace .roba-ace {
-  min-width: 300px;
-  min-height: 100px;
+  min-width: 400px;
+  min-height: 200px;
   width: 100%;
   height: 100%;
 }
@@ -19,15 +19,20 @@
   height: 100%;
 }
 
+.editable-code-display {
+  text-align: left;
+}
+
 /**
  * Highlight.js styling
  */
 .hljs {
   background-color: transparent;
+  font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
 }
 
 .keyword {
-
+  color: rgb(147, 15, 128);
 }
 
 .comment {
@@ -43,7 +48,7 @@
 }
 
 .built_in {
-
+  color: rgb(147, 15, 128);
 }
 
 .string {
@@ -55,7 +60,7 @@
 }
 
 .function {
-
+  color: rgb(147, 15, 128);
 }
 
 .title {

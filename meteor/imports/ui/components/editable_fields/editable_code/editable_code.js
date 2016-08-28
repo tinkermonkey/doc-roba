@@ -4,7 +4,9 @@ import './x_editable_ace.js';
 
 import {Template} from 'meteor/templating';
 import {Blaze} from 'meteor/blaze';
-import {hljs} from 'meteor/simple:highlight.js';
+
+var Prism = require('prismjs');
+import '../../../../../node_modules/prismjs/themes/prism.css';
 
 /**
  * Template Helpers
@@ -30,7 +32,7 @@ Template.EditableCode.created = function () {
  * Template Rendered
  */
 Template.EditableCode.rendered = function () {
-  var instance = this;
+  var instance = Template.instance();
 
   instance.$(".editable").editable({
     type: "editableAce",
@@ -62,14 +64,10 @@ Template.EditableCode.rendered = function () {
   // Watch for data changes and re-render
   instance.autorun(function () {
     var data = Template.currentData();
-    //console.log("Updating editable value: ", data.value);
     instance.$(".editable").editable("setValue", data);
     if(data.value){
-      instance.$('.code').html(data.value);
+      instance.$('.code').html(Prism.highlight(data.value, Prism.languages.javascript));
     }
-    instance.$('.code').each(function(i, block) {
-      hljs.highlightBlock(block);
-    });
   });
 };
 

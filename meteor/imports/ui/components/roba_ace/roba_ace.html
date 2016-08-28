@@ -1,0 +1,18 @@
+<template name="RobaAce">
+  <div class="ace-editor-container {{color}} {{#if fullHeight}}full-height{{/if}} {{cssClass}}">
+    {{constant}}
+    <div id="{{getElementId}}" class="roba-ace editable {{cssClass}} {{#if fullHeight}}full-height{{/if}}" data-key="{{dataKey}}"></div>
+    {{constant}}
+    <div class="roba-ace-toolbar {{cssClass}}">
+      <div class="roba-ace-toolbar-btn">
+        <span class="glyphicon glyphicon-chevron-left btn-fill-left"></span>
+      </div>
+      <div class="roba-ace-toolbar-btn">
+        <span class="glyphicon glyphicon-chevron-right btn-fill-right"></span>
+      </div>
+      <div class="roba-ace-toolbar-btn">
+        <span class="glyphicon glyphicon-fullscreen btn-fullscreen"></span>
+      </div>
+    </div>
+  </div>
+</template>

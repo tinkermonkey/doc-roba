@@ -1,0 +1,245 @@
+/**
+ * Editor toolbar
+ */
+.roba-ace-toolbar {
+  text-align: right;
+  margin: 0;
+  padding-right: 5px;
+}
+
+.roba-ace-toolbar-btn {
+  display: inline-block;
+  color: #fff;
+  margin: 5px;
+}
+
+.roba-ace-toolbar-btn:hover {
+  color: #ffff00;
+}
+
+/**
+ * Ace container (not part of the ace dom)
+ */
+.ace-editor-container {
+  background: #50d7ff;
+  border-radius: 8px;
+  border-top-right-radius: 0;
+  overflow: hidden;
+  text-align: left;
+}
+
+.roba-ace-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+}
+
+.roba-ace-fullscreen.fill-right {
+  left: 50%;
+  width: 50%;
+  border-left: 3px solid #50d7ff;
+}
+
+.roba-ace-fullscreen.fill-left {
+  left: 0;
+  width: 50%;
+  border-right: 3px solid #50d7ff;
+}
+
+.ace-editor-container.grey .ace-docroba .ace_gutter {
+  background: #ddd !important;
+  color: #333;
+  overflow : hidden;
+}
+
+/**
+ * Ace auto-complete styling
+ */
+/* The matched portion of the suggestion */
+.ace_completion-highlight {
+  text-shadow: none !important;
+  color: #298cff !important;
+}
+
+/* The source of the suggestion */
+.ace_autocomplete .ace_rightAlignedText {
+  color: #298cff;
+}
+
+/**
+ * Ace theme css
+ */
+.ace-docroba {
+  color: rgb(102, 102, 102);
+}
+
+.ace-docroba .ace_gutter {
+  overflow : hidden;
+}
+
+.ace-docroba .ace_print-margin {
+  width: 1px;
+  background: #e8e8e8;
+}
+
+.ace-docroba .ace_scroller {
+  border-bottom-left-radius: 8px;
+  background-color: #fff;
+}
+
+.ace-docroba .ace_cursor {
+  /*color: black;*/
+}
+
+.ace-docroba .ace_invisible {
+  color: rgb(191, 191, 191);
+}
+
+.ace-docroba .ace_constant.ace_buildin {
+  /*color: rgb(88, 72, 246);*/
+  color: #905;
+}
+
+.ace-docroba .ace_constant.ace_language {
+  /*color: rgb(88, 92, 246);*/
+  color: #905;
+}
+
+.ace-docroba .ace_constant.ace_library {
+  /*color: rgb(6, 150, 14);*/
+  color: #905;
+}
+
+.ace-docroba .ace_invalid {
+  background-color: rgb(153, 0, 0);
+  color: white;
+}
+
+.ace-docroba .ace_fold {
+}
+
+.ace-docroba .ace_support.ace_function {
+  /*color: rgb(60, 76, 114);*/
+  color: #DD4A68;
+}
+
+.ace-docroba .ace_support.ace_constant {
+  /*color: rgb(6, 150, 14);*/
+  color: #905;
+}
+
+.ace-docroba .ace_support.ace_type,
+.ace-docroba .ace_support.ace_class
+.ace-docroba .ace_support.ace_other {
+  color: rgb(109, 121, 222);
+}
+
+.ace-docroba .ace_variable.ace_parameter {
+  color: #FD971F;
+}
+
+.ace-docroba .ace_keyword.ace_operator {
+  /*color: rgb(104, 118, 135);*/
+  color: #a67f59;
+  background: hsla(0, 0%, 100%, .5);
+}
+
+.ace-docroba .ace_paren,
+.ace-docroba .ace_punctuation {
+  color: #999;
+}
+
+.ace-docroba .ace_comment {
+  color: #236e24;
+}
+
+.ace-docroba .ace_comment.ace_doc {
+  color: #236e24;
+}
+
+.ace-docroba .ace_comment.ace_doc.ace_tag {
+  color: #236e24;
+}
+
+.ace-docroba .ace_constant.ace_numeric {
+  /*color: rgb(0, 0, 205);*/
+  color: #905;
+}
+
+.ace-docroba .ace_variable {
+  color: rgb(49, 132, 149);
+}
+
+.ace-docroba .ace_xml-pe {
+  color: rgb(104, 104, 91);
+}
+
+.ace-docroba .ace_entity.ace_name.ace_function {
+  /*color: #0000A2;*/
+  color: #DD4A68;
+}
+
+.ace-docroba .ace_heading {
+  color: rgb(12, 7, 255);
+}
+
+.ace-docroba .ace_list {
+  color: rgb(185, 6, 144);
+}
+
+.ace-docroba .ace_marker-layer .ace_selection {
+  background: rgb(181, 213, 255);
+}
+
+.ace-docroba .ace_marker-layer .ace_step {
+  background: rgb(252, 255, 0);
+}
+
+.ace-docroba .ace_marker-layer .ace_stack {
+  background: rgb(164, 229, 101);
+}
+
+.ace-docroba .ace_marker-layer .ace_bracket {
+  margin: -1px 0 0 -1px;
+  border: 1px solid rgb(192, 192, 192);
+}
+
+.ace-docroba .ace_marker-layer .ace_active-line {
+  background: rgba(0, 0, 0, 0.07);
+}
+
+.ace-docroba .ace_gutter-active-line {
+  background-color: #dcdcdc;
+}
+
+.ace-docroba .ace_marker-layer .ace_selected-word {
+  background: rgb(250, 250, 255);
+  border: 1px solid rgb(200, 200, 250);
+}
+
+.ace-docroba .ace_storage,
+.ace-docroba .ace_keyword,
+.ace-docroba .ace_meta.ace_tag {
+  /*color: rgb(147, 15, 128);*/
+  color: rgb(0, 119, 170);
+}
+
+.ace-docroba .ace_string.ace_regex {
+  color: rgb(255, 0, 0)
+}
+
+.ace-docroba .ace_string {
+  /*color: #1A1AA6;*/
+  color: #690;
+}
+
+.ace-docroba .ace_entity.ace_other.ace_attribute-name {
+  color: #994409;
+}
+
+.ace-docroba .ace_indent-guide {
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAE0lEQVQImWP4////f4bLly//BwAmVgd1/w11/gAAAABJRU5ErkJggg==") right repeat-y;
+}
