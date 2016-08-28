@@ -2,7 +2,7 @@ import './standalone_node_snippet.html';
 
 import {Template} from 'meteor/templating';
 
-import {DocTreeConfig} from '../../lib/doc_tree_config.js';
+import {DocTreeConfig} from '../../lib/doc_tree/doc_tree_config.js';
 import './node_snippet.js';
 
 /**

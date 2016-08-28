@@ -8,7 +8,7 @@ import {numeral} from 'meteor/numeral:numeral';
 // Utils
 import {Util} from '../../api/util.js';
 import {DSUtil} from '../../api/datastore/ds_util.js';
-import {DocTreeConfig} from '../../ui/lib/doc_tree_config.js';
+import {DocTreeConfig} from '../../ui/lib/doc_tree/doc_tree_config.js';
 
 // Collections
 import {Actions} from '../../api/action/action.js';
