@@ -4,7 +4,10 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import {SchemaHelpers} from '../schema_helpers.js';
 import {Auth} from '../auth.js';
 import {ChangeTracker} from '../change_tracker/change_tracker.js';
+
 import {ProjectVersions} from './project_version.js';
+
+import {CodeLanguages} from '../code_module/code_languages.js';
 
 /**
  * User Projects
@@ -19,6 +22,11 @@ export const Project = new SimpleSchema({
   description: {
     type: String,
     optional: true
+  },
+  automationLanguage: {
+    type: Number,
+    allowedValues: _.values(CodeLanguages),
+    defaultValue: CodeLanguages.javascript
   },
   logo: {
     type: String,

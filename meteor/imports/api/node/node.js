@@ -2,12 +2,18 @@ import {Mongo} from 'meteor/mongo';
 import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import {SchemaHelpers} from '../schema_helpers.js';
 import {Auth} from '../auth.js';
+import {Util} from '../util.js';
 import {ChangeTracker} from '../change_tracker/change_tracker.js';
 import {NodeTypes} from './node_types.js';
+
 import {UrlParameter} from './url_parameter.js';
 import {DataStoreCategories} from '../datastore/datastore_catagories.js';
+
+import {CodeModules} from '../code_module/code_module.js';
 import {DataStores} from '../datastore/datastore.js';
 import {DataStoreRows} from '../datastore/datastore_row.js';
+import {Projects} from '../project/project.js';
+import {ProjectVersions} from '../project/project_version.js';
 
 /**
  * Documentation tree nodes
@@ -35,7 +41,7 @@ export const Node = new SimpleSchema({
   parentId: {
     type: String,
     optional: true,
-    custom: function () {
+    custom() {
       // Required for all non-root nodes
       var isRoot = this.field('type').value === NodeTypes.root;
       if (!isRoot && !this.field('type').isSet && (!this.operator || (this.value === null || this.value === ""))) {
@@ -47,7 +53,7 @@ export const Node = new SimpleSchema({
   userTypeId: {
     type: String,
     optional: true,
-    custom: function () {
+    custom() {
       // Required for all non-root nodes
       var requiresUserType = _.contains([NodeTypes.navMenu, NodeTypes.page, NodeTypes.view, NodeTypes.platform], this.field("type").value);
       console.log("requiresUserType: ", requiresUserType, this.field("type").value, this.isSet, this.field("userTypeId"));
@@ -60,7 +66,7 @@ export const Node = new SimpleSchema({
   platformId: {
     type: String,
     optional: true,
-    custom: function () {
+    custom() {
       // Required for all non-root nodes
       var requiresPlatform = _.contains([NodeTypes.navMenu, NodeTypes.page, NodeTypes.view], this.field("type").value);
       if (requiresPlatform && !this.isSet) {
@@ -158,12 +164,25 @@ if(Meteor.isServer) {
   Nodes.after.insert(function (userId, node) {
     if(node.type === NodeTypes.userType) {
       // Create a new data store for users of this type
-      DataStores.insert({
+      let dataStore = DataStores.insert({
         title: node.title + " Users",
-        dataKey: node._id,
+        dataKey: node.staticId,
         category: DataStoreCategories.userType,
         projectId: node.projectId,
         projectVersionId: node.projectVersionId,
+        modifiedBy: node.modifiedBy,
+        createdBy: node.createdBy
+      });
+      
+      // Create a new code module for this user type
+      let codeModule = CodeModules.insert({
+        name: Util.wordsToCamel(node.title),
+        projectId: node.projectId,
+        projectVersionId: node.projectVersionId,
+        parentId: node.staticId,
+        parentCollectionName: 'Nodes',
+        language: node.project().automationLanguage,
+        docs: 'Code Module for the user type ' + node.title,
         modifiedBy: node.modifiedBy,
         createdBy: node.createdBy
       });
@@ -174,6 +193,7 @@ if(Meteor.isServer) {
       if(_.contains(changedFields, "title")){
         // update the data store title
         DataStores.update({dataKey: node._id}, {$set: {title: node.title + " Users"}});
+        CodeModules.update({projectVersionId: node.projectVersionId, parentId: node.staticId}, {$set: {name: Util.wordsToCamel(node.title)}});
       }
     }
   });
@@ -181,6 +201,7 @@ if(Meteor.isServer) {
     if(node.type === NodeTypes.userType) {
       // update the data store title
       DataStores.update({dataKey: node._id}, {$set: {deleted: true}});
+      CodeModules.update({projectVersionId: node.projectVersionId, parentId: node.staticId}, {$set: {deleted: true}});
     }
   });
 }
@@ -189,17 +210,23 @@ if(Meteor.isServer) {
  * Helpers
  */
 Nodes.helpers({
-  platform: function () {
+  project(){
+    return Projects.findOne({_id: this.projectId});
+  },
+  projectVersion(){
+    return ProjectVersions.findOne({_id: this.projectVersionId});
+  },
+  platform() {
     if(this.platformId){
       return Nodes.findOne({staticId: this.platformId, projectVersionId: this.projectVersionId});
     }
   },
-  userType: function () {
+  userType() {
     if(this.userTypeId){
       return Nodes.findOne({staticId: this.userTypeId, projectVersionId: this.projectVersionId});
     }
   },
-  getAccount: function () {
+  getAccount(filter) {
     if(this.userTypeId || this.type == NodeTypes.userType){
       var userTypeId = this.userTypeId || this._id,
         dataStore = DataStores.findOne({ dataKey: userTypeId });

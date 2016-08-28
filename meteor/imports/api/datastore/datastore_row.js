@@ -6,6 +6,13 @@ import {ChangeTracker} from '../change_tracker/change_tracker.js';
  * The data rows for the data stores
  */
 export const DataStoreRow = new SimpleSchema({
+  // Static ID field that will be constant across versions of the project
+  staticId: {
+    type: String,
+    index: true,
+    autoValue: SchemaHelpers.autoValueObjectId,
+    denyUpdate: true
+  },
   // Link to the data store to which this field belongs
   dataStoreId: {
     type: String
@@ -19,6 +26,11 @@ export const DataStoreRow = new SimpleSchema({
   projectVersionId: {
     type: String,
     denyUpdate: true
+  },
+  // The data for this row
+  data: {
+    type: Object,
+    blackbox: true
   },
   // Standard tracking fields
   dateCreated: {

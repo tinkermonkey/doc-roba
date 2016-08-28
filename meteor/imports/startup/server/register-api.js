@@ -10,6 +10,10 @@ import '../../api/adventure/server/methods.js'
 import '../../api/change_tracker/server/publications.js'
 import '../../api/change_tracker/server/methods.js'
 
+// Code Modules
+import '../../api/code_module/server/publications.js'
+//import '../../api/code_module/server/methods.js'
+
 // Data Stores
 import '../../api/datastore/server/publications.js'
 import '../../api/datastore/server/methods.js'

@@ -3,9 +3,11 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import {SchemaHelpers} from '../schema_helpers.js';
 import {Auth} from '../auth.js';
 import {ChangeTracker} from '../change_tracker/change_tracker.js';
-import {Projects} from './project.js';
-import {Nodes} from '../node/node.js';
 import {NodeTypes} from '../node/node_types.js';
+
+import {CodeModules} from '../code_module/code_module.js';
+import {Nodes} from '../node/node.js';
+import {Projects} from './project.js';
 
 /**
  * User Project Versions
@@ -59,6 +61,33 @@ ProjectVersions.deny({
 ProjectVersions.allow(Auth.ruleSets.allow.ifAuthenticated);
 ChangeTracker.TrackChanges(ProjectVersions, "project_versions");
 
+/**
+ * Observe changes to the nodes to automatically pick up user type changes
+ * Synchronize the changes to the data store representing that type
+ */
+if(Meteor.isServer) {
+  ProjectVersions.after.insert(function (userId, projectVersion) {
+      
+    // Create a new code module for this project version
+    let codeModule = CodeModules.insert({
+      name: Util.wordsToCamel(projectVersion.project().title),
+      projectId: projectVersion.projectId,
+      projectVersionId: projectVersion.projectVersionId,
+      parentId: projectVersion.staticId,
+      parentCollectionName: 'Nodes',
+      language: projectVersion.project().automationLanguage,
+      docs: 'Code Module for the project ' + projectVersion.project().title,
+      modifiedBy: projectVersion.modifiedBy,
+      createdBy: projectVersion.createdBy
+    });
+  });
+  ProjectVersions.after.update(function (userId, projectVersion, changedFields) {
+    if(_.contains(changedFields, "title")){
+      // update the code module title
+      CodeModules.update({projectVersionId: node.projectVersionId, parentId: node.staticId}, {$set: {name: Util.wordsToCamel(node.title)}});
+    }
+  });
+}
 /**
  * Helpers
  */

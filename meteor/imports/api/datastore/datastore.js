@@ -4,11 +4,20 @@ import {SchemaHelpers} from '../schema_helpers.js';
 import {Auth} from '../auth.js';
 import {ChangeTracker} from '../change_tracker/change_tracker.js';
 
+import {CodeModules} from '../code_module/code_module.js';
+
 /**
  * General mechanism for storing schema information for custom data stores
  * This is used by the credentials mechanism
  */
 export const DataStore = new SimpleSchema({
+  // Static ID field that will be constant across versions of the project
+  staticId: {
+    type: String,
+    index: true,
+    autoValue: SchemaHelpers.autoValueObjectId,
+    denyUpdate: true
+  },
   // Link to the project to which this field belongs
   projectId: {
     type: String,
@@ -72,3 +81,13 @@ DataStores.attachSchema(DataStore);
 DataStores.deny(Auth.ruleSets.deny.ifNotTester);
 DataStores.allow(Auth.ruleSets.allow.ifAuthenticated);
 ChangeTracker.TrackChanges(DataStores, "data_stores");
+
+/**
+ * Helpers
+ */
+DataStores.helpers({
+  codeModule(){
+    let dataStore = this;
+    return CodeModules.findOne({parentId: dataStore.static});
+  }
+});

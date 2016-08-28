@@ -10,6 +10,12 @@ import {DataStores} from './datastore.js';
  * Describe the structure of a particular data store
  */
 export const DataStoreField = new SimpleSchema({
+  staticId: {
+    type: String,
+    index: true,
+    autoValue: SchemaHelpers.autoValueObjectId,
+    denyUpdate: true
+  },
   // Link to the project to which this field belongs
   projectId: {
     type: String,
