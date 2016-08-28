@@ -1,11 +1,7 @@
 /**
- * Created by austinsand on 2/14/15.
- */
-
-/**
  * Simple tool for assembling svg paths
  */
-PathBuilder = {
+export const PathBuilder = {
   start: function() {
     return new Path();
   }
