@@ -1,9 +1,10 @@
-import './version_credentials_config.html';
+import './version_user_types_config.html';
 
 import {Template} from 'meteor/templating';
 
 import {DataStores} from '../../../../api/datastore/datastore.js';
 
+import {Util} from '../../../../api/util.js';
 import '../../../components/data_stores/data_store_field_list.js';
 import './components/version_custom_field_types.js';
 import '../../../components/editable_fields/editable_code/editable_code.js';
@@ -11,27 +12,30 @@ import '../../../components/editable_fields/editable_code/editable_code.js';
 /**
  * Template Helpers
  */
-Template.VersionCredentialsConfig.helpers({
-  getDataStore: function () {
+Template.VersionUserTypesConfig.helpers({
+  getDataStore() {
     return DataStores.findOne({dataKey: this._id});
+  },
+  userTitleClean(){
+    return Util.dataKey(this.title);
   }
 });
 
 /**
  * Template Helpers
  */
-Template.VersionCredentialsConfig.events({});
+Template.VersionUserTypesConfig.events({});
 
 /**
  * Template Rendered
  */
-Template.VersionCredentialsConfig.rendered = function () {
+Template.VersionUserTypesConfig.rendered = function () {
 
 };
 
 /**
  * Template Destroyed
  */
-Template.VersionCredentialsConfig.destroyed = function () {
+Template.VersionUserTypesConfig.destroyed = function () {
 
 };

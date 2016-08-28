@@ -156,6 +156,10 @@
   cursor: pointer;
 }
 
+.custom-editor-container {
+  width: 100%;
+}
+
 /**
  * Other page content
  **/

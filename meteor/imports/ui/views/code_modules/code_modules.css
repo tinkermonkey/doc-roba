@@ -1,0 +1,9 @@
+.code-modules-left {
+  flex-basis: 200px;
+  flex-shrink: 0;
+  max-width: 300px;
+}
+
+.code-modules-right {
+  flex-basis: 100%;
+}

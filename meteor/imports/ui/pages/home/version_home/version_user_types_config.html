@@ -1,0 +1,46 @@
+<template name="VersionUserTypesConfig">
+  {{#if userTypes.count}}
+    {{#RobaTabGroup name="user-types" navClass="nav-tabs"}}
+      {{#each userTypes}}
+        
+        {{#RobaTab name=userTitleClean title=title}}
+            <h2>{{title}}</h2>
+  
+            {{#RobaTabGroup name=userTitleClean}}
+              {{#RobaTab name="fields" title="User Schema"}}
+                <h4>Fields describing {{title}} users:</h4>
+                {{#with getDataStore}}
+                  <div class="user-type-data-store" data-pk="{{_id}}">
+                    {{> DataStoreFieldList }}
+                  </div>
+                
+                  {{#unless renderRowSelector}}
+                    <h4>Row Selection Render Function:</h4>
+                    <div class="alert alert-info" role="alert">
+                      <p>This code will be used to return a visual identifier for each row.</p>
+                      <dl>
+                        <dt>An example:</dt>
+                        <dd>return row.first_name + row.last_name;</dd>
+                      </dl>
+                      <p>Where the field datakeys are "first_name" and "last_name"</p>
+                    </div>
+                  {{else}}
+                    <label>Row Selector Renderer:</label>
+                  {{/unless}}
+  
+                  {{> EditableCode dataKey="renderRowSelector" value=renderRowSelector emptyText="Nothing defined" minLines=3}}
+                {{/with}}
+              {{/RobaTab}}
+            {{/RobaTabGroup}}
+        {{/RobaTab}}
+      {{/each}}
+    {{/RobaTabGroup}}
+  
+  {{else}}
+    <h2>User Types</h2>
+    <i>
+      There are currently no user types defined for this project version.
+      Define user types in the <a href="{{pathFor 'DocTree' projectId=projectId projectVersionId=_id}}"><span class="glyphicon glyphicon-map-marker"></span> Application Map</a>.
+    </i>
+  {{/if}}
+</template>

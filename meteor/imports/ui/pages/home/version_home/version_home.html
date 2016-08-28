@@ -9,14 +9,17 @@
           {{#RobaTab name="activity" title="Activity"}}
             {{> VersionActivity }}
           {{/RobaTab}}
+          {{#RobaTab name="code" title="Code Modules"}}
+            {{> VersionCodeModules }}
+          {{/RobaTab}}
           {{#RobaTab name="credentials" title="Credentials"}}
             {{> VersionCredentials }}
           {{/RobaTab}}
-          {{#RobaTab name="credentials_config" title="Credential Configuration"}}
-            {{> VersionCredentialsConfig }}
+          {{#RobaTab name="user_types_config" title="User Types"}}
+            {{> VersionUserTypesConfig }}
           {{/RobaTab}}
-          {{#RobaTab name="credentials_custom_types" title="Custom Types"}}
-            {{> VersionCustomTypes }}
+          {{#RobaTab name="data_types" title="Data Types"}}
+            {{> VersionDataTypes }}
           {{/RobaTab}}
           {{#RobaTab name="servers" title="Server Configuration"}}
             {{> VersionServers }}

@@ -1,4 +1,4 @@
-import './version_custom_types.html';
+import './version_data_types.html';
 
 import {Template} from 'meteor/templating';
 
@@ -7,30 +7,30 @@ import './components/version_custom_field_types.js';
 /**
  * Template Helpers
  */
-Template.VersionCustomTypes.helpers({});
+Template.VersionDataTypes.helpers({});
 
 /**
  * Template Event Handlers
  */
-Template.VersionCustomTypes.events({});
+Template.VersionDataTypes.events({});
 
 /**
  * Template Created
  */
-Template.VersionCustomTypes.onCreated(() => {
+Template.VersionDataTypes.onCreated(() => {
   
 });
 
 /**
  * Template Rendered
  */
-Template.VersionCustomTypes.onRendered(() => {
+Template.VersionDataTypes.onRendered(() => {
   
 });
 
 /**
  * Template Destroyed
  */
-Template.VersionCustomTypes.onDestroyed(() => {
+Template.VersionDataTypes.onDestroyed(() => {
   
 });

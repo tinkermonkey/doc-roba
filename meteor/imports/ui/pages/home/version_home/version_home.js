@@ -12,9 +12,10 @@ import {ProjectVersions} from '../../../../api/project/project_version.js';
 import '../../../components/page_headers/current_project_header.js';
 import '../home_nav.js';
 import './version_activity.js';
+import './version_code_modules.js';
 import './version_credentials.js';
-import './version_credentials_config.js';
-import './version_custom_types.js';
+import './version_user_types_config.js';
+import './version_data_types.js';
 import './version_servers.js';
 import './version_test_systems.js';
 

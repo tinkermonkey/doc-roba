@@ -1,7 +1,7 @@
 import './test_case_step_custom.html';
 
-import {Template} from 'meteor/templating';
 import {Blaze} from 'meteor/blaze';
+import {Template} from 'meteor/templating';
 
 import {TestCaseSteps} from '../../../../api/test_case/test_case_step.js';
 import {TestCaseStepTypes} from '../../../../api/test_case/test_case_step_types.js';
@@ -19,22 +19,7 @@ Template.TestCaseStepCustom.helpers({
  * Template Event Handlers
  */
 Template.TestCaseStepCustom.events({
-  "click .click-to-edit": function (e, instance) {
-    instance.$(".custom-editor-container").removeClass("hide");
-    $(e.target).addClass("hide");
-    var aceInstance = Blaze.getView(instance.$(".roba-ace").get(0)).templateInstance();
-    aceInstance.editor.focus();
-  },
-  "blur": function (e, instance) {
-    // get a handle to the ace instance
-    var aceInstance = Blaze.getView(instance.$(".roba-ace").get(0)).templateInstance(),
-      contentLength = aceInstance.editor.getValue().trim().length;
 
-    if(contentLength < 1){
-      instance.$(".custom-editor-container").addClass("hide");
-      instance.$(".click-to-edit").removeClass("hide");
-    }
-  }
 });
 
 /**
