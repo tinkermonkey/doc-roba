@@ -12,7 +12,7 @@ import {Users} from '../../../../api/users/users.js';
 
 import {Util} from '../../../../api/util.js';
 import './project_invitations_sent.js';
-import '../../../components/data_stores/data_store_row_form_vert.js';
+import '../../../components/datastores/datastore_row_form_vert.js';
 
 /**
  * Template Helpers
@@ -65,7 +65,7 @@ Template.ProjectTeam.events({
 
     // render the form
     RobaDialog.show({
-      contentTemplate: 'DataStoreRowFormVert',
+      contentTemplate: 'DatastoreRowFormVert',
       contentData: formContext,
       title: "Send project invitation",
       buttons: [
@@ -131,7 +131,7 @@ Template.ProjectTeam.events({
 
     // render the form
     RobaDialog.show({
-      contentTemplate: 'DataStoreRowFormVert',
+      contentTemplate: 'DatastoreRowFormVert',
       contentData: formContext,
       title: "Add project role",
       callback: function (btn) {

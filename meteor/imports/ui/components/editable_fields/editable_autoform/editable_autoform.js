@@ -10,17 +10,20 @@ import {Blaze} from 'meteor/blaze';
  */
 Template.EditableAutoform.helpers({
   getDataVars: function () {
-    if(this.data){
+    if (this.data) {
+      //console.log("EditableAutoform context:", this.schema.schema());
       var data = this.data,
-        schema = this.schema;
-
+          schema = this.schema;
+      
       return _.keys(data)
-        .sort()
-        .map(function (key) { return {
-          key: key,
-          value: data[key],
-          label: schema && schema.schema ? schema.schema()[key].label : key
-        } });
+          .sort()
+          .map((key) => {
+            return {
+              key: key,
+              value: data[key],
+              label: schema && schema.schema && schema.schema()[key] ? schema.schema()[key].label : key
+            }
+          });
     }
   },
   hasData: function () {
@@ -45,7 +48,7 @@ Template.EditableAutoform.created = function () {
  */
 Template.EditableAutoform.rendered = function () {
   var instance = this;
-
+  
   instance.$(".editable").editable({
     type: "autoform",
     mode: instance.data.mode || "popup",
@@ -53,7 +56,8 @@ Template.EditableAutoform.rendered = function () {
     data: instance.data,
     parentInstance: instance,
     highlight: false,
-    display: function () {},
+    display: function () {
+    },
     success: function (response, newValue) {
       var editedElement = this;
       $(editedElement).trigger("edited", [newValue]);
@@ -62,16 +66,16 @@ Template.EditableAutoform.rendered = function () {
       }, 10);
     }
   });
-
+  
   // this event listener needs to be registered directly
-  instance.$(".editable").on("hidden", function(e, reason) {
-    if(instance.formView){
+  instance.$(".editable").on("hidden", function (e, reason) {
+    if (instance.formView) {
       setTimeout(function () {
         Blaze.remove(instance.formView);
       }, 100);
     }
   });
-
+  
   instance.autorun(function () {
     var data = Template.currentData();
     instance.$(".editable").editable("option", "data", data);

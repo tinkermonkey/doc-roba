@@ -7,7 +7,7 @@ import {TestCaseRoles} from './test_case_role.js';
 import {TestCaseRun} from './test_case_run.js';
 import {TestCaseRunRole} from './test_case_run_role.js';
 import {TestAgents} from '../test_agent/test_agent.js';
-import {DataStoreRows} from '../datastore/datastore_row.js';
+import {DatastoreRows} from '../datastore/datastore_row.js';
 import {Servers} from '../test_server/server.js';
 import {TestSystems} from '../test_system/test_system.js';
 import {TestResults} from '../test_result/test_result.js';
@@ -122,7 +122,7 @@ TestCases.helpers({
         }
 
         // validate the role account
-        var account = DataStoreRows.findOne({_id: roleConfig.accountId});
+        var account = DatastoreRows.findOne({_id: roleConfig.accountId});
         if(!account){
           throw new Meteor.Error("invalid-test-account", "Test config account not found " + roleConfig.accountId, [testCase, config, roleConfig]);
         }
@@ -159,7 +159,7 @@ TestCases.helpers({
 
         // snapshot the account to use for the test
         roleConfig.dataContext = roleConfig.dataContext || {};
-        roleConfig.dataContext.account = DataStoreRows.findOne({_id: roleConfig.accountId});
+        roleConfig.dataContext.account = DatastoreRows.findOne({_id: roleConfig.accountId});
 
         var testRoleResultId = TestResultRoles.insert({
           projectId: testCase.projectId,

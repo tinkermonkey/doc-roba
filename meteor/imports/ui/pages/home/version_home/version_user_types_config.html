@@ -9,9 +9,9 @@
             {{#RobaTabGroup name=userTitleClean}}
               {{#RobaTab name="fields" title="User Schema"}}
                 <h4>Fields describing {{title}} users:</h4>
-                {{#with getDataStore}}
+                {{#with dataStore}}
                   <div class="user-type-data-store" data-pk="{{_id}}">
-                    {{> DataStoreFieldList }}
+                    {{> DatastoreFieldList }}
                   </div>
                 
                   {{#unless renderRowSelector}}

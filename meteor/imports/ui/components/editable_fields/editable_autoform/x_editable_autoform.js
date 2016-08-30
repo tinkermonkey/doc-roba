@@ -1,7 +1,7 @@
 import {Template} from 'meteor/templating';
 import {Blaze} from 'meteor/blaze';
 import {Autoform} from 'meteor/aldeed:autoform';
-import '../../data_stores/data_store_row_form_vert.js';
+import '../../datastores/datastore_row_form_vert.js';
 
 /**
  Node selector input
@@ -24,7 +24,7 @@ import '../../data_stores/data_store_row_form_vert.js';
       this.form = this.$input.parent().find(".x-editable-autoform");
       this.$input.closest("form").removeClass("form-inline");
 
-      Blaze.renderWithData(Template.DataStoreRowFormVert, {
+      Blaze.renderWithData(Template.DatastoreRowFormVert, {
         type: "update",
         rowSchema: this.options.data.schema,
         rowData: this.options.data.data

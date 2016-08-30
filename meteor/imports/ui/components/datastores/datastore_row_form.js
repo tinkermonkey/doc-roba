@@ -1,4 +1,4 @@
-import './data_store_row_form.html';
+import './datastore_row_form.html';
 
 import {Template} from 'meteor/templating';
 import {Autoform} from 'meteor/aldeed:autoform';
@@ -6,17 +6,17 @@ import {Autoform} from 'meteor/aldeed:autoform';
 /**
  * Template Helpers
  */
-Template.DataStoreRowForm.helpers({});
+Template.DatastoreRowForm.helpers({});
 
 /**
  * Template Helpers
  */
-Template.DataStoreRowForm.events({});
+Template.DatastoreRowForm.events({});
 
 /**
  * Template Rendered
  */
-Template.DataStoreRowForm.rendered = function () {
+Template.DatastoreRowForm.rendered = function () {
   var instance = this;
 
   setTimeout(function () {
@@ -27,6 +27,6 @@ Template.DataStoreRowForm.rendered = function () {
 /**
  * Template Destroyed
  */
-Template.DataStoreRowForm.destroyed = function () {
+Template.DatastoreRowForm.destroyed = function () {
 
 };

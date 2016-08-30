@@ -7,12 +7,12 @@ import {numeral} from 'meteor/numeral:numeral';
 
 // Utils
 import {Util} from '../../api/util.js';
-import {DSUtil} from '../../api/datastore/ds_util.js';
 import {DocTreeConfig} from '../../ui/lib/doc_tree/doc_tree_config.js';
 
 // Collections
 import {Actions} from '../../api/action/action.js';
-import {DataStores} from '../../api/datastore/datastore.js';
+import {Datastores} from '../../api/datastore/datastore.js';
+import {DatastoreDataTypes} from '../../api/datastore/datastore_data_type.js';
 import {Nodes} from '../../api/node/node.js';
 import {Projects} from '../../api/project/project.js';
 import {ProjectVersions} from '../../api/project/project_version.js';
@@ -24,7 +24,7 @@ import {TestSystems} from '../../api/test_system/test_system.js';
 import {AdventureStatus, AdventureStatusLookup} from '../../api/adventure/adventure_status.js';
 import {AdventureStepStatus, AdventureStepStatusLookup} from '../../api/adventure/adventure_step_status.js';
 import {ChangeTypes, ChangeTypesLookup} from '../../api/change_tracker/change_types.js';
-import {DataStoreCategories, DataStoreCategoriesLookup} from '../../api/datastore/datastore_catagories.js';
+import {DatastoreCategories, DatastoreCategoriesLookup} from '../../api/datastore/datastore_catagories.js';
 import {FieldTypes, FieldTypesLookup} from '../../api/datastore/field_types.js';
 import {NodeTypes, NodeTypesLookup} from '../../api/node/node_types.js';
 import {NodeSearchStatus, NodeSearchStatusLookup} from '../../api/node_search/node_search_status.js';
@@ -302,7 +302,7 @@ Template.registerHelper("projectVersions", function () {
  */
 Template.registerHelper("renderCustomFieldType", function (type) {
   if(type){
-    var customType = DataStores.findOne(type);
+    var customType = DatastoreDataTypes.findOne(type);
     if(customType){
       return customType.title;
     }
@@ -446,13 +446,6 @@ Template.registerHelper("adventureIsComplete", function (context) {
 Template.registerHelper("adventureIsPaused", function (context) {
   var adventure = context || this.adventure;
   return adventure.status == AdventureStatus.paused;
-});
-
-/**
- * Render a data store row
- */
-Template.registerHelper("renderDataStoreRow", function (rowId) {
-  return DSUtil.renderRow(rowId);
 });
 
 /**

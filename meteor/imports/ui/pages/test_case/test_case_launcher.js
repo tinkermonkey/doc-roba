@@ -123,9 +123,9 @@ Template.TestCaseLauncher.created = function () {
     instance.subscribe("servers", instance.data.projectId, instance.data.projectVersionId);
     instance.subscribe("test_systems", instance.data.projectId, instance.data.projectVersionId);
     instance.subscribe("test_agents", instance.data.projectId, instance.data.projectVersionId);
-    instance.subscribe("all_data_store_fields", instance.data.projectId, instance.data.projectVersionId);
-    instance.subscribe("all_data_store_rows", instance.data.projectId, instance.data.projectVersionId);
-    instance.subscribe("data_stores", instance.data.projectId, instance.data.projectVersionId);
+    instance.subscribe("all_datastore_fields", instance.data.projectId, instance.data.projectVersionId);
+    instance.subscribe("all_datastore_rows", instance.data.projectId, instance.data.projectVersionId);
+    instance.subscribe("datastores", instance.data.projectId, instance.data.projectVersionId);
 
     if(instance.subscriptionsReady()){
       var server = Servers.findOne({projectVersionId: instance.data.projectVersionId, active: true});

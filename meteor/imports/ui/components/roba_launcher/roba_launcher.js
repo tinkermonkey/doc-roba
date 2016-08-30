@@ -8,9 +8,7 @@ Template.roba_launcher.helpers({
   getAccount: function () {
     var dataContext = this.dataContext.get();
     if(!dataContext.account && this.route){
-      var userTypeId = this.route.get().userType._id,
-        dataStore = DataStores.findOne({ dataKey: userTypeId }),
-        account = DataStoreRows.findOne({dataStoreId: dataStore._id}, {sort: {dateCreated: 1}});
+      let account = this.route.get().userType.getAccount();
       if(account){
         dataContext.account = account._id;
         this.dataContext.set(dataContext);
@@ -99,7 +97,7 @@ Template.roba_launcher.events({
       // assemble the data context
       var dataContext = adventureData.dataContext.get();
       if(dataContext.account){
-        dataContext.account = DataStoreRows.findOne(dataContext.account);
+        dataContext.account = DatastoreRows.findOne(dataContext.account);
       }
 
       // Create the adventure

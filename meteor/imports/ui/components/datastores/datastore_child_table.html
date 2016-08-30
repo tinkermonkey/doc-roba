@@ -1,4 +1,4 @@
-<template name="DataStoreChildTable">
+<template name="DatastoreChildTable">
   {{#with getTableSchema }}
     <table class="table data-store-table">
       <tr class="data-store-table-header">
@@ -25,7 +25,7 @@
                   <tr class="data-store-table-child-header">
                     <td>{{title}}</td>
                     <td colspan="{{getChildColSpan ../..}}">
-                      {{> DataStoreChildTable getChildContext this ..}}
+                      {{> DatastoreChildTable getChildContext this ..}}
                     </td>
                   </tr>
                 {{/if}}

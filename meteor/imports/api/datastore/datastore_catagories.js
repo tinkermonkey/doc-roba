@@ -1,7 +1,5 @@
-export const DataStoreCategories = {
-  userType: "user_type",
-  userTypeCustom: "user_type_custom",
-  custom: "custom",
-  serverConfig: "server_config"
+export const DatastoreCategories = {
+  userType: 0,
+  serverConfig: 1
 };
-export const DataStoreCategoriesLookup = _.invert(DataStoreCategories);
+export const DatastoreCategoriesLookup = _.invert(DatastoreCategories);

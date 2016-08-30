@@ -2,10 +2,12 @@ import {SchemaHelpers} from '../schema_helpers.js';
 import {Auth} from '../auth.js';
 import {ChangeTracker} from '../change_tracker/change_tracker.js';
 
+import {Datastores} from './datastore.js';
+
 /**
  * The data rows for the data stores
  */
-export const DataStoreRow = new SimpleSchema({
+export const DatastoreRow = new SimpleSchema({
   // Static ID field that will be constant across versions of the project
   staticId: {
     type: String,
@@ -30,7 +32,8 @@ export const DataStoreRow = new SimpleSchema({
   // The data for this row
   data: {
     type: Object,
-    blackbox: true
+    blackbox: true,
+    optional: true
   },
   // Standard tracking fields
   dateCreated: {
@@ -52,8 +55,20 @@ export const DataStoreRow = new SimpleSchema({
     autoValue: SchemaHelpers.autoValueModifiedBy
   }
 });
-export const DataStoreRows = new Mongo.Collection("data_store_rows");
-DataStoreRows.attachSchema(DataStoreRow);
-DataStoreRows.deny(Auth.ruleSets.deny.ifNotTester);
-DataStoreRows.allow(Auth.ruleSets.allow.ifAuthenticated);
-ChangeTracker.TrackChanges(DataStoreRows, "data_store_rows");
+export const DatastoreRows = new Mongo.Collection("datastore_rows");
+DatastoreRows.attachSchema(DatastoreRow);
+DatastoreRows.deny(Auth.ruleSets.deny.ifNotTester);
+DatastoreRows.allow(Auth.ruleSets.allow.ifAuthenticated);
+ChangeTracker.TrackChanges(DatastoreRows, "datastore_rows");
+
+/**
+ * Helpers
+ */
+DatastoreRows.helpers({
+  datastore(){
+    return Datastores.findOne({staticId: this.dataStoreId, projectVersionId: this.projectVersionId});
+  },
+  render(){
+    return this.datastore().renderRow(this);
+  }
+});

@@ -7,13 +7,21 @@ export const Auth = {
    * @returns {user}
    */
   requireAuthentication: function () {
-    var userId = Meteor.userId();
-    if(!userId){
-      throw new Meteor.Error(403);
-    }
-    var user = Meteor.users.findOne(userId);
+    var user = Meteor.users.findOne(Meteor.userId());
     if(user){
       return user
+    }
+    throw new Meteor.Error(403);
+  },
+  
+  /**
+   * Global helper for methods to require authentication
+   * @returns {user}
+   */
+  requireProjectAccess: function (projectId) {
+    let user = Meteor.users.findOne(Meteor.userId());
+    if(user && user.hasProjectAccess(projectId)){
+      return user;
     }
     throw new Meteor.Error(403);
   },

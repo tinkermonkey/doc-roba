@@ -1,11 +1,11 @@
-import './data_store_row_form_vert.html';
+import './datastore_row_form_vert.html';
 
 import {Template} from 'meteor/templating';
 
 /**
  * Template Helpers
  */
-Template.DataStoreRowFormVert.helpers({
+Template.DatastoreRowFormVert.helpers({
   schemaFields: function () {
     if(this.rowSchema && this.rowSchema.schema){
       var schema = this.rowSchema.schema();
@@ -17,25 +17,25 @@ Template.DataStoreRowFormVert.helpers({
 /**
  * Template Event Handlers
  */
-Template.DataStoreRowFormVert.events({});
+Template.DatastoreRowFormVert.events({});
 
 /**
  * Template Created
  */
-Template.DataStoreRowFormVert.created = function () {
+Template.DatastoreRowFormVert.created = function () {
   
 };
 
 /**
  * Template Rendered
  */
-Template.DataStoreRowFormVert.rendered = function () {
+Template.DatastoreRowFormVert.rendered = function () {
   
 };
 
 /**
  * Template Destroyed
  */
-Template.DataStoreRowFormVert.destroyed = function () {
+Template.DatastoreRowFormVert.destroyed = function () {
   
 };

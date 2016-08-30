@@ -8,7 +8,7 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 
 import {Projects} from '../../../api/project/project.js';
 
-import '../../components/data_stores/data_store_row_form_vert.js';
+import '../../components/datastores/datastore_row_form_vert.js';
 
 /**
  * Template Helpers
@@ -56,7 +56,7 @@ Template.ProjectList.events({
 
     // render the form
     RobaDialog.show({
-      contentTemplate: 'DataStoreRowFormVert',
+      contentTemplate: 'DatastoreRowFormVert',
       contentData: formContext,
       title: "Create Project",
       buttons: [

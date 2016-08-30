@@ -6,6 +6,9 @@ import {ChangeTracker} from '../change_tracker/change_tracker.js';
 import {NodeTypes} from '../node/node_types.js';
 
 import {CodeModules} from '../code_module/code_module.js';
+import {Datastores} from '../datastore/datastore.js';
+import {DatastoreCategories} from '../datastore/datastore_catagories.js';
+import {DatastoreDataTypes} from '../datastore/datastore_data_type.js';
 import {Nodes} from '../node/node.js';
 import {Projects} from './project.js';
 
@@ -61,25 +64,51 @@ ProjectVersions.deny({
 ProjectVersions.allow(Auth.ruleSets.allow.ifAuthenticated);
 ChangeTracker.TrackChanges(ProjectVersions, "project_versions");
 
-/**
- * Observe changes to the nodes to automatically pick up user type changes
- * Synchronize the changes to the data store representing that type
- */
 if(Meteor.isServer) {
-  ProjectVersions.after.insert(function (userId, projectVersion) {
-      
-    // Create a new code module for this project version
-    let codeModule = CodeModules.insert({
+  /**
+   * Create a code module for this project version
+   * @param projectVersion
+   * @returns {*}
+   */
+  ProjectVersions.createCodeModule = function (projectVersion) {
+    return CodeModules.insert({
       name: Util.wordsToCamel(projectVersion.project().title),
       projectId: projectVersion.projectId,
-      projectVersionId: projectVersion.projectVersionId,
-      parentId: projectVersion.staticId,
+      projectVersionId: projectVersion._id,
+      parentId: projectVersion._id,
       parentCollectionName: 'Nodes',
       language: projectVersion.project().automationLanguage,
       docs: 'Code Module for the project ' + projectVersion.project().title,
-      modifiedBy: projectVersion.modifiedBy,
+      modifiedBy: projectVersion.createdBy,
       createdBy: projectVersion.createdBy
     });
+  };
+  
+  /**
+   * Create a datastore for this project version server config data
+   * @param projectVersion
+   * @returns {*}
+   */
+  ProjectVersions.createServerConfigDatastore = function (projectVersion) {
+    return Datastores.insert({
+      title: projectVersion.project().title + " Server Config",
+      projectId: projectVersion.projectId,
+      projectVersionId: projectVersion._id,
+      parentId: projectVersion._id,
+      parentCollectionName: 'Nodes',
+      category: DatastoreCategories.serverConfig,
+      modifiedBy: projectVersion.createdBy,
+      createdBy: projectVersion.createdBy
+    });
+  };
+  
+  /**
+   * Observe changes to the nodes to automatically pick up user type changes
+   * Synchronize the changes to the data store representing that type
+   */
+  ProjectVersions.after.insert(function (userId, projectVersion) {
+    // Create a new code module for this project version
+    ProjectVersions.createCodeModule(projectVersion);
   });
   ProjectVersions.after.update(function (userId, projectVersion, changedFields) {
     if(_.contains(changedFields, "title")){
@@ -88,14 +117,49 @@ if(Meteor.isServer) {
     }
   });
 }
+
 /**
  * Helpers
  */
 ProjectVersions.helpers({
-  project: function () {
+  project () {
     return Projects.findOne(this.projectId)
   },
-  userTypes: function () {
+  userTypes () {
     return Nodes.find({projectVersionId: this._id, type: NodeTypes.userType}, {sort: {title: 1}});
+  },
+  dataTypes(){
+    DatastoreDataTypes.find({projectVersionId: this._id}, {sort: {title: 1}});
+  },
+  codeModule () {
+    let projectVersion = this,
+        codeModule = CodeModules.findOne({projectVersionId: projectVersion._id, parentId: projectVersion._id});
+    if(codeModule){
+      return codeModule;
+    } else {
+      let codeModuleId;
+      if(Meteor.isServer) {
+        codeModuleId = ProjectVersions.createCodeModule(projectVersion);
+      } else {
+        codeModuleId = Meteor.call("createVersionCodeModule", projectVersion.projectId, projectVersion._id);
+      }
+      return CodeModules.findOne({_id: codeModuleId});
+    }
+  },
+  serverConfigDatastore () {
+    let projectVersion = this,
+        dataStore = Datastores.findOne({projectVersionId: projectVersion._id, parentId: projectVersion._id, category: DatastoreCategories.serverConfig});
+    if(dataStore){
+      return dataStore;
+    } else {
+      let dataStoreId;
+    
+      if(Meteor.isServer) {
+        dataStoreId = ProjectVersions.createServerConfigDatastore(projectVersion);
+      } else {
+        dataStoreId = Meteor.call("createVersionServerConfigDatastore", projectVersion.projectId, projectVersion._id);
+      }
+      return Datastores.findOne({_id: dataStoreId});
+    }
   }
 });

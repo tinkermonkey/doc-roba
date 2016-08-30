@@ -1,4 +1,4 @@
-import './DataStoreChildTable.html';
+import './datastore_child_table.html';
 
 import {Template} from 'meteor/templating';
 
@@ -7,7 +7,7 @@ import {FieldTypes} from '../../../api/datastore/field_types.js';
 /**
  * Template Helpers
  */
-Template.DataStoreChildTable.helpers({
+Template.DatastoreChildTable.helpers({
   getTableSchema: function () {
     return this.schema;
   },
@@ -48,18 +48,18 @@ Template.DataStoreChildTable.helpers({
 /**
  * Template Helpers
  */
-Template.DataStoreChildTable.events({});
+Template.DatastoreChildTable.events({});
 
 /**
  * Template Rendered
  */
-Template.DataStoreChildTable.rendered = function () {
+Template.DatastoreChildTable.rendered = function () {
 
 };
 
 /**
  * Template Destroyed
  */
-Template.DataStoreChildTable.destroyed = function () {
+Template.DatastoreChildTable.destroyed = function () {
 
 };

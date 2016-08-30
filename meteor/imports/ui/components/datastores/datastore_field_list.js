@@ -1,43 +1,39 @@
-import './data_store_field_list.html';
+import './datastore_field_list.html';
 
 import {Template} from 'meteor/templating';
 import {RobaDialog} from 'meteor/austinsand:roba-dialog';
 import {EditableTextField} from 'meteor/austinsand:editable-text-field';
 
 import {FieldTypes} from '../../../api/datastore/field_types.js';
-import {DataStoreFields} from '../../../api/datastore/datastore_field.js';
+import {DatastoreFields} from '../../../api/datastore/datastore_field.js';
 
 import {Util} from '../../../api/util.js';
 import '../editable_fields/editable_field_type.js';
-import '../editable_fields/editable_custom_field_type.js';
+import '../editable_fields/editable_datastore_data_type.js';
 import '../editable_fields/editable_field_shape.js';
 
 /**
  * Template Helpers
  */
-Template.DataStoreFieldList.helpers({
-  getFields: function () {
-    if(this._id){
-      return DataStoreFields.find({dataStoreId: this._id}, {sort: {order: 1}});
-    }
-  }
+Template.DatastoreFieldList.helpers({
+
 });
 
 /**
  * Template Helpers
  */
-Template.DataStoreFieldList.events({
+Template.DatastoreFieldList.events({
   "click .btn-add-field": function () {
     var instance = Template.instance(),
       order = parseInt(instance.$(".sortable-table-row").length || 0) + 1;
 
-    DataStoreFields.insert({
+    DatastoreFields.insert({
       title: "New Field",
       dataKey: "new_field",
       type: FieldTypes.string,
       fieldIsArray: false,
       order: order,
-      dataStoreId: instance.data._id,
+      dataStoreId: instance.data.staticId,
       projectId: instance.data.projectId,
       projectVersionId: instance.data.projectVersionId
     }, function (error, response) {
@@ -64,7 +60,7 @@ Template.DataStoreFieldList.events({
       ],
       callback: function (btn) {
         if(btn == "Delete"){
-          DataStoreFields.remove(field._id, function (error, response) {
+          DatastoreFields.remove(field._id, function (error, response) {
             RobaDialog.hide();
             if(error){
               RobaDialog.error("Delete Field failed: " + error.message);
@@ -97,9 +93,9 @@ Template.DataStoreFieldList.events({
       }
     }
 
-    DataStoreFields.update(fieldId, update, function (error) {
+    DatastoreFields.update(fieldId, update, function (error) {
       if(error){
-        RobaDialog.error("DataStore Field update failed: " + error.message);
+        RobaDialog.error("Datastore Field update failed: " + error.message);
       }
     });
   }
@@ -108,7 +104,7 @@ Template.DataStoreFieldList.events({
 /**
  * Template Rendered
  */
-Template.DataStoreFieldList.rendered = function () {
+Template.DatastoreFieldList.rendered = function () {
   var instance = Template.instance();
 
   // Make the field list sortable
@@ -130,9 +126,9 @@ Template.DataStoreFieldList.rendered = function () {
             oldOrder = parseInt($(el).attr("data-field-order")),
             fieldId = $(el).attr("data-pk");
           if(newOrder != oldOrder){
-            DataStoreFields.update(fieldId, {$set: {order: newOrder}}, function (error, response) {
+            DatastoreFields.update(fieldId, {$set: {order: newOrder}}, function (error, response) {
               if(error){
-                RobaDialog.error("DataStore Field order update failed: " + error.message);
+                RobaDialog.error("Datastore Field order update failed: " + error.message);
               }
             });
           }
@@ -145,6 +141,6 @@ Template.DataStoreFieldList.rendered = function () {
 /**
  * Template Destroyed
  */
-Template.DataStoreFieldList.destroyed = function () {
+Template.DatastoreFieldList.destroyed = function () {
 
 };

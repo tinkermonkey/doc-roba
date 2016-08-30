@@ -1,37 +1,37 @@
-<template name="DataStoreDataTable">
-  {{#if schema}}
+<template name="DatastoreDataTable">
+  {{#if tableSchema}}
     <div class="data-store-table-container">
-    {{#with getTableSchema }}
       <table class="table data-store-table">
         <tr class="data-store-table-header">
           <td></td>
-          {{#each fields}}
+          {{#each tableSchema.fields}}
             {{#if isPrimaryColumn}}
-              <td>{{title}}</td>
+              <td>{{label}}</td>
             {{/if}}
           {{/each}}
+          <td></td>
         </tr>
         <tr class="data-store-table-divider">
           <td colspan="{{getPrimaryColumnCount}}"><div></div></td>
         </tr>
-        {{#if getRows.count}}
-          {{#each getRows}}
+        {{#if rows.count}}
+          {{#each rows}}
             <tr class="data-store-table-row">
               <td class="btn-edit-row"><span class="glyphicon glyphicon-edit"></span></td>
-              {{#each ../fields}}
+              {{#each ../tableSchema.fields}}
                 {{#if isPrimaryColumn}}
                   <td>{{getFieldValue this ..}}</td>
                 {{/if}}
               {{/each}}
               <td class="btn-delete-row"><span class="glyphicon glyphicon-remove"></span></td>
             </tr>
-            {{#each ../fields}}
+            {{#each ../tableSchema.fields}}
               {{#if isChildColumn}}
                 {{#if childHasValue this ..}}
                   <tr class="data-store-table-child-header">
-                    <td>{{title}}</td>
+                    <td>{{label}}</td>
                     <td colspan="{{getChildColSpan ../..}}">
-                      {{> DataStoreChildTable getChildContext this ..}}
+                      {{> DatastoreChildTable getChildContext this ..}}
                     </td>
                   </tr>
                 {{/if}}
@@ -47,7 +47,6 @@
           <td colspan="{{getPrimaryColumnCount}}"><div></div></td>
         </tr>
       </table>
-    {{/with}}
       <button class="btn btn-warning btn-add-ds-row" data-store-id="{{_id}}">Add Row</button>
     </div>
   {{else}}

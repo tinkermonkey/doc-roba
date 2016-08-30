@@ -7,11 +7,11 @@ import {ChangeTracker} from '../change_tracker/change_tracker.js';
 import {NodeTypes} from './node_types.js';
 
 import {UrlParameter} from './url_parameter.js';
-import {DataStoreCategories} from '../datastore/datastore_catagories.js';
+import {DatastoreCategories} from '../datastore/datastore_catagories.js';
 
 import {CodeModules} from '../code_module/code_module.js';
-import {DataStores} from '../datastore/datastore.js';
-import {DataStoreRows} from '../datastore/datastore_row.js';
+import {Datastores} from '../datastore/datastore.js';
+import {DatastoreRows} from '../datastore/datastore_row.js';
 import {Projects} from '../project/project.js';
 import {ProjectVersions} from '../project/project_version.js';
 
@@ -156,43 +156,65 @@ Nodes.allow(Auth.ruleSets.allow.ifAuthenticated);
 ChangeTracker.TrackChanges(Nodes, "nodes");
 SchemaHelpers.autoUpdateOrder(Nodes, ["urlParameters"]);
 
-/**
- * Observe changes to the nodes to automatically pick up user type changes
- * Synchronize the changes to the data store representing that type
- */
 if(Meteor.isServer) {
+  /**
+   * Create a code module for userType nodes
+   * @param projectVersion
+   * @param userId
+   * @returns {*}
+   */
+  Nodes.createCodeModule = function (node) {
+    console.log("createCodeModule:");
+    return CodeModules.insert({
+      name: Util.wordsToCamel(node.title),
+      projectId: node.projectId,
+      projectVersionId: node.projectVersionId,
+      parentId: node.staticId,
+      parentCollectionName: 'Nodes',
+      language: node.project().automationLanguage,
+      docs: 'Code Module for the user type ' + node.title,
+      modifiedBy: node.createdBy,
+      createdBy: node.createdBy
+    });
+  };
+  
+  /**
+   * Create a datastore for userType nodes
+   * @param node
+   * @param userId
+   * @returns {*}
+   */
+  Nodes.createDatastore = function (node) {
+    return Datastores.insert({
+      title: node.title + " Users",
+      projectId: node.projectId,
+      projectVersionId: node.projectVersionId,
+      parentId: node.staticId,
+      parentCollectionName: 'Nodes',
+      category: DatastoreCategories.userType,
+      modifiedBy: node.createdBy,
+      createdBy: node.createdBy
+    });
+  };
+  
+  /**
+   * Observe changes to the nodes to automatically pick up user type changes
+   * Synchronize the changes to the data store representing that type
+   */
   Nodes.after.insert(function (userId, node) {
     if(node.type === NodeTypes.userType) {
-      // Create a new data store for users of this type
-      let dataStore = DataStores.insert({
-        title: node.title + " Users",
-        dataKey: node.staticId,
-        category: DataStoreCategories.userType,
-        projectId: node.projectId,
-        projectVersionId: node.projectVersionId,
-        modifiedBy: node.modifiedBy,
-        createdBy: node.createdBy
-      });
-      
       // Create a new code module for this user type
-      let codeModule = CodeModules.insert({
-        name: Util.wordsToCamel(node.title),
-        projectId: node.projectId,
-        projectVersionId: node.projectVersionId,
-        parentId: node.staticId,
-        parentCollectionName: 'Nodes',
-        language: node.project().automationLanguage,
-        docs: 'Code Module for the user type ' + node.title,
-        modifiedBy: node.modifiedBy,
-        createdBy: node.createdBy
-      });
+      Nodes.createCodeModule(node);
+      
+      // Create a new data store for users of this type
+      Nodes.createDatastore(node);
     }
   });
   Nodes.after.update(function (userId, node, changedFields) {
     if(node.type === NodeTypes.userType) {
       if(_.contains(changedFields, "title")){
         // update the data store title
-        DataStores.update({dataKey: node._id}, {$set: {title: node.title + " Users"}});
+        Datastores.update({projectVersionId: node.projectVersionId, parentId: node.staticId}, {$set: {title: node.title + " Users"}});
         CodeModules.update({projectVersionId: node.projectVersionId, parentId: node.staticId}, {$set: {name: Util.wordsToCamel(node.title)}});
       }
     }
@@ -200,7 +222,7 @@ if(Meteor.isServer) {
   Nodes.after.remove(function (userId, node) {
     if(node.type === NodeTypes.userType) {
       // update the data store title
-      DataStores.update({dataKey: node._id}, {$set: {deleted: true}});
+      Datastores.update({projectVersionId: node.projectVersionId, parentId: node.staticId}, {$set: {deleted: true}});
       CodeModules.update({projectVersionId: node.projectVersionId, parentId: node.staticId}, {$set: {deleted: true}});
     }
   });
@@ -217,21 +239,57 @@ Nodes.helpers({
     return ProjectVersions.findOne({_id: this.projectVersionId});
   },
   platform() {
-    if(this.platformId){
-      return Nodes.findOne({staticId: this.platformId, projectVersionId: this.projectVersionId});
-    }
+    return Nodes.findOne({staticId: this.platformId, projectVersionId: this.projectVersionId});
   },
   userType() {
     if(this.userTypeId){
       return Nodes.findOne({staticId: this.userTypeId, projectVersionId: this.projectVersionId});
+    } else if(this.type == NodeTypes.userType){
+      return this;
+    } else {
+      throw new Meteor.Error("user_type_not_found", "No user type found for node", JSON.stringify(this));
     }
   },
   getAccount(filter) {
-    if(this.userTypeId || this.type == NodeTypes.userType){
-      var userTypeId = this.userTypeId || this._id,
-        dataStore = DataStores.findOne({ dataKey: userTypeId });
+    let dataStore = this.userType().dataStore();
+    filter = filter || {};
+    filter.dataStoreId = dataStore.staticId;
+    filter.projectVersionId = dataStore.projectVersionId;
+    return DatastoreRows.findOne(filter, {sort: {dateCreated: 1}});
+  },
+  codeModule () {
+    let node = this;
+    if(node.type == NodeTypes.userType) {
+      let codeModule = CodeModules.findOne({projectVersionId: node.projectVersionId, parentId: node.staticId});
+      if(codeModule){
+        return codeModule;
+      } else {
+        let codeModuleId;
+        
+        if(Meteor.isServer) {
+          codeModuleId = Nodes.createCodeModule(node);
+        } else {
+          codeModuleId = Meteor.call("createUserTypeCodeModule", node.projectId, node.projectVersionId, node.staticId);
+        }
+        return CodeModules.findOne({_id: codeModuleId});
+      }
+    }
+  },
+  dataStore () {
+    let node = this;
+    if(node.type == NodeTypes.userType) {
+      let dataStore = Datastores.findOne({projectVersionId: node.projectVersionId, parentId: node.staticId});
       if(dataStore){
-        return DataStoreRows.findOne({dataStoreId: dataStore._id}, {sort: {dateCreated: 1}});
+        return dataStore;
+      } else {
+        let dataStoreId;
+  
+        if(Meteor.isServer) {
+          dataStoreId = Nodes.createDatastore(node);
+        } else {
+          dataStoreId = Meteor.call("createUserTypeDatastore", node.projectId, node.projectVersionId, node.staticId);
+        }
+        return Datastores.findOne({_id: dataStoreId});
       }
     }
   }

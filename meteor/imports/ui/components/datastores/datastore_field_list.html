@@ -1,4 +1,4 @@
-<template name="DataStoreFieldList">
+<template name="DatastoreFieldList">
   <table class="sortable-table">
     <tr class="sortable-table-header">
       <td></td>
@@ -12,15 +12,15 @@
     <tr class="sortable-table-divider">
       <td colspan="7"><div class="divider"></div></td>
     </tr>
-    {{#if getFields.count}}
-      {{#each getFields}}
+    {{#if fields.count}}
+      {{#each fields}}
         <tr class="sortable-table-row data-store-field" data-pk="{{_id}}" data-field-order="{{order}}" data-store-id="{{../_id}}">
           <td class="drag-handle"><span class="glyphicon glyphicon-record"></span></td>
           <td>{{> EditableTextField value=title dataKey="title"}}</td>
           <td><small>{{dataKey}}</small></td>
           <td>
             {{> EditableFieldType type=type dataKey="type" }}
-            {{> EditableCustomFieldType type=type customFieldType=customFieldType projectVersionId=../projectVersionId dataKey="customFieldType" }}
+            {{> EditableDatastoreDataType type=type customFieldType=customFieldType projectVersionId=../projectVersionId dataKey="customFieldType" }}
           </td>
           <td>{{> EditableFieldShape fieldIsArray=fieldIsArray dataKey="fieldIsArray"}}</td>
           <td>{{> EditableTextField dataKey="defaultValue" value=defaultValue emptyText="none"}}</td>

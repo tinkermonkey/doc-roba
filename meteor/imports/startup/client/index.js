@@ -5,7 +5,7 @@ import './client.js';
 import '../../ui/lib/css/base.css';
 import '../../ui/lib/css/bootstrap_overrides.css';
 import '../../ui/lib/css/bootstrap_submenu.css';
-import '../../ui/lib/css/data_store_table.css';
+import '../../ui/lib/css/datastore_table.css';
 import '../../ui/lib/css/doc_tree.css';
 import '../../ui/lib/css/editable.css';
 import '../../ui/lib/css/form.css';

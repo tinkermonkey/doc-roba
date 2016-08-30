@@ -1,4 +1,24 @@
 <template name="VersionDataTypes">
-  <h2>Custom Field Types</h2>
-  {{> VersionCustomFieldTypes }}
+  <h2>Custom Data Types</h2>
+  <button class="btn btn-small btn-warning btn-add-custom-type">Add Custom Type</button>
+
+  {{#unless dataTypes.count}}
+    <div class="alert alert-info" role="alert" style="margin-top: 10px;">
+      You can use custom field types to describe more complex data types to mimic linked records in your data.
+    </div>
+  {{/unless}}
+  
+  {{#if dataTypes.count}}
+    {{#RobaTabGroup name="custom-field-tabs" navClass="nav-tabs"}}
+      {{#each dataTypes}}
+        {{#RobaTab name=getTabName title=title}}
+          Fields describing <span class="data-store-name-editable" data-pk="{{_id}}">{{title}}</span>:
+          {{> DatastoreDataTypeFieldList }}
+          <p>
+            <a href="#" class="btn-delete-custom-type" data-store-id="{{_id}}">Delete this custom type</a>
+          </p>
+        {{/RobaTab}}
+      {{/each}}
+    {{/RobaTabGroup}}
+  {{/if}}
 </template>

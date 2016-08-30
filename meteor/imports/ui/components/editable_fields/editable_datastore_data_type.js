@@ -1,15 +1,14 @@
-import './editable_custom_field_type.html';
+import './editable_datastore_data_type.html';
 
 import {Template} from 'meteor/templating';
 
 import {FieldTypes} from '../../../api/datastore/field_types.js';
-import {DataStores} from '../../../api/datastore/datastore.js';
-import {DataStoreCategories} from '../../../api/datastore/datastore_catagories.js';
+import {DatastoreDataTypes} from '../../../api/datastore/datastore_data_type.js';
 
 /**
  * Template Helpers
  */
-Template.EditableCustomFieldType.helpers({
+Template.EditableDatastoreDataType.helpers({
   isCustom: function () {
     return this.type === FieldTypes.custom;
   }
@@ -18,25 +17,23 @@ Template.EditableCustomFieldType.helpers({
 /**
  * Template Helpers
  */
-Template.EditableCustomFieldType.events({});
+Template.EditableDatastoreDataType.events({});
 
 /**
  * Template Rendered
  */
-Template.EditableCustomFieldType.rendered = function () {
+Template.EditableDatastoreDataType.rendered = function () {
   var instance = Template.instance();
 
   instance.autorun(function () {
     var data = Template.currentData(),
-      types = DataStores.find({
-        projectVersionId: instance.data.projectVersionId,
-        deleted: false,
-        category: DataStoreCategories.userTypeCustom
+      types = DatastoreDataTypes.find({
+        projectVersionId: instance.data.projectVersionId
       }, {sort: {title: 1}}).map(function (type) {
-        return { value: type._id, text: type.title };
+        return { value: type.staticId, text: type.title };
       });
 
-    instance.$('.editable-custom-field-type').editable({
+    instance.$('.editable-datastore-data-type').editable({
       mode: instance.data.mode || "inline",
       type: "select",
       source: types,
@@ -50,14 +47,14 @@ Template.EditableCustomFieldType.rendered = function () {
         }, 10);
       }
     });
-    instance.$('.editable-custom-field-type').editable("option", "source", types);
-    instance.$('.editable-custom-field-type').editable("setValue", data.customFieldType, true);
+    instance.$('.editable-datastore-data-type').editable("option", "source", types);
+    instance.$('.editable-datastore-data-type').editable("setValue", data.customFieldType, true);
   });
 };
 
 /**
  * Template Destroyed
  */
-Template.EditableCustomFieldType.destroyed = function () {
+Template.EditableDatastoreDataType.destroyed = function () {
 
 };

@@ -1,18 +1,20 @@
 import {Mongo} from 'meteor/mongo';
 import {SimpleSchema} from 'meteor/aldeed:simple-schema';
-import {SchemaHelpers} from '../schema_helpers.js';
 import {Auth} from '../auth.js';
+import {Util} from '../util.js';
 import {ChangeTracker} from '../change_tracker/change_tracker.js';
-import {FieldTypes} from './field_types.js';
-import {Datastores} from './datastore.js';
-import {DatastoreDataTypes} from './datastore_data_type.js';
+import {SchemaHelpers} from '../schema_helpers.js';
 
 import {DSUtil} from './ds_util.js';
+import {DatastoreDataTypes} from './datastore_data_type.js';
+import {FieldTypes} from './field_types.js';
 
 /**
- * Describe the structure of a particular data store
+ * ============================================================================
+ * DatastoreDataTypeField
+ * ============================================================================
  */
-export const DatastoreField = new SimpleSchema({
+export const DatastoreDataTypeField = new SimpleSchema({
   staticId: {
     type: String,
     index: true,
@@ -30,7 +32,7 @@ export const DatastoreField = new SimpleSchema({
     denyUpdate: true
   },
   // Link to the data store to which this field belongs
-  dataStoreId: {
+  dataTypeId: {
     type: String
   },
   // Field title
@@ -81,42 +83,37 @@ export const DatastoreField = new SimpleSchema({
     autoValue: SchemaHelpers.autoValueModifiedBy
   }
 });
-export const DatastoreFields = new Mongo.Collection("datastore_fields");
-DatastoreFields.attachSchema(DatastoreField);
-DatastoreFields.deny(Auth.ruleSets.deny.ifNotTester);
-DatastoreFields.allow(Auth.ruleSets.allow.ifAuthenticated);
-ChangeTracker.TrackChanges(DatastoreFields, "datastore_fields");
+
+export const DatastoreDataTypeFields = new Mongo.Collection("datastore_data_type_fields");
+DatastoreDataTypeFields.attachSchema(DatastoreDataTypeField);
+DatastoreDataTypeFields.deny(Auth.ruleSets.deny.ifNotTester);
+DatastoreDataTypeFields.allow(Auth.ruleSets.allow.ifAuthenticated);
+ChangeTracker.TrackChanges(DatastoreDataTypeFields, "datastore_data_type_fields");
 
 /**
  * Observe the changes to the fields collection in order to update the schemas
  */
 if(Meteor.isServer){
-  DatastoreFields.after.insert(function (userId, field) {
+  DatastoreDataTypeFields.after.insert(function (userId, field) {
     // Update the schema
-    Datastores.findOne({staticId: field.dataStoreId, projectVersionId: field.projectVersionId}).updateTableSchema();
+    DatastoreDataTypes.findOne({_id: field.dataTypeId}).updateTableSchema();
   });
-  DatastoreFields.after.update(function (userId, field, changedParams) {
+  DatastoreDataTypeFields.after.update(function (userId, field, changedParams) {
     // Update the schema
-    Datastores.findOne({staticId: field.dataStoreId, projectVersionId: field.projectVersionId}).updateTableSchema();
+    DatastoreDataTypes.findOne({_id: field.dataTypeId}).updateTableSchema();
   });
-  DatastoreFields.after.remove(function (userId, field) {
+  DatastoreDataTypeFields.after.remove(function (userId, field) {
     // Update the schema
-    Datastores.findOne({staticId: field.dataStoreId, projectVersionId: field.projectVersionId}).updateTableSchema();
+    DatastoreDataTypes.findOne({_id: field.dataTypeId}).updateTableSchema();
   });
 }
 
 /**
  * Helpers
  */
-DatastoreFields.helpers({
-  datastore(){
-    return Datastores.findOne({staticId: this.dataStoreId, projectVersionId: this.projectVersionId});
-  },
+DatastoreDataTypeFields.helpers({
   dataType(){
-    let field = this;
-    if(field.customFieldType){
-      return DatastoreDataTypes.findOne({staticId: field.customFieldType, projectVersionId: field.projectVersionId});
-    }
+    return DatastoreDataTypes.findOne({_id: this.dataTypeId});
   },
   schema(){
     let field = this;
@@ -127,4 +124,5 @@ DatastoreFields.helpers({
   simpleSchemaType(){
     return DSUtil.dataTypeLiteral(this);
   }
+  
 });

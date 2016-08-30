@@ -1,60 +1,98 @@
 import {Meteor} from 'meteor/meteor';
 import {Auth} from '../../auth.js';
-import {DataStores} from '../datastore.js';
-import {DataStoreFields} from '../datastore_field.js';
-import {DataStoreRows} from '../datastore_row.js';
 
-Meteor.publish('data_stores', function (projectId, projectVersionId) {
-  console.debug("Publish: data_stores");
+import {Datastores} from '../datastore.js';
+import {DatastoreFields} from '../datastore_field.js';
+import {DatastoreRows} from '../datastore_row.js';
+
+import {DatastoreDataTypes} from '../datastore_data_type.js';
+import {DatastoreDataTypeFields} from '../datastore_data_type_field.js';
+
+
+Meteor.publish('datastores', function (projectId, projectVersionId) {
+  console.debug("Publish: datastores");
   // check that there is a project role for the current user
   if(this.userId && projectId && projectVersionId
       && Auth.hasProjectAccess(this.userId, projectId)){
-    return DataStores.find({projectVersionId: projectVersionId});
+    return Datastores.find({projectVersionId: projectVersionId});
   }
-  console.warn("DataStores publication: returning nothing");
+  console.warn("Datastores publication: returning nothing");
   return [];
 });
 
-Meteor.publish('data_store_fields', function (projectId, projectVersionId, dataStoreId) {
-  console.debug("Publish: data_store_fields");
+Meteor.publish('datastore_fields', function (projectId, projectVersionId, dataStoreId) {
+  console.debug("Publish: datastore_fields");
   // check that there is a project role for the current user
   if(this.userId && projectId && projectVersionId && dataStoreId
       && Auth.hasProjectAccess(this.userId, projectId)){
-    return DataStoreFields.find({projectVersionId: projectVersionId, dataStoreId: dataStoreId});
+    return DatastoreFields.find({projectVersionId: projectVersionId, dataStoreId: dataStoreId});
   }
-  console.warn("DataStoreFields publication: returning nothing");
+  console.warn("DatastoreFields publication: returning nothing");
   return [];
 });
 
-Meteor.publish('data_store_rows', function (projectId, projectVersionId, dataStoreId) {
-  console.debug("Publish: data_store_fields");
+Meteor.publish('datastore_rows', function (projectId, projectVersionId, dataStoreId) {
+  console.debug("Publish: datastore_rows");
   // check that there is a project role for the current user
   if(this.userId && projectId && projectVersionId && dataStoreId
       && Auth.hasProjectAccess(this.userId, projectId)){
-    return DataStoreRows.find({projectVersionId: projectVersionId, dataStoreId: dataStoreId});
+    return DatastoreRows.find({projectVersionId: projectVersionId, dataStoreId: dataStoreId});
   }
-  console.warn("DataStoreRows publication: returning nothing");
+  console.warn("DatastoreRows publication: returning nothing");
   return [];
 });
 
-Meteor.publish('all_data_store_fields', function (projectId, projectVersionId) {
-  console.debug("Publish: all_data_store_fields");
+Meteor.publish('datastore_data_types', function (projectId, projectVersionId) {
+  console.debug("Publish: datastore_data_types");
   // check that there is a project role for the current user
   if(this.userId && projectId && projectVersionId
       && Auth.hasProjectAccess(this.userId, projectId)){
-    return DataStoreFields.find({projectVersionId: projectVersionId});
+    return DatastoreDataTypes.find({projectVersionId: projectVersionId});
   }
-  console.warn("AllDataStoreFields publication: returning nothing");
+  console.warn("DatastoreDataTypes publication: returning nothing");
   return [];
 });
 
-Meteor.publish('all_data_store_rows', function (projectId, projectVersionId) {
-  console.debug("Publish: all_data_store_rows");
+Meteor.publish('datastore_data_type_fields', function (projectId, projectVersionId, dataTypeId) {
+  console.debug("Publish: datastore_data_type_fields");
+  // check that there is a project role for the current user
+  if(this.userId && projectId && projectVersionId && dataTypeId
+      && Auth.hasProjectAccess(this.userId, projectId)){
+    return DatastoreDataTypeFields.find({projectVersionId: projectVersionId, dataTypeId: dataTypeId});
+  }
+  console.warn("DatastoreDataTypeFields publication: returning nothing");
+  return [];
+});
+
+Meteor.publish('all_datastore_fields', function (projectId, projectVersionId) {
+  console.debug("Publish: all_datastore_fields");
   // check that there is a project role for the current user
   if(this.userId && projectId && projectVersionId
       && Auth.hasProjectAccess(this.userId, projectId)){
-    return DataStoreRows.find({projectVersionId: projectVersionId});
+    return DatastoreFields.find({projectVersionId: projectVersionId});
   }
-  console.warn("AllDataStoreRows publication: returning nothing");
+  console.warn("AllDatastoreFields publication: returning nothing");
+  return [];
+});
+
+Meteor.publish('all_datastore_data_type_fields', function (projectId, projectVersionId) {
+  console.debug("Publish: all_datastore_data_type_fields");
+  // check that there is a project role for the current user
+  if(this.userId && projectId && projectVersionId
+      && Auth.hasProjectAccess(this.userId, projectId)){
+    return DatastoreDataTypeFields.find({projectVersionId: projectVersionId});
+  }
+  console.warn("AllDatastoreDataTypeFields publication: returning nothing");
+  return [];
+});
+
+Meteor.publish('all_datastore_rows', function (projectId, projectVersionId) {
+  console.debug("Publish: all_datastore_rows");
+  // check that there is a project role for the current user
+  if(this.userId && projectId && projectVersionId
+      && Auth.hasProjectAccess(this.userId, projectId)){
+    return DatastoreRows.find({projectVersionId: projectVersionId});
+  }
+  console.warn("AllDatastoreRows publication: returning nothing");
   return [];
 });

@@ -5,7 +5,7 @@ import {Template} from 'meteor/templating';
 import {FlowRouter} from 'meteor/kadira:flow-router';
 import {RobaDialog} from 'meteor/austinsand:roba-dialog';
 
-import {DataStores} from '../../../../api/datastore/datastore.js';
+import {Datastores} from '../../../../api/datastore/datastore.js';
 import {Projects} from '../../../../api/project/project.js';
 import {ProjectVersions} from '../../../../api/project/project_version.js';
 
@@ -44,10 +44,10 @@ Template.VersionHome.events({
         update = {$set: {}};
     update["$set"][dataKey] = newValue;
 
-    DataStores.update(dataStoreId, update, function (error) {
+    Datastores.update(dataStoreId, update, function (error) {
       if(error){
-        console.error("DataStore update failed: " + error.message);
-        RobaDialog.error("DataStore update failed: " + error.message);
+        console.error("Datastore update failed: " + error.message);
+        RobaDialog.error("Datastore update failed: " + error.message);
       }
     });
   }
@@ -67,9 +67,11 @@ Template.VersionHome.created = function () {
 
     instance.subscribe("nodes", projectId, projectVersionId);
     instance.subscribe("actions", projectId, projectVersionId);
-    instance.subscribe("data_stores", projectId, projectVersionId);// TODO: Move to lower level template
-    instance.subscribe("all_data_store_fields", projectId, projectVersionId);// TODO: Move to lower level template
-    instance.subscribe("all_data_store_rows", projectId, projectVersionId);// TODO: Move to lower level template
+    instance.subscribe("datastores", projectId, projectVersionId);// TODO: Move to lower level template
+    instance.subscribe("datastore_data_types", projectId, projectVersionId);// TODO: Move to lower level template
+    instance.subscribe("all_datastore_fields", projectId, projectVersionId);// TODO: Move to lower level template
+    instance.subscribe("all_datastore_data_type_fields", projectId, projectVersionId);// TODO: Move to lower level template
+    instance.subscribe("all_datastore_rows", projectId, projectVersionId);// TODO: Move to lower level template
     instance.subscribe("servers", projectId, projectVersionId);// TODO: Move to lower level template
     instance.subscribe("test_systems", projectId, projectVersionId);// TODO: Move to lower level template
     instance.subscribe("test_agents", projectId, projectVersionId);// TODO: Move to lower level template

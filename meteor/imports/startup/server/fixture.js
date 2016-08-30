@@ -9,9 +9,9 @@ import {Actions}                  from '../../api/action/action.js';
 import {CodeModules}              from '../../api/code_module/code_module.js';
 import {CodeModuleFunctions}      from '../../api/code_module/code_module_function.js';
 import {CodeModuleFunctionParams} from '../../api/code_module/code_module_function_param.js';
-import {DataStores}               from '../../api/datastore/datastore.js';
-import {DataStoreFields}          from '../../api/datastore/datastore_field.js';
-import {DataStoreRows}            from '../../api/datastore/datastore_row.js';
+import {Datastores}               from '../../api/datastore/datastore.js';
+import {DatastoreFields}          from '../../api/datastore/datastore_field.js';
+import {DatastoreRows}            from '../../api/datastore/datastore_row.js';
 import {DriverCommands}           from '../../api/driver_command/driver_command.js';
 import {Nodes}                    from '../../api/node/node.js';
 import {Projects}                 from '../../api/project/project.js';
@@ -71,9 +71,9 @@ var collectionList = {
       CodeModules: CodeModules,
       CodeModuleFunctions: CodeModuleFunctions,
       CodeModuleFunctionParams: CodeModuleFunctionParams,
-      DataStores: DataStores,
-      DataStoreFields: DataStoreFields,
-      DataStoreRows: DataStoreRows,
+      Datastores: Datastores,
+      DatastoreFields: DatastoreFields,
+      DatastoreRows: DatastoreRows,
       DriverCommands: DriverCommands,
       LogMessages: LogMessages,
       Nodes: Nodes,

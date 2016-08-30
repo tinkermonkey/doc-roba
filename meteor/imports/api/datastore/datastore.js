@@ -3,14 +3,20 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import {SchemaHelpers} from '../schema_helpers.js';
 import {Auth} from '../auth.js';
 import {ChangeTracker} from '../change_tracker/change_tracker.js';
+import {DatastoreFields} from './datastore_field.js';
+import {DatastoreRows} from './datastore_row.js';
+import {DatastoreCategories} from './datastore_catagories.js';
+import {DSUtil} from './ds_util.js';
 
-import {CodeModules} from '../code_module/code_module.js';
+// List the collections that can be parents to datastores for retrieving parent records
+import {Nodes} from '../node/node.js';
+import {ProjectVersion} from '../project/project_version.js';
 
 /**
  * General mechanism for storing schema information for custom data stores
  * This is used by the credentials mechanism
  */
-export const DataStore = new SimpleSchema({
+export const Datastore = new SimpleSchema({
   // Static ID field that will be constant across versions of the project
   staticId: {
     type: String,
@@ -28,20 +34,25 @@ export const DataStore = new SimpleSchema({
     type: String,
     denyUpdate: true
   },
+  // Parent record id
+  parentId: {
+    type: String
+  },
+  // Parent collection name
+  parentCollectionName: {
+    type: String
+  },
+  // Category of the datastore
+  category: {
+    type: Number,
+    allowedValues: _.values(DatastoreCategories)
+  },
   // Descriptive title
   title: {
     type: String
   },
-  // Key used to identify records
-  dataKey: {
-    type: String
-  },
-  // DataStoreCategory
-  category: {
-    type: String
-  },
-  // Stored basic schema
-  schema: {
+  // This is used for rendering tables quickly
+  tableSchemaDef: {
     type: Object,
     blackbox: true,
     optional: true
@@ -76,18 +87,82 @@ export const DataStore = new SimpleSchema({
     autoValue: SchemaHelpers.autoValueModifiedBy
   }
 });
-export const DataStores = new Mongo.Collection("data_stores");
-DataStores.attachSchema(DataStore);
-DataStores.deny(Auth.ruleSets.deny.ifNotTester);
-DataStores.allow(Auth.ruleSets.allow.ifAuthenticated);
-ChangeTracker.TrackChanges(DataStores, "data_stores");
+export const Datastores = new Mongo.Collection("datastores");
+Datastores.attachSchema(Datastore);
+Datastores.deny(Auth.ruleSets.deny.ifNotTester);
+Datastores.allow(Auth.ruleSets.allow.ifAuthenticated);
+ChangeTracker.TrackChanges(Datastores, "datastores");
 
 /**
  * Helpers
  */
-DataStores.helpers({
-  codeModule(){
+Datastores.helpers({
+  fields(){
+    return DatastoreFields.find({dataStoreId: this.staticId, projectVersionId: this.projectVersionId}, {sort: {order: 1}});
+  },
+  rows(limit){
+    console.log("datastore.rows:", DatastoreRows.find({dataStoreId: this.staticId, projectVersionId: this.projectVersionId}, {limit: limit} ).count());
+    return DatastoreRows.find({dataStoreId: this.staticId, projectVersionId: this.projectVersionId}, {limit: limit} );
+  },
+  parentRecord(){
     let dataStore = this;
-    return CodeModules.findOne({parentId: dataStore.static});
+    if (dataStore.parentId) {
+      let collection = eval(dataStore.parentCollectionName);
+      return collection.findOne({
+        $or: [
+          {_id: dataStore.parentId},
+          {staticId: dataStore.parentId}
+        ], projectVersionId: dataStore.projectVersionId
+      });
+    }
+  },
+  updateTableSchema(){
+    let tableSchemaDef = {fields: []};
+    
+    // build up the schema
+    this.fields().forEach(function (field) {
+      tableSchemaDef.fields.push(DSUtil.tableFieldDef(field));
+      //tableSchemaDef[field.dataKey] = DSUtil.tableFieldDef(field);
+    });
+    
+    // store the schema
+    console.log("tableSchemaDef:", tableSchemaDef);
+    Datastores.update({_id: this._id}, {$set: {tableSchemaDef: tableSchemaDef}});
+    return tableSchemaDef;
+  },
+  rowRenderer(){
+    return Function('row', this.renderRowSelector || 'return row ? row[0] : \'undefined\'');
+  },
+  renderRow(datastoreRow){
+    return this.rowRenderer()(datastoreRow);
+  },
+  getRenderedRows(){
+    let render = this.rowRenderer(),
+        rows = [];
+    this.rows().forEach((row) => {
+      rows.push({
+        value: row._id,
+        text: row.render()
+      });
+    });
+    return rows
+  },
+  tableSchema(){
+    if(this.tableSchemaDef){
+      return this.tableSchemaDef;
+    } else {
+      return this.updateTableSchema();
+    }
+  },
+  simpleSchema(){
+    let simpleSchemaDef = {};
+    this.fields().forEach(function (field) {
+      simpleSchemaDef[field.dataKey] = DSUtil.simpleFieldDef(field);
+    });
+    try {
+      return new SimpleSchema(simpleSchemaDef);
+    } catch (e) {
+      console.error("Failed to generate simpleSchema for datastore:", simpleSchemaDef, e);
+    }
   }
 });

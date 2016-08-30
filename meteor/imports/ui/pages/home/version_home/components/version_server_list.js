@@ -4,10 +4,10 @@ import {Template} from 'meteor/templating';
 import {RobaDialog} from 'meteor/austinsand:roba-dialog';
 import {EditableTextField} from 'meteor/austinsand:editable-text-field';
 
+import {ProjectVersions} from '../../../../../api/project/project_version.js';
 import {Servers} from '../../../../../api/test_server/server.js';
-import {DataStores} from '../../../../../api/datastore/datastore.js';
+import {Datastores} from '../../../../../api/datastore/datastore.js';
 
-import {DSUtil, DataStoreSchemas} from '../../../../../api/datastore/ds_util.js';
 import '../../../../components/editable_fields/editable_autoform/editable_autoform.js';
 import '../../../../components/editable_fields/editable_field_yes_no.js';
 
@@ -18,8 +18,9 @@ Template.VersionServerList.helpers({
   sortedServers: function () {
     return Servers.find({projectVersionId: this._id}, {sort: {order: 1}}).fetch();
   },
-  getConfigSchema: function () {
-    return Template.instance().configSchema.get();
+  configSchema: function () {
+    let projectVersion = Template.parentData(1);
+    return projectVersion.serverConfigDatastore().simpleSchema();
   }
 });
 
@@ -131,32 +132,50 @@ Template.VersionServerList.rendered = function () {
     .disableSelection();
 
   // Make the field list sortable
+  /*
   instance.autorun(function () {
     //var servers = Servers.find({projectVersionId: instance.data.version._id});
     //instance.$(".sortable-table").sortable("refresh");
   });
 
   // Setup the config schema initial value
-  var ds = DataStores.findOne({dataKey: "server_config_" + instance.data._id});
+  instance.autorun(() => {
+    console.log("VersionServerList.autorun - updating DatastoreSchemas");
+    let projectVersionId = FlowRouter.getParam("projectVersionId"),
+        projectVersion = ProjectVersions.findOne({_id: projectVersionId}),
+        datastore = projectVersion.serverConfigDatastore();
+    
+    console.log("projectVersionId:", projectVersionId);
+    console.log("projectVersion:", projectVersion);
+    console.log("datastore:", datastore);
+    DatastoreSchemas[datastore._id] = DSUtil.simpleSchema(datastore.schema);
+    instance.configSchema.set(DatastoreSchemas[datastore._id]);
+  });
+  */
+  /*
+  var ds = Datastores.findOne({dataKey: "server_config_" + instance.data._id});
   if(ds.schema){
-    DataStoreSchemas[ds._id] = DSUtil.simpleSchema(ds.schema);
-    instance.configSchema.set(DataStoreSchemas[ds._id]);
+    DatastoreSchemas[ds._id] = DSUtil.simpleSchema(ds.schema);
+    instance.configSchema.set(DatastoreSchemas[ds._id]);
   }
+  */
 
   // Keep the server config simple schema up to date
-  instance.configObservation = DataStores.find({dataKey: "server_config_" + instance.data._id}).observeChanges({
+  /*
+  instance.configObservation = Datastores.find({dataKey: "server_config_" + instance.data._id}).observeChanges({
     changed: function (id, fields) {
       if(_.contains(fields, "schema")){
-        DataStoreSchemas[id] = DSUtil.simpleSchema(fields.schema);
-        instance.configSchema.set(DataStoreSchemas[id]);
+        DatastoreSchemas[id] = DSUtil.simpleSchema(fields.schema);
+        instance.configSchema.set(DatastoreSchemas[id]);
       }
     }
   });
+  */
 };
 
 /**
  * Template Destroyed
  */
 Template.VersionServerList.destroyed = function () {
-  this.configObservation.stop();
+  //this.configObservation.stop();
 };

@@ -81,7 +81,7 @@ ChangeTracker.TrackChanges(Projects, "projects");
  * Helpers
  */
 Projects.helpers({
-  versions: function () {
+  versions () {
     return ProjectVersions.find({projectId: this._id})
   }
 });

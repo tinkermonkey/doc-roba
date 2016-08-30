@@ -8,7 +8,6 @@ import {CodeModuleFunctions} from './code_module_function.js';
 import {CodeLanguages} from './code_languages.js';
 
 // List the collections that can be parents to code modules for retrieving parent records
-import {DataStores} from '../datastore/datastore.js';
 import {Nodes} from '../node/node.js';
 import {ProjectVersion} from '../project/project_version.js';
 
@@ -106,7 +105,11 @@ CodeModules.helpers({
     let module = this;
     if(module.parentId){
       let collection = eval(module.parentCollectionName);
-      return collection.findOne({staticId: module.parentId, projectVersionId: module.projectVersionId});
+      return collection.findOne({ $or: [
+        {_id: module.parentId},
+        {staticId: module.parentId}
+      ], projectVersionId: module.projectVersionId
+      });
     }
   }
 });

@@ -5,8 +5,9 @@ import {Projects} from '../project.js';
 import {ProjectRoles, ProjectRolesLookup} from '../project_roles.js';
 import {ProjectVersions} from '../project_version.js';
 import {ProjectInvitations} from '../project_invitations.js';
-import {Nodes} from '../../node/node.js';
+
 import {Actions} from '../../action/action.js';
+import {Nodes} from '../../node/node.js';
 
 Meteor.methods({
   /**
@@ -377,5 +378,37 @@ Meteor.methods({
     } else {
       throw new Meteor.Error("createVersion: unable to create version from information provided");
     }
+  },
+  
+  /**
+   * Create a code module for a project version
+   * @param projectId
+   * @param projectVersionId
+   * @return CodeModule._id
+   */
+  createVersionCodeModule(projectId, projectVersionId){
+    console.debug("createVersionCodeModule:", projectId, projectVersionId);
+    check(projectId, String);
+    check(projectVersionId, String);
+    
+    let user = Auth.requireProjectAccess(projectId),
+        projectVersion = ProjectVersions.findOne({_id: projectVersionId});
+    return projectVersion.codeModule();
+  },
+  
+  /**
+   * Create a datastore for project version server config data
+   * @param projectId
+   * @param projectVersionId
+   * @return CodeModule._id
+   */
+  createVersionServerConfigDatastore(projectId, projectVersionId){
+    console.debug("createVersionServerConfigDatastore:", projectId, projectVersionId);
+    check(projectId, String);
+    check(projectVersionId, String);
+    
+    let user = Auth.requireProjectAccess(projectId),
+        projectVersion = ProjectVersions.findOne({_id: projectVersionId});
+    return projectVersion.serverConfigDatastore();
   }
 });

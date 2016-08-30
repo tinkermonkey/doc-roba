@@ -21,7 +21,7 @@
         <td class="drag-handle"><span class="glyphicon glyphicon-record"></span></td>
         <td>{{> EditableTextField value=title dataKey="title"}}</td>
         <td>{{> EditableTextField value=url dataKey="url" dataType="url"}}</td>
-        <td>{{> EditableAutoform data=config schema=getConfigSchema emptyText="none" dataKey="config"}}</td>
+        <td>{{> EditableAutoform data=config schema=configSchema emptyText="none" dataKey="config"}}</td>
         <td>{{> EditableFieldYesNo value=active dataKey="active"}}</td>
         <td class="btn-delete"><span class="glyphicon glyphicon-remove"></span></td>
       </tr>

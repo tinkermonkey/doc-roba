@@ -1,6 +1,6 @@
 <template name="EditableUserAccount">
   <div class="{{cssClass}} editable-user-account-selector inline" data-key="{{dataKey}}">
-    <span class="{{#unless value}}hide{{/unless}}">{{renderDataStoreRow value}}</span>
+    <span class="{{#unless value}}hide{{/unless}}">{{render}}</span>
     <span class="{{#if value}}hide{{/if}}">(<i>Select a(n) {{userType.title}} Account</i>)</span>
   </div>
 </template>

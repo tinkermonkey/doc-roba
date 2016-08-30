@@ -8,7 +8,7 @@ import {RobaDialog} from 'meteor/austinsand:roba-dialog';
 import {Projects} from '../../../../api/project/project.js';
 import {ProjectVersions} from '../../../../api/project/project_version.js';
 
-import '../../../components/data_stores/data_store_row_form_vert.js';
+import '../../../components/datastores/datastore_row_form_vert.js';
 
 /**
  * Template Helpers
@@ -51,7 +51,7 @@ Template.ProjectVersions.events({
 
     // render the form
     RobaDialog.show({
-      contentTemplate: 'DataStoreRowFormVert',
+      contentTemplate: 'DatastoreRowFormVert',
       contentData: formContext,
       title: "Add Project Version",
       buttons: [
