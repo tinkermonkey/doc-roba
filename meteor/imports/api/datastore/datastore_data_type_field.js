@@ -32,7 +32,7 @@ export const DatastoreDataTypeField = new SimpleSchema({
     denyUpdate: true
   },
   // Link to the data store to which this field belongs
-  dataTypeId: {
+  parentId: {
     type: String
   },
   // Field title
@@ -47,7 +47,7 @@ export const DatastoreDataTypeField = new SimpleSchema({
     type: Number,
     allowedValues: _.map(FieldTypes, function (d) { return d; })
   },
-  customFieldType: {
+  dataTypeId: {
     type: String,
     optional: true
   },
@@ -96,15 +96,15 @@ ChangeTracker.TrackChanges(DatastoreDataTypeFields, "datastore_data_type_fields"
 if(Meteor.isServer){
   DatastoreDataTypeFields.after.insert(function (userId, field) {
     // Update the schema
-    DatastoreDataTypes.findOne({_id: field.dataTypeId}).updateTableSchema();
+    DatastoreDataTypes.findOne({staticId: field.parentId, projectVersionId: field.projectVersionId}).updateTableSchema();
   });
   DatastoreDataTypeFields.after.update(function (userId, field, changedParams) {
     // Update the schema
-    DatastoreDataTypes.findOne({_id: field.dataTypeId}).updateTableSchema();
+    DatastoreDataTypes.findOne({staticId: field.parentId, projectVersionId: field.projectVersionId}).updateTableSchema();
   });
   DatastoreDataTypeFields.after.remove(function (userId, field) {
     // Update the schema
-    DatastoreDataTypes.findOne({_id: field.dataTypeId}).updateTableSchema();
+    DatastoreDataTypes.findOne({staticId: field.parentId, projectVersionId: field.projectVersionId}).updateTableSchema();
   });
 }
 
@@ -113,12 +113,14 @@ if(Meteor.isServer){
  */
 DatastoreDataTypeFields.helpers({
   dataType(){
-    return DatastoreDataTypes.findOne({_id: this.dataTypeId});
+    //console.log("DatastoreDataTypeFields.dataType:", this);
+    return DatastoreDataTypes.findOne({staticId: this.parentId, projectVersionId: this.projectVersionId});
   },
-  schema(){
+  tableSchema(){
     let field = this;
-    if(field.customFieldType){
-      return field.dataType().schema;
+    if(field.dataTypeId){
+      //console.log("DatastoreDataTypeFields.tableSchema:", this);
+      return field.dataType().tableSchema();
     }
   },
   simpleSchemaType(){

@@ -12,7 +12,7 @@
 /* Header */
 .data-store-table-header {
   font-weight: normal;
-  background-color: #f9f9f9;
+  color: #0A7BFF;
 }
 
 .data-store-table-header > td {
@@ -79,10 +79,10 @@
 /* Sub Col Header */
 .data-store-table-child-header {
   font-weight: normal;
-  background-color: #f9f9f9;
 }
 
 .data-store-table-child-header > td:first-child {
+  color: #0A7BFF;
   padding-left: 15px;
 }
 

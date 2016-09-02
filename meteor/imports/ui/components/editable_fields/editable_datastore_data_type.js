@@ -48,7 +48,7 @@ Template.EditableDatastoreDataType.rendered = function () {
       }
     });
     instance.$('.editable-datastore-data-type').editable("option", "source", types);
-    instance.$('.editable-datastore-data-type').editable("setValue", data.customFieldType, true);
+    instance.$('.editable-datastore-data-type').editable("setValue", data.dataTypeId, true);
   });
 };
 

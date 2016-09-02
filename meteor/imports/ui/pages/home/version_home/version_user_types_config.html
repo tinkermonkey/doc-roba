@@ -11,24 +11,24 @@
                 <h4>Fields describing {{title}} users:</h4>
                 {{#with dataStore}}
                   <div class="user-type-data-store" data-pk="{{_id}}">
-                    {{> DatastoreFieldList }}
-                  </div>
-                
-                  {{#unless renderRowSelector}}
-                    <h4>Row Selection Render Function:</h4>
-                    <div class="alert alert-info" role="alert">
-                      <p>This code will be used to return a visual identifier for each row.</p>
-                      <dl>
-                        <dt>An example:</dt>
-                        <dd>return row.first_name + row.last_name;</dd>
-                      </dl>
-                      <p>Where the field datakeys are "first_name" and "last_name"</p>
+                    <div class="user-type-data-store-fields">
+                      {{> DatastoreFieldList }}
                     </div>
-                  {{else}}
-                    <label>Row Selector Renderer:</label>
-                  {{/unless}}
   
-                  {{> EditableCode dataKey="renderRowSelector" value=renderRowSelector emptyText="Nothing defined" minLines=3}}
+                    <h4>Row Selection Render Function:</h4>
+                    {{#unless renderRowSelector}}
+                      <div class="alert alert-info" role="alert">
+                        <p>This code will be used to return a visual identifier for each row.</p>
+                        <dl>
+                          <dt>An example:</dt>
+                          <dd>return row.first_name + row.last_name;</dd>
+                        </dl>
+                        <p>Where the field datakeys are "first_name" and "last_name"</p>
+                      </div>
+                    {{/unless}}
+    
+                    {{> EditableCode dataKey="renderRowSelector" value=renderRowSelector emptyText="Nothing defined" minLines=3}}
+                  </div>
                 {{/with}}
               {{/RobaTab}}
             {{/RobaTabGroup}}

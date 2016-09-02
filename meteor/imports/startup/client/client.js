@@ -300,9 +300,9 @@ Template.registerHelper("projectVersions", function () {
 /**
  * Render a change type to a string
  */
-Template.registerHelper("renderCustomFieldType", function (type) {
-  if(type){
-    var customType = DatastoreDataTypes.findOne(type);
+Template.registerHelper("renderDataTypeTitle", function (staticId, projectVersionId) {
+  if(staticId && projectVersionId){
+    var customType = DatastoreDataTypes.findOne({staticId: staticId, projectVersionId: projectVersionId});
     if(customType){
       return customType.title;
     }

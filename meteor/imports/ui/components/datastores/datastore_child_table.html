@@ -1,17 +1,17 @@
 <template name="DatastoreChildTable">
-  {{#with getTableSchema }}
+  {{#with field.schema }}
     <table class="table data-store-table">
       <tr class="data-store-table-header">
         {{#each fields}}
           {{#if isPrimaryColumn}}
-            <td>{{title}}</td>
+            <td>{{label}}</td>
           {{/if}}
         {{/each}}
       </tr>
       <tr class="data-store-table-divider">
         <td colspan="{{getPrimaryColumnCount}}"><div></div></td>
       </tr>
-        {{#each getRows ..}}
+        {{#each ../values}}
           <tr class="data-store-table-row">
             {{#each ../fields}}
               {{#if isPrimaryColumn}}
@@ -24,7 +24,7 @@
                 {{#if childHasValue this ..}}
                   <tr class="data-store-table-child-header">
                     <td>{{title}}</td>
-                    <td colspan="{{getChildColSpan ../..}}">
+                    <td colspan="{{getChildColSpan ..}}">
                       {{> DatastoreChildTable getChildContext this ..}}
                     </td>
                   </tr>

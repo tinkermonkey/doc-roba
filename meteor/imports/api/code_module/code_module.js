@@ -46,6 +46,12 @@ export const CodeModule = new SimpleSchema({
     type: String,
     optional: true
   },
+  // If a parent has more than one code module this can be used to differentiate
+  type: {
+    type: Number,
+    denyUpdate: true,
+    optional: true
+  },
   // Variable name
   name: {
     type: String

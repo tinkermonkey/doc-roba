@@ -78,14 +78,15 @@ ChangeTracker.TrackChanges(DatastoreDataTypes, "datastore_data_types");
  */
 DatastoreDataTypes.helpers({
   fields(){
-    return DatastoreDataTypeFields.find({dataTypeId: this.staticId, projectVersionId: this.projectVersionId}, {sort: {order: 1}});
+    return DatastoreDataTypeFields.find({parentId: this.staticId, projectVersionId: this.projectVersionId}, {sort: {order: 1}});
   },
   updateTableSchema(){
-    let tableSchemaDef = {};
-    
+    //console.log("DatastoreDataTypes.updateTableSchema:", this);
+    let tableSchemaDef = {fields: []};
+  
     // build up the schema
-    this.fields.forEach(function (field) {
-      tableSchemaDef[field.dataKey] = DSUtil.tableFieldDef(field);
+    this.fields().forEach(function (field) {
+      tableSchemaDef.fields.push(DSUtil.tableFieldDef(field));
     });
     
     // store the schema
@@ -99,8 +100,10 @@ DatastoreDataTypes.helpers({
   },
   tableSchema(){
     if(this.tableSchemaDef){
+      //console.log("DatastoreDataTypes.tableSchema via storage:", this);
       return this.tableSchemaDef;
     } else {
+      console.log("DatastoreDataTypes.tableSchema via update:", this);
       return this.updateTableSchema();
     }
   },

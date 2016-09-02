@@ -10,6 +10,8 @@ import {CodeModules}              from '../../api/code_module/code_module.js';
 import {CodeModuleFunctions}      from '../../api/code_module/code_module_function.js';
 import {CodeModuleFunctionParams} from '../../api/code_module/code_module_function_param.js';
 import {Datastores}               from '../../api/datastore/datastore.js';
+import {DatastoreDataType}        from '../../api/datastore/datastore_data_type.js';
+import {DatastoreDataTypeFields}  from '../../api/datastore/datastore_data_type_field.js';
 import {DatastoreFields}          from '../../api/datastore/datastore_field.js';
 import {DatastoreRows}            from '../../api/datastore/datastore_row.js';
 import {DriverCommands}           from '../../api/driver_command/driver_command.js';
@@ -72,6 +74,8 @@ var collectionList = {
       CodeModuleFunctions: CodeModuleFunctions,
       CodeModuleFunctionParams: CodeModuleFunctionParams,
       Datastores: Datastores,
+      DatastoreDataType: DatastoreDataType,
+      DatastoreDataTypeFields: DatastoreDataTypeFields,
       DatastoreFields: DatastoreFields,
       DatastoreRows: DatastoreRows,
       DriverCommands: DriverCommands,

@@ -1,8 +1,8 @@
 <template name="EditableDatastoreDataType">
   {{#if isCustom}}
     <div class="{{cssClass}} editable-datastore-data-type inline" data-key="{{dataKey}}">
-      <span class="{{#unless customFieldType}}hide{{/unless}}">({{renderCustomFieldType customFieldType}})</span>
-      <span class="{{#if customFieldType}}hide{{/if}}">(<i>Select Type</i>)</span>
+      <span class="{{#unless dataTypeId}}hide{{/unless}}">({{renderDataTypeTitle dataTypeId projectVersionId}})</span>
+      <span class="{{#if dataTypeId}}hide{{/if}}">(<i>Select Type</i>)</span>
     </div>
   {{/if}}
 </template>

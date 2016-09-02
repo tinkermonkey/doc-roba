@@ -1,9 +1,5 @@
 <template name="DatastoreRowFormVert">
   <div class="data-store-row-form-wrapper">
-    {{#autoForm id=getElementId type=type doc=rowData schema=rowSchema}}
-      {{#each schemaFields}}
-        {{> afQuickField}}
-      {{/each}}
-    {{/autoForm}}
+    {{> quickForm id=getElementId type=type doc=RowData schema=rowSchema buttonContent=false}}
   </div>
 </template>

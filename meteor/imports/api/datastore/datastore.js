@@ -101,7 +101,6 @@ Datastores.helpers({
     return DatastoreFields.find({dataStoreId: this.staticId, projectVersionId: this.projectVersionId}, {sort: {order: 1}});
   },
   rows(limit){
-    console.log("datastore.rows:", DatastoreRows.find({dataStoreId: this.staticId, projectVersionId: this.projectVersionId}, {limit: limit} ).count());
     return DatastoreRows.find({dataStoreId: this.staticId, projectVersionId: this.projectVersionId}, {limit: limit} );
   },
   parentRecord(){
@@ -117,6 +116,7 @@ Datastores.helpers({
     }
   },
   updateTableSchema(){
+    //console.log("Datastores.updateTableSchema:", this);
     let tableSchemaDef = {fields: []};
     
     // build up the schema
@@ -126,7 +126,6 @@ Datastores.helpers({
     });
     
     // store the schema
-    console.log("tableSchemaDef:", tableSchemaDef);
     Datastores.update({_id: this._id}, {$set: {tableSchemaDef: tableSchemaDef}});
     return tableSchemaDef;
   },
@@ -149,8 +148,10 @@ Datastores.helpers({
   },
   tableSchema(){
     if(this.tableSchemaDef){
+      //console.log("Datastores.tableSchema via storage:", this);
       return this.tableSchemaDef;
     } else {
+      console.log("Datastores.tableSchema via update:", this);
       return this.updateTableSchema();
     }
   },

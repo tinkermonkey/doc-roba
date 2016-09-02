@@ -30,7 +30,7 @@
                 {{#if childHasValue this ..}}
                   <tr class="data-store-table-child-header">
                     <td>{{label}}</td>
-                    <td colspan="{{getChildColSpan ../..}}">
+                    <td colspan="{{getChildColSpan ../../tableSchema}}">
                       {{> DatastoreChildTable getChildContext this ..}}
                     </td>
                   </tr>

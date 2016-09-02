@@ -8,9 +8,6 @@ import {FieldTypes} from '../../../api/datastore/field_types.js';
  * Template Helpers
  */
 Template.DatastoreChildTable.helpers({
-  getTableSchema: function () {
-    return this.schema;
-  },
   isPrimaryColumn: function () {
     return this.type !== FieldTypes.custom;
   },
@@ -19,9 +16,6 @@ Template.DatastoreChildTable.helpers({
   },
   getPrimaryColumnCount: function () {
     return _.filter(this.fields, function(field){return field.type !== FieldTypes.custom}).length;
-  },
-  getRows: function (context) {
-    return context.rows;
   },
   getFieldValue: function (field, row) {
     if(field && row){
@@ -34,13 +28,14 @@ Template.DatastoreChildTable.helpers({
     return row.hasOwnProperty(field.dataKey);
   },
   getChildColSpan: function (schema) {
+    console.log("getChildColSpan:", schema);
     return _.filter(schema.fields, function(field){return field.type !== FieldTypes.custom}).length - 1;
   },
   getChildContext: function (field, row) {
     var value = row[field.dataKey];
     return {
-      schema: field.schema,
-      rows: _.isArray(value) ? value : [value]
+      field: field,
+      values: _.isArray(value) ? value : [value]
     };
   }
 });
@@ -51,15 +46,21 @@ Template.DatastoreChildTable.helpers({
 Template.DatastoreChildTable.events({});
 
 /**
+ * Template Created
+ */
+Template.DatastoreChildTable.onCreated(() => {
+});
+
+/**
  * Template Rendered
  */
-Template.DatastoreChildTable.rendered = function () {
+Template.DatastoreChildTable.onRendered(() => {
 
-};
+});
 
 /**
  * Template Destroyed
  */
-Template.DatastoreChildTable.destroyed = function () {
+Template.DatastoreChildTable.onDestroyed(() => {
 
-};
+});

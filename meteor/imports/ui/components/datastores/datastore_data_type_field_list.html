@@ -20,7 +20,7 @@
           <td><small>{{dataKey}}</small></td>
           <td>
             {{> EditableFieldType type=type dataKey="type" }}
-            {{> EditableDatastoreDataType type=type customFieldType=customFieldType projectVersionId=../projectVersionId dataKey="customFieldType" }}
+            {{> EditableDatastoreDataType type=type dataTypeId=dataTypeId projectVersionId=../projectVersionId dataKey="dataTypeId" }}
           </td>
           <td>{{> EditableFieldShape fieldIsArray=fieldIsArray dataKey="fieldIsArray"}}</td>
           <td>{{> EditableTextField dataKey="defaultValue" value=defaultValue emptyText="none"}}</td>

@@ -24,7 +24,7 @@ import '../../datastores/datastore_row_form_vert.js';
       this.form = this.$input.parent().find(".x-editable-autoform");
       this.$input.closest("form").removeClass("form-inline");
 
-      Blaze.renderWithData(Template.DatastoreRowFormVert, {
+      Blaze.renderWithData(Template.DatastoreRowForm, {
         type: "update",
         rowSchema: this.options.data.schema,
         rowData: this.options.data.data

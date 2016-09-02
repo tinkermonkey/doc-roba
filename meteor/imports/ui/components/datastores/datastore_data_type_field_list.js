@@ -26,7 +26,7 @@ Template.DatastoreDataTypeFieldList.events({
       type: FieldTypes.string,
       fieldIsArray: false,
       order: order,
-      dataTypeId: instance.data.staticId,
+      parentId: instance.data.staticId,
       projectId: instance.data.projectId,
       projectVersionId: instance.data.projectVersionId
     }, function (error, response) {
@@ -82,7 +82,7 @@ Template.DatastoreDataTypeFieldList.events({
     } else if (dataKey == "type") {
       // null the custom type if the type is not custom
       if(newValue != FieldTypes.custom) {
-        update["$unset"] = {customFieldType: ""};
+        update["$unset"] = {dataTypeId: ""};
       }
     }
   

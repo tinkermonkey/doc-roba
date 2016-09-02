@@ -89,7 +89,7 @@ Template.DatastoreFieldList.events({
     } else if (dataKey == "type") {
       // null the custom type if the type is not custom
       if(newValue != FieldTypes.custom) {
-        update["$unset"] = {customFieldType: ""};
+        update["$unset"] = {dataTypeId: ""};
       }
     }
 

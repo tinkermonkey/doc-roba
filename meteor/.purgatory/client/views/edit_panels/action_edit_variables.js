@@ -91,7 +91,7 @@ Template.action_edit_variables.events({
       // null the custom type if the type is not custom
       if(newValue != FieldTypes.custom) {
         update["$unset"] = {};
-        update["$unset"]["variables." + variableIndex + ".customFieldType"] = 1;
+        update["$unset"]["variables." + variableIndex + ".dataTypeId"] = 1;
       }
     }
 

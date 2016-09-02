@@ -22,7 +22,7 @@
         <td>{{> EditableTextField mode="popup" value=name dataKey="name" }}</td>
         <td>
           {{> EditableFieldType mode="popup" type=type dataKey="type" }}
-          {{> EditableCustomFieldType mode="popup" type=type customFieldType=customFieldType projectVersionId=../projectVersionId dataKey="customFieldType" }}
+          {{> EditableDatastoreDataType mode="popup" type=type dataTypeId=dataTypeId projectVersionId=../projectVersionId dataKey="dataTypeId" }}
         </td>
         <td>{{> EditableFieldShape mode="popup" fieldIsArray=varIsArray dataKey="varIsArray" }}</td>
         <td>{{> EditableTextField mode="popup" value=defaultValue dataKey="defaultValue" emptyText="\"\"" }}</td>

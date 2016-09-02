@@ -16,10 +16,10 @@ export const DSUtil = {
       label: field.title,
       type: field.type,
       dataKey: field.dataKey,
-      customFieldType: field.customFieldType,
+      dataTypeId: field.dataTypeId,
       fieldIsArray: field.fieldIsArray,
       defaultValue: field.defaultValue,
-      schema: field.schema()
+      schema: field.tableSchema()
     }
   },
   
@@ -41,6 +41,7 @@ export const DSUtil = {
    * @param field
    */
   dataTypeLiteral: function (field) {
+    //console.log("dataTypeLiteral:", field);
     var dataTypeLiteral;
     switch(field.type) {
       case FieldTypes.boolean:

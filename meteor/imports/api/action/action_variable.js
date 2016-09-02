@@ -20,7 +20,7 @@ export const ActionVariable = new SimpleSchema({
     allowedValues: _.values(FieldTypes)
   },
   // The custom type if this is complex
-  customFieldType: {
+  dataTypeId: {
     type: String,
     optional: true
   },

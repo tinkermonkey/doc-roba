@@ -146,6 +146,12 @@ ProjectVersions.helpers({
       return CodeModules.findOne({_id: codeModuleId});
     }
   },
+  checkCodeModules () {
+    // Make sure there is a code module for each user type
+    this.userTypes().codeModule();
+    
+    // Make sure this is
+  },
   serverConfigDatastore () {
     let projectVersion = this,
         dataStore = Datastores.findOne({projectVersionId: projectVersion._id, parentId: projectVersion._id, category: DatastoreCategories.serverConfig});

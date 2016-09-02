@@ -40,13 +40,13 @@ Template.DatastoreDataTable.helpers({
   getChildColSpan: function (schema) {
     return _.filter(schema.fields, function (field) {
           return field.type !== FieldTypes.custom
-        }).length - 2;
+        }).length;
   },
   getChildContext: function (field, row) {
     var value = row[field.dataKey];
     return {
-      schema: field.schema,
-      rows: _.isArray(value) ? value : [value]
+      field: field,
+      values: _.isArray(value) ? value : [value]
     };
   }
 });
@@ -65,7 +65,7 @@ Template.DatastoreDataTable.events({
         };
     
     console.log("Add Row: ", dataStoreId, formContext);
-
+    
     // render the form
     RobaDialog.show({
       contentTemplate: 'DatastoreRowForm',
@@ -115,7 +115,7 @@ Template.DatastoreDataTable.events({
       }
     });
   },
-  "click .btn-edit-row": function (e, instance) {
+  "click .btn-edit-row, dblclick .data-store-table-row": function (e, instance) {
     console.log("Edit: ", this);
     var row = this;
     

@@ -45,7 +45,7 @@ export const DatastoreField = new SimpleSchema({
     type: Number,
     allowedValues: _.map(FieldTypes, function (d) { return d; })
   },
-  customFieldType: {
+  dataTypeId: {
     type: String,
     optional: true
   },
@@ -113,15 +113,17 @@ DatastoreFields.helpers({
     return Datastores.findOne({staticId: this.dataStoreId, projectVersionId: this.projectVersionId});
   },
   dataType(){
+    //console.log("DatastoreField.dataType:", this);
     let field = this;
-    if(field.customFieldType){
-      return DatastoreDataTypes.findOne({staticId: field.customFieldType, projectVersionId: field.projectVersionId});
+    if(field.dataTypeId){
+      return DatastoreDataTypes.findOne({staticId: field.dataTypeId, projectVersionId: field.projectVersionId});
     }
   },
-  schema(){
+  tableSchema(){
     let field = this;
-    if(field.customFieldType){
-      return field.dataType().schema;
+    if(field.dataTypeId){
+      //console.log("DatastoreField.tableSchema:", this);
+      return field.dataType().tableSchema();
     }
   },
   simpleSchemaType(){
