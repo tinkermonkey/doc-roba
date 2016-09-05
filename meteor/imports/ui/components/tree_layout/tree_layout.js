@@ -1,16 +1,14 @@
-import { DocTreeConfig } from '../../lib/doc_tree/doc_tree_config.js';
-import { TreeUtils } from './tree_utils.js';
-
-import { RobaDialog } from 'meteor/austinsand:roba-dialog';
-import { RobaPopover } from 'meteor/austinsand:roba-popover';
-
-import TreeActionControls from './tree_action_controls.js';
-import TreeActionHandler from './tree_action_handler.js';
-import TreeDropNodeHandler from './tree_drop_node_handler.js';
-import TreeInsetLayout from './tree_inset_layout.js';
-import TreeLinkHandler from './tree_link_handler.js';
-import TreeNodeControls from './tree_node_controls.js';
-import TreeNodeHandler from './tree_node_handler.js';
+import { DocTreeConfig } from "../../lib/doc_tree/doc_tree_config.js";
+import { TreeUtils } from "./tree_utils.js";
+import { RobaDialog } from "meteor/austinsand:roba-dialog";
+import { RobaPopover } from "meteor/austinsand:roba-popover";
+import TreeActionControls from "./tree_action_controls.js";
+import TreeActionHandler from "./tree_action_handler.js";
+import TreeDropNodeHandler from "./tree_drop_node_handler.js";
+import TreeInsetLayout from "./tree_inset_layout.js";
+import TreeLinkHandler from "./tree_link_handler.js";
+import TreeNodeControls from "./tree_node_controls.js";
+import TreeNodeHandler from "./tree_node_handler.js";
 
 /**
  * Base class for all of the tree layouts
@@ -24,7 +22,10 @@ export default class TreeLayout {
    */
   constructor (elementId, context, config) {
     console.debug("TreeLayout constructor:", elementId, context, config);
-    var self = this;
+    let self    = this,
+        body    = $("body"),
+        win     = $(window),
+        element = $("#" + elementId);
     
     // store the project context
     self.context = context;
@@ -56,9 +57,9 @@ export default class TreeLayout {
     };
     
     // set the width and height to match the window
-    self.width  = $(window).innerWidth() - parseInt($("body").css("margin-right")) - parseInt($("body")
+    self.width  = win.innerWidth() - parseInt(body.css("margin-right")) - parseInt(body
             .css("margin-left")) * 2;
-    self.height = $(window).innerHeight() - parseInt($("body").css("margin-top")) - parseInt($("body")
+    self.height = win.innerHeight() - parseInt(body.css("margin-top")) - parseInt(body
             .css("margin-bottom")) * 2;
     
     console.debug("TreeLayout width: " + self.width);
@@ -66,8 +67,7 @@ export default class TreeLayout {
     
     // set the container bounds
     self.layoutRoot = d3.select("#" + elementId);
-    $("#" + elementId)
-        .height(self.height)
+    element.height(self.height)
         .width(self.width);
     
     // make sure that the dom is correct
@@ -76,7 +76,7 @@ export default class TreeLayout {
       self.layoutRoot.attr("id");
     } catch (e) {
       console.error("TreeLayout setup failed:", e);
-      console.debug("TreeLayout root:", $("#" + elementId).get(0), d3.select("#" + elementId));
+      console.debug("TreeLayout root:", element.get(0), d3.select("#" + elementId));
       throw new Error("TreeLayout constructor failed: element #" + elementId);
     }
     
@@ -118,7 +118,7 @@ export default class TreeLayout {
         .attr("y", 25);
     
     // capture mouse move events for help debugging coordinates
-    $(window).on("mousemove", self.mouseMove.bind(self));
+    win.on("mousemove", self.mouseMove.bind(self));
     
     // key handler
     $(document).on("keydown", self.keyDown.bind(self));
@@ -153,7 +153,7 @@ export default class TreeLayout {
   /**
    * Destroy the TreeLayout gracefully
    */
-  destroy () {
+  static destroy () {
     console.debug("TreeLayout.destroy");
     $(window).unbind("mousemove");
     $(document).unbind("keydown");
@@ -219,12 +219,14 @@ export default class TreeLayout {
    */
   resize () {
     console.debug("TreeLayout.resize");
-    var self = this;
+    let self = this,
+        body = $("body"),
+        win  = $(window);
     
     // Measure the new dimensions
-    self.width  = $(window).innerWidth() - parseInt($("body").css("margin-right")) - parseInt($("body")
+    self.width  = win.innerWidth() - parseInt(body.css("margin-right")) - parseInt(body
             .css("margin-left"));
-    self.height = $(window).innerHeight() - parseInt($("body").css("margin-top")) - parseInt($("body")
+    self.height = win.innerHeight() - parseInt(body.css("margin-top")) - parseInt(body
             .css("margin-bottom"));
     
     // Update the root element
@@ -368,9 +370,9 @@ export default class TreeLayout {
             self.restoreCachedView(self.config.stepDuration);
             if (btn === "Delete") {
               // delete the nodes
-              for (var i in nodeList) {
-                self.deleteNode(nodeList[ i ]);
-              }
+              nodeList.forEach((node) => {
+                self.deleteNode(node);
+              });
             } else {
               // if the user cancelled, restore the original state
               self.nodeStateCache = self.savedNodeState;
@@ -406,15 +408,13 @@ export default class TreeLayout {
   /**
    * Highlight a list of nodes
    * @param nodeList
-   * @param forceExpand
    */
-  highlightNodes (nodeList, forceExpand) {
+  highlightNodes (nodeList) {
     console.debug("TreeLayout.highlightNodes");
     var self = this;
     
     // clean up
     $(this.highlightLayer).empty();
-    forceExpand = forceExpand || false;
     
     // create the background
     this.highlightLayer.append("rect")
@@ -440,8 +440,8 @@ export default class TreeLayout {
         .attr("height", bounds.height);
     
     // clone each node in the nodeList
-    for (var i in nodeList) {
-      var node = self.layoutRoot.select("#node_" + nodeList[ i ]._id).node();
+    nodeList.forEach((nodeListNode) => {
+      let node = self.layoutRoot.select("#node_" + nodeListNode._id).node();
       try {
         // Clone the main group
         this.highlightLayer.node().appendChild(node.cloneNode(true));
@@ -449,7 +449,7 @@ export default class TreeLayout {
         console.error("TreeLayout.highlightNodes: error Cloning node: " + e.toString());
         console.log(e);
       }
-    }
+    });
     
     // Make sure everything is "selected"
     this.highlightLayer.selectAll(".node").classed("node-selected", true);
@@ -537,12 +537,12 @@ export default class TreeLayout {
     // search for unexpanded (visually) nodes that should be (logically)
     var depthNodes   = TreeUtils.getAtDepth(nodeList, depth),
         anotherLevel = false;
-    for (var i in depthNodes) {
-      if (depthNodes[ i ].logExpanded === true && depthNodes[ i ].visExpanded === false) {
-        depthNodes[ i ].visExpanded = true;
-        anotherLevel                = true;
+    depthNodes.forEach((node) => {
+      if (node.logExpanded === true && node.visExpanded === false) {
+        node.visExpanded = true;
+        anotherLevel     = true;
       }
-    }
+    });
     
     if (anotherLevel) {
       // if the duration is greater than 0, chain the transitions, otherwise call sequentially
@@ -597,12 +597,12 @@ export default class TreeLayout {
     // search for unexpanded (visually) nodes that should be (logically)
     var depthNodes     = TreeUtils.getAtDepth(nodeList, fromDepth),
         updateRequired = false;
-    for (var i in depthNodes) {
-      if (depthNodes[ i ].parent.visExpanded === true) {
-        depthNodes[ i ].parent.visExpanded = false;
-        updateRequired                     = true;
+    depthNodes.forEach((node) => {
+      if (node.parent.visExpanded === true) {
+        node.parent.visExpanded = false;
+        updateRequired          = true;
       }
-    }
+    });
     
     if (updateRequired) {
       this.update(duration);
@@ -1150,9 +1150,9 @@ export default class TreeLayout {
       self.nodeControls.update();
     }, duration);
     
-    setTimeout(function () {
+    setTimeout(() => {
       self.actionHandler.update(duration);
-    }), 1000;
+    }, 1000);
   };
   
   /**
@@ -1201,10 +1201,11 @@ export default class TreeLayout {
     var self = this;
     //console.log("Popover nodes:", nodeList);
     
-    var bounds = TreeUtils.nodeListBounds(nodeList, self.config.highlightSurroundMargin),
-        insetX = self.insetLayout.config.radius * 2 + self.insetLayout.config.margin * 2,
-        insetY = $(".main-nav-menu").height() + $(".main-nav-menu").position().top + self.insetLayout.config.margin * 2,
-        scale  = self.scale;
+    var bounds      = TreeUtils.nodeListBounds(nodeList, self.config.highlightSurroundMargin),
+        mainNavMenu = $(".main-nav-menu"),
+        insetX      = self.insetLayout.config.radius * 2 + self.insetLayout.config.margin * 2,
+        insetY      = mainNavMenu.height() + mainNavMenu.position().top + self.insetLayout.config.margin * 2,
+        scale       = self.scale;
     
     // Auto-scale based on the bounds of the nodes being operated on
     //console.log("Popover bounds:", bounds, insetX, insetY, scale);

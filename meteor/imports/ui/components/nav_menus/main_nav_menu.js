@@ -25,10 +25,11 @@ Template.MainNavMenu.rendered = function () {
     // setup the nav menu controller
     instance.$(".nav-logo-bar")
       .on("mouseenter", function () {
+        let navBody = $(".nav-body");
         $(".main-nav-placement")
-          .css("height", parseInt($(".nav-body").outerHeight()) + "px")
+          .css("height", parseInt(navBody.outerHeight()) + "px")
           .css("right", "0px");
-        $(".nav-body").addClass("nav-body-show");
+        navBody.addClass("nav-body-show");
       });
     instance.$(".nav-body")
       .on("mouseleave", function () {

@@ -65,7 +65,7 @@ Template.TestCaseList.events({
 
     // show everything that matches the search
     var highlight = function (item) {
-      var item = instance.$(".test-case-list-selectable[data-pk='" + item._id + "']")
+      var item = instance.$(".test-case-list-selectable[data-pk='" + item._id + "']");
       item.show().addClass("highlight");
       item.parents(".test-case-list-group-items").each(function (i, el) {
         var parentInstance = Blaze.getView(el).templateInstance();

@@ -1,3 +1,13 @@
+import './edit_node.html';
+import './edit_node.css';
+
+import {Template} from 'meteor/templating';
+import {RobaDialog} from 'meteor/austinsand:roba-dialog';
+import {RobaTabs} from 'meteor/austinsand:roba-tabs';
+
+import {Nodes} from '../../../../api/node/node.js';
+import {NodeTypes} from '../../../../api/node/node_types.js';
+
 /**
  * Template helpers
  */

@@ -95,20 +95,20 @@ export default class TreeLinkHandler {
    * @param d The source node
    * @returns {string} The SVG path for the link
    */
-  generateLinkPath(d) {
+  static generateLinkPath(d) {
     var source, target, control, path;
     if (d.source.visExpanded) {
       if (d.target.type === NodeTypes.view || d.target.type === NodeTypes.navMenu) {
         source = {
           x: d.source.x + d.source.icon.right,
           y: d.source.y
-        }
+        };
         control = {
           x1: (d.source.x + d.source.icon.right + d.target.x + d.target.family.left) / 2,
           y1: d.source.y,
           x2: (d.source.x + d.source.icon.right + d.target.x + d.target.family.left) / 2,
           y2: d.target.y
-        }
+        };
         target = {
           x: d.target.x + d.target.icon.left,
           y: d.target.y
@@ -117,13 +117,13 @@ export default class TreeLinkHandler {
         source = {
           x: d.source.x,
           y: d.source.y + (d.source.type === NodeTypes.root ? 0 : d.source.icon.bottom)
-        }
+        };
         control = {
           x1: d.source.x,
           y1: (d.source.y + d.source.icon.bottom + d.target.y + d.target.family.top) / 2,
           x2: d.target.x,
           y2: (d.source.y + d.source.icon.bottom + d.target.y + d.target.family.top) / 2
-        }
+        };
         target = {
           x: d.target.x,
           y: d.target.y + d.target.icon.top

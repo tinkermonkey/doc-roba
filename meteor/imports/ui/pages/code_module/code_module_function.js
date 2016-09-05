@@ -7,6 +7,7 @@ import {CodeModuleFunctions} from '../../../api/code_module/code_module_function
 import {CodeModuleFunctionParams} from '../../../api/code_module/code_module_function_param.js';
 
 import './code_module_function_params.js';
+var Prism = require('prismjs');
 
 /**
  * Template Helpers
@@ -63,7 +64,6 @@ Template.CodeModuleFunction.onRendered(() => {
     console.log("codeModuleFunction autorun");
     //{{module.name}}.{{name}} = function({{#each params}}{{/each}}) {
     let fn = Template.currentData(),
-        params =
         headerText = fn.module().name + '.' + fn.name + ' = function(' + fn.params().map((param) => { return param.name }).join(', ') + ') {';
       instance.$('.editor-header').html(Prism.highlight(headerText, Prism.languages.javascript));
   })

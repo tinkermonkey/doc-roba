@@ -92,4 +92,4 @@ var getHierarchy = function (el) {
     parents.push(_.omit(el.parent, "parent"));
   }
   return parents;
-}
+};

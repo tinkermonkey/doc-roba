@@ -1,6 +1,6 @@
 "no use strict";
-;(function(window) {
-if (typeof window.window != "undefined" && window.document)
+(function (window) {
+  if (typeof window.window != "undefined" && window.document)
     return;
 if (window.require && window.define)
     return;
@@ -450,7 +450,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
     };
     this.collapseRows = function() {
         if (this.end.column == 0)
-            return new Range(this.start.row, 0, Math.max(this.start.row, this.end.row-1), 0)
+            return new Range(this.start.row, 0, Math.max(this.start.row, this.end.row-1), 0);
         else
             return new Range(this.start.row, 0, this.end.row, 0)
     };
@@ -607,7 +607,7 @@ EventEmitter.once = function(eventName, callback) {
 
 
 EventEmitter.setDefaultHandler = function(eventName, callback) {
-    var handlers = this._defaultHandlers
+    var handlers = this._defaultHandlers;
     if (!handlers)
         handlers = this._defaultHandlers = {_disabled_: {}};
     
@@ -624,7 +624,7 @@ EventEmitter.setDefaultHandler = function(eventName, callback) {
     handlers[eventName] = callback;
 };
 EventEmitter.removeDefaultHandler = function(eventName, callback) {
-    var handlers = this._defaultHandlers
+    var handlers = this._defaultHandlers;
     if (!handlers)
         return;
     var disabled = handlers._disabled_[eventName];
@@ -1711,9 +1711,8 @@ module.exports = {
 
 },{}],"/node_modules/jshint/lodash.js":[function(_dereq_,module,exports){
 (function (global){
-;(function() {
-
-  var undefined;
+  (function () {
+    var undefined;
 
   var VERSION = '3.7.0';
 
@@ -11776,7 +11775,7 @@ oop.inherits(JavaScriptWorker, Mirror);
         lint(value, this.options, this.options.globals);
         var results = lint.errors;
 
-        var errorAdded = false
+        var errorAdded = false;
         for (var i = 0; i < results.length; i++) {
             var error = results[i];
             if (!error)
@@ -11903,7 +11902,7 @@ if ([1,2].splice(0).length != 2) {
         lengthBefore = array.length; //46
         array.splice(5, 0, "XXX"); // add one element
 
-        lengthBefore + 1 == array.length
+        lengthBefore + 1 == array.length;
 
         if (lengthBefore + 1 == array.length) {
             return true;// has right splice implementation without bugs
@@ -12312,7 +12311,7 @@ if (Object.defineProperty) {
 
 if (!Object.defineProperty || definePropertyFallback) {
     var ERR_NON_OBJECT_DESCRIPTOR = "Property description must be an object: ";
-    var ERR_NON_OBJECT_TARGET = "Object.defineProperty called on non-object: "
+    var ERR_NON_OBJECT_TARGET = "Object.defineProperty called on non-object: ";
     var ERR_ACCESSORS_NOT_SUPPORTED = "getters & setters can not be defined " +
                                       "on this javascript engine";
 

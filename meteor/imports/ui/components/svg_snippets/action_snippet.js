@@ -27,8 +27,7 @@ Template.ActionSnippet.helpers({
     return (DocTreeConfig.nodes.width / 2) - (width / 2);
   },
   labelBackWidth () {
-    let width = Template.instance().labelBackWidth.get();
-    return width;
+    return Template.instance().labelBackWidth.get();
   },
   labelBackHeight () {
     let height = Template.instance().labelBackHeight.get();

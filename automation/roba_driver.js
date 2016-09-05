@@ -402,7 +402,7 @@ RobaDriver.prototype.injectHelpers = function () {
           return info;
         } catch (e) {
           console.error("roba_driver.element_info failed: ", e);
-          return;
+          
           //return { message: "roba_driver.element_info failed", error: e }
         }
       };

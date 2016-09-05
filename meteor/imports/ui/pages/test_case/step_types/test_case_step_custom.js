@@ -10,9 +10,7 @@ import {TestCaseStepTypes} from '../../../../api/test_case/test_case_step_types.
  * Template Helpers
  */
 Template.TestCaseStepCustom.helpers({
-  hasCode: function () {
-    return this.data && this.data.code && this.data.code.trim().length
-  }
+
 });
 
 /**

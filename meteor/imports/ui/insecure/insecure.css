@@ -107,15 +107,11 @@
 }
 
 #login-form-container .form {
-  margin: 65px;
-  margin-top: 25%;
-  margin-bottom: 10%;
+  margin: 25% 65px 10%;
 }
 
 #signup-form-container .form {
-  margin: 95px;
-  margin-top: 21%;
-  margin-bottom: 10%;
+  margin: 21% 95px 10%;
 }
 
 .login-container h1 {

@@ -15,9 +15,6 @@ import './datastore_child_table.js';
  * Template Helpers
  */
 Template.DatastoreDataTable.helpers({
-  getSimpleSchema: function () {
-    return Template.instance().cachedSimpleSchema.get();
-  },
   isPrimaryColumn: function () {
     return this.type !== FieldTypes.custom;
   },

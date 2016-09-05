@@ -1,10 +1,9 @@
-import {DocTreeConfig} from '../../lib/doc_tree/doc_tree_config.js';
-import {TreeUtils} from './tree_utils.js';
-import {Util} from '../../../api/util.js';
-
-import {Nodes} from '../../../api/node/node.js';
-import {NodeTypes, NodeTypesLookup} from '../../../api/node/node_types.js';
-import {PlatformTypes} from '../../../api/node/platform_types.js';
+import { DocTreeConfig } from "../../lib/doc_tree/doc_tree_config.js";
+import { TreeUtils } from "./tree_utils.js";
+import { Util } from "../../../api/util.js";
+import { Nodes } from "../../../api/node/node.js";
+import { NodeTypes, NodeTypesLookup } from "../../../api/node/node_types.js";
+import { PlatformTypes } from "../../../api/node/platform_types.js";
 
 /**
  * Handle all of the accounting for the node data structures
@@ -16,7 +15,7 @@ export default class TreeNodeHandler {
    * @param config
    * @constructor
    */
-  constructor(treeLayout, config) {
+  constructor (treeLayout, config) {
     var self = this;
     
     // Make sure there's a tree layout
@@ -37,7 +36,7 @@ export default class TreeNodeHandler {
   /**
    * Initialize the required SVG definition elements
    */
-  initDefs() {
+  initDefs () {
     var self = this,
         tree = self.treeLayout;
     
@@ -63,7 +62,7 @@ export default class TreeNodeHandler {
    * Set the master list of nodes
    * @param nodeList The full flat list of nodes from the DB
    */
-  setNodes(nodeList) {
+  setNodes (nodeList) {
     var self = this;
     
     self.nodeList = nodeList;
@@ -73,7 +72,7 @@ export default class TreeNodeHandler {
    * Get the full list of nodes
    * @returns {*}
    */
-  getNodes() {
+  getNodes () {
     return this.nodeList;
   }
   
@@ -82,62 +81,62 @@ export default class TreeNodeHandler {
    * @param parent The parent of the new node
    * @param dir The direction to add the node in (right or down)
    */
-  addNode(parent, dir) {
+  addNode (parent, dir) {
     var self = this,
         tree = self.treeLayout;
     
     console.log("addNode:", parent, dir);
     
     // update the node state cache for the parent so that the child is visible
-    tree.nodeStateCache[parent._id].logExpanded = true;
-    tree.nodeStateCache[parent._id].visExpanded = true;
+    tree.nodeStateCache[ parent._id ].logExpanded = true;
+    tree.nodeStateCache[ parent._id ].visExpanded = true;
     
     var config = {
-      parentId: parent.staticId,
+      parentId  : parent.staticId,
       userTypeId: parent.type == NodeTypes.userType ? parent.staticId : parent.userTypeId,
       platformId: parent.type == NodeTypes.platform ? parent.staticId : parent.platformId,
     };
     
     switch (parent.type) {
       case NodeTypes.root:
-        config.type = NodeTypes.userType;
+        config.type  = NodeTypes.userType;
         config.title = "New User Type";
         break;
       case NodeTypes.userType:
-        config.type = NodeTypes.platform;
+        config.type  = NodeTypes.platform;
         config.title = "New Platform";
         break;
       case NodeTypes.platform:
         if (parent.config && parent.config.type && parent.config.type == PlatformTypes.email) {
-          config.type = NodeTypes.email;
+          config.type  = NodeTypes.email;
           config.title = "New Email";
         } else {
-          config.type = NodeTypes.page;
+          config.type  = NodeTypes.page;
           config.title = "New Login";
         }
         break;
       default:
         if (dir === "right") {
-          config.type = NodeTypes.view;
+          config.type  = NodeTypes.view;
           config.title = "New View";
         } else if (dir === "nav") {
-          config.type = NodeTypes.navMenu;
+          config.type  = NodeTypes.navMenu;
           config.title = "New Nav Menu";
         } else {
-          config.type = NodeTypes.page;
+          config.type  = NodeTypes.page;
           config.title = "New Page";
         }
     }
     
     // Add the project info
-    config.projectId = parent.projectId;
+    config.projectId        = parent.projectId;
     config.projectVersionId = parent.projectVersionId;
     
     // Create the record
     Nodes.insert(config, function (error, nodeId) {
       if (!error && nodeId) {
         console.debug("Node inserted: " + nodeId);
-        tree.nodeStateCache[nodeId] = {
+        tree.nodeStateCache[ nodeId ] = {
           logExpanded: false,
           visExpanded: false
         };
@@ -156,9 +155,8 @@ export default class TreeNodeHandler {
   
   /**
    * Prepare the list of nodes for an update
-   * @param nodeList
    */
-  prepNodes() {
+  prepNodes () {
     var self = this,
         tree = self.treeLayout;
     
@@ -170,12 +168,10 @@ export default class TreeNodeHandler {
         node.visExpanded = false;
       }
       
-      if (node.logExpanded === undefined) {
-        if (node.type === NodeTypes.root || node.type === NodeTypes.userType) {
-          node.logExpanded = true;
-        } else {
-          node.logExpanded = false;
-        }
+      if (node.logExpanded === undefined && (node.type === NodeTypes.root || node.type === NodeTypes.userType)) {
+        node.logExpanded = true;
+      } else if (node.logExpanded === undefined) {
+        node.logExpanded = false;
       }
     });
     
@@ -192,7 +188,7 @@ export default class TreeNodeHandler {
    * Map the flat list of nodes into a hierarchy
    * @param d The node to map children to
    */
-  mapNode(d) {
+  mapNode (d) {
     //console.debug("mapping node: " + d._id + " (" + d.title + ")");
     var self = this,
         tree = self.treeLayout;
@@ -261,7 +257,7 @@ export default class TreeNodeHandler {
   /**
    * Position all of the nodes using a two-stage algorithm
    */
-  positionNodes() {
+  positionNodes () {
     var self = this,
         tree = self.treeLayout,
         maxDepth,
@@ -270,8 +266,8 @@ export default class TreeNodeHandler {
     // initialize the root node
     _.each(self.getRootNodes(), function (rootNode) {
       rootNode.depth = 0;
-      rootNode.x = tree.width / 2;
-      rootNode.y = 0;
+      rootNode.x     = tree.width / 2;
+      rootNode.y     = 0;
       TreeUtils.setNodeDepth(rootNode, 0);
       
       // From the bottom of the tree up, calculate the family local position
@@ -292,28 +288,30 @@ export default class TreeNodeHandler {
    * Position a node using the bottom-up algorithm
    * @param d
    */
-  positionLocal(d) {
-    var self = this,
+  positionLocal (d) {
+    let self     = this,
         children = [].concat(d.childPages, d.childViews),
+        x        = 0,
+        y        = 0,
         adjustment,
         lastChild;
     
     // Create a construct to store relative positioning
     d.family = {
-      x: 0,
-      y: 0,
-      width: 0,
+      x     : 0,
+      y     : 0,
+      width : 0,
       height: 0,
-      left: 0,
-      right: 0,
-      top: 0,
+      left  : 0,
+      right : 0,
+      top   : 0,
       bottom: 0,
-      pages: {
-        width: 0,
+      pages : {
+        width : 0,
         height: 0
       },
-      views: {
-        width: 0,
+      views : {
+        width : 0,
         height: 0
       }
     };
@@ -321,16 +319,15 @@ export default class TreeNodeHandler {
     // If the parent is not visibly expanded, short circuit the whole process
     if (!d.visExpanded) {
       d.family.height = d.bounds.height;
-      d.family.width = d.bounds.width;
-      d.family.left = d.bounds.left;
-      d.family.right = d.bounds.right;
-      d.family.top = d.bounds.top;
+      d.family.width  = d.bounds.width;
+      d.family.left   = d.bounds.left;
+      d.family.right  = d.bounds.right;
+      d.family.top    = d.bounds.top;
       d.family.bottom = d.bounds.bottom;
       return;
     }
     
     // Position the pages loosely
-    x = 0;
     _.each(d.childPages, function (page, index) {
       // set the basic x value for the child
       page.family.x = x + Math.abs(page.family.left);
@@ -346,12 +343,11 @@ export default class TreeNodeHandler {
     
     // Add in the margin to the width
     if (d.childPages.length) {
-      lastChild = d.childPages[d.childPages.length - 1];
-      d.family.pages.width = lastChild.family.x + lastChild.family.right - (d.childPages[0].family.x + d.childPages[0].family.left);
+      lastChild            = d.childPages[ d.childPages.length - 1 ];
+      d.family.pages.width = lastChild.family.x + lastChild.family.right - (d.childPages[ 0 ].family.x + d.childPages[ 0 ].family.left);
     }
     
     // Position the views loosely
-    y = 0;
     _.each(d.childViews, function (view, index) {
       // set the basic y value for the child
       view.family.y = y + Math.abs(view.family.top);
@@ -367,8 +363,8 @@ export default class TreeNodeHandler {
     
     // Add in the margin to the height
     if (d.childViews.length) {
-      lastChild = d.childViews[d.childViews.length - 1];
-      d.family.views.height = lastChild.family.y + lastChild.family.bottom - (d.childViews[0].family.y + d.childViews[0].family.top);
+      lastChild             = d.childViews[ d.childViews.length - 1 ];
+      d.family.views.height = lastChild.family.y + lastChild.family.bottom - (d.childViews[ 0 ].family.y + d.childViews[ 0 ].family.top);
     }
     
     // Adjust the x position of the pages to center them
@@ -404,9 +400,9 @@ export default class TreeNodeHandler {
     });
     
     // Find the edges of the family
-    d.family.left = d.bounds.left;
-    d.family.right = d.bounds.right;
-    d.family.top = d.bounds.top;
+    d.family.left   = d.bounds.left;
+    d.family.right  = d.bounds.right;
+    d.family.top    = d.bounds.top;
     d.family.bottom = d.bounds.bottom;
     _.each(children, function (child) {
       // left
@@ -429,15 +425,15 @@ export default class TreeNodeHandler {
     
     // set the overall height and width including the node bounds
     d.family.height = d.family.bottom - d.family.top;
-    d.family.width = d.family.right - d.family.left;
+    d.family.width  = d.family.right - d.family.left;
   }
   
   /**
    * Position a node's children globally based on the node positioning
    * @param d
    */
-  positionGlobal(d) {
-    var self = this,
+  positionGlobal (d) {
+    var self     = this,
         children = [].concat(d.childPages, d.childViews);
     
     // position all of the children
@@ -461,23 +457,23 @@ export default class TreeNodeHandler {
    * things like overlays and such)
    * @param d The node to size
    */
-  calcNodeSize(d) {
+  calcNodeSize (d) {
     var iconHeight = this.config.height,
-        iconWidth = this.config.width;
+        iconWidth  = this.config.width;
     
     // get a size based on the type of node
     if (d.type == NodeTypes.root) {
       iconHeight = 2 * this.config.rootRadius;
-      iconWidth = 2 * this.config.rootRadius;
+      iconWidth  = 2 * this.config.rootRadius;
     }
     
     // construct the bounds of the icon, default to the icon centered
     d.icon = {
-      top: -1 * iconHeight / 2,
+      top   : -1 * iconHeight / 2,
       bottom: iconHeight / 2,
-      left: -1 * iconWidth / 2,
-      right: iconWidth / 2,
-      width: iconWidth,
+      left  : -1 * iconWidth / 2,
+      right : iconWidth / 2,
+      width : iconWidth,
       height: iconHeight
     };
     
@@ -489,7 +485,7 @@ export default class TreeNodeHandler {
    * Get the list of root nodes for a node set
    * @returns {Array} The list of root nodes found
    */
-  getRootNodes() {
+  getRootNodes () {
     return _.filter(this.nodeList, function (node) {
       return node.type === NodeTypes.root
     });
@@ -499,7 +495,7 @@ export default class TreeNodeHandler {
    * Fetch a node by the node _id
    * @param id
    */
-  getNode(id) {
+  getNode (id) {
     return _.find(this.nodeList, function (node) {
       return node._id === id
     });
@@ -509,7 +505,7 @@ export default class TreeNodeHandler {
    * Fetch a node by the node staticId
    * @param staticId
    */
-  getByStaticId(staticId) {
+  getByStaticId (staticId) {
     return _.find(this.nodeList, function (node) {
       return node.staticId === staticId
     });
@@ -521,9 +517,9 @@ export default class TreeNodeHandler {
    * @param filter A filter function to limit the results with
    * @returns {Array}
    */
-  getDescendants(parentNode, filter) {
-    var self = this,
-        nodeList = [],
+  getDescendants (parentNode, filter) {
+    var self       = this,
+        nodeList   = [],
         searchList = [].concat(parentNode.childPages, parentNode.childViews);
     
     _.each(searchList, function (node) {
@@ -543,7 +539,7 @@ export default class TreeNodeHandler {
   /**
    * Update the display of all of the nodes
    */
-  update(duration) {
+  update (duration) {
     var self = this,
         tree = self.treeLayout,
         nodes,
@@ -586,7 +582,7 @@ export default class TreeNodeHandler {
    * Create the root nodes for a selection
    * @param selection
    */
-  createRootNodes(selection) {
+  createRootNodes (selection) {
     var self = this,
         tree = self.treeLayout;
     
@@ -634,7 +630,7 @@ export default class TreeNodeHandler {
    * @param selection
    * @param prefix
    */
-  createGroups(selection, prefix) {
+  createGroups (selection, prefix) {
     prefix = prefix === undefined ? "" : prefix;
     return selection.enter()
         .append("g")
@@ -651,7 +647,7 @@ export default class TreeNodeHandler {
    * Create the base shape for the node icon
    * @param selection
    */
-  createBacks(selection) {
+  createBacks (selection) {
     var self = this;
     
     selection
@@ -664,7 +660,7 @@ export default class TreeNodeHandler {
         })
         .append("rect")
         .attr("class", function (d) {
-          return "node node-" + NodeTypesLookup[d.type]
+          return "node node-" + NodeTypesLookup[ d.type ]
         })
         .attr("x", 0)
         .attr("y", 0)
@@ -682,7 +678,7 @@ export default class TreeNodeHandler {
    * Create the node content elements
    * @param selection
    */
-  createContent(selection) {
+  createContent (selection) {
     var self = this,
         nodeContent;
     
@@ -715,7 +711,7 @@ export default class TreeNodeHandler {
     // wrap the text
     nodeContent.selectAll("text.node-title")
         .call(Util.wrapSvgText, DocTreeConfig.nodes.width - 2 * DocTreeConfig.nodes.borderWidth);
-
+    
   }
   
   /**
@@ -723,7 +719,7 @@ export default class TreeNodeHandler {
    * @param selection
    * @param duration
    */
-  transitionUpdates(selection, duration) {
+  static transitionUpdates (selection, duration) {
     // update the text
     selection
         .select(".node-title")
@@ -733,7 +729,7 @@ export default class TreeNodeHandler {
     
     selection.selectAll("text.node-title")
         .call(Util.wrapSvgText, DocTreeConfig.nodes.width - 2 * DocTreeConfig.nodes.borderWidth);
-  
+    
     // update the position
     selection
         .attr("visibility", "visible")
@@ -755,7 +751,7 @@ export default class TreeNodeHandler {
    * Add event listeners to the nodes
    * @param selection
    */
-  addEventListeners(selection) {
+  addEventListeners (selection) {
     var self = this,
         tree = self.treeLayout;
     
@@ -770,15 +766,15 @@ export default class TreeNodeHandler {
    * Edit a node
    * @param node
    */
-  editNode(node) {
+  editNode (node) {
     var self = this,
         tree = self.treeLayout;
     
     // show the bottom drawer
-    tree.popover([node], {
-      width: 700,
+    tree.popover([ node ], {
+      width          : 700,
       contentTemplate: "edit_node",
-      contentData: {_id: node._id}
+      contentData    : { _id: node._id }
     }, tree.nodeControls);
   }
 }

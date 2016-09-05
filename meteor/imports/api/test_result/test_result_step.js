@@ -140,7 +140,7 @@ TestResultSteps.helpers({
       if(message.data && message.data.length){
         message.type = message.data[0].type;
         message.data = message.data[0].data;
-      };
+      }
       return message
     })
   },

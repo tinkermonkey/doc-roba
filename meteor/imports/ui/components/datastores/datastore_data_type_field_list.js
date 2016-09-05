@@ -1,6 +1,7 @@
 import './datastore_data_type_field_list.html';
 
 import {Template} from 'meteor/templating';
+import {RobaDialog} from 'meteor/austinsand:roba-dialog';
 
 import {Util} from '../../../api/util.js';
 import {DatastoreDataTypeFields} from '../../../api/datastore/datastore_data_type_field.js';
@@ -40,9 +41,9 @@ Template.DatastoreDataTypeFieldList.events({
     });
   },
   "click .sortable-table-row .btn-delete": function (e, instance) {
+    var field = this;
     console.log("Delete Field: ", field);
     
-    var field = this;
     RobaDialog.show({
       title: "Delete Field?",
       text: "Are you sure that you want to delete the field <span class='label label-primary'>" + field.title + "</span> from this data type?",

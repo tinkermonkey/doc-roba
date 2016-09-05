@@ -190,7 +190,7 @@ Template.TestRunItemList.rendered = function () {
             instance.reorderItems();
           }
         });
-        return;
+        
       }
     }
   });

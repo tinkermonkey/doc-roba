@@ -1,3 +1,7 @@
+import './roba_launcher_route.html';
+
+import {Template} from 'meteor/templating';
+
 /**
  * Template Helpers
  */

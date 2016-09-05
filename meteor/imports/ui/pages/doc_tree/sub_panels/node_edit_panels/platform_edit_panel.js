@@ -1,3 +1,9 @@
+import './platform_edit_panel.html';
+
+import {Template} from 'meteor/templating';
+
+import {PlatformTypes} from '../../../../../api/node/platform_types.js';
+
 /**
  * Template Helpers
  */

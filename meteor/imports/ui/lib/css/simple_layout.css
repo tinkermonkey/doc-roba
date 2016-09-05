@@ -14,39 +14,11 @@
 .simple-divider {
   border-right: 1px dotted #ddd;
 }
-.simple-col-1 {
-  width:  8%;
-}
-.simple-col-2 {
-  width: 16%;
-}
+
 .simple-col-3 {
   width: 24%;
 }
-.simple-col-4 {
-  width: 33%;
-}
-.simple-col-5 {
-  width: 41%;
-}
-.simple-col-6 {
-  width: 49.7%;
-}
-.simple-col-7 {
-  width: 58%;
-}
-.simple-col-8 {
-  width: 66%;
-}
+
 .simple-col-9 {
   width: 74%;
-}
-.simple-col-10 {
-  width: 83%;
-}
-.simple-col-11 {
-  width: 91%;
-}
-.simple-col-12 {
-  width: 100%;
 }

@@ -63,9 +63,7 @@ import '../../roba_ace/roba_ace.js';
      @method input2value()
      **/
     input2value: function() {
-      var value = Blaze.getView(this.$input.find(".roba-ace").get(0)).templateInstance().editor.getValue();
-      //console.log("xEditableAce.input2value: ", value);
-      return value;
+      return Blaze.getView(this.$input.find(".roba-ace").get(0)).templateInstance().editor.getValue();
     }
   });
 

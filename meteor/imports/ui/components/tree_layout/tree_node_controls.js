@@ -671,7 +671,7 @@ export default class TreeNodeControls {
    * Calculate the radius of the controls for a node
    * @param d
    */
-  getRadius(d) {
+  static getRadius(d) {
     return Math.sqrt(Math.pow(d.icon.right, 2) + Math.pow(d.icon.bottom, 2)) + 15;
   }
   
@@ -779,7 +779,7 @@ export default class TreeNodeControls {
   /**
    * Handle the user pressing the escape key during a drag
    */
-  dragEscapeHandler(e) {
+  static dragEscapeHandler(e) {
     console.debug("dragEscapeHandler: " + e.which);
     if (e.which == 27 && e.data) {
       e.data.addActionDragEnd();
@@ -909,7 +909,7 @@ export default class TreeNodeControls {
   /**
    * Return the controls attach point for the popover
    */
-  attachPoint() {
+  static attachPoint() {
     return $(".node-controls-back").get(0);
   }
 }

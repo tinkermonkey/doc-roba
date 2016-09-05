@@ -1,3 +1,10 @@
+import './map_tree.html';
+
+import {Template} from 'meteor/templating';
+
+import {Actions} from '../../../api/action/action.js';
+import {Nodes} from '../../../api/node/node.js';
+
 /**
  * MapTree
  *
@@ -9,24 +16,7 @@
  * Template Helpers
  */
 Template.MapTree.helpers({
-  halfHeight: function () {
-    var instance = Template.instance(),
-      size = instance.size.get();
-    if(size){
-      return size.height / 2;
-    } else {
-      return -150;
-    }
-  },
-  halfWidth: function () {
-    var instance = Template.instance(),
-      size = instance.size.get();
-    if(size){
-      return size.width / 2;
-    } else {
-      return -150;
-    }
-  }
+
 });
 
 /**

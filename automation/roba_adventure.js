@@ -71,7 +71,7 @@ Future.task(function(){
     logger.error("Fatal error during adventure execution: ", e);
     logger.error(new Error(e.toString()).trace);
     if(ddpLink){
-      ddpLink.setAdventureStatus(adventureId, AdventureStatus ? AdventureStatus.failed : 9)
+      ddpLink.setAdventureStatus(adventureId, AdventureStatus ? AdventureStatus.failed : 9);
       Exit(1);
     }
   }
@@ -105,7 +105,7 @@ function ExecuteAdventure () {
   AdventureStepStatus = enums.stepStatus;
 
   // load the adventure
-  logger.debug("Loading the Adventure live record")
+  logger.debug("Loading the Adventure live record");
   adventure = ddpLink.liveRecord("adventure", adventureId, "adventures");
   context.update({
     projectId:        adventure.projectId,
@@ -290,8 +290,7 @@ function ExecuteAdventure () {
         }
       }
     }
-  };
-
+  }
   // Done
   logger.info("Adventure complete");
   ddpLink.setAdventureStatus(adventure._id, AdventureStatus.complete);

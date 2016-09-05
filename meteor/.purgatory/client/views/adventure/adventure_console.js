@@ -126,7 +126,7 @@ Template.AdventureConsole.created = function () {
           }
         }
       });
-    };
+    }
   });
 };
 

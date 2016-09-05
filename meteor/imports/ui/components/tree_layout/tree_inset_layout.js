@@ -138,7 +138,6 @@ export default class TreeInsetLayout {
   
   /**
    * Update the location of the viewport rectangle
-   * @param duration
    */
   updateViewport() {
     var self = this,

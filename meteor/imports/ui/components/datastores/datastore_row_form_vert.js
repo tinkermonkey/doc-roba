@@ -6,12 +6,7 @@ import {Template} from 'meteor/templating';
  * Template Helpers
  */
 Template.DatastoreRowFormVert.helpers({
-  schemaFields: function () {
-    if(this.rowSchema && this.rowSchema.schema){
-      var schema = this.rowSchema.schema();
-      return _.keys(schema).map(function (key) { return {name: key} });
-    }
-  }
+
 });
 
 /**

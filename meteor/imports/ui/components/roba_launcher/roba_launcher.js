@@ -1,3 +1,18 @@
+import './roba_launcher.html';
+import './roba_launcher.css';
+
+import {Template} from 'meteor/templating';
+import {RobaDialog} from 'meteor/austinsand:roba-dialog';
+
+import {Adventures} from '../../../api/adventure/adventure.js';
+import {AdventureStates} from '../../../api/adventure/adventure_state.js';
+import {AdventureStatus} from '../../../api/adventure/adventure_status.js';
+import {AdventureSteps} from '../../../api/adventure/adventure_step.js';
+import {DatastoreRows} from '../../../api/datastore/datastore_row.js';
+import {Servers} from '../../../api/test_server/server.js';
+import {TestSystems} from '../../../api/test_system/test_system.js';
+import {TestAgents} from '../../../api/test_agent/test_agent.js';
+
 /**
  * Template Helpers
  */
@@ -176,6 +191,7 @@ Template.roba_launcher.created = function () {
     instance.subscribe("nodes", adventureData.projectId, adventureData.projectVersionId);
     instance.subscribe("actions", adventureData.projectId, adventureData.projectVersionId);
     instance.subscribe("servers", adventureData.projectId, adventureData.projectVersionId);
+    instance.subscribe("version_datastore_rows", adventureData.projectId, adventureData.projectVersionId);
     instance.subscribe("test_systems", adventureData.projectId, adventureData.projectVersionId);
     instance.subscribe("test_agents", adventureData.projectId, adventureData.projectVersionId);
   });

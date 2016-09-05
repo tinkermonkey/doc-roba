@@ -199,11 +199,11 @@ var SnippetManager = function() {
             if (typeof ch == "string") {
                 result.push(ch);
             } else if (typeof ch != "object") {
-                continue;
+                
             } else if (ch.skip) {
                 gotoNext(ch);
             } else if (ch.processed < i) {
-                continue;
+                
             } else if (ch.text) {
                 var value = this.getVariableValue(editor, ch.text);
                 if (value && ch.fmtString)
@@ -1695,7 +1695,7 @@ var FilteredList = function(array, filterText) {
 
             if (this.exactMatch) {
                 if (needle !== caption.substr(0, needle.length))
-                    continue loop;
+                    continue;
             }else{
                 for (var j = 0; j < needle.length; j++) {
                     var i1 = caption.indexOf(lower[j], lastIndex + 1);

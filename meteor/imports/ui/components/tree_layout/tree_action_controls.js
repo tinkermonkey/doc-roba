@@ -265,8 +265,8 @@ export default class TreeActionControls {
    */
   hide(duration) {
     //console.debug("ActionControls.hide()");
-    var self = this;
-    visible = self.background.attr("r") > 0;
+    var self = this,
+        visible = self.background.attr("r") > 0;
     
     // make sure it's not locked
     if (self.locked) {
@@ -363,7 +363,7 @@ export default class TreeActionControls {
    * Calculate the radius of the controls for a node
    * @param d
    */
-  getRadius(d) {
+  static getRadius(d) {
     return Math.sqrt(Math.pow(d.labelWidth, 2) + Math.pow(d.labelHeight, 2)) / 2 + 6;
   }
   
@@ -386,11 +386,11 @@ export default class TreeActionControls {
       point = {
         x: -1 * d.drag.x - d.drag.homeX,
         y: -1 * d.drag.y - d.drag.homeY + d.labelHeight / 2
-      }
+      };
       corner = {
         x: point.x,
         y: point.y + Math.min(tetherLength * 0.5, 200)
-      }
+      };
       path = "M" + point.x + " " + point.y + "Q" + corner.x + " " + corner.y + " 0 0";
     }
     
@@ -400,7 +400,7 @@ export default class TreeActionControls {
   /**
    * Handle the user pressing the escape key during a drag
    */
-  dragEscapeHandler(e) {
+  static dragEscapeHandler(e) {
     //console.debug("dragEscapeHandler: " + e.which);
     if (e.which == 27 && e.data) {
       e.data.addActionDragEnd();
@@ -530,7 +530,7 @@ export default class TreeActionControls {
   /**
    * Return the controls attach point for the popover
    */
-  attachPoint() {
+  static attachPoint() {
     return $(".action-controls-layer-back").get(0);
   }
 };

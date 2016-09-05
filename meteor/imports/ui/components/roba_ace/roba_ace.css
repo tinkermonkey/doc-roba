@@ -22,8 +22,7 @@
  */
 .ace-editor-container {
   background: #50d7ff;
-  border-radius: 8px;
-  border-top-right-radius: 0;
+  border-radius: 8px 0 8px 8px;
   overflow: hidden;
   text-align: left;
 }
@@ -132,7 +131,7 @@
 }
 
 .ace-docroba .ace_support.ace_type,
-.ace-docroba .ace_support.ace_class
+.ace-docroba .ace_support.ace_class,
 .ace-docroba .ace_support.ace_other {
   color: rgb(109, 121, 222);
 }

@@ -7,7 +7,7 @@
   display: none;
   opacity: 0;
   transition: opacity 0.5s;
-  -webkit-transform: opacity 0.5s;
+  -webkit-transition: opacity 0.5s;
 }
 
 .location-unknown.show {
@@ -19,6 +19,6 @@
   font-size: 150px;
   fill: #298cff;
   stroke: #efff29;
-  filter: url(imports.svg#node-hover);
+  filter: url(#node-hover);
   text-anchor: middle;
 }

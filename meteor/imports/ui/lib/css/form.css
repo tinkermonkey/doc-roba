@@ -1,19 +1,10 @@
 /* =============================================================================
   Form
 ============================================================================= */
-form.Form {
-  font-size: 13px;
-  width: 100%;
-}
 
 /* =============================================================================
   Inputs
 ============================================================================= */
-.Form .Field {
-  display: block;
-  margin-top: 3px;
-  width: 100%;
-}
 
 .Form label {
   display: inline-block;
@@ -36,19 +27,4 @@ form.Form {
 /* =============================================================================
   Simple Forms like sign-in and sign-up
 ============================================================================= */
-.Form input.Simple {
-  font-size: 16pt;
-  display: block;
-  width: 100%;
-  border: 1px solid #999;
-  padding: 3px;
-  border-radius: 2px;
-  -moz-box-sizing:    border-box;
-  -webkit-box-sizing: border-box;
-  box-sizing:         border-box;
-  margin-bottom: 10px;
-}
 
-.Form input.Simple:last-child {
-  /*margin-bottom: 0px;*/
-}

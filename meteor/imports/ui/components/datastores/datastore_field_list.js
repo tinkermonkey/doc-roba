@@ -47,9 +47,9 @@ Template.DatastoreFieldList.events({
     });
   },
   "click .sortable-table-row .btn-delete": function (e, instance) {
+    var field = this;
     console.log("Delete Field: ", field);
 
-    var field = this;
     RobaDialog.show({
       title: "Delete Field?",
       text: "Are you sure that you want to delete the field <span class='label label-primary'>" + field.title + "</span> from this version?",

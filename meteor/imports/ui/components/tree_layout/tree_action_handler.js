@@ -95,7 +95,7 @@ export default class TreeActionHandler {
         nodeId: destinationNode.staticId
       }],
       title: 'New Action'
-    }
+    };
     
     Actions.insert(actionConfig, function (error, response) {
       if (error) {
@@ -331,7 +331,7 @@ export default class TreeActionHandler {
    * Calculate the direction that a route will take (left or right)
    * @param r
    */
-  setRouteDirection(r) {
+  static setRouteDirection(r) {
     // direction can get complicated
     if (r.destination.y >= r.source.y) {
       r.dir = r.destination.x > r.source.x ? 1 : -1;
@@ -340,7 +340,7 @@ export default class TreeActionHandler {
     }
   }
   
-  getRouteIdentifier(d) {
+  static getRouteIdentifier(d) {
     return d._id + "_" + d.source._id + "_" + d.routeIndex;
   }
   
@@ -504,9 +504,8 @@ export default class TreeActionHandler {
   }
   
   /**
-   *
+   * Create or update the action labels
    * @param selection
-   * @param duration
    */
   createAndUpdateLabels(selection) {
     var self = this,
@@ -580,12 +579,12 @@ export default class TreeActionHandler {
         //x: r.source.x + -1 * ((r.actionCount -1) * 10 / 2) + r.actionSortIndex * 10,
         x: r.source.x,
         y: r.source.y + r.source.icon.bottom
-      }
+      };
       
       destination = {
         x: r.destination.x,
         y: r.destination.y + r.destination.icon.top
-      }
+      };
       
       /*
        Points are laid out from source to destination
@@ -672,6 +671,7 @@ export default class TreeActionHandler {
   /**
    * Show the hover state for an action
    * @param d
+   * @param event
    */
   hover(d, event) {
     //console.log("hover: ", d);

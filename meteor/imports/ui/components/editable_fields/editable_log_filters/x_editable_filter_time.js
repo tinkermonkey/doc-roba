@@ -35,7 +35,7 @@
      Sets value of input.
      
      @method value2input(value)
-     @param {mixed} data
+     @param value
      **/
     value2input: function(value) {
       this.$input.filter('[name="start"]').val(value ? value.start : '');
