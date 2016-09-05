@@ -20,7 +20,7 @@ numeral:numeral
 cfs:ui
 cfs:graphicsmagick
 meteor-base@1.0.4
-mongo@1.1.11
+mongo@1.1.12
 blaze-html-templates@1.0.4
 session@1.1.6
 jquery@1.11.9
@@ -46,6 +46,7 @@ austinsand:editable-text-array
 austinsand:roba-popover
 austinsand:roba-accordion
 austinsand:roba-tabs
-shell-server
+shell-server@0.2.1
 austinsand:roba-round-container
 d3js:d3
+markdown@1.0.10

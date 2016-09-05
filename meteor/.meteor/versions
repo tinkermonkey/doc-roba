@@ -9,7 +9,7 @@ aldeed:simple-schema@1.5.3
 allow-deny@1.0.5
 austinsand:editable-text-area@1.0.1
 austinsand:editable-text-array@1.0.0
-austinsand:editable-text-field@1.0.0
+austinsand:editable-text-field@1.1.0
 austinsand:roba-accordion@1.0.0
 austinsand:roba-dialog@1.0.1
 austinsand:roba-popover@1.0.0
@@ -76,7 +76,8 @@ launch-screen@1.0.12
 livedata@1.0.18
 localstorage@1.0.11
 logging@1.1.15
-lookback:emails@0.7.4
+lookback:emails@0.7.5
+markdown@1.0.10
 matb33:collection-hooks@0.8.4
 mdg:validation-error@0.2.0
 meteor@1.2.17
@@ -92,12 +93,12 @@ mobile-status-bar@1.0.12
 modules@0.7.6
 modules-runtime@0.7.6
 momentjs:moment@2.14.4
-mongo@1.1.11
+mongo@1.1.12
 mongo-id@1.0.5
 mongo-livedata@1.0.12
 natestrauser:x-editable-bootstrap@1.5.2_4
 npm-bcrypt@0.9.1
-npm-mongo@1.5.47
+npm-mongo@1.5.49
 numeral:numeral@1.5.3_1
 observe-sequence@1.0.12
 ordered-dict@1.0.8
