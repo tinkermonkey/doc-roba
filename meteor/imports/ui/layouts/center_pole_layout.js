@@ -4,7 +4,7 @@ import './center_pole_layout.css';
 import {Template} from 'meteor/templating';
 
 import '../../ui/lib/force_logged_in/force_logged_in.js';
-import '../components/menus/main_nav_menu.js';
+import '../components/nav_menus/main_nav_menu.js';
 
 /**
  * Template Helpers

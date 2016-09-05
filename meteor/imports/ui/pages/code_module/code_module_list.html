@@ -1,0 +1,33 @@
+<template name="CodeModuleList">
+  {{#if ready}}
+    <div class="test-case-list-header">
+      <h3>{{title}}</h3>
+    </div>
+    <div id="{{getElementId}}" class="test-case-list">
+      <div class="input-group input-group-sm add-item-form test-case-list-search">
+        <input type="text" class="form-control" pattern="^[a-zA-Z][\w]+$" placeholder="Enter a function or module name">
+        <div class="input-group-btn">
+          <span class="glyphicon glyphicon-remove-circle field-clear-btn"></span>
+          <button type="button" class="btn btn-primary btn-search" disabled="disabled">
+            <span class="glyphicon glyphicon-search"></span>
+          </button>
+          {{#if editable}}
+            <button type="button" class="btn btn-primary btn-add-item" disabled="disabled">
+              Add
+            </button>
+          {{/if}}
+        </div>
+      </div>
+      <div class="code-module-list">
+        {{#each codeModules}}
+          {{> CodeModuleListModule }}
+        {{/each}}
+        <div class="search-no-results" style="display: none;">
+          <i>No results found</i>
+        </div>
+      </div>
+    </div>
+  {{else}}
+    {{> RobaSpinner inline=true }}
+  {{/if}}
+</template>

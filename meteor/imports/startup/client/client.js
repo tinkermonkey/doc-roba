@@ -26,6 +26,7 @@ import {AdventureStepStatus, AdventureStepStatusLookup} from '../../api/adventur
 import {ChangeTypes, ChangeTypesLookup} from '../../api/change_tracker/change_types.js';
 import {DatastoreCategories, DatastoreCategoriesLookup} from '../../api/datastore/datastore_catagories.js';
 import {FieldTypes, FieldTypesLookup} from '../../api/datastore/field_types.js';
+import {FunctionParamTypes, FunctionParamTypesLookup} from '../../api/code_module/function_param_types.js';
 import {NodeTypes, NodeTypesLookup} from '../../api/node/node_types.js';
 import {NodeSearchStatus, NodeSearchStatusLookup} from '../../api/node_search/node_search_status.js';
 import {ProjectRoles, ProjectRolesLookup} from '../../api/project/project_roles.js';
@@ -109,6 +110,13 @@ Template.registerHelper("setNavTitle", function () {
  */
 Template.registerHelper("notNull", function(value){
   return value != null;
+});
+
+/**
+ * Variable and function name validation helper
+ */
+Template.registerHelper("variablePattern", function(){
+  return Util.variableInputPattern;
 });
 
 /**

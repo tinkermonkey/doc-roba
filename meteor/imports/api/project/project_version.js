@@ -2,6 +2,7 @@ import {Mongo} from 'meteor/mongo';
 import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import {SchemaHelpers} from '../schema_helpers.js';
 import {Auth} from '../auth.js';
+import {Util} from '../util.js';
 import {ChangeTracker} from '../change_tracker/change_tracker.js';
 import {NodeTypes} from '../node/node_types.js';
 
@@ -9,6 +10,7 @@ import {CodeModules} from '../code_module/code_module.js';
 import {Datastores} from '../datastore/datastore.js';
 import {DatastoreCategories} from '../datastore/datastore_catagories.js';
 import {DatastoreDataTypes} from '../datastore/datastore_data_type.js';
+import {ProjectCodeModuleTypes} from './project_code_module_types.js';
 import {Nodes} from '../node/node.js';
 import {Projects} from './project.js';
 
@@ -68,17 +70,31 @@ if(Meteor.isServer) {
   /**
    * Create a code module for this project version
    * @param projectVersion
+   * @param type
    * @returns {*}
    */
-  ProjectVersions.createCodeModule = function (projectVersion) {
+  ProjectVersions.createCodeModule = function (projectVersion, type) {
+    console.log("ProjectVersions.createCodeModule:", projectVersion._id, type);
+    var name;
+    switch (type){
+      case ProjectCodeModuleTypes.global:
+        name = projectVersion.project().title;
+        break;
+      case ProjectCodeModuleTypes.test:
+        name = "Test";
+        break;
+      default:
+        console.error("ProjectVersions.createCodeModule requires a known type:", type);
+        return;
+    }
     return CodeModules.insert({
-      name: Util.wordsToCamel(projectVersion.project().title),
+      name: Util.wordsToCamel(name),
       projectId: projectVersion.projectId,
       projectVersionId: projectVersion._id,
       parentId: projectVersion._id,
-      parentCollectionName: 'Nodes',
+      parentCollectionName: 'ProjectVersions',
+      type: type,
       language: projectVersion.project().automationLanguage,
-      docs: 'Code Module for the project ' + projectVersion.project().title,
       modifiedBy: projectVersion.createdBy,
       createdBy: projectVersion.createdBy
     });
@@ -95,7 +111,7 @@ if(Meteor.isServer) {
       projectId: projectVersion.projectId,
       projectVersionId: projectVersion._id,
       parentId: projectVersion._id,
-      parentCollectionName: 'Nodes',
+      parentCollectionName: 'ProjectVersions',
       category: DatastoreCategories.serverConfig,
       modifiedBy: projectVersion.createdBy,
       createdBy: projectVersion.createdBy
@@ -108,12 +124,24 @@ if(Meteor.isServer) {
    */
   ProjectVersions.after.insert(function (userId, projectVersion) {
     // Create a new code module for this project version
-    ProjectVersions.createCodeModule(projectVersion);
+    try {
+      projectVersion.checkCodeModules();
+    } catch(e) {
+      console.error("ProjectVersions.after.insert: projectVersion.checkCodeModules failed,", e);
+    }
   });
   ProjectVersions.after.update(function (userId, projectVersion, changedFields) {
     if(_.contains(changedFields, "title")){
       // update the code module title
-      CodeModules.update({projectVersionId: node.projectVersionId, parentId: node.staticId}, {$set: {name: Util.wordsToCamel(node.title)}});
+      CodeModules.update({
+        projectVersionId: projectVersion._id,
+        parentId: projectVersion._id,
+        type: ProjectCodeModuleTypes.global
+      }, {
+        $set: {
+          name: Util.wordsToCamel(projectVersion.title)
+        }
+      });
     }
   });
 }
@@ -131,26 +159,40 @@ ProjectVersions.helpers({
   dataTypes(){
     DatastoreDataTypes.find({projectVersionId: this._id}, {sort: {title: 1}});
   },
-  codeModule () {
-    let projectVersion = this,
-        codeModule = CodeModules.findOne({projectVersionId: projectVersion._id, parentId: projectVersion._id});
-    if(codeModule){
-      return codeModule;
-    } else {
-      let codeModuleId;
-      if(Meteor.isServer) {
-        codeModuleId = ProjectVersions.createCodeModule(projectVersion);
+  codeModule(type){
+    if(type !== undefined){
+      let projectVersion = this,
+          codeModule = CodeModules.findOne({projectVersionId: projectVersion._id, parentId: projectVersion._id, type: type});
+      if(codeModule){
+        return codeModule;
       } else {
-        codeModuleId = Meteor.call("createVersionCodeModule", projectVersion.projectId, projectVersion._id);
+        let codeModuleId;
+        if(Meteor.isServer) {
+          codeModuleId = ProjectVersions.createCodeModule(projectVersion, type);
+        } else {
+          codeModuleId = Meteor.call("createVersionCodeModule", projectVersion.projectId, projectVersion._id, type);
+        }
+        return CodeModules.findOne({_id: codeModuleId});
       }
-      return CodeModules.findOne({_id: codeModuleId});
+    } else {
+      console.error("ProjectVersions.codeModule: type is required");
     }
   },
+  globalCodeModule () {
+    return this.codeModule(ProjectCodeModuleTypes.global)
+  },
+  testCodeModule () {
+    return this.codeModule(ProjectCodeModuleTypes.test)
+  },
   checkCodeModules () {
-    // Make sure there is a code module for each user type
-    this.userTypes().codeModule();
+    console.log("ProjectVersions.checkCodeModules:", this._id);
     
-    // Make sure this is
+    // Make sure there is a code module for each user type
+    this.userTypes().forEach((userType) => { userType.codeModule() });
+    
+    // Make sure the project has the right code modules
+    this.globalCodeModule();
+    this.testCodeModule();
   },
   serverConfigDatastore () {
     let projectVersion = this,

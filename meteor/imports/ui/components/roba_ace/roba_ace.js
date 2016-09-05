@@ -143,7 +143,7 @@ Template.RobaAce.rendered = function () {
     editor.setOption("fontSize", "14px");
     editor.setOption("fontFamily", "Menlo, Monaco, Consolas, 'Courier New', monospace");
     editor.setTheme("ace/theme/docroba");
-    editor.getSession().setMode("ace/mode/javascript");
+    editor.getSession().setMode("ace/mode/" + (self.data.mode || "javascript"));
     editor.getSession().setUseWrapMode(true);
     editor.setValue(self.data.value || "");
     editor.clearSelection();

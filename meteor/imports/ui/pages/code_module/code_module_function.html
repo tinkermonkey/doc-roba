@@ -1,0 +1,37 @@
+<template name="CodeModuleFunction">
+  {{#if ready}}
+    <div class="code-module-function" data-pk="{{_id}}">
+      <h2>Function <small>{{> EditableTextField value=name dataKey="name" cssClass="inline"}}</small></h2>
+    
+      <div class="code-module-function-docs">
+        {{> EditableCode value=docs dataKey="docs" emptyText="No documentation" language="markdown"}}
+      </div>
+      
+      <div class="code-module-function-params">
+        <h3>Arguments</h3>
+        {{> CodeModuleFunctionParams }}
+      </div>
+  
+      <div class="code-module-function-body">
+        <h3>Code</h3>
+        {{constant}}
+        <pre><code class="code editor-header javascript"></code></pre>
+        {{constant}}
+  
+        {{> EditableCode value=code dataKey="code" emptyText="No code"}}
+  
+        {{constant}}
+        <pre><code class="code editor-footer javascript"></code></pre>
+        {{constant}}
+      </div>
+      <div class="code-module-function-toolbar">
+        <button class="btn btn-warning btn-delete-function">
+          <span class="glyphicon glyphicon-remove"></span>
+          Delete Function
+        </button>
+      </div>
+    </div>
+  {{else}}
+    {{> RobaSpinner }}
+  {{/if}}
+</template>

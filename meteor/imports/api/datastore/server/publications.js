@@ -64,8 +64,8 @@ Meteor.publish('datastore_data_type_fields', function (projectId, projectVersion
   return [];
 });
 
-Meteor.publish('all_datastore_fields', function (projectId, projectVersionId) {
-  console.debug("Publish: all_datastore_fields");
+Meteor.publish('version_datastore_fields', function (projectId, projectVersionId) {
+  console.debug("Publish: version_datastore_fields");
   // check that there is a project role for the current user
   if(this.userId && projectId && projectVersionId
       && Auth.hasProjectAccess(this.userId, projectId)){
@@ -75,8 +75,8 @@ Meteor.publish('all_datastore_fields', function (projectId, projectVersionId) {
   return [];
 });
 
-Meteor.publish('all_datastore_data_type_fields', function (projectId, projectVersionId) {
-  console.debug("Publish: all_datastore_data_type_fields");
+Meteor.publish('version_datastore_data_type_fields', function (projectId, projectVersionId) {
+  console.debug("Publish: version_datastore_data_type_fields");
   // check that there is a project role for the current user
   if(this.userId && projectId && projectVersionId
       && Auth.hasProjectAccess(this.userId, projectId)){
@@ -86,8 +86,8 @@ Meteor.publish('all_datastore_data_type_fields', function (projectId, projectVer
   return [];
 });
 
-Meteor.publish('all_datastore_rows', function (projectId, projectVersionId) {
-  console.debug("Publish: all_datastore_rows");
+Meteor.publish('version_datastore_rows', function (projectId, projectVersionId) {
+  console.debug("Publish: version_datastore_rows");
   // check that there is a project role for the current user
   if(this.userId && projectId && projectVersionId
       && Auth.hasProjectAccess(this.userId, projectId)){

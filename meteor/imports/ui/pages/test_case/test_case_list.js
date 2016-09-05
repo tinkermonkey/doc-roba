@@ -92,7 +92,7 @@ Template.TestCaseList.events({
   },
   "click .add-item-form a": function (e, instance) {
     var itemType = $(e.target).closest("a").attr("data-name"),
-        itemName = $(".add-item-form input").val().trim(),
+        itemName = instance.$(".add-item-form input").val().trim(),
         projectId = FlowRouter.getParam("projectId"),
         versionId = FlowRouter.getParam("projectVersionId"),
         groupId = instance.$(".test-case-list-group.selected").attr("data-group-id");
@@ -109,7 +109,7 @@ Template.TestCaseList.events({
             console.error("Failed to insert test case: " + error.message);
             RobaDialog.error("Failed to insert test case: " + error.message);
           } else {
-            $(".add-item-form input").val("")
+            instance.$(".add-item-form input").val("")
           }
         });
       } else if(itemType == "testgroup") {
@@ -123,7 +123,7 @@ Template.TestCaseList.events({
             console.error("Failed to insert test group: " + error.message);
             RobaDialog.error("Failed to insert test group: " + error.message);
           } else {
-            $(".add-item-form input").val("")
+            instance.$(".add-item-form input").val("")
           }
         });
       }

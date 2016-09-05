@@ -32,7 +32,8 @@ import '../../roba_ace/roba_ace.js';
         value: data.value,
         width: width,
         minLines: data.minLines,
-        maxLines: data.maxLines
+        maxLines: data.maxLines,
+        mode: data.language
       }, this.$input.get(0));
 
       if(this.options.parentInstance){

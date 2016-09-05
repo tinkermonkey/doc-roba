@@ -31,7 +31,8 @@
   cursor: pointer;
   padding: 5px;
   margin: 0;
-  border-radius: 10px;
+  margin-top: 1px;
+  border-radius: 6px;
   transition: background-color 0.1s;
   -webkit-transition: background-color 0.1s;
 }

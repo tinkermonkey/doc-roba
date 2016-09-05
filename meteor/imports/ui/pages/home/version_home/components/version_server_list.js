@@ -121,7 +121,6 @@ Template.VersionServerList.rendered = function () {
             console.log("Updating order: ", i, $(el).attr("data-pk"));
             Servers.update($(el).attr("data-pk"), {$set: {order: i}}, function (error, response) {
               if(error){
-                console.error("Server order update failed: " + error.message);
                 RobaDialog.error("Server order update failed: " + error.message);
               }
             });

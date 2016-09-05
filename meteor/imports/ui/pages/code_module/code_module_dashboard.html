@@ -1,0 +1,18 @@
+<template name="CodeModuleDashboard">
+  {{#CenterPoleLayout}}
+    {{#if ready}}
+      {{setTitle "Home"}}
+      {{setNavTitle project.title "Code"}}
+  
+      {{#if codeModuleId}}
+        {{> CodeModule codeModule}}
+      {{else}}
+        <div class="align-center" style="margin-top: 200px;">
+          <h2>Select a Code Module</h2>
+        </div>
+      {{/if}}
+    {{else}}
+      {{> RobaSpinner }}
+    {{/if}}
+  {{/CenterPoleLayout}}
+</template>

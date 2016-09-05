@@ -123,8 +123,8 @@ Template.TestCaseLauncher.created = function () {
     instance.subscribe("servers", instance.data.projectId, instance.data.projectVersionId);
     instance.subscribe("test_systems", instance.data.projectId, instance.data.projectVersionId);
     instance.subscribe("test_agents", instance.data.projectId, instance.data.projectVersionId);
-    instance.subscribe("all_datastore_fields", instance.data.projectId, instance.data.projectVersionId);
-    instance.subscribe("all_datastore_rows", instance.data.projectId, instance.data.projectVersionId);
+    instance.subscribe("version_datastore_fields", instance.data.projectId, instance.data.projectVersionId);
+    instance.subscribe("version_datastore_rows", instance.data.projectId, instance.data.projectVersionId);
     instance.subscribe("datastores", instance.data.projectId, instance.data.projectVersionId);
 
     if(instance.subscriptionsReady()){

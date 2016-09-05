@@ -12,6 +12,12 @@ import '../../../../../node_modules/prismjs/themes/prism.css';
  * Template Helpers
  */
 Template.EditableCode.helpers({
+  isMarkdown(){
+    return this.language && this.language.match(/markdown/i)
+  },
+  language(){
+    return this.language || "javascript"
+  }
 });
 
 /**

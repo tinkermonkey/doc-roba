@@ -1,0 +1,36 @@
+<template name="CodeModuleFunctionParams">
+  <table class="sortable-table">
+    <tr class="sortable-table-header">
+      <td></td>
+      <td>Name</td>
+      <td>Type</td>
+      <td>Optional</td>
+      <td>Docs</td>
+      <td></td>
+    </tr>
+    <tr class="sortable-table-divider">
+      <td colspan="6"><div class="divider"></div></td>
+    </tr>
+    {{#unless params.count}}
+      <tr>
+        <td colspan="6"><i>No params defined</i></td>
+      </tr>
+    {{/unless}}
+    {{#each params}}
+      <tr class="sortable-table-row param-list-row" data-pk="{{_id}}" data-sort-order="{{order}}">
+        <td class="drag-handle"><span class="glyphicon glyphicon-record"></span></td>
+        <td>{{> EditableTextField value=name dataKey="name" pattern=variablePattern}}</td>
+        <td>{{> EditableEnumSelector value=type dataKey="type" enum=paramTypesEnum}}</td>
+        <td>{{> EditableFieldYesNo value=optional dataKey="optional"}}</td>
+        <td>{{> EditableTextField value=docs dataKey="docs" emptyText="No Documentation"}}</td>
+        <td class="btn-delete"><span class="glyphicon glyphicon-remove"></span></td>
+      </tr>
+    {{/each}}
+    <tr class="sortable-table-divider">
+      <td colspan="6"><div class="divider"></div></td>
+    </tr>
+  </table>
+  <div>
+    <button class="btn btn-small btn-warning btn-add-param" data-pk="{{version._id}}">Add Param</button>
+  </div>
+</template>

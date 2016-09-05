@@ -5,14 +5,12 @@ import {Template} from 'meteor/templating';
 import {FlowRouter} from 'meteor/kadira:flow-router';
 import {RobaDialog} from 'meteor/austinsand:roba-dialog';
 
-import {Datastores} from '../../../../api/datastore/datastore.js';
 import {Projects} from '../../../../api/project/project.js';
 import {ProjectVersions} from '../../../../api/project/project_version.js';
 
 import '../../../components/page_headers/current_project_header.js';
 import '../home_nav.js';
 import './version_activity.js';
-import './version_code_modules.js';
 import './version_credentials.js';
 import './version_user_types_config.js';
 import './version_data_types.js';
@@ -49,18 +47,23 @@ Template.VersionHome.created = function () {
     var projectId = FlowRouter.getParam("projectId"),
         projectVersionId = FlowRouter.getParam("projectVersionId");
 
+    // Core data
     instance.subscribe("nodes", projectId, projectVersionId);
     instance.subscribe("actions", projectId, projectVersionId);
+    
+    // Datastores
     instance.subscribe("datastores", projectId, projectVersionId);// TODO: Move to lower level template
+    instance.subscribe("version_datastore_fields", projectId, projectVersionId);// TODO: Move to lower level template
     instance.subscribe("datastore_data_types", projectId, projectVersionId);// TODO: Move to lower level template
-    instance.subscribe("all_datastore_fields", projectId, projectVersionId);// TODO: Move to lower level template
-    instance.subscribe("all_datastore_data_type_fields", projectId, projectVersionId);// TODO: Move to lower level template
-    instance.subscribe("all_datastore_rows", projectId, projectVersionId);// TODO: Move to lower level template
+    instance.subscribe("version_datastore_data_type_fields", projectId, projectVersionId);// TODO: Move to lower level template
+    instance.subscribe("version_datastore_rows", projectId, projectVersionId);// TODO: Move to lower level template
+    
+    // Test infrastructure
     instance.subscribe("servers", projectId, projectVersionId);// TODO: Move to lower level template
     instance.subscribe("test_systems", projectId, projectVersionId);// TODO: Move to lower level template
     instance.subscribe("test_agents", projectId, projectVersionId);// TODO: Move to lower level template
 
-    // pull in the project and project version records
+    // Cache the project and project version records
     instance.project.set(Projects.findOne(projectId));
     instance.version.set(ProjectVersions.findOne(projectVersionId));
   });

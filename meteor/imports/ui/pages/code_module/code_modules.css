@@ -1,0 +1,55 @@
+/**
+ * Code module page styling
+ */
+.code-module-editor-container {
+  margin-top: 50px;
+}
+
+/**
+ * Code module function page styling
+ */
+.code-module-function-params {
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+.code-module-function-body .editable-code {
+  padding-left: 2em;
+}
+
+.code-module-function-toolbar {
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+/**
+ * Custom glyphicon for the code module list
+ */
+.code-module-list-function-icon {
+  position: relative;
+  top: 1px;
+  display: inline-block;
+}
+
+.code-module-list-function-icon:before {
+  content: "\192";
+}
+
+/**
+ * Code module list styling
+ */
+.test-case-list-group .btn {
+  display: none;
+}
+
+.test-case-list-group:hover .btn {
+  display: inherit;
+}
+
+.test-case-list-group .add-item-form {
+  margin-top: 3px;
+}
+
+.test-case-list-group .add-item-form .btn {
+  display: inherit;
+}

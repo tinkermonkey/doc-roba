@@ -164,7 +164,7 @@ if(Meteor.isServer) {
    * @returns {*}
    */
   Nodes.createCodeModule = function (node) {
-    console.log("createCodeModule:");
+    console.log("Nodes.createCodeModule:", node);
     return CodeModules.insert({
       name: Util.wordsToCamel(node.title),
       projectId: node.projectId,

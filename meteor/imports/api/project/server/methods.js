@@ -386,14 +386,15 @@ Meteor.methods({
    * @param projectVersionId
    * @return CodeModule._id
    */
-  createVersionCodeModule(projectId, projectVersionId){
-    console.debug("createVersionCodeModule:", projectId, projectVersionId);
+  createVersionCodeModule(projectId, projectVersionId, type){
+    console.debug("createVersionCodeModule:", projectId, projectVersionId, type);
     check(projectId, String);
     check(projectVersionId, String);
+    check(type, Number);
     
     let user = Auth.requireProjectAccess(projectId),
         projectVersion = ProjectVersions.findOne({_id: projectVersionId});
-    return projectVersion.codeModule();
+    return projectVersion.codeModule(type);
   },
   
   /**

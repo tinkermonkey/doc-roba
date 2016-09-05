@@ -7,6 +7,7 @@ import {TestCaseStepTypes} from './test_case/test_case_step_types.js';
  * Utility functions
  */
 export const Util = {
+  variableInputPattern: '^[a-zA-Z][\\w]*?$',
 
   /**
    * Turn a string into a JSON key-safe string, forcing to lowercase
@@ -145,7 +146,9 @@ export const Util = {
    */
   wordsToCamel: function (words) {
     if(words){
-      return words.replace(/[\W]/g, " ").replace(/(^[a-z]|\s+[a-z])/g, (letter) => {return letter.trim().toUpperCase()})
+      return words.replace(/[\W]/g, " ")
+                  .replace(/(^[a-z]|\s+[a-z])/g, (letter) => {return letter.trim().toUpperCase()})
+                  .replace(/\s/g, "");
     }
   },
 
@@ -426,5 +429,18 @@ export const Util = {
         }
       }
     });
+  },
+  
+  /**
+   * Go hunting for UTF-8 characters
+   * @param start
+   * @param stop
+   */
+  debugUtf8(start, stop){
+    for(let i = start; i < stop; i++){
+      let hexVal = i.toString(16);
+      $(".center-pole-content").append('<style>.test-'+hexVal+':before { content:\'\\'+hexVal+'\'; }</style>' +
+          '<span class="test-'+hexVal+'" style="color:#f00; font-size: 24px; width:30px; display: inline-block;"></span>');
+    }
   }
 };

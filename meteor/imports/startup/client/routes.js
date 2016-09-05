@@ -16,6 +16,9 @@ import '../../ui/layouts/no_menu_layout.js';
 import '../../ui/insecure/login/login.js';
 import '../../ui/insecure/logout/logout.js';
 import '../../ui/insecure/not_found/not_found.js';
+
+import '../../ui/pages/code_module/code_module_dashboard.js';
+import '../../ui/pages/doc_tree/doc_tree.js';
 import '../../ui/pages/home/home.js';
 import '../../ui/pages/home/project_home/project_home.js';
 import '../../ui/pages/home/version_home/version_home.js';
@@ -119,6 +122,17 @@ FlowRouter.route("/test_plan_dashboard/:projectId/:projectVersionId", {
       svgDefs: "MinimalSvgDefs",
       header: "CurrentProjectHeader",
       nav: "TestPlanNav"
+    });
+  }
+});
+FlowRouter.route("/code_module_dashboard/:projectId/:projectVersionId", {
+  name: "CodeModuleDashboard",
+  action: function(params) {
+    BlazeLayout.render("BaseLayout", {
+      content: "CodeModuleDashboard",
+      svgDefs: "MinimalSvgDefs",
+      header: "CurrentProjectHeader",
+      nav: "CodeModuleNav"
     });
   }
 });

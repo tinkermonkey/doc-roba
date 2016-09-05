@@ -7,7 +7,7 @@ import {TestCaseSteps} from '../../../../api/test_case/test_case_step.js';
 import {TestCaseStepTypes} from '../../../../api/test_case/test_case_step_types.js';
 
 import {RobaRouter} from '../../../../api/roba_router/roba_router.js';
-import '../../../views/routes/route_map.js';
+import '../../../components/routes/route_map.js';
 
 /**
  * Template Helpers

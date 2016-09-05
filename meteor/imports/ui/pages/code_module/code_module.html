@@ -1,0 +1,26 @@
+<template name="CodeModule">
+  {{#if ready}}
+    {{setNavTitle "CodeModule:" name}}
+  
+    <div class="code-module" data-pk="{{_id}}">
+      <h1>
+        Code Module
+        <small>
+          {{> EditableTextField value=name dataKey="name" cssClass="inline"}}
+        </small>
+      </h1>
+      <h4>{{> EditableCode value=docs dataKey="docs" emptyText="No Documentation" language="markdown"}}</h4>
+  
+      <div class="code-module-editor-container">
+        {{#if codeModuleFunction}}
+          {{> CodeModuleFunction codeModuleFunction}}
+        {{else}}
+          {{cleanseUrlParams}}
+          <div class="align-center">
+            <h2>Select a Function</h2>
+          </div>
+        {{/if}}
+      </div>
+    </div>
+  {{/if}}
+</template>

@@ -5,7 +5,7 @@ import {SchemaHelpers} from '../schema_helpers.js';
 import {ChangeTracker} from '../change_tracker/change_tracker.js';
 
 import {CodeModuleFunctions} from './code_module_function.js';
-import {FunctionParamTypes} from './funcation_param_types.js';
+import {FunctionParamTypes} from './function_param_types.js';
 
 /**
  * ============================================================================
@@ -48,11 +48,14 @@ export const CodeModuleFunctionParam = new SimpleSchema({
   },
   optional: {
     type: Boolean,
-    defaultValue: false
+    defaultValue: true
   },
   docs: {
     type: String,
     optional: true
+  },
+  order: {
+    type: Number
   },
   // Standard tracking fields
   dateCreated: {
