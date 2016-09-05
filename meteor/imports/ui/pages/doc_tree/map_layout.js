@@ -371,7 +371,7 @@ MapLayout.prototype.centerNode = function (node, scale, callback) {
     .classed("hide", false);
 
   // get the bounds of the nodes
-  var bounds = treeUtils.nodeListBounds([node], this.config.highlightSurroundMargin);
+  var bounds = TreeUtils.nodeListBounds([node], this.config.highlightSurroundMargin);
 
   // make sure the bounds are up-to-date
   self.updateSize();

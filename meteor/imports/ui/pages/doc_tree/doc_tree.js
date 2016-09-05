@@ -1,3 +1,25 @@
+import './doc_tree.html';
+
+import {Template} from 'meteor/templating';
+
+// Collections
+import {Actions} from '../../../api/action/action.js';
+import {Datastores} from '../../../api/datastore/datastore.js';
+import {DatastoreFields} from '../../../api/datastore/datastore_field.js';
+import {DatastoreRows} from '../../../api/datastore/datastore_row.js';
+import {Nodes} from '../../../api/node/node.js';
+import {Projects} from '../../../api/project/project.js';
+import {ProjectVersions} from '../../../api/project/project_version.js';
+import {Servers} from '../../../api/test_server/server.js';
+import {TestAgents} from '../../../api/test_agent/test_agent.js';
+import {TestSystems} from '../../../api/test_system/test_system.js';
+
+// Enums
+import {NodeTypes} from '../../../api/node/node_types.js';
+
+// Content
+import TreeLayout from '../../components/tree_layout/tree_layout.js';
+
 /**
  * Basic helpers for the tree display
  */
@@ -26,14 +48,14 @@ Template.DocTree.created = function () {
     var projectId = FlowRouter.getParam("projectId"),
         projectVersionId = FlowRouter.getParam("projectVersionId");
 
-    instance.subscribe("nodes", projectId, projectVersionId);
     instance.subscribe("actions", projectId, projectVersionId);
-    instance.subscribe("datastores", projectId, projectVersionId);// TODO: Move to lower level template
-    instance.subscribe("all_datastore_fields", projectId, projectVersionId);// TODO: Move to lower level template
-    instance.subscribe("all_datastore_rows", projectId, projectVersionId);// TODO: Move to lower level template
-    instance.subscribe("servers", projectId, projectVersionId);// TODO: Move to lower level template
-    instance.subscribe("test_systems", projectId, projectVersionId);// TODO: Move to lower level template
-    instance.subscribe("test_agents", projectId, projectVersionId);// TODO: Move to lower level template
+    instance.subscribe("nodes", projectId, projectVersionId);
+    instance.subscribe("datastores", projectId, projectVersionId);
+    instance.subscribe("version_datastore_fields", projectId, projectVersionId);
+    instance.subscribe("version_datastore_rows", projectId, projectVersionId);
+    instance.subscribe("servers", projectId, projectVersionId);
+    instance.subscribe("test_systems", projectId, projectVersionId);
+    instance.subscribe("test_agents", projectId, projectVersionId);
 
     // pull in the project and project version records
     instance.project.set(Projects.findOne(projectId));

@@ -3,7 +3,7 @@
  *
  * @singleton
  */
-treeUtils = {
+export const TreeUtils = {
   /**
    * Get the bounding box for a list of nodes
    * @param nodeList The nodes to gets the bounds of
@@ -60,7 +60,7 @@ treeUtils = {
 
     d.depth = depth;
     _.each(children, function (child) {
-      treeUtils.setNodeDepth(child, depth + 1);
+      TreeUtils.setNodeDepth(child, depth + 1);
     });
   },
 

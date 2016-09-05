@@ -96,12 +96,12 @@ ResultMapLayout.prototype.positionNodes = function () {
   rootNode.depth = 0;
   rootNode.x = self.width / 2;
   rootNode.y = 0;
-  treeUtils.setNodeDepth(rootNode, 0);
+  TreeUtils.setNodeDepth(rootNode, 0);
 
   // From the bottom of the tree up, calculate the family local position
-  maxDepth = treeUtils.getMaxDepth(self.nodeList);
+  maxDepth = TreeUtils.getMaxDepth(self.nodeList);
   for (depth = maxDepth; depth > 0; depth--) {
-    _.each(treeUtils.getAtDepth(nodeHandler.nodeList, depth), nodeHandler.positionLocal.bind(nodeHandler));
+    _.each(TreeUtils.getAtDepth(nodeHandler.nodeList, depth), nodeHandler.positionLocal.bind(nodeHandler));
   }
 
   // Calculate the family local position of the first level

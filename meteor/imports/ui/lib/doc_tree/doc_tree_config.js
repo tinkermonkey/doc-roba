@@ -46,7 +46,7 @@ export const DocTreeConfig = {
     yMargin: 50,
     xViewMargin: 60,
     yViewMargin: 50,
-    cornerRadius: 10
+    cornerRadius: 6
   },
 
   /**
