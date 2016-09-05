@@ -54,7 +54,7 @@ Template.DatastoreDataTypeFieldList.events({
       ],
       callback: function (btn) {
         if(btn == "Delete"){
-          DatastoreDataTypeFields.remove(field._id, function (error, response) {
+          DatastoreDataTypeFields.remove(field._id, function (error) {
             RobaDialog.hide();
             if(error){
               RobaDialog.error("Delete Field failed: " + error.message);

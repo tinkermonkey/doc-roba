@@ -18,7 +18,7 @@ Template.Login.events({
    * Transition to the sign-up form
    * @param e
    */
-  "click button.show-signup": function (e) {
+  "click button.show-signup": function () {
     d3.select(".login-slide")
       .classed("slide-right", true);
     d3.selectAll(".login-container")
@@ -30,7 +30,7 @@ Template.Login.events({
    * Transition to the login form
    * @param e
    */
-  "click button.show-login": function (e) {
+  "click button.show-login": function () {
     d3.select(".login-slide")
       .classed("slide-right", false);
     d3.selectAll(".login-container")
@@ -42,7 +42,7 @@ Template.Login.events({
    * Submit the signup form
    * @param e
    */
-  "click button.signup": function (e) {
+  "click button.signup": function () {
     console.log("Signup");
     var valid = true;
 

@@ -97,6 +97,7 @@ Meteor.methods({
    * Invite a user to a project
    * @param userEmail The email address to send the invitation to
    * @param userName The name of the person being invited
+   * @param role The role to invite the user to
    * @param projectId The id of the project the person is being invited to
    */
   inviteUser(userEmail, userName, role, projectId) {
@@ -384,6 +385,7 @@ Meteor.methods({
    * Create a code module for a project version
    * @param projectId
    * @param projectVersionId
+   * @param type
    * @return CodeModule._id
    */
   createVersionCodeModule(projectId, projectVersionId, type){
@@ -392,8 +394,8 @@ Meteor.methods({
     check(projectVersionId, String);
     check(type, Number);
     
-    let user = Auth.requireProjectAccess(projectId),
-        projectVersion = ProjectVersions.findOne({_id: projectVersionId});
+    Auth.requireProjectAccess(projectId);
+    let projectVersion = ProjectVersions.findOne({_id: projectVersionId});
     return projectVersion.codeModule(type);
   },
   
@@ -407,9 +409,9 @@ Meteor.methods({
     console.debug("createVersionServerConfigDatastore:", projectId, projectVersionId);
     check(projectId, String);
     check(projectVersionId, String);
-    
-    let user = Auth.requireProjectAccess(projectId),
-        projectVersion = ProjectVersions.findOne({_id: projectVersionId});
+  
+    Auth.requireProjectAccess(projectId);
+    let projectVersion = ProjectVersions.findOne({_id: projectVersionId});
     return projectVersion.serverConfigDatastore();
   }
 });

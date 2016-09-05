@@ -159,8 +159,7 @@ SchemaHelpers.autoUpdateOrder(Nodes, ["urlParameters"]);
 if(Meteor.isServer) {
   /**
    * Create a code module for userType nodes
-   * @param projectVersion
-   * @param userId
+   * @param node
    * @returns {*}
    */
   Nodes.createCodeModule = function (node) {
@@ -181,7 +180,6 @@ if(Meteor.isServer) {
   /**
    * Create a datastore for userType nodes
    * @param node
-   * @param userId
    * @returns {*}
    */
   Nodes.createDatastore = function (node) {

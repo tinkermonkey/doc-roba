@@ -47,7 +47,7 @@ Meteor.startup(function(){
 
   // setup a resize event for redraw actions
   Session.set("resize", { timestamp: Date.now(), width: window.innerWidth, height: window.innerHeight });
-  $(window).resize(function(event) {
+  $(window).resize(function() {
     if(this.resizeTimeout){
       clearTimeout(this.resizeTimeout);
     }
@@ -65,7 +65,7 @@ Meteor.startup(function(){
  */
 Template.registerHelper("debug", function(){
   if(arguments.length){
-    _.each(_.toArray(arguments).slice(0, -1), function (d, i){
+    _.each(_.toArray(arguments).slice(0, -1), function (d){
       console.log("Debug: ", d);
     });
   } else {
@@ -498,7 +498,7 @@ Template.registerHelper("testStepTypeIcon", function (type) {
 Template.registerHelper("join", function (list, joint) {
   joint = joint ? joint : ", ";
   if(list){
-    return _.filter(list, function (d) {return d != null;}).join(", ");
+    return _.filter(list, function (d) {return d != null;}).join(joint);
   }
 });
 

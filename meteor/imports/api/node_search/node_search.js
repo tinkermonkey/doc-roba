@@ -19,6 +19,7 @@ export const NodeSearch = {
   /**
    * Return a list of weighted results based on matching the URL
    * @param url
+   * @param title
    * @param projectVersionId
    */
   byUrl: function (url, title, projectVersionId) {
@@ -60,7 +61,7 @@ export const NodeSearch = {
 
   /**
    * Return a list of nodes
-   * @param url
+   * @param searchTerm
    * @param projectVersionId
    */
   byTerm: function (searchTerm, projectVersionId) {
@@ -153,12 +154,11 @@ export const NodeSearch = {
   compareNode: function (url, title, node) {
     // check the local url
     if(url && title && node){
-      var result = {
+      return {
         url:    NodeSearch.compareUrl(url, node.url),
         params: NodeSearch.compareParams(url, node.urlParameters),
         title:  NodeSearch.compareTitle(title, node.pageTitle)
       };
-      return result;
     } else {
       console.error("compareNode check failed:", url, title, node);
     }
@@ -269,7 +269,7 @@ export const NodeSearch = {
   /**
    * Compare url parameters to a node urlParameters set
    * @param url
-   * @param nodeUrl
+   * @param nodeUrlParameters
    */
   compareParams: function (url, nodeUrlParameters) {
     var result = {

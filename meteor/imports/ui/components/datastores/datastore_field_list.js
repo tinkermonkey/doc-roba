@@ -60,7 +60,7 @@ Template.DatastoreFieldList.events({
       ],
       callback: function (btn) {
         if(btn == "Delete"){
-          DatastoreFields.remove(field._id, function (error, response) {
+          DatastoreFields.remove(field._id, function (error) {
             RobaDialog.hide();
             if(error){
               RobaDialog.error("Delete Field failed: " + error.message);
@@ -126,7 +126,7 @@ Template.DatastoreFieldList.rendered = function () {
             oldOrder = parseInt($(el).attr("data-field-order")),
             fieldId = $(el).attr("data-pk");
           if(newOrder != oldOrder){
-            DatastoreFields.update(fieldId, {$set: {order: newOrder}}, function (error, response) {
+            DatastoreFields.update(fieldId, {$set: {order: newOrder}}, function (error) {
               if(error){
                 RobaDialog.error("Datastore Field order update failed: " + error.message);
               }

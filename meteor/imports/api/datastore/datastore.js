@@ -136,15 +136,14 @@ Datastores.helpers({
     return this.rowRenderer()(datastoreRow);
   },
   getRenderedRows(){
-    let render = this.rowRenderer(),
-        rows = [];
+    let renderedRows = [];
     this.rows().forEach((row) => {
-      rows.push({
+      renderedRows.push({
         value: row._id,
         text: row.render()
       });
     });
-    return rows
+    return renderedRows
   },
   tableSchema(){
     if(this.tableSchemaDef){

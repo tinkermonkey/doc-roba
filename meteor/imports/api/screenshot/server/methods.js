@@ -22,6 +22,7 @@ Meteor.methods({
    * Run a quick comparison of two screenshots
    * @param baseScreenshotId
    * @param compareScreenshotId
+   * @param forceUpdate
    */
   templateCompareScreenshots(baseScreenshotId, compareScreenshotId, forceUpdate) {
     console.log("templateCompareScreenshots:", baseScreenshotId, compareScreenshotId);

@@ -59,7 +59,7 @@ Template.EditableCode.rendered = function () {
   });
 
   // This is needed to prevent re-use of an outdated context
-  instance.$(".editable").on("hidden", function(e, reason) {
+  instance.$(".editable").on("hidden", function() {
     if(instance.formView){
       setTimeout(function () {
         Blaze.remove(instance.formView);

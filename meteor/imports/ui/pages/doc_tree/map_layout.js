@@ -1,6 +1,10 @@
 import { DocTreeConfig } from "../../lib/doc_tree/doc_tree_config.js";
 import { TreeUtils } from "../../components/tree_layout/tree_utils.js";
 
+import TreeActionHandler from '../../components/tree_layout/tree_action_handler.js';
+import TreeLinkHandler from '../../components/tree_layout/tree_link_handler.js';
+import TreeNodeHandler from '../../components/tree_layout/tree_node_handler.js';
+
 /**
  * Custom tree layout for providing navigational guidance
  */

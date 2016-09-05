@@ -68,7 +68,7 @@ Template.EditableAutoform.rendered = function () {
   });
   
   // this event listener needs to be registered directly
-  instance.$(".editable").on("hidden", function (e, reason) {
+  instance.$(".editable").on("hidden", function () {
     if (instance.formView) {
       setTimeout(function () {
         Blaze.remove(instance.formView);

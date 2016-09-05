@@ -62,7 +62,7 @@ Template.EditableActionRouteSelector.rendered = function () {
   });
 
   // this event listener needs to be registered directly
-  instance.$(".editable").on("hidden", function(e, reason) {
+  instance.$(".editable").on("hidden", function() {
     if(instance.selectorView){
       setTimeout(function () {
         Blaze.remove(instance.selectorView);

@@ -15,7 +15,7 @@ Meteor.methods({
   updateDatastoreRow(recordId, update) {
     console.log("updateDatastoreRow:", this.userId, Meteor.userId(), recordId);
     // Require authentication
-    let user = Auth.requireAuthentication();
+    Auth.requireAuthentication();
   
     // require a full set of source material
     check(recordId, String);
@@ -41,7 +41,7 @@ Meteor.methods({
         throw new Meteor.Error("updateDatastoreRow: record is not valid");
       }
     
-      DatastoreRows.update(recordId, {$set: update}, {filter: false, validate: false}, (error, response) => {
+      DatastoreRows.update(recordId, {$set: update}, {filter: false, validate: false}, (error) => {
         if(error){
           throw new Meteor.Error("updateDatastoreRow update failed: " + error);
         }

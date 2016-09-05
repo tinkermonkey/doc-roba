@@ -93,11 +93,9 @@ Template.DatastoreDataTable.events({
               } else {
                 //console.log("DatastoreRow initial insert successful: ", recordId, updateDoc);
                 
-                Meteor.call("updateDatastoreRow", recordId, updateDoc, function (error, response) {
+                Meteor.call("updateDatastoreRow", recordId, updateDoc, function (error) {
                   if (error) {
-                    console.error("DatastoreRow insert update failed: ", error);
-                  } else {
-                    console.log("DatastoreRow insert update succeeded:", recordId);
+                    RobaDialog.error("DatastoreRow insert update failed: " + error.toString());
                   }
                 });
               }
@@ -142,11 +140,9 @@ Template.DatastoreDataTable.events({
           if (formId) {
             var updateDoc = _.clone(AutoForm.getFormValues(formId).updateDoc);
             
-            Meteor.call("updateDatastoreRow", row._id, updateDoc["$set"], function (error, response) {
+            Meteor.call("updateDatastoreRow", row._id, updateDoc["$set"], function (error) {
               if (error) {
-                console.error("DatastoreRow insert update failed: ", error);
-              } else {
-                console.log("DatastoreRow insert update succeeded:", row._id);
+                RobaDialog.error("DatastoreRow insert update failed: " + error.toString());
               }
             });
             RobaDialog.hide();
@@ -174,7 +170,7 @@ Template.DatastoreDataTable.events({
       ],
       callback: function (btn) {
         if (btn == "Delete") {
-          DatastoreRows.remove(row._id, function (error, response) {
+          DatastoreRows.remove(row._id, function (error) {
             RobaDialog.hide();
             if (error) {
               RobaDialog.error("Delete datastore row failed: " + error.message);

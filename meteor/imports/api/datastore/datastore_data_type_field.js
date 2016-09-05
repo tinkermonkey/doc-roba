@@ -98,7 +98,7 @@ if(Meteor.isServer){
     // Update the schema
     DatastoreDataTypes.findOne({staticId: field.parentId, projectVersionId: field.projectVersionId}).updateTableSchema();
   });
-  DatastoreDataTypeFields.after.update(function (userId, field, changedParams) {
+  DatastoreDataTypeFields.after.update(function (userId, field) {
     // Update the schema
     DatastoreDataTypes.findOne({staticId: field.parentId, projectVersionId: field.projectVersionId}).updateTableSchema();
   });

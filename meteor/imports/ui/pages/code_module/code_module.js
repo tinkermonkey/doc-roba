@@ -39,7 +39,7 @@ Template.CodeModule.events({
     
     if(dataKey && moduleId){
       update.$set[dataKey] = newValue;
-      CodeModules.update({_id: moduleId}, update, (error, respose) => {
+      CodeModules.update({_id: moduleId}, update, (error) => {
         if(error){
           RobaDialog.error("Updating CodeModule failed: " + error.toString());
           console.error("Failed update context:", dataKey, moduleId, update, error);

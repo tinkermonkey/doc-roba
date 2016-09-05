@@ -1,6 +1,7 @@
 import {FieldTypes} from './datastore/field_types.js';
 import {TestAgentOSLookup} from './test_agent/test_agent_os.js';
 import {Nodes} from './node/node.js';
+import {NodeTypes} from './node/node_types.js';
 import {TestCaseStepTypes} from './test_case/test_case_step_types.js';
 
 /**
@@ -11,7 +12,7 @@ export const Util = {
 
   /**
    * Turn a string into a JSON key-safe string, forcing to lowercase
-   * @param name The string to be made key-safe
+   * @param title The string to be made key-safe
    */
   dataKey: function (title) {
     return title.replace(/[\W]/g, "_").replace(/^[0-9]+/, "N").toLowerCase();
@@ -290,10 +291,9 @@ export const Util = {
    * @param view
    */
   findTemplateFromView: function (view){
-    while(!view.templateInstance() && view.parentView){
+    if(!view.templateInstance() && view.parentView){
       return Util.findTemplateFromView(view.parentView)
-    }
-    if(view.templateInstance){
+    } else if(view.templateInstance){
       return view.templateInstance()
     }
   },
@@ -349,6 +349,7 @@ export const Util = {
   /**
    * Return the container class for a test case step type
    * @param type
+   * @param error
    */
   testStepContainerClass: function (type, error) {
     var cssClass = "";

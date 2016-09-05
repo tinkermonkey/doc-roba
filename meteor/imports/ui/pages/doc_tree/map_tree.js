@@ -1,9 +1,12 @@
 import './map_tree.html';
+import './map_layout.css';
 
 import {Template} from 'meteor/templating';
 
 import {Actions} from '../../../api/action/action.js';
 import {Nodes} from '../../../api/node/node.js';
+
+import MapLayout from './map_layout.js';
 
 /**
  * MapTree

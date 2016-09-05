@@ -11,7 +11,7 @@ export const Auth = {
     if(user){
       return user
     }
-    throw new Meteor.Error(403);
+    throw new Meteor.Error("403");
   },
   
   /**
@@ -23,7 +23,7 @@ export const Auth = {
     if(user && user.hasProjectAccess(projectId)){
       return user;
     }
-    throw new Meteor.Error(403);
+    throw new Meteor.Error("403");
   },
 
   /**
@@ -44,10 +44,9 @@ export const Auth = {
   /**
    * Allow authenticated use
    * @param userId
-   * @param doc
    * @returns {boolean}
    */
-  allowIfAuthenticated: function (userId, doc) {
+  allowIfAuthenticated: function (userId) {
     return userId !== null;
   },
 
@@ -103,7 +102,6 @@ export const Auth = {
   /**
    * Deny if the user does not have access to create a project
    * @param userId
-   * @param doc
    * @returns {boolean}
    */
   denyIfNoProjectCreation: function (userId) {
