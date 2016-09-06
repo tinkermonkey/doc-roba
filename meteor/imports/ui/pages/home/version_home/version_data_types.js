@@ -71,9 +71,7 @@ Template.VersionDataTypes.onRendered(() => {
   DatastoreDataTypes.find({projectVersionId: instance.data.version._id}).observeChanges({
     added: function () {
       updateDatastoreNameEditable(instance);
-    },
-    changed: function () {  /*Tabs.init(instance).activateFirst(instance);*/ },
-    removed: function () {  /*Tabs.init(instance).activateFirst(instance);*/ }
+    }
   });
 });
 
