@@ -758,7 +758,7 @@ TreeNodeHandler.prototype.editNode = function (node) {
   // show the bottom drawer
   tree.popover([node], {
     width: 700,
-    contentTemplate: "edit_node",
+    contentTemplate: "EditNode",
     contentData: {_id: node._id}
   }, tree.nodeControls);
 };

@@ -1,3 +1,7 @@
+import './edit_node_url_parameter_list.html';
+
+import {Template} from 'meteor/templating';
+
 /**
  * Template Helpers
  */

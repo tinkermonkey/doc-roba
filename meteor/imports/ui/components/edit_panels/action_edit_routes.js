@@ -1,7 +1,18 @@
+import './action_edit_routes.html';
+
+import {Template} from 'meteor/templating';
+import {RobaDialog} from 'meteor/austinsand:roba-dialog';
+
+import {Actions} from '../../../api/action/action.js';
+import {Nodes} from '../../../api/node/node.js';
+
+import '../editable_fields/node_selector/editable_node_selector.js';
+import '../editable_fields/editable_code/editable_code.js';
+
 /**
  * Template Helpers
  */
-Template.action_edit_routes.helpers({
+Template.ActionEditRoutes.helpers({
   indexedRoutes: function () {
     var routes = this.routes,
       indexedRoutes = _.map(routes, function (r, i) {
@@ -28,7 +39,7 @@ Template.action_edit_routes.helpers({
 /**
  * Template Helpers
  */
-Template.action_edit_routes.events({
+Template.ActionEditRoutes.events({
   "click .click-to-edit": function (e, instance) {
     var row = $(e.target).closest(".action-route-row");
 
@@ -102,7 +113,7 @@ Template.action_edit_routes.events({
 /**
  * Template Rendered
  */
-Template.action_edit_routes.rendered = function () {
+Template.ActionEditRoutes.rendered = function () {
   var instance = Template.instance(),
     action = Template.currentData();
 
@@ -151,6 +162,6 @@ Template.action_edit_routes.rendered = function () {
 /**
  * Template Destroyed
  */
-Template.action_edit_routes.destroyed = function () {
+Template.ActionEditRoutes.destroyed = function () {
 
 };

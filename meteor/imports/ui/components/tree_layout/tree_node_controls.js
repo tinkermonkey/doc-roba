@@ -1,18 +1,20 @@
-import {DocTreeConfig} from '../../lib/doc_tree/doc_tree_config.js';
-import {TreeUtils} from './tree_utils.js';
-import {RobaRouter} from '../../../api/roba_router/roba_router.js';
-import {NodeTypes} from '../../../api/node/node_types.js';
+import { DocTreeConfig } from '../../lib/doc_tree/doc_tree_config.js';
+import { TreeUtils } from './tree_utils.js';
+import { RobaRouter } from '../../../api/roba_router/roba_router.js';
+import { NodeTypes } from '../../../api/node/node_types.js';
+import RobaContext from '../roba_launcher/roba_context.js';
 
 /**
  * Hover controls for working with nodes
- *
- * @param treeLayout
- * @param config
- * @constructor
  */
 export default class TreeNodeControls {
-  
-  constructor(treeLayout, config) {
+  /**
+   * TreeNodeControls
+   * @param treeLayout
+   * @param config
+   * @constructor
+   */
+  constructor (treeLayout, config) {
     var self = this;
     
     // Make sure there's a tree layout
@@ -27,8 +29,8 @@ export default class TreeNodeControls {
     _.defaults(self.config, DocTreeConfig.nodeControls);
     
     // pick up the layers we need
-    self.midLayer = self.treeLayout.layoutRoot.select(".node-controls-layer");
-    self.backLayer = self.treeLayout.layoutRoot.select(".node-controls-layer-back");
+    self.midLayer   = self.treeLayout.layoutRoot.select(".node-controls-layer");
+    self.backLayer  = self.treeLayout.layoutRoot.select(".node-controls-layer-back");
     self.frontLayer = self.treeLayout.layoutRoot.select(".node-controls-layer-front");
     
     // create a drag listener for creating links between nodes
@@ -44,7 +46,7 @@ export default class TreeNodeControls {
   /**
    * Initialize the controls
    */
-  init() {
+  init () {
     console.debug("nodeControls.init()");
     var self = this;
     
@@ -59,7 +61,7 @@ export default class TreeNodeControls {
   /**
    * Lock the controls so they do not change
    */
-  lock() {
+  lock () {
     console.debug("NodeControls: lock");
     this.locked = true;
   }
@@ -67,7 +69,7 @@ export default class TreeNodeControls {
   /**
    * Unlock the controls so they can change
    */
-  unlock() {
+  unlock () {
     console.debug("NodeControls: unlock");
     this.locked = false;
   }
@@ -75,7 +77,7 @@ export default class TreeNodeControls {
   /**
    * Create the controls
    */
-  create() {
+  create () {
     console.debug("nodeControls.create()");
     var self = this,
         tree = self.treeLayout;
@@ -214,9 +216,9 @@ export default class TreeNodeControls {
         .attr("class", "roba-button control-button")
         .attr("transform", "translate(0, 0)")
         .on('click', function (d) {
-          tree.popover([self.node], {
+          tree.popover([ self.node ], {
                 contentTemplate: 'roba_launcher',
-                contentData: new RobaContext({
+                contentData    : new RobaContext({
                   route: RobaRouter.routeFromStart(self.node._id)
                 })
               },
@@ -271,18 +273,18 @@ export default class TreeNodeControls {
   /**
    * Update the location of the controls
    */
-  update() {
+  update () {
     //console.debug("nodeControls.update()");
-    var self = this,
-        tree = self.treeLayout,
+    var self        = this,
+        tree        = self.treeLayout,
         contraction = 0.75,
-        duration = self.config.transitionTimer,
-        _45Deg = Math.cos(Math.PI / 4),
+        duration    = self.config.transitionTimer,
+        _45Deg      = Math.cos(Math.PI / 4),
         x, y;
     
     if (self.node) {
-      var radius = self.getRadius(self.node),
-          visible = self.background.attr("r") > radius / 2,
+      var radius    = self.getRadius(self.node),
+          visible   = self.background.attr("r") > radius / 2,
           placement = TreeUtils.parseTranslate(self.controlsBack.attr("transform"));
       
       // show the control layer
@@ -464,7 +466,7 @@ export default class TreeNodeControls {
    * Show the controls
    * @param d The node to control
    */
-  show(d) {
+  show (d) {
     //console.debug("nodeControls.show()");
     var self = this;
     
@@ -528,9 +530,9 @@ export default class TreeNodeControls {
   /**
    * Hide the controls
    */
-  hide() {
+  hide () {
     //console.debug("nodeControls.hide()");
-    var self = this,
+    var self    = this,
         visible = self.background.attr("r") > 0;
     
     // make sure it's not locked
@@ -638,7 +640,7 @@ export default class TreeNodeControls {
   /**
    * Possibly hide the controls
    */
-  considerHiding() {
+  considerHiding () {
     //console.debug("nodeControls.considerHiding()");
     var self = this,
         tree = this.treeLayout;
@@ -658,7 +660,7 @@ export default class TreeNodeControls {
   /**
    * Stop hiding the controls
    */
-  cancelHiding() {
+  cancelHiding () {
     //console.debug("nodeControls.cancelHiding()");
     var self = this;
     
@@ -671,7 +673,7 @@ export default class TreeNodeControls {
    * Calculate the radius of the controls for a node
    * @param d
    */
-  static getRadius(d) {
+  getRadius (d) {
     return Math.sqrt(Math.pow(d.icon.right, 2) + Math.pow(d.icon.bottom, 2)) + 15;
   }
   
@@ -679,16 +681,16 @@ export default class TreeNodeControls {
    * Generate the outline path for the addActionDragHandle
    * This changes from a circle to a balloon shape when pulled
    */
-  generateDraggerOutline() {
+  generateDraggerOutline () {
     var self = this,
         tree = self.treeLayout,
-        d = self.node;
+        d    = self.node;
     
-    var path = 'M0 10 A10 10, 0, 1, 1, 1, 10 Z',
-        radius = 10,
+    var path      = 'M0 10 A10 10, 0, 1, 1, 1, 10 Z',
+        radius    = 10,
         boxRadius = Math.sqrt(Math.pow(radius, 2) * 2) * 2,
         tailAngle = Math.PI / 3,
-        ovation = Math.PI / 15,
+        ovation   = Math.PI / 15,
         tether,
         tetherLength,
         tetherAngle,
@@ -701,7 +703,7 @@ export default class TreeNodeControls {
         cornerLength;
     
     if (d && d.drag && 0) {
-      tether = self.backLayer.select(".drag-tether").node();
+      tether       = self.backLayer.select(".drag-tether").node();
       tetherLength = tether.getTotalLength();
       cornerLength = Math.sqrt(Math.pow(d.icon.right, 2) + Math.pow(d.icon.bottom, 2)) + 15;
       
@@ -749,9 +751,9 @@ export default class TreeNodeControls {
   /**
    * Generate the tether path for the addActionDragHandle
    */
-  generateDragTetherPath() {
+  generateDragTetherPath () {
     var self = this,
-        d = self.node,
+        d    = self.node,
         path = 'M0,0',
         point,
         corner,
@@ -762,7 +764,7 @@ export default class TreeNodeControls {
       tetherLength = self.backLayer.select(".drag-tether").node().getTotalLength();
       
       // Center point of the node being controlled
-      point = {
+      point  = {
         x: -1 * d.drag.x - d.drag.homeX,
         y: -1 * d.drag.y - d.drag.homeY + d.icon.bottom
       };
@@ -770,7 +772,7 @@ export default class TreeNodeControls {
         x: point.x,
         y: point.y + Math.min(tetherLength * 0.5, 200)
       };
-      path = "M" + point.x + " " + point.y + "Q" + corner.x + " " + corner.y + " 0 0";
+      path   = "M" + point.x + " " + point.y + "Q" + corner.x + " " + corner.y + " 0 0";
     }
     
     return path;
@@ -779,7 +781,7 @@ export default class TreeNodeControls {
   /**
    * Handle the user pressing the escape key during a drag
    */
-  static dragEscapeHandler(e) {
+  dragEscapeHandler (e) {
     console.debug("dragEscapeHandler: " + e.which);
     if (e.which == 27 && e.data) {
       e.data.addActionDragEnd();
@@ -789,10 +791,10 @@ export default class TreeNodeControls {
   /**
    * Handle the start of an action creating drag
    */
-  addActionDragStart() {
+  addActionDragStart () {
     console.debug("nodeControls.addActionDragStart()");
-    var self = this,
-        tree = self.treeLayout,
+    var self   = this,
+        tree   = self.treeLayout,
         radius = self.getRadius(self.node);
     
     // diffuse the event so that we can hover through the dragged element
@@ -813,10 +815,10 @@ export default class TreeNodeControls {
     
     // Setup the drag construct
     self.node.drag = {
-      el: self.addActionDragHandle,
+      el   : self.addActionDragHandle,
       dummy: self.addActionDragHandleDummy,
-      x: 0,
-      y: 0,
+      x    : 0,
+      y    : 0,
       homeX: radius * Math.cos(Math.PI / 4),
       homeY: radius * Math.sin(Math.PI / 4)
     }
@@ -825,10 +827,10 @@ export default class TreeNodeControls {
   /**
    * Handle the continued dragging during an add-action operation
    */
-  addActionDrag() {
+  addActionDrag () {
     //console.debug("nodeControls.addActionDrag()");
     var self = this,
-        d = self.node;
+        d    = self.node;
     
     // translate and draw the connector
     d.drag.x += d3.event.dx;
@@ -842,11 +844,11 @@ export default class TreeNodeControls {
   /**
    * Handle the end of an add-action drag
    */
-  addActionDragEnd() {
+  addActionDragEnd () {
     console.debug("nodeControls.addActionDragEnd()");
     var self = this,
         tree = self.treeLayout,
-        d = self.node;
+        d    = self.node;
     
     // If the drag is aborted we need to exit early
     if (!d) {
@@ -909,7 +911,7 @@ export default class TreeNodeControls {
   /**
    * Return the controls attach point for the popover
    */
-  static attachPoint() {
+  attachPoint () {
     return $(".node-controls-back").get(0);
   }
 }

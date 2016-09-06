@@ -1,3 +1,7 @@
+import './root_edit_panel.html';
+
+import {Template} from 'meteor/templating';
+
 /**
  * Template Helpers
  */

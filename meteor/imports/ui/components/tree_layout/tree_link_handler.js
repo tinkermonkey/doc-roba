@@ -95,7 +95,7 @@ export default class TreeLinkHandler {
    * @param d The source node
    * @returns {string} The SVG path for the link
    */
-  static generateLinkPath(d) {
+  generateLinkPath(d) {
     var source, target, control, path;
     if (d.source.visExpanded) {
       if (d.target.type === NodeTypes.view || d.target.type === NodeTypes.navMenu) {
@@ -156,8 +156,8 @@ export default class TreeLinkHandler {
         .append("path")
         .attr("class", "link")
         .attr("opacity", 0)
-        .attr("d", function (d, i) {
-          return self.generateLinkPath(d, i);
+        .attr("d", function (d) {
+          return self.generateLinkPath(d);
         });
     
     // Transition links to their new position
@@ -165,8 +165,8 @@ export default class TreeLinkHandler {
         .transition()
         .duration(duration)
         .attr("opacity", 1)
-        .attr("d", function (d, i) {
-          return self.generateLinkPath(d, i);
+        .attr("d", function (d) {
+          return self.generateLinkPath(d);
         });
     
     // Transition exiting nodes to the parent's new position

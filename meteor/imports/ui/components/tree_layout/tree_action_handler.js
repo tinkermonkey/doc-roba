@@ -262,7 +262,7 @@ export default class TreeActionHandler {
         return r.destination.x
       }), function (r, i) {
         baseRouteLookup[r._id] = r;
-        self.setRouteDirection(r);
+        TreeActionHandler.setRouteDirection(r);
         
         // keep track of which x direction the destination is
         if (r.dir > 0) {
@@ -290,7 +290,7 @@ export default class TreeActionHandler {
       _.each(nodeRoutes, function (r) {
         if (r.routeIndex > 0 && baseRouteLookup[r._id]) {
           r.actionSortIndex = baseRouteLookup[r._id].actionSortIndex;
-          self.setRouteDirection(r);
+          TreeActionHandler.setRouteDirection(r);
           
           // If the lesser route direction is different from the base route direction
           if (r.dir !== baseRouteLookup[r._id].dir) {
@@ -368,7 +368,7 @@ export default class TreeActionHandler {
     // gather the existing action links and set the data
     actions = self.linkLayer.selectAll(".action-group")
         .data(self.actionRoutes, function (d) {
-          return self.getRouteIdentifier(d)
+          return TreeActionHandler.getRouteIdentifier(d)
         });
     
     // Update the action links
@@ -380,7 +380,7 @@ export default class TreeActionHandler {
     // Update the hover actions
     if (self.hoverActions.length) {
       var hoverActionRoutes = _.filter(self.actionRoutes, function (d) {
-        return _.contains(self.hoverActions, self.getRouteIdentifier(d))
+        return _.contains(self.hoverActions, TreeActionHandler.getRouteIdentifier(d))
       });
       if (hoverActionRoutes.length && self.treeLayout.actionControls) {
         self.treeLayout.actionControls.action = hoverActionRoutes[0];
@@ -688,7 +688,7 @@ export default class TreeActionHandler {
     
     // Store the id for updates
     if (d.action && d.action.staticId) {
-      self.hoverActions = [self.getRouteIdentifier(d)];
+      self.hoverActions = [TreeActionHandler.getRouteIdentifier(d)];
     } else {
       console.error("Action Hover Failed: invalid data point passed");
       return;
@@ -707,12 +707,12 @@ export default class TreeActionHandler {
     
     var actions = self.hoverLayerBack.selectAll(".action")
         .data(routes, function (d) {
-          return self.getRouteIdentifier(d)
+          return TreeActionHandler.getRouteIdentifier(d)
         });
     
     var labels = self.hoverLayerFront.selectAll(".action-label")
         .data([d], function (d) {
-          return self.getRouteIdentifier(d)
+          return TreeActionHandler.getRouteIdentifier(d)
         });
     
     // Update the action links
@@ -758,12 +758,12 @@ export default class TreeActionHandler {
     
     var actions = self.hoverLayerBack.selectAll(".action")
         .data(routes, function (d) {
-          return self.getRouteIdentifier(d)
+          return TreeActionHandler.getRouteIdentifier(d)
         });
     
     var labels = self.hoverLayerFront.selectAll(".action-label")
         .data([route], function (d) {
-          return self.getRouteIdentifier(d)
+          return TreeActionHandler.getRouteIdentifier(d)
         });
     
     // Update the action links

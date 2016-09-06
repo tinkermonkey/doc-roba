@@ -3,15 +3,20 @@ import './edit_node.css';
 
 import {Template} from 'meteor/templating';
 import {RobaDialog} from 'meteor/austinsand:roba-dialog';
-import {RobaTabs} from 'meteor/austinsand:roba-tabs';
 
-import {Nodes} from '../../../../api/node/node.js';
-import {NodeTypes} from '../../../../api/node/node_types.js';
+import {Nodes} from '../../../api/node/node.js';
+import {NodeTypes} from '../../../api/node/node_types.js';
+
+import './root_edit_panel.js';
+import './user_type_edit_panel.js';
+import './platform_edit_panel.js';
+import './nav_menu_edit_panel.js';
+import './page_view_edit_panel.js';
 
 /**
  * Template helpers
  */
-Template.edit_node.helpers({
+Template.EditNode.helpers({
   getNodeRecord: function () {
     return Nodes.findOne({_id: this._id});
   },
@@ -38,7 +43,7 @@ Template.edit_node.helpers({
 /**
  * React to the template being rendered
  */
-Template.edit_node.events({
+Template.EditNode.events({
   "edited .editable": function (e, instance, newValue) {
     e.stopImmediatePropagation();
     var dataKey = $(e.target).attr("data-key"),
@@ -63,13 +68,12 @@ Template.edit_node.events({
 /**
  * Set the editable components
  */
-Template.edit_node.rendered = function () {
-  var instance = Template.instance();
-  Tabs.init(instance).activateFirst(instance);
+Template.EditNode.rendered = function () {
+
 };
 
 /**
  * React to the template being destroyed
  */
-Template.edit_node.destroyed = function () {
+Template.EditNode.destroyed = function () {
 };

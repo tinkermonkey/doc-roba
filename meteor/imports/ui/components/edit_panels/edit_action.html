@@ -1,0 +1,23 @@
+<template name="edit_action">
+  <div class="content-with-padding">
+    {{#with getActionRecord}}
+      <h2>
+        {{> EditableTextField cssClass="action-editable" value=title dataKey="title" }}
+      </h2>
+      <a class="delete-action-link">Delete Action</a>
+      
+    
+      {{#RobaTabGroup name="action-tabs" navClass="nav-tabs"}}
+        {{#RobaTab name="code" title="Code"}}
+          {{> EditableCode cssClass="action-editable" dataKey="code" value=code emptyText="Click to edit Action code"}}
+        {{/RobaTab}}
+        {{#RobaTab name="variables" title="Variables"}}
+          {{> ActionEditVariables }}
+        {{/RobaTab}}
+        {{#RobaTab name="routes" title="Routes"}}
+          {{> ActionEditRoutes }}
+        {{/RobaTab}}
+      {{/RobaTabGroup}}
+    {{/with}}
+  </div>
+</template>

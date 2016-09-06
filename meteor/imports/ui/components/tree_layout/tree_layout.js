@@ -1,7 +1,7 @@
+import { RobaPopover } from "meteor/austinsand:roba-popover";
+import { RobaDialog } from "meteor/austinsand:roba-dialog";
 import { DocTreeConfig } from "../../lib/doc_tree/doc_tree_config.js";
 import { TreeUtils } from "./tree_utils.js";
-import { RobaDialog } from "meteor/austinsand:roba-dialog";
-import { RobaPopover } from "meteor/austinsand:roba-popover";
 import TreeActionControls from "./tree_action_controls.js";
 import TreeActionHandler from "./tree_action_handler.js";
 import TreeDropNodeHandler from "./tree_drop_node_handler.js";
@@ -1274,7 +1274,7 @@ export default class TreeLayout {
         popoverConfig.left = corner.x;
         
         // Show the popover
-        Popover.show(popoverConfig);
+        RobaPopover.show(popoverConfig);
       }, self.config.popover.transitionTime);
     }, self.config.popover.transitionTime);
   };

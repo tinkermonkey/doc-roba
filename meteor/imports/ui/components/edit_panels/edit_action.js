@@ -1,3 +1,11 @@
+import './edit_action.html';
+import './edit_action.css';
+
+import {Template} from 'meteor/templating';
+import {RobaDialog} from 'meteor/austinsand:roba-dialog';
+
+import {Actions} from '../../../api/action/action.js';
+
 /**
  * Template helpers
  */
@@ -70,17 +78,5 @@ Template.edit_action.events({
  * React to the template being rendered
  */
 Template.edit_action.rendered = function () {
-  var instance = Template.instance();
 
-  instance.autorun(function () {
-    var data = Template.currentData();
-
-    setTimeout(function () {
-      Tabs.init(instance);
-      if(!instance.$("ul.nav > li.active").get(0)){
-        console.log("Activating first tab");
-        Tabs.activateFirst(instance);
-      }
-    }, 10);
-  });
 };

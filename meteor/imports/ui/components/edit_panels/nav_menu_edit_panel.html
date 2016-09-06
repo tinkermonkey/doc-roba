@@ -1,0 +1,20 @@
+<template name="NavMenuEditPanel">
+  <div class="full-width">
+    {{#RobaTabGroup name="sub-tabs" navClass="nav-tabs"}}
+      {{#RobaTab name="ready" title="Ready"}}
+        <div class="sub-heading">Code to determine if this {{renderLookup "NodeTypesLookup" type}} is ready:</div>
+        {{> EditableCode dataKey="readyCode" value=readyCode emptyText="Click to define ready code for this node."}}
+      {{/RobaTab}}
+      {{#RobaTab name="validations" title="Validations"}}
+        <div class="sub-heading">Code to determine if this {{renderLookup "NodeTypesLookup" type}} is valid:</div>
+        {{> EditableCode dataKey="validationCode" value=validationCode  emptyText="Click to define validation code for this node."}}
+      {{/RobaTab}}
+      {{#RobaTab name="documentation" title="Documentation"}}
+        Documentation
+      {{/RobaTab}}
+      {{#RobaTab name="recent" title="Recent Renditions"}}
+        Recent Renditions
+      {{/RobaTab}}
+    {{/RobaTabGroup}}
+  </div>
+</template>

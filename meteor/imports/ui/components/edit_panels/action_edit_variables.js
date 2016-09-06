@@ -1,7 +1,19 @@
+import './action_edit_variables.html';
+
+import {Template} from 'meteor/templating';
+import {RobaDialog} from 'meteor/austinsand:roba-dialog';
+
+import {Actions} from '../../../api/action/action.js';
+import {FieldTypes} from '../../../api/datastore/field_types.js';
+
+import '../editable_fields/editable_field_type.js';
+import '../editable_fields/editable_datastore_data_type.js';
+import '../editable_fields/editable_field_shape.js';
+
 /**
  * Template Helpers
  */
-Template.action_edit_variables.helpers({
+Template.ActionEditVariables.helpers({
   indexedVariables: function () {
     var action = this,
       indexedVariables = _.map(action.variables, function (v, i) {v.index = i; v.actionId = action._id; return v; });
@@ -12,7 +24,7 @@ Template.action_edit_variables.helpers({
 /**
  * Template Helpers
  */
-Template.action_edit_variables.events({
+Template.ActionEditVariables.events({
   "click .btn-add-var": function (e, instance) {
     e.stopPropagation();
     var instance = Template.instance(),
@@ -107,7 +119,7 @@ Template.action_edit_variables.events({
 /**
  * Template Rendered
  */
-Template.action_edit_variables.rendered = function () {
+Template.ActionEditVariables.rendered = function () {
   var instance = Template.instance();
 
   // Make the field list sortable
@@ -149,6 +161,6 @@ Template.action_edit_variables.rendered = function () {
 /**
  * Template Destroyed
  */
-Template.action_edit_variables.destroyed = function () {
+Template.ActionEditVariables.destroyed = function () {
 
 };

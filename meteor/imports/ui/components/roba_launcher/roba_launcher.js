@@ -13,6 +13,8 @@ import {Servers} from '../../../api/test_server/server.js';
 import {TestSystems} from '../../../api/test_system/test_system.js';
 import {TestAgents} from '../../../api/test_agent/test_agent.js';
 
+import {RobaContext} from './roba_context.js';
+
 /**
  * Template Helpers
  */
@@ -208,29 +210,4 @@ Template.roba_launcher.rendered = function () {
  */
 Template.roba_launcher.destroyed = function () {
 
-};
-
-/**
- * Helper to assist in the creation of the correct context
- */
-RobaContext = function (config) {
-  check(config.route, RobaRoute);
-
-  var route = config.route.export();
-
-  console.log("RobaContext Route: ", route);
-
-  // Initialize the data context
-  var defaultDataContext = {};
-  _.each(route.steps, function (step) {
-    defaultDataContext["step" + step.stepNum] = {};
-  });
-
-  this.projectId        = route.projectId;
-  this.projectVersionId = route.projectVersionId;
-  this.route            = new ReactiveVar(route);
-  this.dataContext      = new ReactiveVar(config.dataContext || defaultDataContext);
-  this.server           = new ReactiveVar(config.server);
-  this.testAgent        = new ReactiveVar(config.testAgent);
-  this.testSystem       = new ReactiveVar(config.testSystem);
 };

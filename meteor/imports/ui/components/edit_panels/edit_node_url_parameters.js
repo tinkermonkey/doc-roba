@@ -1,13 +1,22 @@
+import './edit_node_url_parameters.html';
+
+import {Template} from 'meteor/templating';
+import {RobaDialog} from 'meteor/austinsand:roba-dialog';
+
+import {Nodes} from '../../../api/node/node.js';
+
+import './edit_node_url_parameter_list.js';
+
 /**
  * Template Helpers
  */
-Template.edit_node_url_parameters.helpers({
+Template.EditNodeUrlParameters.helpers({
 });
 
 /**
  * Template Helpers
  */
-Template.edit_node_url_parameters.events({
+Template.EditNodeUrlParameters.events({
   "click .btn-add-url-parameter": function (e, instance) {
     var node = this;
     Nodes.update(instance.data._id, {
@@ -58,7 +67,7 @@ Template.edit_node_url_parameters.events({
 /**
  * Template Rendered
  */
-Template.edit_node_url_parameters.rendered = function () {
+Template.EditNodeUrlParameters.rendered = function () {
   var instance = Template.instance();
 
   // Make the field list sortable
@@ -100,6 +109,6 @@ Template.edit_node_url_parameters.rendered = function () {
 /**
  * Template Destroyed
  */
-Template.edit_node_url_parameters.destroyed = function () {
+Template.EditNodeUrlParameters.destroyed = function () {
 
 };

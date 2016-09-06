@@ -5,6 +5,8 @@ import { Nodes } from "../../../api/node/node.js";
 import { NodeTypes, NodeTypesLookup } from "../../../api/node/node_types.js";
 import { PlatformTypes } from "../../../api/node/platform_types.js";
 
+import '../edit_panels/edit_node.js';
+
 /**
  * Handle all of the accounting for the node data structures
  */
@@ -719,7 +721,7 @@ export default class TreeNodeHandler {
    * @param selection
    * @param duration
    */
-  static transitionUpdates (selection, duration) {
+  transitionUpdates (selection, duration) {
     // update the text
     selection
         .select(".node-title")
@@ -773,7 +775,7 @@ export default class TreeNodeHandler {
     // show the bottom drawer
     tree.popover([ node ], {
       width          : 700,
-      contentTemplate: "edit_node",
+      contentTemplate: "EditNode",
       contentData    : { _id: node._id }
     }, tree.nodeControls);
   }

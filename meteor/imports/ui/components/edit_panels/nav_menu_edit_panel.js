@@ -1,3 +1,9 @@
+import './nav_menu_edit_panel.html';
+
+import {Template} from 'meteor/templating';
+
+import '../editable_fields/editable_code/editable_code.js';
+
 /**
  * Template Helpers
  */
