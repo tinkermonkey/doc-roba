@@ -1,3 +1,10 @@
+import 'adventure_edit_action_form.html';
+
+import {Template} from 'meteor/templating';
+import {RobaDialog} from 'meteor/austinsand:roba-dialog';
+
+import {Actions} from '../../../api/action/action.js';
+
 /**
  * Template Helpers
  */
@@ -45,8 +52,7 @@ Template.AdventureEditActionForm.created = function () {
  * Template Rendered
  */
 Template.AdventureEditActionForm.rendered = function () {
-  var instance = Template.instance();
-  //Tabs.init(instance).activateFirst(instance);
+
 };
 
 /**

@@ -1,3 +1,14 @@
+import './adventure_console.html';
+
+import {Template} from 'meteor/templating';
+
+import {Adventures} from '../../../api/adventure/adventure.js';
+import {AdventureStatus} from '../../../api/adventure/adventure_status.js';
+import {AdventureStates} from '../../../api/adventure/adventure_state.js';
+import {Nodes} from '../../../api/node/node.js';
+import {NodeSearch} from '../../../api/node_search/node_search.js';
+import {TestSystems} from '../../../api/test_system/test_system.js';
+
 /**
  * Template Helpers
  */
