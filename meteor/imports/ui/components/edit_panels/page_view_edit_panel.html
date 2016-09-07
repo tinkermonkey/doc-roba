@@ -18,28 +18,25 @@
     </div>
   </div>
   <div class="full-width">
-    <ul class="nav nav-pills">
-      <li role="presentation"><a data-tab-name="ready">Ready</a></li>
-      <li role="presentation"><a data-tab-name="validations">Validations</a></li>
-      <li role="presentation"><a data-tab-name="nav-menus">Nav Menus</a></li>
-      <li role="presentation"><a data-tab-name="documentation">Documentation</a></li>
-      <li role="presentation"><a data-tab-name="recent">Recent Renditions</a></li>
-    </ul>
-    <div class="tab-container">
-      <div class="tab" data-tab-name="ready">
+    {{#RobaTabGroup name="edit-panel-tabs" navClass="nav-tabs"}}
+      {{#RobaTab name="ready" title="Ready"}}
         <div class="sub-heading">Code to determine if this {{renderLookup "NodeTypesLookup" type}} is ready:</div>
         {{> EditableCode dataKey="readyCode" value=readyCode emptyText="Click to define ready code for this node."}}
-      </div>
-      <div class="tab" data-tab-name="validations">
+      {{/RobaTab}}
+      {{#RobaTab name="validations" title="Validations"}}
         <div class="sub-heading">Code to determine if this {{renderLookup "NodeTypesLookup" type}} is valid:</div>
         {{> EditableCode dataKey="validationCode" value=validationCode  emptyText="Click to define validation code for this node."}}
-      </div>
-      <div class="tab" data-tab-name="nav-menus">
+      {{/RobaTab}}
+      {{#RobaTab name="nav-menus" title="Nav Menus"}}
         <div class="sub-heading">Navigation Menus on this page:</div>
         {{> EditableNavMenuList projectVersionId=projectVersionId value=navMenus dataKey="navMenus" }}
-      </div>
-      <div class="tab" data-tab-name="documentation">Documentation</div>
-      <div class="tab" data-tab-name="recent">Recent Renditions</div>
-    </div>
+      {{/RobaTab}}
+      {{#RobaTab name="documentation" title="Documentation"}}
+        Documentation
+      {{/RobaTab}}
+      {{#RobaTab name="recent" title="Recent Renditions"}}
+        Recent Renditions
+      {{/RobaTab}}
+    {{/RobaTabGroup}}
   </div>
 </template>

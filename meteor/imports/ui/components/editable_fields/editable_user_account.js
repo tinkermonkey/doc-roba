@@ -32,7 +32,7 @@ Template.EditableUserAccount.rendered = function () {
   instance.autorun(function () {
     var data = Template.currentData();
     if(data.userType && data.userType._id){
-      var accounts = data.userType.datastore().getRenderedRows();
+      var accounts = data.userType.dataStore().getRenderedRows();
 
       instance.$('.editable-user-account-selector').editable({
         mode: instance.data.mode || "inline",

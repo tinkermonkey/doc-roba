@@ -4,6 +4,8 @@ import { RobaRouter } from '../../../api/roba_router/roba_router.js';
 import { NodeTypes } from '../../../api/node/node_types.js';
 import RobaContext from '../roba_launcher/roba_context.js';
 
+import '../roba_launcher/roba_launcher.js';
+
 /**
  * Hover controls for working with nodes
  */

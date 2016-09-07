@@ -1,8 +1,12 @@
+import "./adventure_route.html";
+import "./route.css";
+import { Template } from "meteor/templating";
+
 /**
  * Template Helpers
  */
 Template.AdventureRoute.helpers({
-  getVariableValue: function () {
+  getVariableValue () {
     return this.hasOwnProperty("value") ? this.value : this.defaultValue
   }
 });
