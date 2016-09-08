@@ -2,7 +2,7 @@
  * Template helpers
  */
 Template.AdventurePreviewElement.helpers({
-  getFirstArg: function () {
+  getFirstArg () {
     if(this.preview && this.preview.args){
       return this.preview.args[0];
     }
@@ -13,7 +13,7 @@ Template.AdventurePreviewElement.helpers({
  * Event Handlers
  */
 Template.AdventurePreviewElement.events({
-  "click .adventure-preview-element": function (e, instance) {
+  "click .adventure-preview-element" (e, instance) {
     var element = $(e.target),
       detail = $("#adventure-preview-detail-" + instance.data.index);
 

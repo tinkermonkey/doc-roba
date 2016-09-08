@@ -5,7 +5,8 @@
            data-toggle="popover"
            data-trigger="focus"
            data-content="This is not the correct node"
-        >X</div>
+      >X
+      </div>
       <div>
         {{#unless isMatch this ..}}
           <div class="alert alert-warning">
@@ -20,7 +21,7 @@
                       data-toggle="popover"
                       data-trigger="focus"
                       data-content="{{renderLookup "NodeSearchStatusLookup" status "dash"}}: {{value}}"
-                      >{{value}}</span>
+                    >{{value}}</span>
                   {{/each}}
                 </div>
               {{/unless}}
@@ -35,7 +36,7 @@
                         data-toggle="popover"
                         data-trigger="focus"
                         data-content="{{renderLookup "NodeSearchStatusLookup" status "dash"}}: {{value}}"
-                        >{{value}}</span>
+                      >{{value}}</span>
                       </div>
                     {{/each}}
                   </span>
@@ -51,7 +52,7 @@
                         data-toggle="popover"
                         data-trigger="focus"
                         data-content="{{renderLookup "NodeSearchStatusLookup" status "dash"}}: {{value.param}}{{#if value.value}}={{value.value}}{{/if}}"
-                        >{{value.param}}{{#if value.value}}={{value.value}}{{/if}}</div>
+                      >{{value.param}}{{#if value.value}}={{value.value}}{{/if}}</div>
                     {{/each}}
                   </div>
                 </div>
@@ -62,32 +63,32 @@
       </div>
       <table>
         <tr>
-          <td class="field-label">Type: </td>
+          <td class="field-label">Type:</td>
           <td>{{> EditableNodeType cssClass="inline-block" pageView=true value=type dataKey="type" emptyText="Select a node type" }}</td>
         </tr>
         <tr>
-          <td class="field-label">Name: </td>
+          <td class="field-label">Name:</td>
           <td>{{> EditableTextField cssClass="inline-block" value=title dataKey="title" emptyText="none"}}</td>
         </tr>
         <tr>
-          <td class="field-label">Page Title: </td>
+          <td class="field-label">Page Title:</td>
           <td>{{> EditableTextField cssClass="inline-block" value=pageTitle dataKey="pageTitle" emptyText="none"}}</td>
         </tr>
         <tr>
-          <td class="field-label">Base Url: </td>
+          <td class="field-label">Base Url:</td>
           <td>{{> EditableTextField cssClass="inline-block" value=url dataKey="url" emptyText="none"}}</td>
         </tr>
       </table>
       <div>
         {{> EditNodeUrlParameters }}
       </div>
-
+      
       <h3 class="section grey">Node Ready Code</h3>
-      {{> RobaAce value=readyCode dataKey="readyCode" emptyText="Code to validate that the node is ready" color="grey" minLines=3 maxLines=20}}
-
+      {{> EditableCode value=readyCode dataKey="readyCode" emptyText="Code to validate that the node is ready" color="grey" minLines=3 maxLines=20}}
+      
       <h3 class="section grey">Node Valid Code</h3>
-      {{> RobaAce value=validationCode dataKey="validationCode" emptyText="Code to validate the node is correct" color="grey" minLines=3 maxLines=20}}
-
+      {{> EditableCode value=validationCode dataKey="validationCode" emptyText="Code to validate the node is correct" color="grey" minLines=3 maxLines=20}}
+    
     </div>
   {{else}}
     <div class="{{#unless adventureIsStill}}hide{{/unless}}">

@@ -6,7 +6,7 @@ Template.AdventureScreen.helpers({
    * Provide a full context including the instance ReactiveVar values
    * @returns {*}
    */
-  fullContext: function () {
+  fullContext () {
     var instance = Template.instance();
     this.viewport           = instance.viewport.get();
     this.highlightElements  = instance.highlightElements.get();
@@ -19,7 +19,7 @@ Template.AdventureScreen.helpers({
     return this;
   },
 
-  updateViewport: function () {
+  updateViewport () {
     //console.log("updateViewport");
     var instance = Template.instance();
     Meteor.setTimeout(instance.updateViewport, 1000);
@@ -29,7 +29,7 @@ Template.AdventureScreen.helpers({
    * Get the coordinates for the screen shot mask
    * @returns {{top: number, left: number, height: number, width: number}}
    */
-  getScreenMaskPosition: function () {
+  getScreenMaskPosition () {
     var instance = Template.instance(),
       localViewport = instance.viewport.get(),
       width   = $(".remote-screen").width(),
@@ -49,7 +49,7 @@ Template.AdventureScreen.helpers({
   /**
    * Get the local coordinates of the remove mouse
    */
-  getMousePosition: function () {
+  getMousePosition () {
     var instance = Template.instance(),
         state = instance.data.state,
         coords;
@@ -72,7 +72,7 @@ Template.AdventureScreen.helpers({
    * Get the elements to highlight from the last command that returned highlight elements
    * @returns [elements]
    */
-  getHighlightElements: function () {
+  getHighlightElements () {
     return Template.instance().highlightElements.get()
   },
 
@@ -80,7 +80,7 @@ Template.AdventureScreen.helpers({
    * Get the preview elements from the last preview command
    * @returns [elements]
    */
-  getPreviewElements: function () {
+  getPreviewElements () {
     return Template.instance().previewElements.get().map(function (el, i) { el.index = i; return el })
   },
 
@@ -88,7 +88,7 @@ Template.AdventureScreen.helpers({
    * Get the preview elements from the last preview command
    * @returns [elements]
    */
-  getPreviewMatches: function () {
+  getPreviewMatches () {
     if(this.matches){
       var parent = this;
       return parent.matches.map(function (el, i) {
@@ -103,7 +103,7 @@ Template.AdventureScreen.helpers({
    * Get the element which the hover controls are for
    * @returns [elements]
    */
-  getControlledElement: function () {
+  getControlledElement () {
     return Template.instance().controlledElement.get()
   },
 
@@ -111,7 +111,7 @@ Template.AdventureScreen.helpers({
    * Process a highlight element into something usable
    * @returns {*}
    */
-  processHighlightElement: function () {
+  processHighlightElement () {
     var el = this,
       instance        = Template.instance(),
       localViewport   = instance.viewport.get(),
@@ -143,7 +143,7 @@ Template.AdventureScreen.helpers({
   /**
    * Get the results of a selector check
    */
-  getCheckResult: function () {
+  getCheckResult () {
     return this.checkResult.get();
   },
 
@@ -152,7 +152,7 @@ Template.AdventureScreen.helpers({
    * @param item
    * @returns {Array}
    */
-  splitValues: function (item) {
+  splitValues (item) {
     var valueList = [],
       rawValueList = this.value.split(" ");
     _.each(rawValueList, function (subValue, i) {
@@ -174,7 +174,7 @@ Template.AdventureScreen.events({
    * Click event for the drone screen and screen mask
    * @param e
    */
-  "click .remote-screen-mask, click .remote-screen": function (e, instance) {
+  "click .remote-screen-mask, click .remote-screen" (e, instance) {
     // make sure the adventure is operating
     if(instance.data.adventure.status == AdventureStatus.complete){
       return;
@@ -215,17 +215,17 @@ Template.AdventureScreen.events({
       }
     });
   },
-  "mouseenter .adventure-highlight-list-row-header": function (e, instance) {
+  "mouseenter .adventure-highlight-list-row-header" (e, instance) {
     instance.$(".adventure-highlight-element.index-" + this.index).addClass("highlight");
   },
-  "mouseleave .adventure-highlight-list-row-header": function (e, instance) {
+  "mouseleave .adventure-highlight-list-row-header" (e, instance) {
     instance.$(".adventure-highlight-element.index-" + this.index).removeClass("highlight");
   },
   /**
    * Click event for the highlight element list toggle
    * @param e
    */
-  "click .adventure-highlight-list-row-header, click .detail-toggle": function (e, instance) {
+  "click .adventure-highlight-list-row-header, click .detail-toggle" (e, instance) {
     $(e.target).closest("td").find(".adventure-highlight-list-row-detail").toggleClass("active");
     $(e.target).closest("td").find(".detail-toggle").toggleClass("glyphicon-chevron-up");
     $(e.target).closest("td").find(".detail-toggle").toggleClass("glyphicon-chevron-down");
@@ -235,7 +235,7 @@ Template.AdventureScreen.events({
    * @param e
    * @param instance
    */
-  "click .adventure-highlight-hierarchy .clickable, click .adventure-highlight-hierarchy-content .clickable": function (e, instance) {
+  "click .adventure-highlight-hierarchy .clickable, click .adventure-highlight-hierarchy-content .clickable" (e, instance) {
     var context = this,
       el = $(e.target),
       selectorElements = instance.selectorElements.get();
@@ -289,7 +289,7 @@ Template.AdventureScreen.events({
   /**
    * Show the hover controls for a highlight element
    */
-  "mouseenter .adventure-highlight-element": function (e, instance) {
+  "mouseenter .adventure-highlight-element" (e, instance) {
     var element = this;
 
     // make sure the adventure is operating
@@ -312,7 +312,7 @@ Template.AdventureScreen.events({
   /**
    * Hide the hover controls
    */
-  "mouseleave .adventure-highlight-element, mouseleave .hover-controls-container": function (e, instance) {
+  "mouseleave .adventure-highlight-element, mouseleave .hover-controls-container" (e, instance) {
     var context = this;
     if(instance.hideHoverControlsTimeout){
       clearTimeout(instance.hideHoverControlsTimeout);
@@ -327,10 +327,10 @@ Template.AdventureScreen.events({
   /**
    * Hide the hover controls
    */
-  "mouseenter .hover-controls-container": function (e, instance) {
+  "mouseenter .hover-controls-container" (e, instance) {
     clearTimeout(instance.hideHoverControlsTimeout);
   },
-  "mouseenter .adventure-highlight-hierarchy": function (e, instance) {
+  "mouseenter .adventure-highlight-hierarchy" (e, instance) {
     var localBounds = this.localBounds,
       activeElement = instance.$(".adventure-highlight-detail.active .adventure-highlight-hierarchy:last")[0];
 
@@ -352,7 +352,7 @@ Template.AdventureScreen.events({
       console.error("mouseenter adventure-highlight-hierarchy without bounds");
     }
   },
-  "mouseleave .adventure-highlight-hierarchy": function (e, instance) {
+  "mouseleave .adventure-highlight-hierarchy" (e, instance) {
     instance.$(".adventure-hover-element-highlight")
       .css("top", "50%")
       .css("left", "50%")
@@ -360,7 +360,7 @@ Template.AdventureScreen.events({
       .css("height", "1px")
       .css("visibility", "hidden");
   },
-  "click .adventure-selector-action-menu a": function (e, instance) {
+  "click .adventure-selector-action-menu a" (e, instance) {
     // check for a data command
     var item = $(e.target),
       selector = atob(item.closest("[data-selector]").attr("data-selector")),
@@ -433,7 +433,7 @@ Template.AdventureScreen.events({
 /**
  * Create reactive vars for this instance
  */
-Template.AdventureScreen.created = function () {
+Template.AdventureScreen.onCreated( () =>  {
   var instance = Template.instance();
   instance.viewport           = new ReactiveVar();
   instance.highlightElements  = new ReactiveVar([]);
@@ -443,7 +443,7 @@ Template.AdventureScreen.created = function () {
   instance.checkResult        = new ReactiveVar();
   instance.lastClickLocation  = new ReactiveVar();
 
-  instance.updateViewport = function () {
+  instance.updateViewport( () =>  {
     var viewport = {
       width: $(".remote-screen").width(),
       height: $(".remote-screen").height(),
@@ -461,7 +461,7 @@ Template.AdventureScreen.created = function () {
 /**
  * React to the template being rendered
  */
-Template.AdventureScreen.rendered = function () {
+Template.AdventureScreen.onRendered( () =>  {
   var instance = Template.instance();
 
   // Setup the console view
@@ -475,7 +475,7 @@ Template.AdventureScreen.rendered = function () {
     adventureId: instance.data.adventure._id,
     "result.highlightElements": {$exists: true}
   }, {sort: {dateCreated: -1}, limit: 1}).observe({
-    addedAt: function (command) {
+    addedAt (command) {
       if(command && command.result && command.result.highlightElements){
         _.each(command.result.highlightElements, function (d, i) {d.index = i;});
         if(command.result.preview){
@@ -487,7 +487,7 @@ Template.AdventureScreen.rendered = function () {
         }
       }
     },
-    changedAt: function (command) {
+    changedAt (command) {
       if(command && command.result && command.result.highlightElements){
         _.each(command.result.highlightElements, function (d, i) {d.index = i;});
         if(command.result.preview){
@@ -505,5 +505,5 @@ Template.AdventureScreen.rendered = function () {
 /**
  * React to the template being destroyed
  */
-Template.AdventureScreen.destroyed = function () {
+Template.AdventureScreen.onDestroyed( () =>  {
 };

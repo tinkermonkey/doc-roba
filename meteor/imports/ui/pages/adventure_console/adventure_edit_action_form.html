@@ -6,22 +6,22 @@
         {{> EditableTextField cssClass="inline" value=title dataKey="title" }}
         <button class="btn btn-warning btn-xs btn-close-action-edit-form pull-right">Done Editing</button>
       </div>
-
+      
       <h4 class="section blue">Action Code</h4>
       <div class="action-edit-form-section">
         {{> EditableCode dataKey="code" value=code emptyText="Click to add code for this action." }}
       </div>
-
+      
       <h4 class="section blue">Action Variables</h4>
       <div class="action-edit-form-section">
         {{> ActionEditVariables }}
       </div>
-
+      
       <h4 class="section blue">Action Routes</h4>
       <div class="action-edit-form-section">
         {{> ActionEditRoutes }}
       </div>
-
+    
     {{/with}}
   </div>
 </template>

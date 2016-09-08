@@ -1,22 +1,22 @@
-/**
- * AdventureAddNodeForm
- *
- * Created by austinsand on 4/9/15
- *
- */
+import "./adventure_add_node_form.html";
+import { Blaze } from "meteor/blaze";
+import { Template } from "meteor/templating";
+import "../../components/editable_fields/node_selector/editable_node_selector.js";
+import "../../components/editable_fields/editable_node_type.js";
+import "../../components/edit_panels/edit_node_url_parameters.js";
 
 /**
  * Template Helpers
  */
 Template.AdventureAddNodeForm.helpers({
-  record: function () {
+  record () {
     return Template.instance().nodeRecord.get();
   },
-  splitUrl: function () {
-    if(this.state && this.state.url){
+  splitUrl () {
+    if (this.state && this.state.url) {
       var pieces = [];
       _.each(Util.urlPath(this.state.url).split("/"), function (part, i) {
-        if(part.length){
+        if (part.length) {
           pieces.push({
             index: i,
             value: part
@@ -26,14 +26,14 @@ Template.AdventureAddNodeForm.helpers({
       return pieces;
     }
   },
-  splitParams: function () {
-
+  splitParams () {
+    
   },
-  splitTitle: function () {
-    if(this.state && this.state.title){
+  splitTitle () {
+    if (this.state && this.state.title) {
       var pieces = [];
       _.each(this.state.title.split(/\s/), function (part, i) {
-        if(part.trim().length){
+        if (part.trim().length) {
           pieces.push({
             index: i,
             value: part
@@ -49,48 +49,47 @@ Template.AdventureAddNodeForm.helpers({
  * Template Event Handlers
  */
 Template.AdventureAddNodeForm.events({
-  "click .url-part.clickable": function (e, instance) {
+  "click .url-part.clickable" (e, instance) {
     $(e.target).toggleClass("selected");
-
+    
     var selection = [], oneSelected = false;
     instance.$(".url-part").each(function (i, part) {
       selection.push($(part).hasClass("selected") ? $(part).attr("data-value") : "*");
       oneSelected = oneSelected || $(part).hasClass("selected");
     });
-
-    if(!oneSelected){
+    
+    if (!oneSelected) {
       selection = [];
     }
-
+    
     var record = instance.nodeRecord.get();
     record.url = selection.length ? "/" + selection.join("/") : null;
     instance.nodeRecord.set(record);
   },
-  "click .title-part.clickable": function (e, instance) {
+  "click .title-part.clickable" (e, instance) {
     $(e.target).toggleClass("selected");
-
+    
     var selection = [], oneSelected = false, selected, lastSelected = true;
     instance.$(".title-part").each(function (i, part) {
       selected = $(part).hasClass("selected");
-      if(selected || lastSelected){
+      if (selected || lastSelected) {
         selection.push(selected ? $(part).attr("data-value") : "*");
       }
-      oneSelected = oneSelected || selected;
+      oneSelected  = oneSelected || selected;
       lastSelected = selected;
     });
-
-    if(!oneSelected){
+    
+    if (!oneSelected) {
       selection = [];
     }
-
-
-    var record = instance.nodeRecord.get();
+    
+    var record       = instance.nodeRecord.get();
     record.pageTitle = selection.join(" ");
     instance.nodeRecord.set(record);
   },
-  "click .url-param.clickable": function (e, instance) {
+  "click .url-param.clickable" (e, instance) {
     $(e.target).toggleClass("selected");
-
+    
     var selection = [];
     instance.$(".param-part").each(function (i, part) {
       //console.log("url-part: ", i, $(part).attr("data-value"), $(part).hasClass("selected"));
@@ -99,21 +98,21 @@ Template.AdventureAddNodeForm.events({
         value: $(part).hasClass("selected") ? $(part).attr("data-value") : null
       });
     });
-
-    var record = instance.nodeRecord.get();
+    
+    var record       = instance.nodeRecord.get();
     record.urlParams = selection;
     instance.nodeRecord.set(record);
   },
-  "edited .editable": function (e, instance, newValue) {
+  "edited .editable" (e, instance, newValue) {
     e.stopImmediatePropagation();
     var field = $(e.target).attr("data-key");
     console.log("Edited: ", field, newValue);
-
-    var record = instance.nodeRecord.get();
-    record[field] = newValue;
+    
+    var record      = instance.nodeRecord.get();
+    record[ field ] = newValue;
     instance.nodeRecord.set(record);
-
-    if(field == "url"){
+    
+    if (field == "url") {
       instance.$(".url-part").removeClass("selected");
     } else if (field == "pageTitle") {
       instance.$(".title-part").removeClass("selected");
@@ -124,43 +123,46 @@ Template.AdventureAddNodeForm.events({
 /**
  * Template Created
  */
-Template.AdventureAddNodeForm.created = function () {
-  this.nodeRecord = new ReactiveVar({
-    parentId: this.data.adventure.lastKnownNode,
-    projectId: this.data.adventure.projectId,
+Template.AdventureAddNodeForm.onCreated(() => {
+  let instance        = Template.instance();
+  
+  // Use this construct to build up the new node record
+  instance.nodeRecord = new ReactiveVar({
+    parentId        : this.data.adventure.lastKnownNode,
+    projectId       : this.data.adventure.projectId,
     projectVersionId: this.data.adventure.projectVersionId,
-    type: NodeTypes.page,
-    title: "",
-    pageTitle: "",
-    url: "",
-    urlParams: []
+    type            : NodeTypes.page,
+    title           : "",
+    pageTitle       : "",
+    url             : "",
+    urlParams       : []
   });
-};
+});
 
 /**
  * Template Rendered
  */
-Template.AdventureAddNodeForm.rendered = function () {
+Template.AdventureAddNodeForm.onRendered(() => {
   var instance = Template.instance();
-
+  
   instance.autorun(function () {
-    var record = instance.nodeRecord.get(),
-      visible = $(instance.firstNode).is(":visible");
-    if(record.parentId && visible){
-      try{
+    var record  = instance.nodeRecord.get(),
+        visible = $(instance.firstNode).is(":visible");
+    if (record.parentId && visible) {
+      try {
         console.log("AddNodeForm autoRun");
         var mapInstance = Blaze.getView($(".map-tree-base").get(0)).templateInstance();
-        mapInstance.mapLayout.highlightNodes([record.parentId]);
+        mapInstance.mapLayout.highlightNodes([ record.parentId ]);
       } catch (e) {
         console.error("Failed to locate map container: " + e.message);
       }
     }
   });
-};
+});
 
 /**
  * Template Destroyed
  */
-Template.AdventureAddNodeForm.destroyed = function () {
-
-};
+Template.AdventureAddNodeForm.onDestroyed(() => {
+  
+});

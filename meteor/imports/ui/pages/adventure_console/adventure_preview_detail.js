@@ -5,7 +5,7 @@ Template.AdventurePreviewDetail.helpers({
   /**
    * Get the processed list of parent elements for this element
    */
-  getHierarchy: function () {
+  getHierarchy () {
     var el = this,
       parent = Template.parentData(3),
       scroll = parent.state.scroll,
@@ -30,7 +30,7 @@ Template.AdventurePreviewDetail.helpers({
    * Get the adjusted top position for this element
    * @returns {number}
    */
-  getDetailTop: function () {
+  getDetailTop () {
     if(this.bounds && this.localViewport){
       var maskLayer = this.localViewport.offset,
         adjustment = this.localViewport.parentOffset;
@@ -42,7 +42,7 @@ Template.AdventurePreviewDetail.helpers({
    * Get the adjusted left position for this element
    * @returns {number}
    */
-  getDetailLeft: function () {
+  getDetailLeft () {
     if(this.bounds && this.localViewport){
       var maskLayer = this.localViewport.offset,
         adjustment = this.localViewport.parentOffset,
@@ -58,7 +58,7 @@ Template.AdventurePreviewDetail.helpers({
   /**
    * Get the maximum width
    */
-  getMaxWidth: function () {
+  getMaxWidth () {
     if(this.localBounds && this.localViewport){
       var maskLayer = this.localViewport.offset,
         adjustment = this.localViewport.parentOffset,
@@ -79,7 +79,7 @@ Template.AdventurePreviewDetail.helpers({
  * Base element first
  * @param el
  */
-var getHierarchy = function (el) {
+var getHierarchy( (l) =>  {
   var parents = [];
   if(el.parent){
     var ancestors = getHierarchy(el.parent);

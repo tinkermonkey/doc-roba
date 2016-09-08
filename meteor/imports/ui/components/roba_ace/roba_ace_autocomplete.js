@@ -1,5 +1,5 @@
 /**
- * Created by austinsand on 3/29/15.
+ * Autocomplete shim which will be replaced with code module based autocomplete
  */
 var futureDriverAutocomplete = {
   driver: [

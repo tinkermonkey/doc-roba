@@ -2,7 +2,7 @@
  * Template Helpers
  */
 Template.AdventureSelectorResult.helpers({
-  fullContext: function () {
+  fullContext () {
     var instance = Template.instance(),
         selector = this,
         currentNodeId = instance.data.currentNodeId,
@@ -26,20 +26,20 @@ Template.AdventureSelectorResult.events({});
 /**
  * Template Created
  */
-Template.AdventureSelectorResult.created = function () {
+Template.AdventureSelectorResult.onCreated( () =>  {
   
 };
 
 /**
  * Template Rendered
  */
-Template.AdventureSelectorResult.rendered = function () {
+Template.AdventureSelectorResult.onRendered( () =>  {
   
 };
 
 /**
  * Template Destroyed
  */
-Template.AdventureSelectorResult.destroyed = function () {
+Template.AdventureSelectorResult.onDestroyed( () =>  {
   
 };

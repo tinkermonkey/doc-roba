@@ -2,7 +2,7 @@
  * Template Helpers
  */
 Template.AdventureToolbar.helpers({
-  getXPath: function () {
+  getXPath () {
     if(this.selectorElements){
       var elements = this.selectorElements.get(),
         xPath = "",
@@ -48,13 +48,13 @@ Template.AdventureToolbar.helpers({
       return xPath;
     }
   },
-  getCurrentNode: function () {
+  getCurrentNode () {
     var nodeId = this.currentNodeId.get();
     if(nodeId){
       return Nodes.findOne({ staticId: nodeId, projectVersionId: this.adventure.projectVersionId });
     }
   },
-  getSelector: function () {
+  getSelector () {
     return {selector: Template.instance().selector.get()};
   }
 });
@@ -63,13 +63,13 @@ Template.AdventureToolbar.helpers({
  * Template Helpers
  */
 Template.AdventureToolbar.events({
-  "click .btn-clear": function (e, instance) {
+  "click .btn-clear" (e, instance) {
     this.selectorElements.set({});
     this.checkResult.set();
     $(".adventure-highlight-detail").find(".selected").removeClass("selected");
     instance.$(".selector-value").val("");
   },
-  "click .btn-refine": function (e, instance) {
+  "click .btn-refine" (e, instance) {
     var selector = instance.$(".selector-value").val(),
       lastLocation = this.lastClickLocation.get();
 
@@ -88,7 +88,7 @@ Template.AdventureToolbar.events({
         } else {
           // wait for the command to return
           var cursor = AdventureCommands.find({_id: commandId}).observe({
-            changed: function (newDoc) {
+            changed (newDoc) {
               if(newDoc.status == AdventureStepStatus.complete){
                 console.log("Command Complete: ", newDoc.result);
                 cursor.stop();
@@ -105,7 +105,7 @@ Template.AdventureToolbar.events({
       });
     }
   },
-  "click .btn-highlight": function (e, instance) {
+  "click .btn-highlight" (e, instance) {
     // make sure the adventure is operating
     if(instance.data.adventure.status == AdventureStatus.complete){
       return;
@@ -126,7 +126,7 @@ Template.AdventureToolbar.events({
       }
     });
   },
-  "keyup input.selector-value, change input.selector-value": function (e, instance) {
+  "keyup input.selector-value, change input.selector-value" (e, instance) {
     var selector = instance.$(".selector-value").val(),
       lastLocation = this.lastClickLocation.get();
     console.log("Selector: ", selector);
@@ -153,7 +153,7 @@ Template.AdventureToolbar.events({
    * Click event for the refresh button
    * @param e
    */
-  "click .btn-refresh": function (e, instance) {
+  "click .btn-refresh" (e, instance) {
     // make sure the adventure is operating
     if(instance.data.adventure.status == AdventureStatus.complete){
       return;
@@ -176,7 +176,7 @@ Template.AdventureToolbar.events({
    * Click event for the clear-highlight button
    * @param e
    */
-  "click .btn-clear-highlight": function (e, instance) {
+  "click .btn-clear-highlight" (e, instance) {
     // make sure the adventure is operating
     if(instance.data.adventure.status == AdventureStatus.complete){
       return;
@@ -204,7 +204,7 @@ Template.AdventureToolbar.events({
 /**
  * Template Rendered
  */
-Template.AdventureToolbar.created = function () {
+Template.AdventureToolbar.onCreated( () =>  {
   var instance = this;
   instance.selector = new ReactiveVar("");
 };
@@ -212,13 +212,13 @@ Template.AdventureToolbar.created = function () {
 /**
  * Template Rendered
  */
-Template.AdventureToolbar.rendered = function () {
+Template.AdventureToolbar.onRendered( () =>  {
 
 };
 
 /**
  * Template Destroyed
  */
-Template.AdventureToolbar.destroyed = function () {
+Template.AdventureToolbar.onDestroyed( () =>  {
 
 };

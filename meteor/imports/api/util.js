@@ -443,5 +443,25 @@ export const Util = {
       $(".center-pole-content").append('<style>.test-'+hexVal+':before { content:\'\\'+hexVal+'\'; }</style>' +
           '<span class="test-'+hexVal+'" style="color:#f00; font-size: 24px; width:30px; display: inline-block;"></span>');
     }
+  },
+  
+  /**
+   * Get the highlight hierarchy for a highlight element in an adventure
+   * @param el
+   * @param depth
+   * @return {Array}
+   */
+  getHighlightHierarchy(el, depth){
+    var parents = [];
+    depth = depth || 0;
+    if (el.parent && depth < 500) {
+      var ancestors = Util.getHighlightHierarchy(el.parent, depth + 1);
+      _.each(ancestors, (a) => {
+        parents.push(a);
+      });
+    
+      parents.push(_.omit(el.parent, "parent"));
+    }
+    return parents;
   }
 };

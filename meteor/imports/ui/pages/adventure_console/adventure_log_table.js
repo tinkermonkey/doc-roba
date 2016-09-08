@@ -2,16 +2,16 @@
  * Template Helpers
  */
 Template.AdventureLogTable.helpers({
-  messages: function () {
+  messages () {
     var filter = Template.instance().filter.get();
     return Template.instance().messages();
   },
-  unfilteredMessages: function () {
+  unfilteredMessages () {
     return LogMessages.find({
       "context.adventureId": FlowRouter.getParam("adventureId")
     });
   },
-  hasMoreMessages: function () {
+  hasMoreMessages () {
     var limit = Template.instance().limit.get();
     if(limit > 0){
       return Template.instance().messages().count() >= Template.instance().limit.get();
@@ -23,14 +23,14 @@ Template.AdventureLogTable.helpers({
  * Template Events
  */
 Template.AdventureLogTable.events({
-  "click .btn-load-more": function (e, instance) {
+  "click .btn-load-more" (e, instance) {
     var limit = instance.limit.get();
     instance.limit.set(limit + 5);
   },
-  "click .btn-load-all": function (e, instance) {
+  "click .btn-load-all" (e, instance) {
     instance.limit.set(-1);
   },
-  "edited .editable": function (e, instance, newValue) {
+  "edited .editable" (e, instance, newValue) {
     console.log("Edited:", $(e.target).attr("data-key"), newValue);
     var dataKey = $(e.target).attr("data-key"),
         filter = instance.filter.get();
@@ -43,7 +43,7 @@ Template.AdventureLogTable.events({
 /**
  * Template Created
  */
-Template.AdventureLogTable.created = function () {
+Template.AdventureLogTable.onCreated( () =>  {
   var instance = this;
 
   // initialize the reactive variables
@@ -112,5 +112,5 @@ Template.AdventureLogTable.created = function () {
 /**
  * Template Rendered
  */
-Template.AdventureLogTable.rendered = function () {
+Template.AdventureLogTable.onRendered( () =>  {
 };

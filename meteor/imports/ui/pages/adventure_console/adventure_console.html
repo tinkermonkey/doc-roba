@@ -2,66 +2,37 @@
   {{#NoMenuLayout}}
     {{#if ready}}
       {{setTitle "Adventure Console" }}
-
+      
       {{#with getFullContext}}
         <div class="fluid-container full-page adventure">
           <div class="adventure-main-view">
             {{> AdventureScreen }}
           </div>
           <div class="adventure-sidebar" style="height: {{relativeHeight 1.0}}px;">
-            <div class="accordion">
+            {{#RobaAccordionGroup}}
               {{> AdventureStatusBar }}
-
-              <div class="accordion-group" data-accordion-name="adventure-map">
-                <div class="accordion-icon"><span class="glyphicon glyphicon-map-marker"></span></div>
-                <div class="accordion-content">
-                  <div class="accordion-heading">Map</div>
-                  <div class="accordion-inner accordion-sticky display">{{> AdventureMap }}</div>
-                </div>
-              </div>
-
-              <div class="accordion-group" data-accordion-name="adventure-route">
-                <div class="accordion-icon"><span class="glyphicon glyphicon-picture"></span></div>
-                <div class="accordion-content">
-                  <div class="accordion-heading">Adventure Route</div>
-                  <div class="accordion-inner">{{> AdventureRoute adventure }}</div>
-                </div>
-              </div>
-
-              <div class="accordion-group accordion-grey" data-accordion-name="current-node">
-                <div class="accordion-icon"><span class="glyphicon glyphicon-pencil"></span></div>
-                <div class="accordion-content">
-                  <div class="accordion-heading">Current Node</div>
-                  <div class="accordion-inner accordion-inner-padded">{{> AdventureContext }}</div>
-                </div>
-              </div>
-
-              <div class="accordion-group accordion-grey" data-accordion-name="current-node-actions">
-                <div class="accordion-icon"><span class="glyphicon glyphicon-pencil"></span></div>
-                <div class="accordion-content">
-                  <div class="accordion-heading">Current Node Actions</div>
-                  <div class="accordion-inner accordion-inner-padded">{{> AdventureEditNodeActions getCurrentNode }}</div>
-                </div>
-              </div>
-
+              
+              {{#RobaAccordion display=true sticky=true name="adventure-map" title="Map" icon="glyphicon glyphicon-map-marker"}}
+                {{> AdventureMap }}
+              {{/RobaAccordion}}
+              {{#RobaAccordion name="adventure-route" title="Route" icon="glyphicon glyphicon-picture"}}
+                {{> AdventureRoute adventure }}
+              {{/RobaAccordion}}
+              {{#RobaAccordion name="current-node" title="Current Location" icon="glyphicon glyphicon-pencil" cssClass="accordion-grey"}}
+                {{> AdventureContext }}
+              {{/RobaAccordion}}
+              {{#RobaAccordion name="current-actions" title="Current Location Actions" icon="glyphicon glyphicon-pencil" cssClass="accordion-grey"}}
+                {{> AdventureEditNodeActions getCurrentNode }}
+              {{/RobaAccordion}}
               {{#unless adventureIsComplete}}
-              <div class="accordion-group" data-accordion-name="raw-command">
-                <div class="accordion-icon"><span class="glyphicon glyphicon-play"></span></div>
-                <div class="accordion-content">
-                  <div class="accordion-heading">Raw Command</div>
-                  <div class="accordion-inner ">{{> AdventureCommandEditor }}</div>
-                </div>
-              </div>
+                {{#RobaAccordion name="command-console" title="Command Console" icon="glyphicon glyphicon-play"}}
+                  {{> AdventureCommandEditor }}
+                {{/RobaAccordion}}
               {{/unless}}
-
-              <div class="accordion-group" data-accordion-name="command-history">
-                <div class="accordion-icon"><span class="glyphicon glyphicon-list"></span></div>
-                <div class="accordion-content">
-                  <div class="accordion-heading">Command History</div>
-                  <div class="accordion-inner accordion-sticky">{{> AdventureCommandHistory }}</div>
-                </div>
-              </div>
-            </div>
+              {{#RobaAccordion name="command-history" title="Command History" icon="glyphicon glyphicon-list"}}
+                {{> AdventureCommandHistory }}
+              {{/RobaAccordion}}
+            {{/RobaAccordionGroup}}
           </div>
         </div>
       {{/with}}

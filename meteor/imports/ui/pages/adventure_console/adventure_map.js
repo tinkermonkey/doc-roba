@@ -2,7 +2,7 @@
  * Template Helpers
  */
 Template.AdventureMap.helpers({
-  getCurrentNode: function () {
+  getCurrentNode () {
     if(this.currentNodeId){
       return this.currentNodeId.get();
     }
@@ -17,7 +17,7 @@ Template.AdventureMap.events({});
 /**
  * Template Created
  */
-Template.AdventureMap.created = function () {
+Template.AdventureMap.onCreated( () =>  {
   var instance = this;
 
   instance.autorun(function () {
@@ -30,13 +30,13 @@ Template.AdventureMap.created = function () {
 /**
  * Template Rendered
  */
-Template.AdventureMap.rendered = function () {
+Template.AdventureMap.onRendered( () =>  {
 
 };
 
 /**
  * Template Destroyed
  */
-Template.AdventureMap.destroyed = function () {
+Template.AdventureMap.onDestroyed( () =>  {
 
 };
