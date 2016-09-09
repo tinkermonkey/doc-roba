@@ -115,7 +115,7 @@ Template.TestCaseLauncher.events({
  * Template Created
  */
 Template.TestCaseLauncher.created = function () {
-  var instance = this;
+  let instance = Template.instance();
   instance.config = new ReactiveVar();
 
   instance.autorun(function () {
@@ -145,7 +145,7 @@ Template.TestCaseLauncher.created = function () {
  * Template Rendered
  */
 Template.TestCaseLauncher.rendered = function () {
-  var instance = this;
+  let instance = Template.instance();
   instance.autorun(function () {
     var config = instance.config.get();
     //console.log("config: ", config);

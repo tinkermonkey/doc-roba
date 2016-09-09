@@ -1,10 +1,13 @@
+import './adventure_preview_element.html';
+import { Template } from 'meteor/templating';
+
 /**
  * Template helpers
  */
 Template.AdventurePreviewElement.helpers({
   getFirstArg () {
-    if(this.preview && this.preview.args){
-      return this.preview.args[0];
+    if (this.preview && this.preview.args) {
+      return this.preview.args[ 0 ];
     }
   }
 });
@@ -15,9 +18,9 @@ Template.AdventurePreviewElement.helpers({
 Template.AdventurePreviewElement.events({
   "click .adventure-preview-element" (e, instance) {
     var element = $(e.target),
-      detail = $("#adventure-preview-detail-" + instance.data.index);
-
-    if(element.hasClass("active")){
+        detail  = $("#adventure-preview-detail-" + instance.data.index);
+    
+    if (element.hasClass("active")) {
       element.removeClass("active");
       detail.removeClass("active");
     } else {

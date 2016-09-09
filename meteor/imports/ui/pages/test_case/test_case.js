@@ -149,7 +149,7 @@ Template.TestCase.created = function () {
  * Template Rendered
  */
 Template.TestCase.rendered = function () {
-  var instance = this;
+  let instance = Template.instance();
 
   // monitor test case step changes to maintain wait alignment
   instance.autorun(function () {

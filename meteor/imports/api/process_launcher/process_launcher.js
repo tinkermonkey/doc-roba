@@ -1,7 +1,8 @@
-import {Meteor} from 'meteor/meteor';
-import {DocRoba} from '../doc_roba.js';
-var fs = require('fs'),
-    path = require('path');
+import { Meteor } from 'meteor/meteor';
+import { DocRoba } from '../doc_roba.js';
+var fs           = require('fs'),
+    path         = require('path'),
+    childProcess = require("child_process");
 
 /**
  * Handle the launching of various child processes
@@ -14,7 +15,7 @@ Meteor.startup(() => {
  * Functionality for launching and kill child processes
  */
 export const ProcessLauncher = {
-  testRoleScript: "roba_test_role.js",
+  testRoleScript : "roba_test_role.js",
   adventureScript: "roba_adventure.js",
   
   /**
@@ -31,11 +32,11 @@ export const ProcessLauncher = {
     console.info("ProcessLauncher.init imageAnalysisPath: " + this.imageAnalysisPath);
     
     // Make sure the log path exists
-    if(!fs.existsSync(this.baseLogPath)){
+    if (!fs.existsSync(this.baseLogPath)) {
       console.debug("ProcessLauncher creating log directory: " + this.baseLogPath);
       fs.mkdirSync(this.baseLogPath);
     }
-    if(!fs.existsSync(this.launcherLogPath)){
+    if (!fs.existsSync(this.launcherLogPath)) {
       console.debug("ProcessLauncher creating log directory: " + this.launcherLogPath);
       fs.mkdirSync(this.launcherLogPath);
     }
@@ -53,28 +54,28 @@ export const ProcessLauncher = {
     
     // create a log file path
     var logFilePath = path.join(this.launcherLogPath, logFileName),
-        out = fs.openSync(logFilePath, "a"),
-        err = fs.openSync(logFilePath, "a");
+        out         = fs.openSync(logFilePath, "a"),
+        err         = fs.openSync(logFilePath, "a");
     
     // if the helper is not running, launch locally
-    var script = command.split(" ")[0],
-        args = command.split(" ").slice(1),
-        proc = childProcess.spawn("node", [path.join(this.automationPath, script)].concat(args), {
+    var script = command.split(" ")[ 0 ],
+        args   = command.split(" ").slice(1),
+        proc   = childProcess.spawn("node", [ path.join(this.automationPath, script) ].concat(args), {
           stdio: [ 'ignore', out, err ]
         });
     
     console.debug("ProcessLauncher.launchAutomation Launched: " + proc.pid, this.automationPath + command);
     
     // Catch the exit
-    proc.on("exit", Meteor.bindEnvironment(exitListener || function (code)  {
-      console.debug("ProcessLauncher.launchAutomation Exit: " + proc.pid + ", " + code);
-      try {
-        out.close();
-        err.close();
-      } catch (e) {
-        console.error("ProcessLauncher.launchAutomation: " + e.toString());
-      }
-    }));
+    proc.on("exit", Meteor.bindEnvironment(exitListener || function (code) {
+          console.debug("ProcessLauncher.launchAutomation Exit: " + proc.pid + ", " + code);
+          try {
+            out.close();
+            err.close();
+          } catch (e) {
+            console.error("ProcessLauncher.launchAutomation: " + e.toString());
+          }
+        }));
     
     return proc;
   },
@@ -90,27 +91,27 @@ export const ProcessLauncher = {
     
     // create a log file path
     var logFilePath = path.join(this.launcherLogPath, logFileName),
-        out = fs.openSync(logFilePath, "w"),
-        err = fs.openSync(logFilePath, "a");
+        out         = fs.openSync(logFilePath, "w"),
+        err         = fs.openSync(logFilePath, "a");
     
     // if the helper is not running, launch locally
-    var script = command.split(" ")[0],
-        args = command.split(" ").slice(1),
-        proc = childProcess.spawn("python", [path.join(this.imageAnalysisPath, script)].concat(args), {
+    var script = command.split(" ")[ 0 ],
+        args   = command.split(" ").slice(1),
+        proc   = childProcess.spawn("python", [ path.join(this.imageAnalysisPath, script) ].concat(args), {
           stdio: [ 'ignore', out, err ]
         });
     
-    console.debug("ProcessLauncher.launchImageTask Launched: " + proc.pid,  "python " + this.imageAnalysisPath + command);
+    console.debug("ProcessLauncher.launchImageTask Launched: " + proc.pid, "python " + this.imageAnalysisPath + command);
     
     // Catch the exit
     proc.on("exit", Meteor.bindEnvironment((code) => {
       console.debug("ProcessLauncher.launchImageTask Exit: " + proc.pid + ", " + code);
       
       // grab the output
-      if(callback){
+      if (callback) {
         fs.close(out);
         fs.close(err);
-        var output = fs.readFileSync(logFilePath, {encoding: 'utf8'});
+        var output = fs.readFileSync(logFilePath, { encoding: 'utf8' });
         callback(output);
       }
     }));

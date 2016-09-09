@@ -28,7 +28,7 @@ Template.ProjectHome.events({});
  * Template Created
  */
 Template.ProjectHome.created = function () {
-  var instance = this;
+  let instance = Template.instance();
   instance.project = new ReactiveVar();
 
   instance.autorun(function () {

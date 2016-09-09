@@ -39,7 +39,7 @@ Template.VersionHome.events({
  * Template Created
  */
 Template.VersionHome.created = function () {
-  var instance = this;
+  let instance = Template.instance();
   instance.project = new ReactiveVar();
   instance.version = new ReactiveVar();
 

@@ -28,7 +28,7 @@ Template.TestRunItemList.events({
  * Template Created
  */
 Template.TestRunItemList.created = function () {
-  var instance = this;
+  let instance = Template.instance();
 
   // Setup the collection based on whether this is a template or not
   instance.collection = TestPlanItems;
@@ -165,7 +165,7 @@ Template.TestRunItemList.created = function () {
  * Template Rendered
  */
 Template.TestRunItemList.rendered = function () {
-  var instance = this;
+  let instance = Template.instance();
   instance.$("> .test-run-item-list").sortable({
     forcePlaceholderSize: true,
     placeholder: "test-run-item-list-placeholder",

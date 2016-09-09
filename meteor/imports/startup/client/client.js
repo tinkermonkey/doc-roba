@@ -459,21 +459,21 @@ Template.registerHelper("adventureIsPaused", function (context) {
 /**
  * Get the right data template for test result log data
  */
-Template.registerHelper("getLogDataTemplate", function (data) {
+Template.registerHelper("LogMessageData", function (data) {
   // accept the param or default to this
   data = data || this;
   if(_.isString(data)){
-    return "TestResultLogDataString";
+    return "LogMessageDataString";
   } else if(_.isDate(data)){
-    return "TestResultLogDataString";
+    return "LogMessageDataString";
   } else if(_.isNumber(data)){
-    return "TestResultLogDataString";
+    return "LogMessageDataString";
   } else if(_.isArray(data)){
-    return "TestResultLogDataArray";
+    return "LogMessageDataArray";
   } else if(_.isObject(data)){
-    return "TestResultLogDataObject";
+    return "LogMessageDataObject";
   } else {
-    return "TestResultLogDataString";
+    return "LogMessageDataString";
   }
 });
 

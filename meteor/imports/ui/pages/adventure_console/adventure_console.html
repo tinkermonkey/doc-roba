@@ -1,6 +1,7 @@
 <template name="AdventureConsole">
   {{#NoMenuLayout}}
     {{#if ready}}
+      {{debug this}}
       {{setTitle "Adventure Console" }}
       
       {{#with getFullContext}}

@@ -29,7 +29,7 @@ Template.TestCaseStepAction.events({
  * Template Created
  */
 Template.TestCaseStepAction.created = function () {
-  var instance = this;
+  let instance = Template.instance();
   instance.nodeId = new ReactiveVar();
   instance.destinationNode = new ReactiveVar();
   instance.route = new ReactiveVar();

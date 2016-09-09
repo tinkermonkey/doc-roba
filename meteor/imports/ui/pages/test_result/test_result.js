@@ -22,7 +22,7 @@ Template.TestResult.events({});
  * Template Created
  */
 Template.TestResult.created = function () {
-  var instance = this;
+  let instance = Template.instance();
   instance.testResult = new ReactiveVar();
   instance.testCase = new ReactiveVar();
 

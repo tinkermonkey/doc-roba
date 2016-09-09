@@ -20,7 +20,7 @@ Template.BaseLayout.events({});
  * Template Created
  */
 Template.BaseLayout.created = function () {
-  var instance = this;
+  let instance = Template.instance();
   instance.subscribe("user_data");
 
   instance.autorun(function () {

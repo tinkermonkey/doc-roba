@@ -1,8 +1,8 @@
-<template name="TestResultLogDataArray">
+<template name="LogMessageDataArray">
   <div class="log-data-container">
     {{#each this}}
       <div class="log-data-array-value">
-        {{> Template.dynamic template=getLogDataTemplate}}
+        {{> Template.dynamic template=LogMessageData}}
       </div>
     {{/each}}
   </div>

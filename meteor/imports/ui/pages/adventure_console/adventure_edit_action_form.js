@@ -1,4 +1,4 @@
-import 'adventure_edit_action_form.html';
+import './adventure_edit_action_form.html';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
 import { Actions } from '../../../api/action/action.js';

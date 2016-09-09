@@ -1,9 +1,10 @@
-import "./adventure_add_node_form.html";
-import { Blaze } from "meteor/blaze";
-import { Template } from "meteor/templating";
-import "../../components/editable_fields/node_selector/editable_node_selector.js";
-import "../../components/editable_fields/editable_node_type.js";
-import "../../components/edit_panels/edit_node_url_parameters.js";
+import './adventure_add_node_form.html';
+import { Blaze } from 'meteor/blaze';
+import { Template } from 'meteor/templating';
+import { NodeTypes } from '../../../api/node/node_types.js';
+import '../../components/editable_fields/node_selector/editable_node_selector.js';
+import '../../components/editable_fields/editable_node_type.js';
+import '../../components/edit_panels/edit_node_url_parameters.js';
 
 /**
  * Template Helpers
@@ -124,13 +125,13 @@ Template.AdventureAddNodeForm.events({
  * Template Created
  */
 Template.AdventureAddNodeForm.onCreated(() => {
-  let instance        = Template.instance();
+  let instance = Template.instance();
   
   // Use this construct to build up the new node record
   instance.nodeRecord = new ReactiveVar({
-    parentId        : this.data.adventure.lastKnownNode,
-    projectId       : this.data.adventure.projectId,
-    projectVersionId: this.data.adventure.projectVersionId,
+    parentId        : instance.data.adventure.lastKnownNode,
+    projectId       : instance.data.adventure.projectId,
+    projectVersionId: instance.data.adventure.projectVersionId,
     type            : NodeTypes.page,
     title           : "",
     pageTitle       : "",

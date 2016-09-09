@@ -28,7 +28,7 @@ Template.TestRunItemTestGroup.events({
  * Template Created
  */
 Template.TestRunItemTestGroup.created = function () {
-  var instance = this;
+  let instance = Template.instance();
 
   // Get the breadcrumbs for the test group
   instance.getBreadcrumbs = function (item, breadcrumbs) {

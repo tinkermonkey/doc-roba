@@ -1,16 +1,16 @@
-import { DocTreeConfig } from "../../lib/doc_tree/doc_tree_config.js";
-import { TreeUtils } from "../../components/tree_layout/tree_utils.js";
-
-import TreeActionHandler from '../../components/tree_layout/tree_action_handler.js';
-import TreeLinkHandler from '../../components/tree_layout/tree_link_handler.js';
-import TreeNodeHandler from '../../components/tree_layout/tree_node_handler.js';
+import './map_layout.css';
+import { DocTreeConfig } from '../../lib/doc_tree/doc_tree_config.js';
+import { TreeUtils } from '../tree_layout/tree_utils.js';
+import TreeActionHandler from '../tree_layout/tree_action_handler.js';
+import TreeLinkHandler from '../tree_layout/tree_link_handler.js';
+import TreeNodeHandler from '../tree_layout/tree_node_handler.js';
 
 /**
  * Custom tree layout for providing navigational guidance
  */
 export default class MapLayout {
   constructor (elementId, context, config) {
-    var self = this;
+    let self = this;
     
     // store the container element
     self.container = $("#" + elementId);
@@ -56,7 +56,7 @@ export default class MapLayout {
           self.scaleAndTranslate(d3.event.scale, d3.event.translate);
         });
     self.layoutRoot
-    //.select(".inset-layer")
+        //.select(".inset-layer")
         .call(self.zoomer);
     
     // setup the main svg element
@@ -87,7 +87,7 @@ export default class MapLayout {
    * Setup the initial view
    */
   init () {
-    var self = this;
+    let self = this;
     
     console.info("MapLayout.init");
     this.scaleAndTranslate(self.scale, self.translation);
@@ -97,7 +97,7 @@ export default class MapLayout {
    * Scrub all of the source data and update all of the links
    */
   prepData () {
-    var self = this;
+    let self = this;
     
     // Initialize the link data
     self.linkHandler.prepLinks();
@@ -122,7 +122,7 @@ export default class MapLayout {
    * Resize to fix the window
    */
   updateSize () {
-    var self = this;
+    let self = this;
     
     // Measure the new dimensions
     self.width  = self.container.innerWidth() - parseInt(self.container.css('margin-right')) - parseInt(self.container.css('margin-left'));
@@ -133,7 +133,7 @@ export default class MapLayout {
    * Resize to fix the window
    */
   resize () {
-    var self = this;
+    let self = this;
     
     // Measure the new dimensions
     self.updateSize();
@@ -308,7 +308,7 @@ export default class MapLayout {
    * @param duration // the duration of the transition animation
    */
   scaleAndTranslate (scale, translation, duration, callback) {
-    var self = this;
+    let self = this;
     
     // normalize
     translation[ 0 ] = translation[ 0 ] || 0;
@@ -361,7 +361,7 @@ export default class MapLayout {
    * @param callback
    */
   centerNode (node, scale, callback) {
-    var self = this;
+    let self = this;
     
     // look up the node
     if (_.isString(node)) {
@@ -401,7 +401,7 @@ export default class MapLayout {
    * Clear the centered node
    */
   clearCenteredNode (callback) {
-    var self = this;
+    let self = this;
     console.log("clearCenteredNode");
     
     self.highlightCircle
@@ -416,7 +416,7 @@ export default class MapLayout {
    * Zoom out to show everything
    */
   zoomAll (duration, callback) {
-    var self = this;
+    let self = this;
     
     if (!self.contentBounds) {
       self.updateContentBounds();
@@ -486,7 +486,7 @@ export default class MapLayout {
    * Show the location unknown content
    */
   showLocationUnknown () {
-    var self = this;
+    let self = this;
     self.layoutRoot.select(".location-unknown").classed("show", true);
   }
   
@@ -494,7 +494,7 @@ export default class MapLayout {
    * Show the location unknown content
    */
   hideLocationUnknown () {
-    var self = this;
+    let self = this;
     self.layoutRoot.select(".location-unknown").classed("show", false);
   }
   
@@ -503,7 +503,7 @@ export default class MapLayout {
    * @param node
    */
   showNodeActions (node) {
-    var self = this;
+    let self = this;
     
     // look up the node
     if (_.isString(node)) {
@@ -555,7 +555,7 @@ export default class MapLayout {
    * Front line event handler for clicks on nodes
    */
   nodeClickHandler (e, d) {
-    var self = this;
+    let self = this;
     
     console.debug('click: ' + d._id + " (" + d.title + ")");
     
@@ -606,7 +606,7 @@ export default class MapLayout {
    * @param d
    */
   nodeMouseEnterHandler (d) {
-    var self = this;
+    let self = this;
     
     //console.debug("mouseenter: ", d);
     if (!self.state.inDrag) {
@@ -633,7 +633,7 @@ export default class MapLayout {
    * @param d
    */
   nodeMouseLeaveHandler (d) {
-    var self = this;
+    let self = this;
     
     //console.debug("mouseleave: ", d);
     if (!self.state.inDrag) {
@@ -666,7 +666,7 @@ export default class MapLayout {
    * @param d
    */
   actionRightClickHandler (d) {
-    var self = this;
+    let self = this;
   }
   
   /**
@@ -675,7 +675,7 @@ export default class MapLayout {
    */
   actionMouseEnterHandler (d) {
     //console.debug("Action mouseenter: ", d);
-    var self = this;
+    let self = this;
     
     if (!self.state.inDrag) {
       // Show the hover state for this action
@@ -695,7 +695,7 @@ export default class MapLayout {
    */
   actionMouseLeaveHandler (d) {
     //console.debug("Action mouseleave: ", d);
-    var self = this;
+    let self = this;
     
     if (!self.state.inDrag) {
       // Consider hiding any hovered actions
@@ -729,7 +729,7 @@ export default class MapLayout {
    * @param duration The duration of the update transition
    */
   update (duration) {
-    var self = this;
+    let self = this;
     
     // default duration
     duration = duration || self.config.stepDuration;
@@ -803,7 +803,7 @@ export default class MapLayout {
    * Clear the highlight
    */
   clearHighlight () {
-    var self = this;
+    let self = this;
     
     self.highlightLayer.selectAll(".node-highlight").remove();
   }

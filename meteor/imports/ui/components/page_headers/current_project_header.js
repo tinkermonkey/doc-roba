@@ -27,7 +27,7 @@ Template.CurrentProjectHeader.events({});
  * Template Created
  */
 Template.CurrentProjectHeader.created = function () {
-  var instance = this;
+  let instance = Template.instance();
   instance.project = new ReactiveVar();
   instance.version = new ReactiveVar();
 

@@ -58,7 +58,7 @@ Template.XEditableActionRouteSelector.events({
  * Template Created
  */
 Template.XEditableActionRouteSelector.created = function () {
-  var instance = this;
+  let instance = Template.instance();
   instance.value = new ReactiveVar();
   instance.filter = new ReactiveVar();
 };

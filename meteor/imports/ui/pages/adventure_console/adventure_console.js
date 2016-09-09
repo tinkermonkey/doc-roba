@@ -1,4 +1,5 @@
 import './adventure_console.html';
+import './adventure_console.css';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
@@ -31,7 +32,7 @@ Template.AdventureConsole.helpers({
     return Template.instance().testSystem.get();
   },
   getFullContext () {
-    var instance  = Template.instance(),
+    let instance  = Template.instance(),
         adventure = instance.adventure.get(),
         state     = instance.state.get();
     
@@ -44,7 +45,7 @@ Template.AdventureConsole.helpers({
     }
   },
   getCurrentNode () {
-    var nodeId = Template.instance().currentNodeId.get();
+    let nodeId = Template.instance().currentNodeId.get();
     if (nodeId) {
       return Nodes.findOne({ staticId: nodeId, projectVersionId: this.adventure.projectVersionId });
     }
@@ -108,12 +109,11 @@ Template.AdventureConsole.onCreated(() => {
     instance.subscribe("test_agents", projectId, projectVersionId);
   });
   
-  instance.autorun(function () {
-    var adventureId = FlowRouter.getParam("adventureId"),
-        ready       = instance.subscriptionsReady();
+  instance.autorun( () => {
+    let adventureId = FlowRouter.getParam("adventureId");
     
-    if (ready) {
-      var adventure = Adventures.findOne(adventureId),
+    if (instance.subscriptionsReady()) {
+      let adventure = Adventures.findOne(adventureId),
           state     = AdventureStates.findOne({ adventureId: adventureId });
       
       instance.adventure.set(adventure);
@@ -156,10 +156,10 @@ Template.AdventureConsole.onCreated(() => {
  * Setup an adventure if one isn't active
  */
 Template.AdventureConsole.onRendered(() => {
-  var instance = Template.instance();
+  let instance = Template.instance();
   
   // respond to location changes
-  instance.autorun(function () {
+  instance.autorun(() => {
     var currentLocation = instance.currentNodeId.get();
     if (instance.previousLocation && currentLocation && instance.previousLocation !== currentLocation) {
       console.log("Current node changed, clearing highlights:", currentLocation, instance.previousLocation);
@@ -167,14 +167,6 @@ Template.AdventureConsole.onRendered(() => {
       instance.previousLocation = currentLocation;
     } else if (!instance.previousLocation) {
       instance.previousLocation = currentLocation;
-    }
-  });
-  
-  // initialize the tabs
-  instance.autorun(function () {
-    var ready = instance.subscriptionsReady();
-    if (ready) {
-      Accordion.init(instance);
     }
   });
   

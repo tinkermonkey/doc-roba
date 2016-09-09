@@ -1,38 +1,47 @@
+import './adventure_toolbar.html';
+import { Template } from 'meteor/templating';
+import { RobaDialog } from 'meteor/austinsand:roba-dialog';
+import { AdventureCommands } from '../../../api/adventure/adventure_command.js';
+import { AdventureStepStatus, AdventureStepStatusLookup } from '../../../api/adventure/adventure_step_status.js';
+import { AdventureStatus } from '../../../api/adventure/adventure_status.js';
+import { Nodes } from '../../../api/node/node.js';
+import './adventure_selector_action_menu.js';
+
 /**
  * Template Helpers
  */
 Template.AdventureToolbar.helpers({
   getXPath () {
-    if(this.selectorElements){
+    if (this.selectorElements) {
       var elements = this.selectorElements.get(),
-        xPath = "",
-        element, previousElement;
+          xPath    = "",
+          element, previousElement;
       _.each(_.keys(elements), function (key) {
-        element = elements[key];
-
+        element = elements[ key ];
+        
         // start the xPath
-        if(previousElement && previousElement.index == element.index - 1){
+        if (previousElement && previousElement.index == element.index - 1) {
           xPath += "/"
         } else {
           xPath += "//"
         }
-
+        
         // set the tag selector
-        if(element.tag){
+        if (element.tag) {
           xPath += element.tag
         } else {
           xPath += "*"
         }
-
+        
         // set the attributes
-        if(element.attributes.length){
+        if (element.attributes.length) {
           xPath += "[";
           _.each(element.attributes, function (attribute, i) {
-            if(i > 0){
+            if (i > 0) {
               xPath += " and ";
             }
-
-            if(attribute.attribute == "class"){
+            
+            if (attribute.attribute == "class") {
               xPath += "contains(@" + attribute.attribute + ",\"" + attribute.value + "\")";
             } else {
               xPath += "@" + attribute.attribute + "=\"" + attribute.value + "\"";
@@ -40,22 +49,22 @@ Template.AdventureToolbar.helpers({
           });
           xPath += "]";
         }
-
+        
         // store the previous
         previousElement = element;
       });
-
+      
       return xPath;
     }
   },
   getCurrentNode () {
     var nodeId = this.currentNodeId.get();
-    if(nodeId){
+    if (nodeId) {
       return Nodes.findOne({ staticId: nodeId, projectVersionId: this.adventure.projectVersionId });
     }
   },
   getSelector () {
-    return {selector: Template.instance().selector.get()};
+    return { selector: Template.instance().selector.get() };
   }
 });
 
@@ -70,26 +79,25 @@ Template.AdventureToolbar.events({
     instance.$(".selector-value").val("");
   },
   "click .btn-refine" (e, instance) {
-    var selector = instance.$(".selector-value").val(),
-      lastLocation = this.lastClickLocation.get();
-
+    var selector     = instance.$(".selector-value").val(),
+        lastLocation = this.lastClickLocation.get();
+    
     console.log("Last click location: ", lastLocation);
-
-    if(selector && lastLocation){
+    
+    if (selector && lastLocation) {
       // send the command to clear all of the highlighted elements
       var commandId = AdventureCommands.insert({
-        projectId: instance.data.adventure.projectId,
+        projectId  : instance.data.adventure.projectId,
         adventureId: instance.data.adventure._id,
-        code: "driver.refineSelector(" + lastLocation.x + ", " + lastLocation.y + ", \"" + Util.escapeDoubleQuotes(selector) + "\");"
+        code       : "driver.refineSelector(" + lastLocation.x + ", " + lastLocation.y + ", \"" + Util.escapeDoubleQuotes(selector) + "\");"
       }, function (error) {
-        if(error){
-          console.error("Error adding adventure command: " + error.message);
+        if (error) {
           RobaDialog.error("Error adding adventure command: " + error.message);
         } else {
           // wait for the command to return
-          var cursor = AdventureCommands.find({_id: commandId}).observe({
+          var cursor = AdventureCommands.find({ _id: commandId }).observe({
             changed (newDoc) {
-              if(newDoc.status == AdventureStepStatus.complete){
+              if (newDoc.status == AdventureStepStatus.complete) {
                 console.log("Command Complete: ", newDoc.result);
                 cursor.stop();
                 instance.data.checkResult.set(newDoc.result);
@@ -97,7 +105,7 @@ Template.AdventureToolbar.events({
                 console.log("Command Failed: ", newDoc.result);
                 cursor.stop();
               } else {
-                console.log("Command status: ", AdventureStepStatusLookup[newDoc.status]);
+                console.log("Command status: ", AdventureStepStatusLookup[ newDoc.status ]);
               }
             }
           });
@@ -107,36 +115,35 @@ Template.AdventureToolbar.events({
   },
   "click .btn-highlight" (e, instance) {
     // make sure the adventure is operating
-    if(instance.data.adventure.status == AdventureStatus.complete){
+    if (instance.data.adventure.status == AdventureStatus.complete) {
       return;
     }
-
+    
     // get the selector
     var selector = instance.$(".selector-value").val();
-
+    
     // send the command to clear all of the highlighted elements
     AdventureCommands.insert({
-      projectId: instance.data.adventure.projectId,
+      projectId  : instance.data.adventure.projectId,
       adventureId: instance.data.adventure._id,
-      code: "driver.testSelector(\"" + Util.escapeDoubleQuotes(selector) + "\");"
+      code       : "driver.testSelector(\"" + Util.escapeDoubleQuotes(selector) + "\");"
     }, function (error) {
-      if(error){
-        console.error("Error adding adventure command: " + error.message);
+      if (error) {
         RobaDialog.error("Error adding adventure command: " + error.message);
       }
     });
   },
   "keyup input.selector-value, change input.selector-value" (e, instance) {
-    var selector = instance.$(".selector-value").val(),
-      lastLocation = this.lastClickLocation.get();
+    var selector     = instance.$(".selector-value").val(),
+        lastLocation = this.lastClickLocation.get();
     console.log("Selector: ", selector);
-
-    if(selector.length && lastLocation) {
+    
+    if (selector.length && lastLocation) {
       instance.$(".btn-clear").removeAttr("disabled");
       instance.$(".btn-refine").removeAttr("disabled");
       instance.$(".btn-highlight").removeAttr("disabled");
       instance.$(".btn-selector-dropdown").removeAttr("disabled");
-    } else if (selector.length){
+    } else if (selector.length) {
       instance.$(".btn-clear").removeAttr("disabled");
       instance.$(".btn-refine").attr("disabled", "disabled");
       instance.$(".btn-highlight").removeAttr("disabled");
@@ -155,19 +162,18 @@ Template.AdventureToolbar.events({
    */
   "click .btn-refresh" (e, instance) {
     // make sure the adventure is operating
-    if(instance.data.adventure.status == AdventureStatus.complete){
+    if (instance.data.adventure.status == AdventureStatus.complete) {
       return;
     }
-
+    
     // send the command to clear all of the highlighted elements
     AdventureCommands.insert({
-      projectId: instance.data.adventure.projectId,
+      projectId  : instance.data.adventure.projectId,
       adventureId: instance.data.adventure._id,
       updateState: true,
-      code: "true"
+      code       : "true"
     }, function (error) {
-      if(error){
-        console.error("Error adding adventure command: " + error.message);
+      if (error) {
         RobaDialog.error("Error adding adventure command: " + error.message);
       }
     });
@@ -178,23 +184,22 @@ Template.AdventureToolbar.events({
    */
   "click .btn-clear-highlight" (e, instance) {
     // make sure the adventure is operating
-    if(instance.data.adventure.status == AdventureStatus.complete){
+    if (instance.data.adventure.status == AdventureStatus.complete) {
       return;
     }
-
+    
     // clear the last click location and check result
     this.lastClickLocation.set();
     this.checkResult.set();
-
+    
     // send the command to clear all of the highlighted elements
     AdventureCommands.insert({
-      projectId: instance.data.adventure.projectId,
+      projectId  : instance.data.adventure.projectId,
       adventureId: instance.data.adventure._id,
       updateState: false,
-      code: "driver.clearHighlight();"
+      code       : "driver.clearHighlight();"
     }, function (error) {
-      if(error){
-        console.error("Error adding adventure command: " + error.message);
+      if (error) {
         RobaDialog.error("Error adding adventure command: " + error.message);
       }
     });
@@ -204,21 +209,21 @@ Template.AdventureToolbar.events({
 /**
  * Template Rendered
  */
-Template.AdventureToolbar.onCreated( () =>  {
-  var instance = this;
+Template.AdventureToolbar.onCreated(() => {
+  let instance      = Template.instance();
   instance.selector = new ReactiveVar("");
-};
+});
 
 /**
  * Template Rendered
  */
-Template.AdventureToolbar.onRendered( () =>  {
-
-};
+Template.AdventureToolbar.onRendered(() => {
+  
+});
 
 /**
  * Template Destroyed
  */
-Template.AdventureToolbar.onDestroyed( () =>  {
-
-};
+Template.AdventureToolbar.onDestroyed(() => {
+  
+});

@@ -1,9 +1,12 @@
+import './editable_filter_option.html';
+import { Template } from 'meteor/templating';
+
 /**
  * Template Helpers
  */
 Template.EditableFilterOption.helpers({
-  hasValue: function () {
-    var value = Template.instance().value.get();
+  hasValue () {
+    let value = Template.instance().value.get();
     return value != null;
   }
 });
@@ -16,36 +19,39 @@ Template.EditableFilterOption.events({});
 /**
  * Template Created
  */
-Template.EditableFilterOption.created = function () {
-  var instance = this;
+Template.EditableFilterOption.onCreated(() => {
+  let instance   = Template.instance();
   instance.value = new ReactiveVar();
-};
+});
 
 /**
  * Template Rendered
  */
-Template.EditableFilterOption.rendered = function () {
-  var instance = Template.instance();
+Template.EditableFilterOption.onRendered(() => {
+  let instance = Template.instance();
   
   instance.autorun(function () {
-    var data = Template.currentData(),
+    var data         = Template.currentData(),
         currentValue = instance.value.get(),
-        options =  _.map(_.uniq(data.messages.map(function (message) { return message[data.dataKey] })), function (option) {
+        options      = _.map(_.uniq(data.messages.map((message) => {
+          return message[ data.dataKey ]
+        })), (option) => {
           return { value: option, text: option };
         });
     
     console.log("EditableFilterOption:", options);
-    if(!instance.editable){
+    if (!instance.editable) {
       instance.editable = instance.$('.editable').editable({
-        mode: data.mode || "popup",
-        type: "checklist",
-        source: options,
+        mode     : data.mode || "popup",
+        type     : "checklist",
+        source   : options,
         placement: instance.data.placement || "auto",
         highlight: false,
-        display: function () {},
-        success: function (response, newValue) {
+        display () {
+        },
+        success (response, newValue) {
           var editedElement = this;
-          $(editedElement).trigger("edited", [newValue]);
+          $(editedElement).trigger("edited", [ newValue ]);
           setTimeout(function () {
             $(editedElement).removeClass('editable-unsaved');
           }, 10);
@@ -56,11 +62,11 @@ Template.EditableFilterOption.rendered = function () {
     instance.$('.editable').editable("option", "source", options);
     instance.$('.editable').editable("setValue", currentValue ? currentValue.join(",") : '', true);
   });
-};
+});
 
 /**
  * Template Destroyed
  */
-Template.EditableFilterOption.destroyed = function () {
+Template.EditableFilterOption.onDestroyed(() => {
   
-};
+});

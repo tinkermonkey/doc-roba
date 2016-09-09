@@ -1,4 +1,4 @@
-<template name="TestResultLogDataObject">
+<template name="LogMessageDataObject">
   <div class="log-data-object-container">
     {{#if getKeys}}
       <div class="log-data-object-expander">
@@ -11,7 +11,7 @@
               <td class="log-data-object-key">{{this}}</td>
               <td class="log-data-object-value">
                 {{#with getKeyValue this ..}}
-                  {{> Template.dynamic template=getLogDataTemplate}}
+                  {{> Template.dynamic template=LogMessageData}}
                 {{else}}
                   <i>null</i>
                 {{/with}}

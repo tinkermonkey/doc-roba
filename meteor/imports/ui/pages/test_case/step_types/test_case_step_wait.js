@@ -46,7 +46,7 @@ Template.TestCaseStepWait.events({
  * Template Created
  */
 Template.TestCaseStepWait.created = function () {
-  var instance = this;
+  let instance = Template.instance();
 
   // we need a reactive variable to keep waitId accurate for drag and drop
   instance.waitId = new ReactiveVar();
@@ -126,7 +126,7 @@ Template.TestCaseStepWait.created = function () {
  * Template Rendered
  */
 Template.TestCaseStepWait.rendered = function () {
-  var instance = this;
+  let instance = Template.instance();
 
   // Setup the join draggable behavior
   instance.$(".draggable-wait").draggable({

@@ -25,7 +25,7 @@ Template.TestResultStepLog.created = function () {
  */
 Template.TestResultStepLog.rendered = function () {
   console.log("TestResultStepLog.rendered: ", Date.now() - this.startTime);
-  var instance = this;
+  let instance = Template.instance();
   instance.autorun(function () {
     var resize = Session.get("resize");
     if(resize.width){

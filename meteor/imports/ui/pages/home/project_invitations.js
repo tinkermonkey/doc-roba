@@ -51,7 +51,7 @@ Template.ProjectInvitations.events({
  * Template Created
  */
 Template.ProjectInvitations.created = function () {
-  var instance = this;
+  let instance = Template.instance();
 
   instance.subscribe("user_invitations");
 };

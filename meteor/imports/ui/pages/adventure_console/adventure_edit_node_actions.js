@@ -1,4 +1,4 @@
-import './adventure_edit_node_actions.js';
+import './adventure_edit_node_actions.html';
 import { Blaze } from 'meteor/blaze';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';

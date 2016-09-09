@@ -43,7 +43,7 @@ Template.TestCaseDashboard.events({});
  * Template Created
  */
 Template.TestCaseDashboard.created = function () {
-  var instance = this;
+  let instance = Template.instance();
   instance.project = new ReactiveVar();
   instance.version = new ReactiveVar();
 

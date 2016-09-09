@@ -38,7 +38,7 @@ Template.TestCaseRecentResultList.events({
  * Template Created
  */
 Template.TestCaseRecentResultList.created = function () {
-  var instance = this;
+  let instance = Template.instance();
 
   // initialize the reactive variables
   instance.loaded = new ReactiveVar(0);

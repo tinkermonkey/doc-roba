@@ -20,7 +20,7 @@ Template.TestRunItemTestCase.events({});
  * Template Created
  */
 Template.TestRunItemTestCase.created = function () {
-  var instance = this;
+  let instance = Template.instance();
   instance.getBreadcrumbs = function (item, breadcrumbs) {
     var parentId = item.testGroupId || item.parentGroupId;
     if(parentId){

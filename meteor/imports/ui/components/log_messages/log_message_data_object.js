@@ -1,14 +1,17 @@
+import './log_message_data_object.html';
+import { Template } from 'meteor/templating';
+
 /**
  * Template Helpers
  */
-Template.TestResultLogDataObject.helpers({
-  getKeys: function () {
+Template.LogMessageDataObject.helpers({
+  getKeys    : function () {
     return _.keys(this)
   },
   getKeyValue: function (key, data) {
     // force it to display zeros which other fail in the with clause
-    var value = data[key];
-    if(_.isNumber(value)){
+    var value = data[ key ];
+    if (_.isNumber(value)) {
       return value.toString();
     }
     return value;
@@ -18,13 +21,13 @@ Template.TestResultLogDataObject.helpers({
 /**
  * Template Event Handlers
  */
-Template.TestResultLogDataObject.events({
+Template.LogMessageDataObject.events({
   "click .log-data-object-expander": function (e, instance) {
     e.stopImmediatePropagation();
     var expander = $(e.target).closest(".log-data-object-expander"),
-      expandee = expander.next();
-
-    if(expandee.is(":visible")){
+        expandee = expander.next();
+    
+    if (expandee.is(":visible")) {
       //expandee.hide('slide',{direction:'left'}, 400)
       expandee.hide();
     } else {
@@ -39,20 +42,20 @@ Template.TestResultLogDataObject.events({
 /**
  * Template Created
  */
-Template.TestResultLogDataObject.created = function () {
+Template.LogMessageDataObject.created = function () {
   
 };
 
 /**
  * Template Rendered
  */
-Template.TestResultLogDataObject.rendered = function () {
+Template.LogMessageDataObject.rendered = function () {
   
 };
 
 /**
  * Template Destroyed
  */
-Template.TestResultLogDataObject.destroyed = function () {
+Template.LogMessageDataObject.destroyed = function () {
   
 };

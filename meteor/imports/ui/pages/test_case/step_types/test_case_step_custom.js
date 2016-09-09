@@ -31,7 +31,7 @@ Template.TestCaseStepCustom.created = function () {
  * Template Rendered
  */
 Template.TestCaseStepCustom.rendered = function () {
-  var instance = this;
+  let instance = Template.instance();
   instance.autorun(function () {
     var data = Template.currentData(),
       previousStep = TestCaseSteps.findOne({

@@ -207,7 +207,7 @@ Template.TestResultScreenshot.events({
  * Template Created
  */
 Template.TestResultScreenshot.created = function () {
-  var instance = this;
+  let instance = Template.instance();
   instance.scale = new ReactiveVar(1);
 
   // pull in the comparison screenshots
@@ -230,7 +230,7 @@ Template.TestResultScreenshot.created = function () {
  * Template Rendered
  */
 Template.TestResultScreenshot.rendered = function () {
-  var instance = this;
+  let instance = Template.instance();
 
   // make the step_types sortable
   instance.$(".test-result-screenshot-comparitor-layers").sortable({

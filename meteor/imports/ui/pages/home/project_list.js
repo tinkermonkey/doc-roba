@@ -140,7 +140,7 @@ Template.ProjectList.events({
  * Template Created
  */
 Template.ProjectList.created = function () {
-  var instance = this;
+  let instance = Template.instance();
 
   instance.subscribe("all_projects");
 };

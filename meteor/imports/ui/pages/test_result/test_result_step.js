@@ -123,7 +123,7 @@ Template.TestResultStep.events({
  * Template Created
  */
 Template.TestResultStep.created = function () {
-  var instance = this;
+  let instance = Template.instance();
   instance.logRendered = new ReactiveVar(false);
 };
 

@@ -16,11 +16,9 @@ Template.DriverCommandList.events({});
  * Template Created
  */
 Template.DriverCommandList.created = function () {
-  var instance = this;
+  let instance = Template.instance();
 
-  instance.autorun(function () {
-    instance.subscribe("driver_commands");
-  });
+  instance.subscribe("driver_commands");
 };
 
 /**

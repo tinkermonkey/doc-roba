@@ -47,7 +47,7 @@ Template.EditableAutoform.created = function () {
  * Template Rendered
  */
 Template.EditableAutoform.rendered = function () {
-  var instance = this;
+  let instance = Template.instance();
   
   instance.$(".editable").editable({
     type: "autoform",

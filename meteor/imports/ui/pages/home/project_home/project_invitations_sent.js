@@ -52,7 +52,7 @@ Template.ProjectInvitationsSent.events({
  * Template Created
  */
 Template.ProjectInvitationsSent.created = function () {
-  var instance = this;
+  let instance = Template.instance();
 
   instance.autorun(function () {
     instance.subscribe("invitations_sent", FlowRouter.getParam("projectId"));

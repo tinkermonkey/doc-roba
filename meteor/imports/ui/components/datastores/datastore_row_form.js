@@ -17,7 +17,7 @@ Template.DatastoreRowForm.events({});
  * Template Rendered
  */
 Template.DatastoreRowForm.rendered = function () {
-  var instance = this;
+  let instance = Template.instance();
 
   setTimeout(function () {
     instance.$("input").first().focus()

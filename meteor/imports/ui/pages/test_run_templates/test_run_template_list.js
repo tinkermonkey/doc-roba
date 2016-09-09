@@ -57,7 +57,7 @@ Template.TestRunTemplateList.events({
  * Template Created
  */
 Template.TestRunTemplateList.created = function () {
-  var instance = this;
+  let instance = Template.instance();
 
   instance.autorun(function () {
     var projectId = FlowRouter.getParam("projectId"),

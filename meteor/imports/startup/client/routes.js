@@ -1,27 +1,29 @@
 import { FlowRouter } from "meteor/kadira:flow-router";
 import { BlazeLayout } from "meteor/kadira:blaze-layout";
+
+/**
+ * Layouts
+ */
 import "../../ui/layouts/base_layout.js";
 import "../../ui/layouts/center_pole_layout.js";
 import "../../ui/layouts/fullscreen_layout.js";
 import "../../ui/layouts/insecure_layout.js";
 import "../../ui/layouts/no_menu_layout.js";
+
+/**
+ * Pages
+ */
 import "../../ui/insecure/login/login.js";
 import "../../ui/insecure/logout/logout.js";
 import "../../ui/insecure/not_found/not_found.js";
+import "../../ui/pages/adventure_console/adventure_console.js";
+import "../../ui/pages/adventure_console/adventure_log.js";
 import "../../ui/pages/code_module/code_module_dashboard.js";
 import "../../ui/pages/doc_tree/doc_tree.js";
 import "../../ui/pages/home/home.js";
 import "../../ui/pages/home/project_home/project_home.js";
 import "../../ui/pages/home/version_home/version_home.js";
 import "../../ui/pages/test_case/test_case_dashboard.js";
-
-/**
- * Layouts
- */
-
-/**
- * Pages
- */
 
 /**
  * Config

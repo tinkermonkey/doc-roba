@@ -152,7 +152,7 @@ Template.DocTree.created = function () {
    */
   instance.updateTree = function (project, version) {
     console.debug("DocTree.updateTree:", project._id, version._id);
-    var instance = this;
+    let instance = Template.instance();
     
     // get fresh node data
     instance.treeLayout.nodeHandler.setNodes(Nodes.find({ projectVersionId: version._id }).fetch());
@@ -191,7 +191,7 @@ Template.DocTree.created = function () {
    */
   instance.initTree = function (docTreeDataId) {
     console.debug("DocTree.initTree");
-    var instance = this;
+    let instance = Template.instance();
     
     instance.init = docTreeDataId;
     instance.treeLayout.init();
@@ -203,7 +203,7 @@ Template.DocTree.created = function () {
    */
   instance.resetTree = function () {
     console.debug("DocTree.resetTree");
-    var instance = this;
+    let instance = Template.instance();
     
     instance.init    = false;
     instance.inReset = Date.now();

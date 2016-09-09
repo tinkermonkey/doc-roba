@@ -1,3 +1,17 @@
+import './adventure_screen.html';
+import { Template } from 'meteor/templating';
+import { RobaDialog } from 'meteor/austinsand:roba-dialog';
+import { AdventureCommands } from '../../../api/adventure/adventure_command.js';
+import { AdventureStatus } from '../../../api/adventure/adventure_status.js';
+import { Actions } from '../../../api/action/action.js';
+import { Nodes } from '../../../api/node/node.js';
+import './adventure_highlight_element.js';
+import './adventure_hover_controls.js';
+import './adventure_log_embedded.js';
+import './adventure_preview_element.js';
+import './adventure_selector_result.js';
+import './adventure_toolbar.js';
+
 /**
  * Template helpers
  */
@@ -7,42 +21,43 @@ Template.AdventureScreen.helpers({
    * @returns {*}
    */
   fullContext () {
-    var instance = Template.instance();
-    this.viewport           = instance.viewport.get();
-    this.highlightElements  = instance.highlightElements.get();
-    this.previewElements    = instance.previewElements.get();
-    this.controlledElement  = instance.controlledElement.get();
-    this.selectorElements   = instance.selectorElements; // need read/write access in the toolbar
-    this.checkResult        = instance.checkResult; // track the results of selector check
-    this.lastClickLocation  = instance.lastClickLocation; // track the mouse clicks
-
+    let instance           = Template.instance();
+    this.viewport          = instance.viewport.get();
+    this.highlightElements = instance.highlightElements.get();
+    this.previewElements   = instance.previewElements.get();
+    this.controlledElement = instance.controlledElement.get();
+    this.selectorElements  = instance.selectorElements; // need read/write access in the toolbar
+    this.checkResult       = instance.checkResult; // track the results of selector check
+    this.lastClickLocation = instance.lastClickLocation; // track the mouse clicks
+    
     return this;
   },
-
+  
   updateViewport () {
     //console.log("updateViewport");
-    var instance = Template.instance();
+    let instance = Template.instance();
     Meteor.setTimeout(instance.updateViewport, 1000);
   },
-
+  
   /**
    * Get the coordinates for the screen shot mask
    * @returns {{top: number, left: number, height: number, width: number}}
    */
   getScreenMaskPosition () {
-    var instance = Template.instance(),
-      localViewport = instance.viewport.get(),
-      width   = $(".remote-screen").width(),
-      height  = $(".remote-screen").height(),
-      offset  = $(".remote-screen").offset(),
-      adjust  = $(".remote-screen").parent().offset();
-
-    if(offset && adjust){
+    let instance      = Template.instance(),
+        localViewport = instance.viewport.get(),
+        remoteScreen  = $(".remote-screen"),
+        width         = remoteScreen.width(),
+        height        = remoteScreen.height(),
+        offset        = remoteScreen.offset(),
+        adjust        = remoteScreen.parent().offset();
+    
+    if (offset && adjust) {
       return {
-        top: offset.top - adjust.top,
-        left: offset.left - adjust.left,
+        top   : offset.top - adjust.top,
+        left  : offset.left - adjust.left,
         height: height,
-        width: width
+        width : width
       };
     }
   },
@@ -50,24 +65,24 @@ Template.AdventureScreen.helpers({
    * Get the local coordinates of the remove mouse
    */
   getMousePosition () {
-    var instance = Template.instance(),
-        state = instance.data.state,
+    let instance = Template.instance(),
+        state    = instance.data.state,
         coords;
-    if(state && state.mouse && state.mouse.x >= 0 && instance.viewport.get() && state.viewportSize){
-      var remoteViewport  = state.viewportSize,
-        localViewport     = instance.viewport.get(),
-        ratio             = (localViewport.width / remoteViewport.width),
-        adjust            = $(".remote-screen").parent().offset();
-
+    if (state && state.mouse && state.mouse.x >= 0 && instance.viewport.get() && state.viewportSize) {
+      let remoteViewport = state.viewportSize,
+          localViewport  = instance.viewport.get(),
+          ratio          = (localViewport.width / remoteViewport.width),
+          adjust         = $(".remote-screen").parent().offset();
+      
       coords = {
         x: parseInt(state.mouse.x * ratio + adjust.left),
         y: parseInt(state.mouse.y * ratio + adjust.top)
       };
-
+      
     }
     return coords;
   },
-
+  
   /**
    * Get the elements to highlight from the last command that returned highlight elements
    * @returns [elements]
@@ -75,30 +90,33 @@ Template.AdventureScreen.helpers({
   getHighlightElements () {
     return Template.instance().highlightElements.get()
   },
-
+  
   /**
    * Get the preview elements from the last preview command
    * @returns [elements]
    */
   getPreviewElements () {
-    return Template.instance().previewElements.get().map(function (el, i) { el.index = i; return el })
+    return Template.instance().previewElements.get().map(function (el, i) {
+      el.index = i;
+      return el
+    })
   },
-
+  
   /**
    * Get the preview elements from the last preview command
    * @returns [elements]
    */
   getPreviewMatches () {
-    if(this.matches){
-      var parent = this;
+    if (this.matches) {
+      let parent = this;
       return parent.matches.map(function (el, i) {
-        el.index = parent.index + "" + i;
+        el.index   = parent.index + "" + i;
         el.preview = parent;
         return el
       })
     }
   },
-
+  
   /**
    * Get the element which the hover controls are for
    * @returns [elements]
@@ -106,37 +124,37 @@ Template.AdventureScreen.helpers({
   getControlledElement () {
     return Template.instance().controlledElement.get()
   },
-
+  
   /**
    * Process a highlight element into something usable
    * @returns {*}
    */
   processHighlightElement () {
-    var el = this,
-      instance        = Template.instance(),
-      localViewport   = instance.viewport.get(),
-      remoteViewport  = instance.data.state.viewportSize,
-      scroll          = instance.data.state.scroll;
-
+    let el             = this,
+        instance       = Template.instance(),
+        localViewport  = instance.viewport.get(),
+        remoteViewport = instance.data.state.viewportSize,
+        scroll         = instance.data.state.scroll;
+    
     // convert the bounds of the highlight element from remote to local coordinates
-    if(el.bounds && localViewport && remoteViewport){
-      var ratio = (localViewport.width / remoteViewport.width);
-
+    if (el.bounds && localViewport && remoteViewport) {
+      let ratio = (localViewport.width / remoteViewport.width);
+      
       // attach the local viewport
       el.localViewport = localViewport;
-
+      
       // add in the adventure and nodeId context
-      el.adventure = instance.data.adventure;
+      el.adventure     = instance.data.adventure;
       el.currentNodeId = instance.data.currentNodeId.get();
-
+      
       // setup the local position of the highlight element
       el.localBounds = {
-        top: parseInt( (el.bounds.top - scroll.y + el.bounds.scrollY) * ratio ),
-        left: parseInt( (el.bounds.left - scroll.x + el.bounds.scrollX) * ratio ),
-        height: parseInt( el.bounds.height * ratio ),
-        width: parseInt( el.bounds.width * ratio )
+        top   : parseInt((el.bounds.top - scroll.y + el.bounds.scrollY) * ratio),
+        left  : parseInt((el.bounds.left - scroll.x + el.bounds.scrollX) * ratio),
+        height: parseInt(el.bounds.height * ratio),
+        width : parseInt(el.bounds.width * ratio)
       };
-
+      
       return el;
     }
   },
@@ -146,20 +164,20 @@ Template.AdventureScreen.helpers({
   getCheckResult () {
     return this.checkResult.get();
   },
-
+  
   /**
    * Formatting for the highlight elements
    * @param item
    * @returns {Array}
    */
   splitValues (item) {
-    var valueList = [],
-      rawValueList = this.value.split(" ");
+    let valueList    = [],
+        rawValueList = this.value.split(" ");
     _.each(rawValueList, function (subValue, i) {
-      var context = _.omit(item, "html", "text");
+      let context   = _.omit(item, "html", "text");
       context.value = subValue.trim();
-      context.last = i == rawValueList.length - 1;
-
+      context.last  = i == rawValueList.length - 1;
+      
       valueList.push(context);
     });
     return valueList;
@@ -176,40 +194,40 @@ Template.AdventureScreen.events({
    */
   "click .remote-screen-mask, click .remote-screen" (e, instance) {
     // make sure the adventure is operating
-    if(instance.data.adventure.status == AdventureStatus.complete){
+    if (instance.data.adventure.status == AdventureStatus.complete) {
       return;
     }
-
+    
     // filter to make sure that the click event isn't being propagated
-    if(!$(e.target).hasClass("remote-screen-mask") && !$(e.target).hasClass("remote-screen")){
+    if (!$(e.target).hasClass("remote-screen-mask") && !$(e.target).hasClass("remote-screen")) {
       return;
     }
-
+    
     // take the image coordinates and convert them to window coordinates
-    var viewport = instance.data.state.viewportSize,
-      bounds = { width: $(e.target).width(), height: $(e.target).height()},
-      ratio  = (viewport.width / bounds.width),
-      coords = {
-        x: parseInt(e.offsetX * ratio),
-        y: parseInt(e.offsetY * ratio)
-      };
-
+    let viewport = instance.data.state.viewportSize,
+        bounds   = { width: $(e.target).width(), height: $(e.target).height() },
+        ratio    = (viewport.width / bounds.width),
+        coords   = {
+          x: parseInt(e.offsetX * ratio),
+          y: parseInt(e.offsetY * ratio)
+        };
+    
     // clear the last click location
-    this.lastClickLocation.set({x: coords.x, y: coords.y});
-
+    this.lastClickLocation.set({ x: coords.x, y: coords.y });
+    
     // clear the current highlights
     this.selectorElements.set({});
     this.checkResult.set();
     $(".adventure-highlight-detail").find(".selected").removeClass("selected");
-
+    
     // send the command to get information about the "clicked" element
     AdventureCommands.insert({
-      projectId: instance.data.adventure.projectId,
+      projectId  : instance.data.adventure.projectId,
       adventureId: instance.data.adventure._id,
       updateState: false,
-      code: "driver.getElementAtLocation(" + coords.x + "," + coords.y + ", true, true);"
+      code       : "driver.getElementAtLocation(" + coords.x + "," + coords.y + ", true, true);"
     }, function (error) {
-      if(error){
+      if (error) {
         console.error("Error adding adventure command: " + error.message);
         RobaDialog.error("Error adding adventure command: " + error.message);
       }
@@ -226,9 +244,12 @@ Template.AdventureScreen.events({
    * @param e
    */
   "click .adventure-highlight-list-row-header, click .detail-toggle" (e, instance) {
-    $(e.target).closest("td").find(".adventure-highlight-list-row-detail").toggleClass("active");
-    $(e.target).closest("td").find(".detail-toggle").toggleClass("glyphicon-chevron-up");
-    $(e.target).closest("td").find(".detail-toggle").toggleClass("glyphicon-chevron-down");
+    let cell   = $(e.target).closest("td"),
+        toggle = cell.find(".detail-toggle");
+    
+    cell.find(".adventure-highlight-list-row-detail").toggleClass("active");
+    toggle.toggleClass("glyphicon-chevron-up");
+    toggle.toggleClass("glyphicon-chevron-down");
   },
   /**
    * Click one of the selectable xpath components
@@ -236,52 +257,55 @@ Template.AdventureScreen.events({
    * @param instance
    */
   "click .adventure-highlight-hierarchy .clickable, click .adventure-highlight-hierarchy-content .clickable" (e, instance) {
-    var context = this,
-      el = $(e.target),
-      selectorElements = instance.selectorElements.get();
-
+    var context          = this,
+        el               = $(e.target),
+        selectorElements = instance.selectorElements.get();
+    
     el.toggleClass("selected");
-
+    
     // Do the rollup for this row
     var element = {
-      index: context.index,
+      index     : context.index,
       attributes: []
     };
-    el.closest(".adventure-highlight-detail").find(".selected").each(function (i, d) {
-      if($(d).hasClass("tag")){
-        element.tag = $(d).text().trim();
+    el.closest(".adventure-highlight-detail").find(".selected").each(function (i, detailEl) {
+      let detail = $(detailEl);
+      
+      if (detail.hasClass("tag")) {
+        element.tag = detail.text().trim();
       } else {
-        var attribute = $(d).prevAll(".attr").first(),
-          value = $(d).text().trim();
-
-        if(attribute && attribute.text()){
+        let attribute = detail.prevAll(".attr").first(),
+            value     = detail.text().trim();
+        
+        if (attribute && attribute.text()) {
           element.attributes.push({
             attribute: attribute.text().trim(),
-            value: value
+            value    : value
           });
         } else {
-          console.error("clickable failure: could not identify attribute or tag: " + el.text());
           RobaDialog.error("clickable failure: could not identify attribute or tag: " + el.text());
         }
       }
     });
-
+    
     // update the selector elements
     var index = ("0000" + parseInt(element.index)).slice(-4);
-    if(element.tag || element.attributes.length){
+    if (element.tag || element.attributes.length) {
       // set the element
-      selectorElements["_" + index] = element;
+      selectorElements[ "_" + index ] = element;
     } else {
       // make sure the element is nulled
-      delete selectorElements["_" + index];
+      delete selectorElements[ "_" + index ];
     }
-
+    
     // sort by index
     var sortedElements = {};
-    _.each(_.sortBy(_.keys(selectorElements), function (key) { return selectorElements[key].index }), function (key) {
-      sortedElements[key] = selectorElements[key];
+    _.each(_.sortBy(_.keys(selectorElements), (key) => {
+      return selectorElements[ key ].index
+    }), (key) => {
+      sortedElements[ key ] = selectorElements[ key ];
     });
-
+    
     // done
     //console.log("updating elements: ", sortedElements);
     instance.selectorElements.set(sortedElements);
@@ -290,22 +314,22 @@ Template.AdventureScreen.events({
    * Show the hover controls for a highlight element
    */
   "mouseenter .adventure-highlight-element" (e, instance) {
-    var element = this;
-
+    let element = this;
+    
     // make sure the adventure is operating
-    if(instance.data.adventure.status == AdventureStatus.complete){
+    if (instance.data.adventure.status == AdventureStatus.complete) {
       return;
     }
-
+    
     clearTimeout(instance.hideHoverControlsTimeout);
-
+    
     //console.log("mouseenter: ", element);
     var hoverContainer = instance.$(".hover-controls-container");
-    if(element.localBounds && hoverContainer){
+    if (element.localBounds && hoverContainer) {
       hoverContainer
-        .css("top", element.localBounds.top - 40)
-        .css("left", element.localBounds.left)
-        .css("display", "block");
+          .css("top", element.localBounds.top - 40)
+          .css("left", element.localBounds.left)
+          .css("display", "block");
       instance.controlledElement.set(element);
     }
   },
@@ -314,10 +338,10 @@ Template.AdventureScreen.events({
    */
   "mouseleave .adventure-highlight-element, mouseleave .hover-controls-container" (e, instance) {
     var context = this;
-    if(instance.hideHoverControlsTimeout){
+    if (instance.hideHoverControlsTimeout) {
       clearTimeout(instance.hideHoverControlsTimeout);
     }
-
+    
     instance.hideHoverControlsTimeout = setTimeout(function () {
       delete instance.hideHoverControlsTimeout;
       instance.$(".hover-controls-container").css("display", "");
@@ -331,22 +355,22 @@ Template.AdventureScreen.events({
     clearTimeout(instance.hideHoverControlsTimeout);
   },
   "mouseenter .adventure-highlight-hierarchy" (e, instance) {
-    var localBounds = this.localBounds,
-      activeElement = instance.$(".adventure-highlight-detail.active .adventure-highlight-hierarchy:last")[0];
-
-    if(activeElement && activeElement == e.target){
+    var localBounds   = this.localBounds,
+        activeElement = instance.$(".adventure-highlight-detail.active .adventure-highlight-hierarchy:last")[ 0 ];
+    
+    if (activeElement && activeElement == e.target) {
       return;
     }
-
+    
     // this needs to be delayed slightly to ensure any mouseleave triggers first
-    if(localBounds){
+    if (localBounds) {
       setTimeout(function () {
         instance.$(".adventure-hover-element-highlight")
-          .css("visibility", "visible")
-          .css("top", localBounds.top + "px")
-          .css("left", localBounds.left + "px")
-          .css("width", localBounds.width + "px")
-          .css("height", localBounds.height + "px");
+            .css("visibility", "visible")
+            .css("top", localBounds.top + "px")
+            .css("left", localBounds.left + "px")
+            .css("width", localBounds.width + "px")
+            .css("height", localBounds.height + "px");
       }, 10);
     } else {
       console.error("mouseenter adventure-highlight-hierarchy without bounds");
@@ -354,46 +378,47 @@ Template.AdventureScreen.events({
   },
   "mouseleave .adventure-highlight-hierarchy" (e, instance) {
     instance.$(".adventure-hover-element-highlight")
-      .css("top", "50%")
-      .css("left", "50%")
-      .css("width", "1px")
-      .css("height", "1px")
-      .css("visibility", "hidden");
+        .css("top", "50%")
+        .css("left", "50%")
+        .css("width", "1px")
+        .css("height", "1px")
+        .css("visibility", "hidden");
   },
   "click .adventure-selector-action-menu a" (e, instance) {
     // check for a data command
-    var item = $(e.target),
-      selector = atob(item.closest("[data-selector]").attr("data-selector")),
-      command = item.closest("[data-command]").attr("data-command"),
-      commandType = item.closest("[data-command-type]").attr("data-command-type"),
-      nodeId = item.closest("[data-node-id]").attr("data-node-id"),
-      targetId = item.closest("[data-target-id]").attr("data-target-id");
-
+    var item        = $(e.target),
+        selector    = atob(item.closest("[data-selector]").attr("data-selector")),
+        command     = item.closest("[data-command]").attr("data-command"),
+        commandType = item.closest("[data-command-type]").attr("data-command-type"),
+        nodeId      = item.closest("[data-node-id]").attr("data-node-id"),
+        targetId    = item.closest("[data-target-id]").attr("data-target-id");
+    
     console.log("Select: ", commandType, command, nodeId, targetId, selector);
-
+    
     // make sure the change we'll make is visible
     switch (commandType) {
       case "ready":
       case "valid":
         Accordion.activate("current-node");
         setTimeout(function () {
-          var targetTop = $(".node-edit-form").offset().top,
-            currentScroll = $(".adventure-sidebar").scrollTop(),
-            sidebarTop = $(".adventure-sidebar").offset().top;
-          $(".adventure-sidebar").animate({scrollTop: targetTop + currentScroll - 10 - sidebarTop}, 200, function () {
-            var field = commandType == "ready" ? "readyCode" : "validationCode",
-              update = {$set: {}},
-              node = Nodes.findOne(nodeId);
-            if(node[field] && node[field].length){
-              update.$set[field] = node[field] + "\n" + commandType + "." + command + "('" + selector + "');";
+          let adventureSidebar = $(".adventure-sidebar"),
+              targetTop        = $(".node-edit-form").offset().top,
+              currentScroll    = adventureSidebar.scrollTop(),
+              sidebarTop       = adventureSidebar.offset().top;
+          
+          adventureSidebar.animate({ scrollTop: targetTop + currentScroll - 10 - sidebarTop }, 200, function () {
+            var field  = commandType == "ready" ? "readyCode" : "validationCode",
+                update = { $set: {} },
+                node   = Nodes.findOne(nodeId);
+            if (node[ field ] && node[ field ].length) {
+              update.$set[ field ] = node[ field ] + "\n" + commandType + "." + command + "('" + selector + "');";
             } else {
-              update.$set[field] = commandType + "." + command + "('" + selector + "');";
+              update.$set[ field ] = commandType + "." + command + "('" + selector + "');";
             }
             Nodes.update(nodeId, update, function (error, result) {
-              if(error){
-                console.error("Failed to update node value: " + error.message);
+              if (error) {
                 RobaDialog.error("Failed to update node value: " + error.message);
-                console.log("Attempted update:", update);
+                console.error("Attempted update:", update);
               }
             });
           });
@@ -401,28 +426,30 @@ Template.AdventureScreen.events({
         break;
       case "action":
         Accordion.activate("current-node-actions");
-        if(targetId){
+        if (targetId) {
           $(".action-control-buttons[data-action-id='" + targetId + "'] .btn-edit-action").trigger("click");
           setTimeout(function () {
-            var targetTop = $(".action-edit-form[data-action-id='" + targetId + "']").offset().top,
-              currentScroll = $(".adventure-sidebar").scrollTop(),
-              sidebarTop = $(".adventure-sidebar").offset().top;
-            $(".adventure-sidebar").animate({scrollTop: targetTop + currentScroll - 10 - sidebarTop}, 200, function () {
-              var action = Actions.findOne(targetId),
-                update = {$set: {}};
-              if(action.code && action.code.length){
-                update.$set.code = action.code + "\n" + "driver." + command + "('" + selector + "');";
-              } else {
-                update.$set.code  = "driver." + command + "('" + selector + "');";
-              }
-              Actions.update(targetId, update, function (error, result) {
-                if(error){
-                  console.error("Failed to update action value: " + error.message);
-                  RobaDialog.error("Failed to update action value: " + error.message);
-                  console.log("Attempted update:", update);
-                }
-              });
-            });
+            let adventureSidebar = $(".adventure-sidebar"),
+                targetTop        = $(".action-edit-form[data-action-id='" + targetId + "']").offset().top,
+                currentScroll    = adventureSidebar.scrollTop(),
+                sidebarTop       = adventureSidebar.offset().top;
+            
+            adventureSidebar
+                .animate({ scrollTop: targetTop + currentScroll - 10 - sidebarTop }, 200, function () {
+                  var action = Actions.findOne(targetId),
+                      update = { $set: {} };
+                  if (action.code && action.code.length) {
+                    update.$set.code = action.code + "\n" + "driver." + command + "('" + selector + "');";
+                  } else {
+                    update.$set.code = "driver." + command + "('" + selector + "');";
+                  }
+                  Actions.update(targetId, update, function (error, result) {
+                    if (error) {
+                      RobaDialog.error("Failed to update action value: " + error.message);
+                      console.log("Attempted update:", update);
+                    }
+                  });
+                });
           }, 250);
         }
         break;
@@ -433,52 +460,55 @@ Template.AdventureScreen.events({
 /**
  * Create reactive vars for this instance
  */
-Template.AdventureScreen.onCreated( () =>  {
-  var instance = Template.instance();
-  instance.viewport           = new ReactiveVar();
-  instance.highlightElements  = new ReactiveVar([]);
-  instance.previewElements    = new ReactiveVar([]);
-  instance.selectorElements   = new ReactiveVar({});
-  instance.controlledElement  = new ReactiveVar();
-  instance.checkResult        = new ReactiveVar();
-  instance.lastClickLocation  = new ReactiveVar();
-
-  instance.updateViewport( () =>  {
-    var viewport = {
-      width: $(".remote-screen").width(),
-      height: $(".remote-screen").height(),
-      offset: $(".remote-screen").offset(),
-      parentOffset: $(".remote-screen").offsetParent().offset()
-    };
-
-    viewport.parentOffset.height = $(".remote-screen").offsetParent().height();
-    viewport.parentOffset.width = $(".remote-screen").offsetParent().width();
-
+Template.AdventureScreen.onCreated(() => {
+  let instance               = Template.instance();
+  instance.viewport          = new ReactiveVar();
+  instance.highlightElements = new ReactiveVar([]);
+  instance.previewElements   = new ReactiveVar([]);
+  instance.selectorElements  = new ReactiveVar({});
+  instance.controlledElement = new ReactiveVar();
+  instance.checkResult       = new ReactiveVar();
+  instance.lastClickLocation = new ReactiveVar();
+  
+  instance.updateViewport = () => {
+    let remoteScreen = $(".remote-screen"),
+        viewport     = {
+          width       : remoteScreen.width(),
+          height      : remoteScreen.height(),
+          offset      : remoteScreen.offset(),
+          parentOffset: remoteScreen.offsetParent().offset()
+        };
+    
+    viewport.parentOffset.height = remoteScreen.offsetParent().height();
+    viewport.parentOffset.width  = remoteScreen.offsetParent().width();
+    
     instance.viewport.set(viewport);
-  }
-};
+  };
+});
 
 /**
  * React to the template being rendered
  */
-Template.AdventureScreen.onRendered( () =>  {
-  var instance = Template.instance();
-
+Template.AdventureScreen.onRendered(() => {
+  let instance = Template.instance();
+  
   // Setup the console view
-  instance.autorun(function () {
+  instance.autorun(() => {
     var resize = Session.get("resize");
     instance.updateViewport();
   });
-
+  
   // Observe the commands to pick up the highlight elements
   AdventureCommands.find({
-    adventureId: instance.data.adventure._id,
-    "result.highlightElements": {$exists: true}
-  }, {sort: {dateCreated: -1}, limit: 1}).observe({
+    adventureId               : instance.data.adventure._id,
+    "result.highlightElements": { $exists: true }
+  }, { sort: { dateCreated: -1 }, limit: 1 }).observe({
     addedAt (command) {
-      if(command && command.result && command.result.highlightElements){
-        _.each(command.result.highlightElements, function (d, i) {d.index = i;});
-        if(command.result.preview){
+      if (command && command.result && command.result.highlightElements) {
+        _.each(command.result.highlightElements, function (d, i) {
+          d.index = i;
+        });
+        if (command.result.preview) {
           instance.previewElements.set(command.result.highlightElements);
           instance.highlightElements.set([]);
         } else {
@@ -488,9 +518,11 @@ Template.AdventureScreen.onRendered( () =>  {
       }
     },
     changedAt (command) {
-      if(command && command.result && command.result.highlightElements){
-        _.each(command.result.highlightElements, function (d, i) {d.index = i;});
-        if(command.result.preview){
+      if (command && command.result && command.result.highlightElements) {
+        _.each(command.result.highlightElements, function (d, i) {
+          d.index = i;
+        });
+        if (command.result.preview) {
           instance.previewElements.set(command.result.highlightElements);
           instance.highlightElements.set([]);
         } else {
@@ -500,10 +532,10 @@ Template.AdventureScreen.onRendered( () =>  {
       }
     }
   });
-};
+});
 
 /**
  * React to the template being destroyed
  */
-Template.AdventureScreen.onDestroyed( () =>  {
-};
+Template.AdventureScreen.onDestroyed(() => {
+});

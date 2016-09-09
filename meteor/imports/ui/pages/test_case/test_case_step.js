@@ -95,7 +95,7 @@ Template.TestCaseStep.events({
  * Template Created
  */
 Template.TestCaseStep.created = function () {
-  var instance = this;
+  let instance = Template.instance();
   instance.error = new ReactiveVar();
 };
 

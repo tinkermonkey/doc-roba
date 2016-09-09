@@ -19,7 +19,7 @@ Template.EditableTitleDescription.created = function () {
  * Template Rendered
  */
 Template.EditableTitleDescription.rendered = function () {
-  var instance = this;
+  let instance = Template.instance();
 
   instance.$(".editable-title-description").editable({
     type: "titleDescriptionEditor",

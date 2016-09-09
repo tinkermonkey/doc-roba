@@ -89,7 +89,7 @@ Template.VersionServerList.events({
  * Template Created
  */
 Template.VersionServerList.created = function () {
-  var instance = this;
+  let instance = Template.instance();
   instance.configSchema = new ReactiveVar({});
 };
 

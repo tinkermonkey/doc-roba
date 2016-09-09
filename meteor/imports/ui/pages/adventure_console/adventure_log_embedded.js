@@ -1,6 +1,8 @@
 import './adventure_log_embedded.html';
+import './adventure_log.css';
 import { Template } from 'meteor/templating';
 import { LogMessages } from '../../../api/log_message/log_message.js';
+import '../../components/log_messages/log_message_data.js';
 
 /**
  * Template Helpers
@@ -28,10 +30,11 @@ Template.AdventureLogEmbedded.events({});
  * Template Rendered
  */
 Template.AdventureLogEmbedded.onCreated(() => {
-  let instance = Template.instance;
+  let instance = Template.instance();
   
   instance.autorun(function () {
-    instance.subscribe("adventure_log", instance.data.adventure._id);
+    let data = Template.currentData();
+    instance.subscribe("adventure_log", data.adventure._id);
   });
 });
 

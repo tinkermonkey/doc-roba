@@ -114,7 +114,7 @@ Template.TestCaseRole.created = function () {
  * Template Rendered
  */
 Template.TestCaseRole.rendered = function () {
-  var instance = this;
+  let instance = Template.instance();
 
   // make the step_types sortable
   instance.$(".test-role-steps").sortable({

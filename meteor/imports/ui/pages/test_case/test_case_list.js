@@ -152,7 +152,7 @@ Template.TestCaseList.events({
  * Template Created
  */
 Template.TestCaseList.created = function () {
-  var instance = this;
+  let instance = Template.instance();
   instance.elementIdReactor = new ReactiveVar();
 
   instance.autorun(function () {

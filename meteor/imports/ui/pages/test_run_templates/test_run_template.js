@@ -45,7 +45,7 @@ Template.TestPlan.created = function () {
  * Template Rendered
  */
 Template.TestPlan.rendered = function () {
-  var instance = this;
+  let instance = Template.instance();
 
   instance.$(".test-run-add-item-list > .test-run-new-item").draggable({
     revert: "invalid",
