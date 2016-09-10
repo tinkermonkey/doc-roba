@@ -9,11 +9,11 @@ import '../../node_search/node_term_search_results.js';
  * Template Helpers
  */
 Template.XEditableNodeSearch.helpers({
-  searchResults: function () {
+  searchResults() {
     var instance = Template.instance();
     return instance.searchResults.get();
   },
-  getValue: function () {
+  getValue() {
     var instance = Template.instance();
     return instance.value.get();
   }
@@ -23,16 +23,16 @@ Template.XEditableNodeSearch.helpers({
  * Template Event Handlers
  */
 Template.XEditableNodeSearch.events({
-  "keydown .input-search": function (e, instance) {
+  "keydown .input-search"(e, instance) {
     e.stopImmediatePropagation();
   },
-  "keyup .input-search, change .input-search": function (e, instance) {
+  "keyup .input-search, change .input-search"(e, instance) {
     e.stopImmediatePropagation();
     var term = instance.$(".input-search").val().trim();
     console.log("Node Selector:", term);
     instance.searchResults.set(NodeSearch.byTerm(term, instance.data.projectVersionId));
   },
-  "click .list-group-item": function (e, instance) {
+  "click .list-group-item"(e, instance) {
     var selection = this;
     instance.data.xEditable.$input.val(selection.node.staticId);
     instance.value.set(selection.node.staticId);

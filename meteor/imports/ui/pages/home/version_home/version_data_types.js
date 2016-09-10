@@ -26,7 +26,7 @@ Template.VersionDataTypes.helpers({
  * Template Event Handlers
  */
 Template.VersionDataTypes.events({
-  "click .btn-add-custom-type": function (event, instance) {
+  "click .btn-add-custom-type"(event, instance) {
     DatastoreDataTypes.insert({
       title: "New Type",
       projectId: instance.data.projectId,
@@ -39,7 +39,7 @@ Template.VersionDataTypes.events({
       }
     });
   },
-  "click .btn-delete-custom-type": function (event) {
+  "click .btn-delete-custom-type"(event) {
     var dataTypeId = $(event.target).attr("data-store-id");
     if(dataTypeId){
       DatastoreDataTypes.remove({_id: dataTypeId}, function (error, response) {
@@ -69,7 +69,7 @@ Template.VersionDataTypes.onRendered(() => {
   
   // Update the editables if the list of custom types changes
   DatastoreDataTypes.find({projectVersionId: instance.data.version._id}).observeChanges({
-    added: function () {
+    added() {
       updateDatastoreNameEditable(instance);
     }
   });
@@ -91,8 +91,8 @@ var updateDatastoreNameEditable = function (instance) {
   instance.$('.data-store-name-editable').editable({
     mode: "inline",
     highlight: false,
-    display: function () {},
-    success: function (response, newValue) {
+    display() {},
+    success(response, newValue) {
       var editedElement = this,
           dataStoreId = $(editedElement).attr("data-pk");
       

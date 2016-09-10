@@ -22,7 +22,7 @@ import './x_editable_action_route_selector.js';
   $.fn.editableutils.inherit(ActionRouteSelector, $.fn.editabletypes.abstractinput);
 
   $.extend(ActionRouteSelector.prototype, {
-    render: function() {
+    render() {
       this.$input.parent().append('<div class="x-editable-action-route-selector"></div>');
       this.search = this.$input.parent().find(".x-editable-action-route-selector");
 
@@ -43,7 +43,7 @@ import './x_editable_action_route_selector.js';
      @method value2input(value)
      @param {mixed} value
      **/
-    value2input: function(value) {
+    value2input(value) {
       if(!value) {
         return;
       }
@@ -56,7 +56,7 @@ import './x_editable_action_route_selector.js';
 
      @method input2value()
      **/
-    input2value: function() {
+    input2value() {
       return {
         actionId: this.$input.filter('[name="actionId"]').val(),
         nodeId: this.$input.filter('[name="nodeId"]').val()

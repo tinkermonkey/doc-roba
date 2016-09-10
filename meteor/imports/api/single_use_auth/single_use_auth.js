@@ -4,7 +4,7 @@ Accounts.singleUseAuth = {
   /**
    * Generate and store a one-time password
    */
-  generate: function (options, user) {
+  generate(options, user) {
     user = user || Meteor.user();
     if(!user) { throw new Meteor.Error("Accounts.singleUserAuth.generate failed: no user specified")}
 
@@ -28,7 +28,7 @@ Accounts.singleUseAuth = {
    * Verify a single use token
    * @param token
    */
-  verify: function (token) {
+  verify(token) {
     console.log("Verify: ", token);
     var user = Meteor.users.findOne({
         'services.singleUse.verificationTokens.token': token

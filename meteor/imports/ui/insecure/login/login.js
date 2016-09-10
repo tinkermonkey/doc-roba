@@ -18,7 +18,7 @@ Template.Login.events({
    * Transition to the sign-up form
    * @param e
    */
-  "click button.show-signup": function () {
+  "click button.show-signup"() {
     d3.select(".login-slide")
       .classed("slide-right", true);
     d3.selectAll(".login-container")
@@ -30,7 +30,7 @@ Template.Login.events({
    * Transition to the login form
    * @param e
    */
-  "click button.show-login": function () {
+  "click button.show-login"() {
     d3.select(".login-slide")
       .classed("slide-right", false);
     d3.selectAll(".login-container")
@@ -42,7 +42,7 @@ Template.Login.events({
    * Submit the signup form
    * @param e
    */
-  "click button.signup": function () {
+  "click button.signup"() {
     console.log("Signup");
     var valid = true;
 
@@ -84,7 +84,7 @@ Template.Login.events({
    * Submit the login form
    * @param e
    */
-  "click button.login, keypress #loginEmail, keypress #loginPassword": function (e) {
+  "click button.login, keypress #loginEmail, keypress #loginPassword"(e) {
     var email = $("#loginEmail").val(),
       password = $("#loginPassword").val(),
       valid = true; // TODO do field validation!

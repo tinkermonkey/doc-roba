@@ -17,7 +17,7 @@ Users.helpers({
    * @param id Project of ProjectVersion _id
    * @returns {boolean}
    */
-  hasProjectAccess: function (id) {
+  hasProjectAccess(id) {
     var user = this;
     // check projectList first
     if(_.contains(user.projectList, id)){
@@ -31,7 +31,7 @@ Users.helpers({
    * Return the list of roles for a project
    * @param projectId
    */
-  projectRoles: function(projectId) {
+  projectRoles(projectId) {
     var user = this;
     if(user.projectList && _.contains(user.projectList, projectId)){
       return user.projects[projectId].roles;
@@ -44,7 +44,7 @@ Users.helpers({
    * @param projectId
    * @returns {boolean}
    */
-  hasAdminAccess: function (projectId) {
+  hasAdminAccess(projectId) {
     var user = this;
     if(user.projectList && _.contains(user.projectList, projectId)
       && user.projects && user.projects[projectId] && user.projects[projectId].roles){
@@ -60,7 +60,7 @@ Users.helpers({
    * @param projectId
    * @returns {boolean}
    */
-  hasDeveloperAccess: function (projectId) {
+  hasDeveloperAccess(projectId) {
     var user = this;
     if(user.projectList && _.contains(user.projectList, projectId)
       && user.projects && user.projects[projectId] && user.projects[projectId].roles){
@@ -77,7 +77,7 @@ Users.helpers({
    * @param projectId
    * @returns {boolean}
    */
-  hasTesterAccess: function (projectId) {
+  hasTesterAccess(projectId) {
     var user = this;
     if(user.projectList && _.contains(user.projectList, projectId)
       && user.projects && user.projects[projectId] && user.projects[projectId].roles){
@@ -96,7 +96,7 @@ Users.helpers({
    * @param role
    * @returns {boolean}
    */
-  hasProjectRole: function (projectId, role) {
+  hasProjectRole(projectId, role) {
     var user = this;
     if(user.projectList && _.contains(user.projectList, projectId)
       && user.projects && user.projects[projectId] && user.projects[projectId].roles){
@@ -111,7 +111,7 @@ Users.helpers({
    * @param projectId
    * @param role
    */
-  addProjectRole: function (projectId, role) {
+  addProjectRole(projectId, role) {
     var user = this,
       projects = user.projects || {},
       projectList = user.projectList || [],
@@ -139,7 +139,7 @@ Users.helpers({
    * @param projectId
    * @param role
    */
-  setProjectRole: function (projectId, role) {
+  setProjectRole(projectId, role) {
     var user = this,
       projects = user.projects || {},
       projectList = user.projectList || [],
@@ -164,7 +164,7 @@ Users.helpers({
    * @param projectId
    * @param role
    */
-  removeProjectRole: function (projectId, role) {
+  removeProjectRole(projectId, role) {
     var user = this,
         projects = user.projects || {},
         projectList = user.projectList || [],
@@ -192,7 +192,7 @@ Users.helpers({
    * Remove a user's access to a project
    * @param projectId
    */
-  removeProjectAccess: function (projectId) {
+  removeProjectAccess(projectId) {
     var user = this,
         projects = user.projects || {},
         projectList = user.projectList || [],

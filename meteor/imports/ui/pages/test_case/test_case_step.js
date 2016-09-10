@@ -18,7 +18,7 @@ import './step_types/test_case_step_wait.js';
  * Template Helpers
  */
 Template.TestCaseStep.helpers({
-  getStepTemplate: function () {
+  getStepTemplate() {
     switch (this.type) {
       case TestCaseStepTypes.node:
         return "TestCaseStepNode";
@@ -32,14 +32,14 @@ Template.TestCaseStep.helpers({
         return "TestCaseStepCustom";
     }
   },
-  getStepClass: function () {
+  getStepClass() {
     return Util.testStepContainerClass(this.type, Template.instance().error.get());
   },
-  stepContext: function () {
+  stepContext() {
     this.error = Template.instance().error;
     return this;
   },
-  error: function () {
+  error() {
     return Template.instance().error.get();
   }
 });
@@ -48,7 +48,7 @@ Template.TestCaseStep.helpers({
  * Template Event Handlers
  */
 Template.TestCaseStep.events({
-  "click .roba-round-container-delete": function (e, instance) {
+  "click .roba-round-container-delete"(e, instance) {
     var step = instance.data;
     if(step && step._id){
       e.stopImmediatePropagation();
@@ -60,7 +60,7 @@ Template.TestCaseStep.events({
       });
     }
   },
-  "edited .editable": function (e, instance, newValue) {
+  "edited .editable"(e, instance, newValue) {
     e.stopImmediatePropagation();
     var testCaseStep = instance.data,
       dataKey = $(e.target).attr("data-key");
@@ -83,7 +83,7 @@ Template.TestCaseStep.events({
       });
     }
   },
-  "click .test-case-step-error": function (e, instance) {
+  "click .test-case-step-error"(e, instance) {
     var editable = instance.$(".editable");
     console.log("Editable: ", editable.get(0));
     $(e.target).closest(".test-case-step-body").addClass("hide");

@@ -9,16 +9,16 @@ import './node_snippet.js';
  * Template Helpers
  */
 Template.StandaloneNodeSnippet.helpers({
-  width: function () {
+  width() {
     return DocTreeConfig.nodes.width * (this.scale || 1) + DocTreeConfig.standalone.margin * 2;
   },
-  height: function () {
+  height() {
     return DocTreeConfig.nodes.height * (this.scale || 1) + DocTreeConfig.standalone.margin * 2;
   },
-  margin: function () {
+  margin() {
     return DocTreeConfig.standalone.margin;
   },
-  getScale: function () {
+  getScale() {
     return this.scale || 1;
   }
 });

@@ -27,10 +27,10 @@ Template.TestPlanListItem.onRendered(()=> {
   instance.$(".test-case-list-selectable").draggable({
     revert  : true,
     distance: 5,
-    start   : function (event, ui) {
+    start(event, ui) {
       ui.helper.addClass("in-drag");
     },
-    stop    : function (event, ui) {
+    stop(event, ui) {
       ui.helper.removeClass("in-drag");
     }
   });

@@ -28,9 +28,9 @@ Template.EditablePlatformType.rendered = function () {
       return { value: type, text: Util.camelToTitle(PlatformTypesLookup[type])}
     }),
     highlight: false,
-    display: function () {
+    display() {
     },
-    success: function (response, newValue) {
+    success(response, newValue) {
       var editedElement = this;
       $(editedElement).trigger("edited", [newValue]);
       setTimeout(function () {

@@ -365,7 +365,7 @@ export default class TreeLayout {
             { text: "Cancel" },
             { text: "Delete" }
           ],
-          callback       : function (btn) {
+          callback(btn) {
             self.removeHighlight();
             self.restoreCachedView(self.config.stepDuration);
             if (btn === "Delete") {

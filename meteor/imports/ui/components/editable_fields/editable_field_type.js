@@ -28,9 +28,9 @@ Template.EditableFieldType.rendered = function () {
       return {value: typeId, text: FieldTypesLookup[typeId]};
     }),
     highlight: false,
-    display: function () {
+    display() {
     },
-    success: function (response, newValue) {
+    success(response, newValue) {
       var editedElement = this;
       if (FieldTypesLookup[newValue]) {
         $(editedElement).trigger("edited", [newValue]);

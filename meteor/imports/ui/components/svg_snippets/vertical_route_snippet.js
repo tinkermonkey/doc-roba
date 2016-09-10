@@ -11,10 +11,10 @@ import './node_snippet.js';
  * Template Helpers
  */
 Template.VerticalRouteSnippet.helpers({
-  width: function () {
+  width() {
     return DocTreeConfig.nodes.width * 2 * (this.scale || 1) + DocTreeConfig.standalone.margin * 2
   },
-  height: function () {
+  height() {
     var height = 0;
     if(this.steps){
       // calculate the starting Y value for each step
@@ -25,20 +25,20 @@ Template.VerticalRouteSnippet.helpers({
     }
     return height * (this.scale || 1) + DocTreeConfig.standalone.margin * 2
   },
-  actionY: function () {
+  actionY() {
     return this.nodeId ? DocTreeConfig.nodes.height : 0
   },
-  xMargin: function () {
+  xMargin() {
     var width = DocTreeConfig.nodes.width * 2 * (this.scale || 1) + DocTreeConfig.standalone.margin * 2;
     return (width - DocTreeConfig.nodes.width) / 2
   },
-  yMargin: function () {
+  yMargin() {
     return DocTreeConfig.standalone.margin
   },
-  getScale: function () {
+  getScale() {
     return this.scale || 1
   },
-  getSteps: function () {
+  getSteps() {
     if(this.steps){
       // calculate the starting Y value for each step
       var startY = 0;

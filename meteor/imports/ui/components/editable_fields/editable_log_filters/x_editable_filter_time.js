@@ -18,7 +18,7 @@
     /**
      * Render the editor control
      */
-    render: function () {
+    render() {
       this.$input = this.$tpl.find('input');
     },
     
@@ -27,7 +27,7 @@
      
      @method activate()
      **/
-    activate: function () {
+    activate() {
       this.$input.filter('[name="start"]').focus();
     },
     
@@ -37,7 +37,7 @@
      @method value2input(value)
      @param value
      **/
-    value2input: function (value) {
+    value2input(value) {
       this.$input.filter('[name="start"]').val(value ? value.start : '');
       this.$input.filter('[name="end"]').val(value ? value.end : '');
     },
@@ -47,7 +47,7 @@
      
      @method input2value()
      **/
-    input2value: function () {
+    input2value() {
       return {
         start: this.$input.filter('[name="start"]').val() ? parseFloat(this.$input.filter('[name="start"]')
             .val()) : null,

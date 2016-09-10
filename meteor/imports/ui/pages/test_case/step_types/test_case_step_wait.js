@@ -11,10 +11,10 @@ import {TestCaseSteps} from '../../../../api/test_case/test_case_step.js';
  * Template Helpers
  */
 Template.TestCaseStepWait.helpers({
-  getRole: function () {
+  getRole() {
     return TestCaseRoles.findOne({staticId: this.testCaseRoleId, projectVersionId: this.projectVersionId});
   },
-  waitPartners: function () {
+  waitPartners() {
     if(this.data && this.data.waitId){
       var stepIdMap = [], // keep a handy lookup of the step Is so we know what to remove
         waitPartnerIds = _.without(TestCaseSteps.find({
@@ -88,11 +88,11 @@ Template.TestCaseStepWait.created = function () {
       instance.$(".removable-wait").draggable({
         revert: true,
         revertDuration: 100,
-        start: function (event, ui) {
+        start(event, ui) {
           ui.helper.addClass("draggable-wait-dragged");
           ui.helper.data("dropped", false);
         },
-        stop: function (event, ui) {
+        stop(event, ui) {
           var keep = ui.helper.data("dropped"),
             removeId = ui.helper.attr("data-remove-id");
 
@@ -131,7 +131,7 @@ Template.TestCaseStepWait.rendered = function () {
   // Setup the join draggable behavior
   instance.$(".draggable-wait").draggable({
     helper: "clone",
-    start: function (event, ui) {
+    start(event, ui) {
       ui.helper.addClass("draggable-wait-dragged");
     }
   });
@@ -141,7 +141,7 @@ Template.TestCaseStepWait.rendered = function () {
 
   // Setup the droppable behavior
   instance.$(".droppable-wait").droppable({
-    accept: function (el){
+    accept(el){
       var data = instance.data,
         currentWaitId = instance.waitId.get(),
         drag = $(el);
@@ -163,7 +163,7 @@ Template.TestCaseStepWait.rendered = function () {
     },
     activeClass: "droppable-wait-active",
     hoverClass: "droppable-wait-hover",
-    drop: function (event, ui) {
+    drop(event, ui) {
       var drop = $(this),
         drag = ui.draggable;
 

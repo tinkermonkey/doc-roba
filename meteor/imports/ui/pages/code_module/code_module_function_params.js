@@ -82,7 +82,7 @@ Template.CodeModuleFunctionParams.onRendered(() => {
       .sortable({
         items: "> .sortable-table-row",
         handle: ".drag-handle",
-        helper: function (e, ui) {
+        helper(e, ui) {
           // fix the width
           ui.children().each(function () {
             $(this).width($(this).width());
@@ -91,7 +91,7 @@ Template.CodeModuleFunctionParams.onRendered(() => {
         },
         axis: "y",
         forcePlaceholderSize: true,
-        update: function (event, ui) {
+        update(event, ui) {
           var order;
           instance.$(".sortable-table-row").each(function (i, el) {
             order = $(el).attr("data-sort-order");

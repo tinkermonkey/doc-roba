@@ -10,7 +10,7 @@ import {TestAgentTypes} from '../../../api/test_agent/test_agent_types.js';
  * Template Helpers
  */
 Template.EditableTestAgentList.helpers({
-  valueList: function () {
+  valueList() {
     return this.value ? this.value.join(",") : ''
   }
 });
@@ -50,8 +50,8 @@ Template.EditableTestAgentList.rendered = function () {
       type: "checklist",
       source: testAgents,
       highlight: false,
-      display: function () {},
-      success: function (response, newValue) {
+      display() {},
+      success(response, newValue) {
         var editedElement = this;
         $(editedElement).trigger("edited", [newValue]);
         setTimeout(function () {

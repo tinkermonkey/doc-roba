@@ -70,10 +70,10 @@ ChangeTracker.TrackChanges(TestGroups, "test_groups");
  * Helpers
  */
 TestGroups.helpers({
-  groups: function () {
+  groups() {
     return TestGroups.find({ parentGroupId: this.staticId, projectVersionId: this.projectVersionId }, { sort: { title: 1 } })
   },
-  testCases: function () {
+  testCases() {
     return TestCases.find({ testGroupId: this.staticId, projectVersionId: this.projectVersionId }, { sort: { title: 1 } })
   }
 });

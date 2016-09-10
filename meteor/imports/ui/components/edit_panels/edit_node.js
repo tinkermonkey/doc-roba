@@ -17,13 +17,13 @@ import './page_view_edit_panel.js';
  * Template helpers
  */
 Template.EditNode.helpers({
-  getNodeRecord: function () {
+  getNodeRecord() {
     return Nodes.findOne({_id: this._id});
   },
-  isVisitable: function () {
+  isVisitable() {
     return this.type == NodeTypes.page || this.type == NodeTypes.view
   },
-  getEditPanel: function () {
+  getEditPanel() {
     switch (this.type) {
       case NodeTypes.root:
         return "RootEditPanel";
@@ -44,7 +44,7 @@ Template.EditNode.helpers({
  * React to the template being rendered
  */
 Template.EditNode.events({
-  "edited .editable": function (e, instance, newValue) {
+  "edited .editable"(e, instance, newValue) {
     e.stopImmediatePropagation();
     var dataKey = $(e.target).attr("data-key"),
       update = {$set: {}};

@@ -15,10 +15,10 @@ import '../../../../components/editable_fields/editable_field_yes_no.js';
  * Template Helpers
  */
 Template.VersionServerList.helpers({
-  sortedServers: function () {
+  sortedServers() {
     return TestServers.find({projectVersionId: this._id}, {sort: {order: 1}}).fetch();
   },
-  configSchema: function () {
+  configSchema() {
     let projectVersion = Template.parentData(1);
     return projectVersion.serverConfigDatastore().simpleSchema();
   }
@@ -28,7 +28,7 @@ Template.VersionServerList.helpers({
  * Template Helpers
  */
 Template.VersionServerList.events({
-  "click .btn-add-server": function () {
+  "click .btn-add-server"() {
     var instance = Template.instance(),
         projectVersion = this,
         order = instance.$(".server-list-row").length;
@@ -42,7 +42,7 @@ Template.VersionServerList.events({
       order: order
     });
   },
-  "click .server-list-row .btn-delete": function () {
+  "click .server-list-row .btn-delete"() {
     var server = this;
 
     RobaDialog.show({
@@ -53,7 +53,7 @@ Template.VersionServerList.events({
         {text: "Cancel"},
         {text: "Delete"}
       ],
-      callback: function (btn) {
+      callback(btn) {
         //console.log("Dialog button pressed: ", btn);
         if(btn == "Delete"){
           TestServers.remove(server._id, function (error, response) {
@@ -69,7 +69,7 @@ Template.VersionServerList.events({
       }
     });
   },
-  "edited .editable": function (e, instance, newValue) {
+  "edited .editable"(e, instance, newValue) {
     e.stopImmediatePropagation();
     
     var serverId = $(e.target).closest(".server-list-row").attr("data-pk"),
@@ -104,7 +104,7 @@ Template.VersionServerList.rendered = function () {
     .sortable({
       items: "> .sortable-table-row",
       handle: ".drag-handle",
-      helper: function(e, ui) {
+      helper(e, ui) {
         // fix the width
         ui.children().each(function() {
           $(this).width($(this).width());
@@ -113,7 +113,7 @@ Template.VersionServerList.rendered = function () {
       },
       axis: "y",
       forcePlaceholderSize: true,
-      update: function (event, ui) {
+      update(event, ui) {
         var order;
         instance.$(".server-list-row").each(function (i, el) {
           order = $(el).attr("data-sort-order");
@@ -162,7 +162,7 @@ Template.VersionServerList.rendered = function () {
   // Keep the server config simple schema up to date
   /*
   instance.configObservation = Datastores.find({dataKey: "server_config_" + instance.data._id}).observeChanges({
-    changed: function (id, fields) {
+    changed(id, fields) {
       if(_.contains(fields, "schema")){
         DatastoreSchemas[id] = DSUtil.simpleSchema(fields.schema);
         instance.configSchema.set(DatastoreSchemas[id]);

@@ -8,7 +8,7 @@ import {Session} from 'meteor/session';
  * Template helpers
  */
 Template.MainNavMenu.helpers({
-  navTitle: function () {
+  navTitle() {
     return Session.get("navTitle")
   }
 });

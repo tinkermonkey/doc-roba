@@ -28,9 +28,9 @@ Template.EditableTestAgentOS.rendered = function () {
       return {value: os, text: Util.camelToTitle(TestAgentOSLookup[os])};
     }),
     highlight: false,
-    display: function () {
+    display() {
     },
-    success: function (response, newValue) {
+    success(response, newValue) {
       var editedElement = this;
       if (TestAgentOSLookup[newValue]) {
         $(editedElement).trigger("edited", [newValue]);

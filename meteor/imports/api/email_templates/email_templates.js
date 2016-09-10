@@ -6,7 +6,7 @@ export const EmailTemplates = {
     path: "project_invitation/project_invitation.html",
     route: {
       path: "/project_invitation/:invitationId",
-      data: function (params) {
+      data(params) {
         console.log("Invitation Preview: ", params);
         var invitation = ProjectInvitations.findOne(params.invitationId),
             project = Projects.findOne(invitation.projectId);

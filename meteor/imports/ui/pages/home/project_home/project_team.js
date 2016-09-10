@@ -18,20 +18,20 @@ import '../../../components/datastores/datastore_row_form_vert.js';
  * Template Helpers
  */
 Template.ProjectTeam.helpers({
-  projectUsers: function () {
+  projectUsers() {
     return Users.find({projectList: FlowRouter.getParam("projectId")}, {sort: {"profile.name": 1}});
   },
-  projectRoles: function () {
+  projectRoles() {
     var projectId = FlowRouter.getParam("projectId"),
         user = this;
     if(user && projectId && user.projects && user.projects[projectId]){
       return user.projects[projectId].roles
     }
   },
-  userIsAdmin: function () {
+  userIsAdmin() {
     return Meteor.user().hasAdminAccess(FlowRouter.getParam("projectId"))
   },
-  isCurrentUser: function (userId) {
+  isCurrentUser(userId) {
     return Meteor.userId() != userId && !_.isNull(userId)
   }
 });
@@ -40,7 +40,7 @@ Template.ProjectTeam.helpers({
  * Template Event Handlers
  */
 Template.ProjectTeam.events({
-  "click .btn-invite-user": function (e, instance) {
+  "click .btn-invite-user"(e, instance) {
     // Build the form context
     var formContext = {
       type: "update",
@@ -72,7 +72,7 @@ Template.ProjectTeam.events({
         { text: "Cancel" },
         { text: "Send" }
       ],
-      callback: function (btn) {
+      callback(btn) {
         console.log("Dialog button pressed: ", btn);
         if(btn == "Send"){
           // grab the form data
@@ -95,7 +95,7 @@ Template.ProjectTeam.events({
       }
     });
   },
-  "click .btn-remove-role": function (e, instance) {
+  "click .btn-remove-role"(e, instance) {
     var role = parseInt(this),
         userId = $(e.target).closest(".data-store-table-row").attr("data-user-id"),
         projectId = instance.data._id;
@@ -108,7 +108,7 @@ Template.ProjectTeam.events({
       });
     });
   },
-  "click .btn-add-role": function (e, instance) {
+  "click .btn-add-role"(e, instance) {
     var userId = $(e.target).closest(".data-store-table-row").attr("data-user-id"),
         user = Meteor.users.findOne(userId),
         projectId = instance.data._id;
@@ -134,7 +134,7 @@ Template.ProjectTeam.events({
       contentTemplate: 'DatastoreRowFormVert',
       contentData: formContext,
       title: "Add project role",
-      callback: function (btn) {
+      callback(btn) {
         console.log("Dialog button pressed: ", btn);
         if(btn == "OK"){
           var formId = RobaDialog.currentInstance.$("form").attr("id");
@@ -155,7 +155,7 @@ Template.ProjectTeam.events({
       }
     });
   },
-  "click .btn-remove-access": function (e, instance) {
+  "click .btn-remove-access"(e, instance) {
     var userId = $(e.target).closest(".data-store-table-row").attr("data-user-id"),
         projectId = instance.data._id;
 

@@ -43,9 +43,9 @@ Template.EditableEnumSelector.onRendered(() => {
       return {value: key, text: Util.camelToTitle(instance.lookup[key])};
     }),
     highlight: false,
-    display: function () {
+    display() {
     },
-    success: function (response, newValue) {
+    success(response, newValue) {
       var editedElement = this,
           lookup = instance.lookup.get();
       if (lookup[newValue]) {

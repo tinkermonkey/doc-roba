@@ -13,19 +13,19 @@ Template.nodes_change.helpers({
   /**
    * Pull in the retrieved record along with the
    */
-  combineData: function () {
+  combineData() {
     var change = this;
     change.project = Projects.findOne({ _id: change.projectId });
     change.projectVersion = ProjectVersions.findOne({ _id: change.projectVersionId });
     return change;
   },
-  isUpdated: function () {
+  isUpdated() {
     return this.type === ChangeTypes.updated;
   },
-  isCreated: function () {
+  isCreated() {
     return this.type === ChangeTypes.created;
   },
-  isDestroyed: function () {
+  isDestroyed() {
     return this.type === ChangeTypes.destroyed;
   }
 });

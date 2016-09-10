@@ -21,7 +21,7 @@ Template.VersionUserTypesConfig.helpers({
  * Template Helpers
  */
 Template.VersionUserTypesConfig.events({
-  "edited .editable": function (e, instance, newValue) {
+  "edited .editable"(e, instance, newValue) {
     console.log("Edited:", $(e.target).attr("data-key"), e.target);
     e.stopImmediatePropagation();
     

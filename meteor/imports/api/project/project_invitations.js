@@ -67,10 +67,10 @@ ProjectInvitations.allow(Auth.ruleSets.allow.ifAuthenticated);
  * Helpers
  */
 ProjectInvitations.helpers({
-  project: function () {
+  project() {
     return Projects.findOne(this.projectId);
   },
-  invitor: function () {
+  invitor() {
     return Users.findOne(this.invitorId);
   }
 });

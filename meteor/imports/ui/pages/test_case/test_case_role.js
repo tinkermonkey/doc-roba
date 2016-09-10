@@ -14,7 +14,7 @@ import './test_case_step.js';
  * Template Helpers
  */
 Template.TestCaseRole.helpers({
-  TestCaseStepTypes: function () {
+  TestCaseStepTypes() {
     return TestCaseStepTypes;
   }
 });
@@ -23,7 +23,7 @@ Template.TestCaseRole.helpers({
  * Template Event Handlers
  */
 Template.TestCaseRole.events({
-  "edited .editable": function (e, instance, newValue) {
+  "edited .editable"(e, instance, newValue) {
     e.stopImmediatePropagation();
     var dataKey = $(e.target).attr("data-key"),
       update = {$set: {}},
@@ -49,7 +49,7 @@ Template.TestCaseRole.events({
       RobaDialog.error("Failed to update test case role value: data-key not found");
     }
   },
-  "click .btn-add-step": function (e, instance) {
+  "click .btn-add-step"(e, instance) {
     var testCaseRole = this,
       order = TestCaseSteps.find({testCaseRoleId: testCaseRole.staticId }).count(),
       type = $(e.target).closest("button").attr("data-type");
@@ -67,7 +67,7 @@ Template.TestCaseRole.events({
       console.error("Could not add step: ", type, testCaseRole, order);
     }
   },
-  "click .btn-delete-role": function (e, instance) {
+  "click .btn-delete-role"(e, instance) {
     var testCaseRole = this;
 
     RobaDialog.show({
@@ -78,7 +78,7 @@ Template.TestCaseRole.events({
         {text: "Cancel"},
         {text: "Delete"}
       ],
-      callback: function (btn) {
+      callback(btn) {
         //console.log("Dialog button pressed: ", btn);
         if(btn == "Delete"){
           // Call the delete function, needs to happen server side
@@ -97,7 +97,7 @@ Template.TestCaseRole.events({
       }
     });
   },
-  "mousedown .test-case-step-title": function (e, instance) {
+  "mousedown .test-case-step-title"(e, instance) {
     // because the page height is defined by this list, we need to pin it to prevent unwanted scrolling
     instance.$(".test-role-step_types").height(instance.$(".test-role-step_types").outerHeight());
   }
@@ -123,7 +123,7 @@ Template.TestCaseRole.rendered = function () {
     handle: ".roba-round-container-title",
     placeholder: "test-case-step-placeholder",
     forcePlaceholderSize: true,
-    update: function (event, ui) {
+    update(event, ui) {
       // restore the flexible height of the list
       instance.$(".test-role-step_types").height("auto");
       instance.$(".test-case-step").each(function (newOrder, el) {
@@ -145,7 +145,7 @@ Template.TestCaseRole.rendered = function () {
 
   // Listen for changes and refresh the sortable
   TestCaseSteps.find({testCaseRoleId: instance.data.staticId}).observeChanges({
-    added: function () {
+    added() {
       instance.$(".test-role-step_types").sortable("refresh");
     }
   });
@@ -153,13 +153,13 @@ Template.TestCaseRole.rendered = function () {
   // Animate the addition of role step_types
   /*
   instance.find(".test-role-step_types")._uihooks = {
-    insertElement: function(node, next) {
+    insertElement(node, next) {
       $(node)
         .hide()
         .insertBefore(next)
         .fadeIn();
     },
-    removeElement: function(node) {
+    removeElement(node) {
       $(node).fadeOut(function() {
         $(node).remove();
       });

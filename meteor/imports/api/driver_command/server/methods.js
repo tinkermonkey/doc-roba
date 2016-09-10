@@ -4,7 +4,7 @@ import {DriverCommands} from '../driver_command.js';
 
 Meteor.methods({
   // Update a documentation method from webdriver.io
-  updateDriverCommand: function (docs) {
+  updateDriverCommand(docs) {
     check(docs, [Object]);
     _.each(docs, function (doc) {
       // check to see if the doc exists

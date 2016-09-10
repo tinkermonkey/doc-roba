@@ -20,7 +20,7 @@ import '../../datastores/datastore_row_form_vert.js';
   $.fn.editableutils.inherit(Autoform, $.fn.editabletypes.abstractinput);
   
   $.extend(Autoform.prototype, {
-    render: function() {
+    render() {
       this.form = this.$input.parent().find(".x-editable-autoform");
       this.$input.closest("form").removeClass("form-inline");
 
@@ -42,7 +42,7 @@ import '../../datastores/datastore_row_form_vert.js';
      @method value2input(value)
      @param {mixed} value
      **/
-    value2input: function(value) {
+    value2input(value) {
       // this is handled by the form template
     },
     
@@ -51,7 +51,7 @@ import '../../datastores/datastore_row_form_vert.js';
     
      @method input2value()
      **/
-    input2value: function() {
+    input2value() {
       var formId = this.$input.find("form").attr("id");
       return _.clone(AutoForm.getFormValues(formId).updateDoc).$set;
     }

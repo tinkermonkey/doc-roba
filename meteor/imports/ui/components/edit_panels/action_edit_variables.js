@@ -14,7 +14,7 @@ import '../editable_fields/editable_field_shape.js';
  * Template Helpers
  */
 Template.ActionEditVariables.helpers({
-  indexedVariables: function () {
+  indexedVariables() {
     var action = this,
       indexedVariables = _.map(action.variables, function (v, i) {v.index = i; v.actionId = action._id; return v; });
     return _.sortBy(indexedVariables, function (v) { return v.order });
@@ -25,7 +25,7 @@ Template.ActionEditVariables.helpers({
  * Template Helpers
  */
 Template.ActionEditVariables.events({
-  "click .btn-add-var": function (e, instance) {
+  "click .btn-add-var"(e, instance) {
     e.stopPropagation();
     var instance = Template.instance(),
       action = this,
@@ -58,7 +58,7 @@ Template.ActionEditVariables.events({
       RobaDialog.error("Add Action Variable failed: no action found");
     }
   },
-  "click .btn-delete": function (e, instance) {
+  "click .btn-delete"(e, instance) {
     var variable = this;
 
     RobaDialog.show({
@@ -69,7 +69,7 @@ Template.ActionEditVariables.events({
         {text: "Cancel"},
         {text: "Delete"}
       ],
-      callback: function (btn) {
+      callback(btn) {
         //console.log("Dialog button pressed: ", btn);
         if(btn == "Delete"){
           Actions.update(variable.actionId, { $pull: { variables: {order: variable.order} } }, function (error, response) {
@@ -85,7 +85,7 @@ Template.ActionEditVariables.events({
       }
     });
   },
-  "edited .editable": function (e, instance, newValue) {
+  "edited .editable"(e, instance, newValue) {
     e.stopImmediatePropagation();
     var actionId = $(e.target).closest(".sortable-table-row").attr("data-pk"),
       variableIndex = $(e.target).closest(".sortable-table-row").attr("data-variable-index"),
@@ -127,7 +127,7 @@ Template.ActionEditVariables.rendered = function () {
     .sortable({
       items: "> .sortable-table-row",
       handle: ".drag-handle",
-      helper: function(e, ui) {
+      helper(e, ui) {
         // fix the width
         ui.children().each(function() {
           $(this).width($(this).width());
@@ -135,7 +135,7 @@ Template.ActionEditVariables.rendered = function () {
         return ui;
       },
       axis: "y",
-      update: function (event, ui) {
+      update(event, ui) {
         var actionId = instance.$(".action-variable-row").attr("data-pk"),
           update = {$set: {}},
           updateKey;

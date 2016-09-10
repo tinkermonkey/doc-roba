@@ -23,7 +23,7 @@ Template.DatastoreFieldList.helpers({
  * Template Helpers
  */
 Template.DatastoreFieldList.events({
-  "click .btn-add-field": function () {
+  "click .btn-add-field"() {
     var instance = Template.instance(),
       order = parseInt(instance.$(".sortable-table-row").length || 0) + 1;
 
@@ -46,7 +46,7 @@ Template.DatastoreFieldList.events({
       }
     });
   },
-  "click .sortable-table-row .btn-delete": function (e, instance) {
+  "click .sortable-table-row .btn-delete"(e, instance) {
     var field = this;
     console.log("Delete Field: ", field);
 
@@ -58,7 +58,7 @@ Template.DatastoreFieldList.events({
         {text: "Cancel"},
         {text: "Delete"}
       ],
-      callback: function (btn) {
+      callback(btn) {
         if(btn == "Delete"){
           DatastoreFields.remove(field._id, function (error) {
             RobaDialog.hide();
@@ -72,7 +72,7 @@ Template.DatastoreFieldList.events({
       }
     });
   },
-  "edited .editable": function (e, instance, newValue) {
+  "edited .editable"(e, instance, newValue) {
     console.log("Data Store Field update: ", $(e.target).attr("data-key"));
 
     e.stopImmediatePropagation();
@@ -112,7 +112,7 @@ Template.DatastoreFieldList.rendered = function () {
     .sortable({
       items: "> .sortable-table-row",
       handle: ".drag-handle",
-      helper: function(e, ui) {
+      helper(e, ui) {
         // fix the width
         ui.children().each(function() {
           $(this).width($(this).width());
@@ -120,7 +120,7 @@ Template.DatastoreFieldList.rendered = function () {
         return ui;
       },
       axis: "y",
-      update: function (event, ui) {
+      update(event, ui) {
         instance.$(".data-store-field").each(function (i, el) {
           var newOrder = i + 1,
             oldOrder = parseInt($(el).attr("data-field-order")),

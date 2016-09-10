@@ -14,7 +14,7 @@ import './project_versions.js';
  * Template Helpers
  */
 Template.ProjectHome.helpers({
-  project: function () {
+  project() {
     return Template.instance().project.get()
   }
 });

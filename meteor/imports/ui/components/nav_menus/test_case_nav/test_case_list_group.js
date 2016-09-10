@@ -6,7 +6,7 @@ import {Template} from 'meteor/templating';
  * Template Helpers
  */
 Template.TestCaseListGroup.helpers({
-  isExpanded: function () {
+  isExpanded() {
     return Template.instance().expanded.get();
   }
 });
@@ -15,7 +15,7 @@ Template.TestCaseListGroup.helpers({
  * Template Event Handlers
  */
 Template.TestCaseListGroup.events({
-  "dblclick .test-case-list-group": function (e, instance) {
+  "dblclick .test-case-list-group"(e, instance) {
     e.stopImmediatePropagation();
     instance.expanded.set(!instance.expanded.get());
   }

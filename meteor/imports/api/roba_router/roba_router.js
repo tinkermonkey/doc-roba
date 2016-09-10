@@ -9,7 +9,7 @@ export const RobaRouter = {
    * Get the simplest route to a node as a starting point
    * @param node
    */
-  routeFromStart: function (node) {
+  routeFromStart(node) {
     return new RobaRoute(node);
   },
   /**
@@ -17,7 +17,7 @@ export const RobaRouter = {
    * @param source
    * @param destination
    */
-  nodeToNode    : function (source, destination) {
+  nodeToNode(source, destination) {
     return new RobaRoute(destination, source);
   }
 };

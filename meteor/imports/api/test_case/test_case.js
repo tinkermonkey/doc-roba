@@ -79,14 +79,14 @@ ChangeTracker.TrackChanges(TestCases, "test_cases");
  * Helpers
  */
 TestCases.helpers({
-  roles: function () {
+  roles() {
     return TestCaseRoles.find({testCaseId: this.staticId, projectVersionId: this.projectVersionId}, {sort: {order: 1}});
   },
   /**
    * Validate the config for running a test case
    * @param config
    */
-  validateRunConfig: function (config) {
+  validateRunConfig(config) {
     check(config, TestCaseRun);
     var testCase = this;
 
@@ -138,7 +138,7 @@ TestCases.helpers({
    * Validate the config of and prepare the result records for running a test case
    * @param config
    */
-  prepareTestResult: function (config) {
+  prepareTestResult(config) {
     check(config, Object);
     var testCase = this;
 

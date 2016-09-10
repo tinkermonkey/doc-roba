@@ -10,10 +10,10 @@ import '../../../components/change_list/change_list.js';
  * Template Helpers
  */
 Template.ProjectActivity.helpers({
-  hasChanges: function () {
+  hasChanges() {
     return RecordChanges.find({ projectId: this._id }).count();
   },
-  projectChanges: function () {
+  projectChanges() {
     return RecordChanges.find({ projectId: this._id }, { sort: { date: -1 } });
   }
 });

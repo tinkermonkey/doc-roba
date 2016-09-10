@@ -21,10 +21,10 @@ import './version_test_systems.js';
  * Template Helpers
  */
 Template.VersionHome.helpers({
-  project: function () {
+  project() {
     return Template.instance().project.get()
   },
-  version: function () {
+  version() {
     return Template.instance().version.get()
   }
 });

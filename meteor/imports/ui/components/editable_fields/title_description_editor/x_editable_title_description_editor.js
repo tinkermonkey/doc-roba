@@ -15,7 +15,7 @@
   $.fn.editableutils.inherit(TitleDescriptionEditor, $.fn.editabletypes.abstractinput);
 
   $.extend(TitleDescriptionEditor.prototype, {
-    render: function() {
+    render() {
       this.$input = this.$tpl.find("input,textarea");
     },
 
@@ -25,7 +25,7 @@
      @method value2input(value)
      @param {mixed} value
      **/
-    value2input: function(value) {
+    value2input(value) {
       console.log("value2input: ", value);
       if(!value) {
         return;
@@ -39,7 +39,7 @@
 
      @method input2value()
      **/
-    input2value: function() {
+    input2value() {
       return {
         title: this.$input.filter('[name="title"]').val(),
         description: this.$input.filter('[name="description"]').val()

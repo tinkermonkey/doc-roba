@@ -13,7 +13,7 @@ import '../editable_fields/editable_code/editable_code.js';
  * Template Helpers
  */
 Template.ActionEditRoutes.helpers({
-  indexedRoutes: function () {
+  indexedRoutes() {
     var routes = this.routes,
       indexedRoutes = _.map(routes, function (r, i) {
         r.canDelete = routes.length - 1 > 0;
@@ -40,14 +40,14 @@ Template.ActionEditRoutes.helpers({
  * Template Helpers
  */
 Template.ActionEditRoutes.events({
-  "click .click-to-edit": function (e, instance) {
+  "click .click-to-edit"(e, instance) {
     var row = $(e.target).closest(".action-route-row");
 
     // make the editor visible
     row.find(".click-to-edit").addClass("hide");
     row.find(".action-editable").removeClass("hide");
   },
-  "click .btn-delete": function (e, instance) {
+  "click .btn-delete"(e, instance) {
     var route = this,
       source = Nodes.findOne({staticId: instance.data.nodeId, projectVersionId: instance.data.projectVersionId}),
       destination = Nodes.findOne({staticId: route.nodeId, projectVersionId: instance.data.projectVersionId});
@@ -61,7 +61,7 @@ Template.ActionEditRoutes.events({
         {text: "Cancel"},
         {text: "Delete"}
       ],
-      callback: function (btn) {
+      callback(btn) {
         //console.log("Dialog button pressed: ", btn);
         if(btn == "Delete"){
           Actions.update(instance.data._id, { $pull: { routes: {order: route.order} } }, function (error, response) {
@@ -77,7 +77,7 @@ Template.ActionEditRoutes.events({
       }
     });
   },
-  "click .btn-add-route": function (e, instance) {
+  "click .btn-add-route"(e, instance) {
     e.stopImmediatePropagation();
     var instance = Template.instance(),
       action = this;
@@ -121,7 +121,7 @@ Template.ActionEditRoutes.rendered = function () {
     .sortable({
       items: "> .sortable-table-row",
       handle: ".drag-handle",
-      helper: function(e, ui) {
+      helper(e, ui) {
         // fix the width
         ui.children().each(function() {
           $(this).width($(this).width());
@@ -130,7 +130,7 @@ Template.ActionEditRoutes.rendered = function () {
       },
       axis: "y",
       forcePlaceholderSize: true,
-      update: function (event, ui) {
+      update(event, ui) {
         var actionId = instance.$(".action-route-row").attr("data-pk"),
           update = {$set: {}},
           updateKey;

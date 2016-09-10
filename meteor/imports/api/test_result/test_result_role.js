@@ -99,31 +99,31 @@ TestResultRoles.allow(Auth.ruleSets.allow.ifAuthenticated);
  * Helpers
  */
 TestResultRoles.helpers({
-  role: function () {
+  role() {
     return TestCaseRoles.findOne({staticId: this.testCaseRoleId, projectVersionId: this.projectVersionId});
   },
-  steps: function () {
+  steps() {
     return TestResultSteps.find({testResultRoleId: this._id}, {sort: {order: 1}});
   },
-  testResult: function () {
+  testResult() {
     return TestResults.findOne({_id: this.testResultId});
   },
-  testSystem: function () {
+  testSystem() {
     return TestSystems.findOne({staticId: this.testSystemId, projectVersionId: this.projectVersionId});
   },
-  testAgent: function () {
+  testAgent() {
     return TestAgents.findOne({staticId: this.testAgentId, projectVersionId: this.projectVersionId});
   },
-  isStaged: function () {
+  isStaged() {
     return this.status = TestResultStatus.staged
   },
-  isLaunching: function () {
+  isLaunching() {
     return this.status = TestResultStatus.launched
   },
-  isRunning: function () {
+  isRunning() {
     return this.status = TestResultStatus.executing
   },
-  isDone: function () {
+  isDone() {
     return _.contains([
       TestResultStatus.complete,
       TestResultStatus.skipped

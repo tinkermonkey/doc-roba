@@ -33,9 +33,9 @@ Template.EditableTestAgentType.rendered = function () {
       return {value: type, text: Util.camelToTitle(TestAgentTypesLookup[type])};
     }),
     highlight: false,
-    display: function () {
+    display() {
     },
-    success: function (response, newValue) {
+    success(response, newValue) {
       var editedElement = this;
       if (TestAgentTypesLookup[newValue]) {
         $(editedElement).trigger("edited", [newValue]);

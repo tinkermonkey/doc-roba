@@ -34,8 +34,8 @@ Template.EditableServerSelector.rendered = function () {
       type: "select",
       source: servers,
       highlight: false,
-      display: function () {},
-      success: function (response, newValue) {
+      display() {},
+      success(response, newValue) {
         var editedElement = this;
         $(editedElement).trigger("edited", [newValue]);
         setTimeout(function () {

@@ -32,11 +32,11 @@ Template.CodeModuleDashboard.helpers({
   referenceModules(){
     return CodeModules.find({projectVersionId: {$exists: false}}, {sort: {name: 1}});
   },
-  codeModuleId: function () {
+  codeModuleId() {
     console.log("codeModuleId:", FlowRouter.getQueryParam("codeModuleId"));
     return FlowRouter.getQueryParam("codeModuleId")
   },
-  codeModule: function () {
+  codeModule() {
     var codeModuleId = FlowRouter.getQueryParam("codeModuleId"),
         projectVersionId = FlowRouter.getParam("projectVersionId");
     if(codeModuleId && projectVersionId){

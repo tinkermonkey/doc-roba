@@ -14,19 +14,19 @@ import '../../components/datastores/datastore_row_form_vert.js';
  * Template Helpers
  */
 Template.ProjectList.helpers({
-  inactiveProjects: function () {
+  inactiveProjects() {
     var user = Meteor.user();
     if(user && user.projectList){
       return Projects.find({_id: {$in: user.projectList}, active: false}, {sort: {title: 1}});
     }
   },
-  user: function () {
+  user() {
     return Meteor.users.findOne(Meteor.userId())
   },
-  canCreateProjects: function () {
+  canCreateProjects() {
     return Meteor.user().isSystemAdmin || Meteor.settings.allowPersonalProjects;
   },
-  projectRoles: function () {
+  projectRoles() {
     var user = Meteor.user(),
         projectId = this._id;
     if(projectId && user.projects[projectId] && user.projects[projectId].roles){
@@ -39,7 +39,7 @@ Template.ProjectList.helpers({
  * Template Event Handlers
  */
 Template.ProjectList.events({
-  "click .btn-create-project": function (e, instance) {
+  "click .btn-create-project"(e, instance) {
     // Build the form context
     var formContext = {
       type: "update",
@@ -63,7 +63,7 @@ Template.ProjectList.events({
         { text: "Cancel" },
         { text: "Create" }
       ],
-      callback: function (btn) {
+      callback(btn) {
         console.log("Dialog button pressed: ", btn);
         if(btn == "Create"){
           // grab the form data
@@ -87,11 +87,11 @@ Template.ProjectList.events({
       }
     });
   },
-  "click .btn-delete-project": function (e, instance) {
+  "click .btn-delete-project"(e, instance) {
     var project = this;
     RobaDialog.show({
       contentData: { text: "Deleting this project will permanently remove all data associated with this project. Are you sure this is what you want to do?" },
-      callback: function (btn) {
+      callback(btn) {
         if(btn == "OK"){
           Meteor.call("deleteProject", project._id, function (error, result) {
             RobaDialog.hide(function () {
@@ -106,12 +106,12 @@ Template.ProjectList.events({
       }
     });
   },
-  "click .btn-deactivate-project": function (e, instance) {
+  "click .btn-deactivate-project"(e, instance) {
     var project = this;
 
     RobaDialog.show({
       contentData: { text: "Deactivating this project will remove all user's access to it. Only project adminstrators will be able to see it. Are you sure this is what you want to do?" },
-      callback: function (btn) {
+      callback(btn) {
         if(btn == "OK"){
           Projects.update(project._id, {$set: {active: false}});
         }
@@ -119,11 +119,11 @@ Template.ProjectList.events({
       }
     });
   },
-  "click .btn-activate-project": function (e, instance) {
+  "click .btn-activate-project"(e, instance) {
     var project = this;
     RobaDialog.show({
       contentData: { text: "Activating this project will restore user's access to it. Are you sure this is what you want to do?" },
-      callback: function (btn) {
+      callback(btn) {
         if(btn == "OK"){
           Projects.update(project._id, {$set: {active: true}});
         }
@@ -131,7 +131,7 @@ Template.ProjectList.events({
       }
     });
   },
-  "click .btn-remove-role": function (e, instance) {
+  "click .btn-remove-role"(e, instance) {
 
   }
 });

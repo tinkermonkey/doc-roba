@@ -9,7 +9,7 @@ import './x_editable_action_route.js';
  * Template Helpers
  */
 Template.EditableActionRouteSelector.helpers({
-  getSteps: function () {
+  getSteps() {
     if(this.value){
       var steps = [];
       if(this.value.actionId){
@@ -50,8 +50,8 @@ Template.EditableActionRouteSelector.rendered = function () {
     nodeId: instance.data.nodeId,
     parentInstance: instance,
     highlight: false,
-    display: function () {},
-    success: function (response, newValue) {
+    display() {},
+    success(response, newValue) {
       console.log("EditableActionRouteSelector edited: ", newValue);
       var editedElement = this;
       $(editedElement).trigger("edited", [newValue]);

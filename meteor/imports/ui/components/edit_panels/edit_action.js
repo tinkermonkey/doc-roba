@@ -10,7 +10,7 @@ import {Actions} from '../../../api/action/action.js';
  * Template helpers
  */
 Template.edit_action.helpers({
-  getActionRecord: function () {
+  getActionRecord() {
     return Actions.findOne({_id: this._id});
   }
 });
@@ -19,7 +19,7 @@ Template.edit_action.helpers({
  * Event Handlers
  */
 Template.edit_action.events({
-  "edited .action-editable": function (e, instance, newValue) {
+  "edited .action-editable"(e, instance, newValue) {
     e.stopImmediatePropagation();
     var dataKey = $(e.target).attr("data-key"),
       update = {$set: {}};
@@ -40,7 +40,7 @@ Template.edit_action.events({
       RobaDialog.error("Failed to update action value: data-key not found");
     }
   },
-  "click .delete-action-link": function () {
+  "click .delete-action-link"() {
     var action = this;
     console.log("Delete Action: ", action);
 
@@ -53,7 +53,7 @@ Template.edit_action.events({
         {text: "Cancel"},
         {text: "Delete"}
       ],
-      callback: function (btn) {
+      callback(btn) {
         //console.log("Dialog button pressed: ", btn);
         if(btn == "Delete"){
           Actions.remove(action._id, function (error, result) {

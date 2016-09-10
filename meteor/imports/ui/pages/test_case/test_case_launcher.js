@@ -17,7 +17,7 @@ import '../../components/editable_fields/editable_test_system_selector.js';
  * Template Helpers
  */
 Template.TestCaseLauncher.helpers({
-  accountId: function () {
+  accountId() {
     var config = Template.instance().config.get(),
       role = this;
     if(!(config.roles[role.staticId] && config.roles[role.staticId].accountId)){
@@ -35,13 +35,13 @@ Template.TestCaseLauncher.helpers({
       return config.roles[role.staticId].accountId;
     }
   },
-  serverId: function () {
+  serverId() {
     var config = Template.instance().config.get();
     if(config){
       return config.serverId;
     }
   },
-  testSystemId: function () {
+  testSystemId() {
     var config = Template.instance().config.get(),
       role = this;
     if(!(config.roles[role.staticId] && config.roles[role.staticId].testSystemId)){
@@ -56,7 +56,7 @@ Template.TestCaseLauncher.helpers({
       return config.roles[role.staticId].testSystemId;
     }
   },
-  testAgentId: function () {
+  testAgentId() {
     var config = Template.instance().config.get(),
       role = this;
     if(!(config.roles[role.staticId] && config.roles[role.staticId].testAgentId && config.roles[role.staticId].testSystemId)){
@@ -77,7 +77,7 @@ Template.TestCaseLauncher.helpers({
  * Template Event Handlers
  */
 Template.TestCaseLauncher.events({
-  "click .btn-launch": function (e, instance) {
+  "click .btn-launch"(e, instance) {
     console.log("Launch: ", instance.config.get());
 
     // prepare the run and make sure it works

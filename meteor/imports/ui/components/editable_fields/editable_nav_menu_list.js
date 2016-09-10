@@ -9,7 +9,7 @@ import {NodeTypes} from '../../../api/node/node_types.js';
  * Template Helpers
  */
 Template.EditableNavMenuList.helpers({
-  valueList: function () {
+  valueList() {
     return this.value ? this.value.join(",") : ''
   }
 });
@@ -39,8 +39,8 @@ Template.EditableNavMenuList.rendered = function () {
       type: "checklist",
       source: navMenus,
       highlight: false,
-      display: function () {},
-      success: function (response, newValue) {
+      display() {},
+      success(response, newValue) {
         var editedElement = this;
         $(editedElement).trigger("edited", [newValue]);
         setTimeout(function () {

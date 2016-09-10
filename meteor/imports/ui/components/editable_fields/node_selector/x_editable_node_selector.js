@@ -20,7 +20,7 @@ import './x_editable_node_search.js';
   $.fn.editableutils.inherit(NodeSelector, $.fn.editabletypes.abstractinput);
 
   $.extend(NodeSelector.prototype, {
-    render: function() {
+    render() {
       this.$input.parent().append('<div class="x-editable-node-selector"></div>');
       this.search = this.$input.parent().find(".x-editable-node-selector");
 

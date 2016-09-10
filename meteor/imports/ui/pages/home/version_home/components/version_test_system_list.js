@@ -15,7 +15,7 @@ import '../../../../components/editable_fields/editable_test_agent_list.js';
  * Template Helpers
  */
 Template.VersionTestSystemList.helpers({
-  sortedTestSystems: function () {
+  sortedTestSystems() {
     return TestSystems.find({projectVersionId: this._id}, {sort: {order: 1}}).fetch();
   }
 });
@@ -24,7 +24,7 @@ Template.VersionTestSystemList.helpers({
  * Template Helpers
  */
 Template.VersionTestSystemList.events({
-  "click .btn-add-test-system": function (e, instance) {
+  "click .btn-add-test-system"(e, instance) {
     var order = instance.$(".sortable-table-row").length,
         projectVersion = this;
 
@@ -47,7 +47,7 @@ Template.VersionTestSystemList.events({
       }
     });
   },
-  "click .sortable-table-row .btn-delete": function (e, instance) {
+  "click .sortable-table-row .btn-delete"(e, instance) {
     var testSystem = this;
 
     RobaDialog.show({
@@ -58,7 +58,7 @@ Template.VersionTestSystemList.events({
         {text: "Cancel"},
         {text: "Delete"}
       ],
-      callback: function (btn) {
+      callback(btn) {
         //console.log("Dialog button pressed: ", btn);
         if(btn == "Delete"){
           TestSystems.remove(testSystem._id, function (error, response) {
@@ -73,7 +73,7 @@ Template.VersionTestSystemList.events({
       }
     });
   },
-  "edited .editable": function (e, instance, newValue) {
+  "edited .editable"(e, instance, newValue) {
     e.stopImmediatePropagation();
     var testSystemId = $(e.target).closest(".sortable-table-row").attr("data-pk"),
       dataKey = $(e.target).attr("data-key"),
@@ -97,7 +97,7 @@ Template.VersionTestSystemList.rendered = function () {
     .sortable({
       items: "> .sortable-table-row",
       handle: ".drag-handle",
-      helper: function(e, ui) {
+      helper(e, ui) {
         // fix the width
         ui.children().each(function() {
           $(this).width($(this).width());
@@ -106,7 +106,7 @@ Template.VersionTestSystemList.rendered = function () {
       },
       axis: "y",
       forcePlaceholderSize: true,
-      update: function (event, ui) {
+      update(event, ui) {
         var order;
         instance.$(".sortable-table-row").each(function (i, el) {
           order = $(el).attr("data-sort-order");

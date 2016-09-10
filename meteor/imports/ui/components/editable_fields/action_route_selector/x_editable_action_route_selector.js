@@ -8,10 +8,10 @@ import '../../svg_snippets/single_route_snippet.js';
  * Template Helpers
  */
 Template.XEditableActionRouteSelector.helpers({
-  getValue       : function () {
+  getValue() {
     return Template.instance().value.get();
   },
-  actions        : function () {
+  actions() {
     var filter = Template.instance().filter.get();
     if (this.staticId && this.projectVersionId) {
       if (filter && filter.length > 1) {
@@ -25,7 +25,7 @@ Template.XEditableActionRouteSelector.helpers({
       }
     }
   },
-  actionWithScale: function () {
+  actionWithScale() {
     this.scale = 1.0;
     return this;
   }
@@ -35,11 +35,11 @@ Template.XEditableActionRouteSelector.helpers({
  * Template Event Handlers
  */
 Template.XEditableActionRouteSelector.events({
-  "keyup .input-search, change .input-search": function (e, instance) {
+  "keyup .input-search, change .input-search"(e, instance) {
     var filter = $(e.target).val();
     instance.filter.set(filter);
   },
-  "click .route-destination"                 : function (e, instance) {
+  "click .route-destination"(e, instance) {
     var route       = this,
         destination = $(e.target).closest(".route-destination"),
         actionId    = destination.attr("data-action-id"),

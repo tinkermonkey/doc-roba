@@ -2,7 +2,7 @@
  * Simple tool for assembling svg paths
  */
 export const PathBuilder = {
-  start: function() {
+  start() {
     return new Path();
   }
 };

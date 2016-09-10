@@ -16,16 +16,16 @@ import './test_case.js';
  * Template Helpers
  */
 Template.TestCaseDashboard.helpers({
-  project: function () {
+  project() {
     return Template.instance().project.get()
   },
-  version: function () {
+  version() {
     return Template.instance().version.get()
   },
-  testCaseId: function () {
+  testCaseId() {
     return FlowRouter.getQueryParam("testCaseId")
   },
-  testCase: function () {
+  testCase() {
     var testCaseId = FlowRouter.getQueryParam("testCaseId"),
         projectVersionId = FlowRouter.getParam("projectVersionId");
     if(testCaseId && projectVersionId){

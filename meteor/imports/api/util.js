@@ -14,7 +14,7 @@ export const Util = {
    * Turn a string into a JSON key-safe string, forcing to lowercase
    * @param title The string to be made key-safe
    */
-  dataKey: function (title) {
+  dataKey(title) {
     return title.replace(/[\W]/g, "_").replace(/^[0-9]+/, "N").toLowerCase();
   },
 
@@ -22,7 +22,7 @@ export const Util = {
    * Turn a string into a JSON key-safe string, but preserve case
    * @param name The string to be made key-safe
    */
-  varName: function (name) {
+  varName(name) {
     return name.replace(/[\W]/g, "_").replace(/^[0-9]+/, "N");
   },
 
@@ -30,7 +30,7 @@ export const Util = {
    * Strip off the server & params from a url
    * @param url
    */
-  urlPath: function (url) {
+  urlPath(url) {
     check(url, String);
     return url.replace(/^[https\:\/]*/, "").replace(/^[^\/]+/, "").split("?")[0];
   },
@@ -39,7 +39,7 @@ export const Util = {
    * Strip off the path and return just the query params
    * @param url
    */
-  urlQuery: function (url) {
+  urlQuery(url) {
     check(url, String);
     return url.split("?")[1];
   },
@@ -48,7 +48,7 @@ export const Util = {
    * Strip off the path and return the parsed params
    * @param url
    */
-  urlParams: function (url) {
+  urlParams(url) {
     check(url, String);
     var query = Util.urlQuery(url),
       params = [], paramPieces;
@@ -69,7 +69,7 @@ export const Util = {
    * Turns whatever arguments passed into an assembled url
    * @returns {string} The assembled url built from whatever was passed
    */
-  buildUrl: function () {
+  buildUrl() {
     var pieces = [], parts;
     _.each(arguments, function (argv) {
       if(_.isArray(argv)){
@@ -95,7 +95,7 @@ export const Util = {
    * @param type The FieldType enum value
    * @returns {*} The literal type for the given FieldType
    */
-  fieldTypeLiteral: function (type) {
+  fieldTypeLiteral(type) {
     switch(type){
       case FieldTypes.string:
         return String;
@@ -114,7 +114,7 @@ export const Util = {
    * Capitalize a string
    * @param word The string to capitalize
    */
-  capitalize: function (word) {
+  capitalize(word) {
     if(word) {
       return word.substr(0,1).toUpperCase() + word.substr(1);
     }
@@ -125,7 +125,7 @@ export const Util = {
    * Convert camel case to title case
    * @param word
    */
-  camelToTitle: function (word) {
+  camelToTitle(word) {
     if(word){
       return (word.substr(0,1).toUpperCase() + word.substr(1)).replace(/([A-Z])/g, " $1").trim();
     }
@@ -135,7 +135,7 @@ export const Util = {
    * Convert camel case to dashed words
    * @param word
    */
-  camelToDash: function (word) {
+  camelToDash(word) {
     if(word){
       return word.replace(/([A-Z])/g, "-$1").trim().toLowerCase();
     }
@@ -145,7 +145,7 @@ export const Util = {
    * Convert words to a CamelCase string
    * @param words
    */
-  wordsToCamel: function (words) {
+  wordsToCamel(words) {
     if(words){
       return words.replace(/[\W]/g, " ")
                   .replace(/(^[a-z]|\s+[a-z])/g, (letter) => {return letter.trim().toUpperCase()})
@@ -157,7 +157,7 @@ export const Util = {
    * Get the name of a test agent with the versions
    * @param testAgent The testAgent record to build the name for
    */
-  getTestAgentNameWithVersion: function (testAgent) {
+  getTestAgentNameWithVersion(testAgent) {
     if(testAgent.title){
       return testAgent.title + (testAgent.version ? " " + testAgent.version : "") + " on " + TestAgentOSLookup[testAgent.os] + (testAgent.osVersion ? " " + testAgent.osVersion : "")
     }
@@ -168,7 +168,7 @@ export const Util = {
    * For an element in the live console, determine the best way to identify it
    * @param element
    */
-  getHighlightedElementSelector: function (element) {
+  getHighlightedElementSelector(element) {
     // check to see if it has an id
     var idAttr;
     _.each(element.attributes, function (attr) {
@@ -220,7 +220,7 @@ export const Util = {
    * @param xPath The current xPath
    * @returns {string} The entire xPath leading to the initial element, structure only
    */
-  getHighlightedElementLineageXPath: function (element, xPath) {
+  getHighlightedElementLineageXPath(element, xPath) {
     xPath = xPath || "";
     xPath = "/" + element.tag + xPath;
     if(element.parent && element.parent.tag){
@@ -234,7 +234,7 @@ export const Util = {
    * @param str
    * @returns {string}
    */
-  escapeDoubleQuotes: function (str) {
+  escapeDoubleQuotes(str) {
     if(str && str.length){
       var escapedFix = new RegExp("\/\"", "g"),
         quoteFix = new RegExp("\"", "g");
@@ -246,7 +246,7 @@ export const Util = {
    * Get the platform and usertype for a node
    * TODO: this data is now denormalized, this should be eliminated
    */
-  getNodePlatformUserType: function (node) {
+  getNodePlatformUserType(node) {
     var platform, userType,
       level = 0;
 
@@ -271,7 +271,7 @@ export const Util = {
   /**
    * Find a piece of data at an unknown parent depth
    */
-  findParentData: function (key) {
+  findParentData(key) {
     for(var i = 0; i < 20; i++){
       try {
         var data = Template.parentData(i);
@@ -290,7 +290,7 @@ export const Util = {
    *
    * @param view
    */
-  findTemplateFromView: function (view){
+  findTemplateFromView(view){
     if(!view.templateInstance() && view.parentView){
       return Util.findTemplateFromView(view.parentView)
     } else if(view.templateInstance){
@@ -301,7 +301,7 @@ export const Util = {
   /**
    * Get a full measure of an elements scoll top and left
    */
-  getAbsoluteScroll: function (rawEl) {
+  getAbsoluteScroll(rawEl) {
     var el = $(rawEl),
       fixedPositionFound = false,
       scroll = {top: 0, left: 0};
@@ -325,7 +325,7 @@ export const Util = {
   /**
    * Get the screen bounds of an element
    */
-  getScreenBounds: function (rawEl) {
+  getScreenBounds(rawEl) {
     var el = $(rawEl),
       offset  = el.offset(),
       scroll  = Util.getAbsoluteScroll(rawEl),
@@ -351,7 +351,7 @@ export const Util = {
    * @param type
    * @param error
    */
-  testStepContainerClass: function (type, error) {
+  testStepContainerClass(type, error) {
     var cssClass = "";
     if(error){
       cssClass = "roba-round-container-error";
@@ -384,7 +384,7 @@ export const Util = {
    * Return the icon class for a test case step type
    * @param type
    */
-  testStepTypeIcon: function (type) {
+  testStepTypeIcon(type) {
     if(type != null){
       switch (type) {
         case TestCaseStepTypes.node:
@@ -407,7 +407,7 @@ export const Util = {
    * @param text
    * @param width
    */
-  wrapSvgText: function (text, width) {
+  wrapSvgText(text, width) {
     //console.log("wrapSvgText:", text, width);
     text.each(function() {
       var text = d3.select(this),

@@ -8,7 +8,7 @@ import '../../components/svg_snippets/vertical_route_snippet.js';
  * Template Helpers
  */
 Template.RouteMap.helpers({
-  getRouteSteps: function () {
+  getRouteSteps() {
     if(this.route){
 
       var steps = [],

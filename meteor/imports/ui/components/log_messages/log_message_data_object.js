@@ -5,10 +5,10 @@ import { Template } from 'meteor/templating';
  * Template Helpers
  */
 Template.LogMessageDataObject.helpers({
-  getKeys    : function () {
+  getKeys() {
     return _.keys(this)
   },
-  getKeyValue: function (key, data) {
+  getKeyValue(key, data) {
     // force it to display zeros which other fail in the with clause
     var value = data[ key ];
     if (_.isNumber(value)) {
@@ -22,7 +22,7 @@ Template.LogMessageDataObject.helpers({
  * Template Event Handlers
  */
 Template.LogMessageDataObject.events({
-  "click .log-data-object-expander": function (e, instance) {
+  "click .log-data-object-expander"(e, instance) {
     e.stopImmediatePropagation();
     var expander = $(e.target).closest(".log-data-object-expander"),
         expandee = expander.next();

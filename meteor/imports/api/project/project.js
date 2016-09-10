@@ -64,7 +64,7 @@ Projects.attachSchema(Project);
  */
 Projects.deny({
   insert: Auth.denyAlways,
-  update: function (userId, doc) {
+  update(userId, doc) {
     var user = Meteor.users.findOne(userId);
     if(userId && user && doc && doc._id){
       return !user.hasAdminAccess(doc._id);

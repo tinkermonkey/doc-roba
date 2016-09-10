@@ -10,7 +10,7 @@ import {ProjectInvitations} from '../../../../api/project/project_invitations.js
  * Template Helpers
  */
 Template.ProjectInvitationsSent.helpers({
-  invitations: function () {
+  invitations() {
     return ProjectInvitations.find({projectId: this._id}, {sort: {dateCreated: 1}});
   }
 });
@@ -19,7 +19,7 @@ Template.ProjectInvitationsSent.helpers({
  * Template Event Handlers
  */
 Template.ProjectInvitationsSent.events({
-  "click .btn-resend-ivitation": function (e, instance) {
+  "click .btn-resend-ivitation"(e, instance) {
     var invitation = this;
     Meteor.call("resendInvitation", invitation._id, function (error){
       if(error){
@@ -29,12 +29,12 @@ Template.ProjectInvitationsSent.events({
       }
     });
   },
-  "click .btn-delete-ivitation": function (e, instance) {
+  "click .btn-delete-ivitation"(e, instance) {
     var invitation = this;
     RobaDialog.show({
       title: "Delete Invitation?",
       text: "The user will no longer be able to join the project, though they will still have the invitation email.",
-      callback: function (btn) {
+      callback(btn) {
         RobaDialog.hide();
         if(btn == "OK"){
           Meteor.call("deleteInvitation", invitation._id, function (error){

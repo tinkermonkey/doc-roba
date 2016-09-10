@@ -22,7 +22,7 @@ export const NodeSearch = {
    * @param title
    * @param projectVersionId
    */
-  byUrl: function (url, title, projectVersionId) {
+  byUrl(url, title, projectVersionId) {
     //console.debug("searchNodes: " + url+ ", " + title + ", " + projectVersionId);
     var maxScore    = -100000,
       searchResults = [];
@@ -64,7 +64,7 @@ export const NodeSearch = {
    * @param searchTerm
    * @param projectVersionId
    */
-  byTerm: function (searchTerm, projectVersionId) {
+  byTerm(searchTerm, projectVersionId) {
     //console.debug("NodeSearch.byTerm: " + searchTerm, projectVersionId);
 
     if(!searchTerm || !searchTerm.length){
@@ -121,7 +121,7 @@ export const NodeSearch = {
    * Check to see if an adventure is still at the last known node
    * @param instance The adventure console instance
    */
-  checkAdventureLocation: function (instance) {
+  checkAdventureLocation(instance) {
     var adventure = instance.adventure.get(),
         state = instance.state.get();
 
@@ -151,7 +151,7 @@ export const NodeSearch = {
    * @param title
    * @param node
    */
-  compareNode: function (url, title, node) {
+  compareNode(url, title, node) {
     // check the local url
     if(url && title && node){
       return {
@@ -169,7 +169,7 @@ export const NodeSearch = {
    * @param url
    * @param nodeUrl
    */
-  compareUrl: function (url, nodeUrl) {
+  compareUrl(url, nodeUrl) {
     var result = {
         match: true,
         score: 0,
@@ -271,7 +271,7 @@ export const NodeSearch = {
    * @param url
    * @param nodeUrlParameters
    */
-  compareParams: function (url, nodeUrlParameters) {
+  compareParams(url, nodeUrlParameters) {
     var result = {
         match: true,
         score: 0,
@@ -394,7 +394,7 @@ export const NodeSearch = {
    * @param title
    * @param nodePageTitle
    */
-  compareTitle: function (title, nodePageTitle) {
+  compareTitle(title, nodePageTitle) {
     var result = {
         match: true,
         score: 0,

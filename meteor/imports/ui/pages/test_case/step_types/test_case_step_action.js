@@ -13,7 +13,7 @@ import '../../../components/editable_fields/action_route_selector/editable_actio
  * Template Helpers
  */
 Template.TestCaseStepAction.helpers({
-  nodeId: function () {
+  nodeId() {
     var instance = Template.instance();
     return instance.nodeId.get()
   }

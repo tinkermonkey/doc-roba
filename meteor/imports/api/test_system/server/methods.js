@@ -4,7 +4,7 @@ import {TestSystems} from '../test_system.js';
 
 Meteor.methods({
   // Update the status of a helper
-  setTestSystemStatus: function (testSystemId, status) {
+  setTestSystemStatus(testSystemId, status) {
     console.log("setTestSystemStatus: ", testSystemId, status);
     check(testSystemId, String);
     check(status, Number);
@@ -18,7 +18,7 @@ Meteor.methods({
   },
   
   // Get the status of a test system
-  getTestSystemStatus: function (testSystemId) {
+  getTestSystemStatus(testSystemId) {
     check(testSystemId, String);
     if (testSystemId) {
       var testSystem = TestSystems.findOne({_id: testSystemId});
@@ -29,14 +29,14 @@ Meteor.methods({
   },
   
   // Set the current log file name of a test system
-  setTestSystemLogFile: function (testSystemId, path) {
+  setTestSystemLogFile(testSystemId, path) {
     check(testSystemId, String);
     check(path, String);
     TestSystems.update({_id: testSystemId}, {$set: {logFile: path}});
   },
   
   // Retrieve the record for a test system
-  loadTestSystemRecord: function (testSystemId) {
+  loadTestSystemRecord(testSystemId) {
     console.log("loadTestSystemRecord: ", testSystemId);
     check(testSystemId, String);
     return TestSystems.findOne({_id: testSystemId});

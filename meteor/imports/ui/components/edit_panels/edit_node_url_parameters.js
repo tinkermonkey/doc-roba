@@ -17,7 +17,7 @@ Template.EditNodeUrlParameters.helpers({
  * Template Helpers
  */
 Template.EditNodeUrlParameters.events({
-  "click .btn-add-url-parameter": function (e, instance) {
+  "click .btn-add-url-parameter"(e, instance) {
     var node = this;
     Nodes.update(instance.data._id, {
       $push: {
@@ -34,7 +34,7 @@ Template.EditNodeUrlParameters.events({
       }
     });
   },
-  "click .node-url-parameter .btn-delete": function (e, instance) {
+  "click .node-url-parameter .btn-delete"(e, instance) {
     var parameter = this,
       index = $(e.target).closest(".node-url-parameter").attr("data-index");
 
@@ -46,7 +46,7 @@ Template.EditNodeUrlParameters.events({
         {text: "Cancel"},
         {text: "Delete"}
       ],
-      callback: function (btn) {
+      callback(btn) {
         //console.log("Dialog button pressed: ", btn);
         if(btn == "Delete"){
           Nodes.update(instance.data._id, { $pull: { urlParameters: {order: parameter.order} } }, function (error) {
@@ -75,7 +75,7 @@ Template.EditNodeUrlParameters.rendered = function () {
     .sortable({
       items: "> tbody > .sortable-table-row",
       handle: ".drag-handle",
-      helper: function(e, ui) {
+      helper(e, ui) {
         // fix the width
         ui.children().each(function() {
           $(this).width($(this).width());
@@ -83,7 +83,7 @@ Template.EditNodeUrlParameters.rendered = function () {
         return ui;
       },
       axis: "y",
-      update: function (event, ui) {
+      update(event, ui) {
         var update = {$set: {}},
           updateKey;
 

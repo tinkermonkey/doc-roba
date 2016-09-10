@@ -16,7 +16,7 @@ import '../svg_snippets/standalone_node_snippet.js';
  * Template Helpers
  */
 Template.NodeTermSearchResults.helpers({
-  highlightTerm: function (param, term) {
+  highlightTerm(param, term) {
     if(param && term){
       return param.replace(new RegExp('(' + term + ')', 'i'), '<span class="search-highlight">$1</span>');
     }

@@ -15,7 +15,7 @@ import '../../../../components/editable_fields/editable_test_agent_os.js';
  * Template Helpers
  */
 Template.VersionTestAgentList.helpers({
-  sortedTestAgents: function () {
+  sortedTestAgents() {
     return TestAgents.find({projectVersionId: this._id}, {sort: {order: 1}}).fetch();
   }
 });
@@ -24,7 +24,7 @@ Template.VersionTestAgentList.helpers({
  * Template Event Handlers
  */
 Template.VersionTestAgentList.events({
-  "click .btn-add-test-agent": function (e, instance) {
+  "click .btn-add-test-agent"(e, instance) {
     var order = instance.$(".sortable-table-row").length,
         projectVersion = this;
 
@@ -46,7 +46,7 @@ Template.VersionTestAgentList.events({
       }
     });
   },
-  "click .sortable-table-row .btn-delete": function () {
+  "click .sortable-table-row .btn-delete"() {
     var testAgent = this;
 
     RobaDialog.show({
@@ -57,7 +57,7 @@ Template.VersionTestAgentList.events({
         {text: "Cancel"},
         {text: "Delete"}
       ],
-      callback: function (btn) {
+      callback(btn) {
         //console.log("Dialog button pressed: ", btn);
         if(btn == "Delete"){
           TestAgents.remove(testAgent._id, function (error, response) {
@@ -73,7 +73,7 @@ Template.VersionTestAgentList.events({
       }
     });
   },
-  "edited .editable": function (e, instance, newValue) {
+  "edited .editable"(e, instance, newValue) {
     e.stopImmediatePropagation();
     
     var testAgentId = $(e.target).closest(".sortable-table-row").attr("data-pk"),
@@ -99,7 +99,7 @@ Template.VersionTestAgentList.rendered = function () {
     .sortable({
       items: "> .sortable-table-row",
       handle: ".drag-handle",
-      helper: function(e, ui) {
+      helper(e, ui) {
         // fix the width
         ui.children().each(function() {
           $(this).width($(this).width());
@@ -108,7 +108,7 @@ Template.VersionTestAgentList.rendered = function () {
       },
       axis: "y",
       forcePlaceholderSize: true,
-      update: function (event, ui) {
+      update(event, ui) {
         var order;
         instance.$(".sortable-table-row").each(function (i, el) {
           order = $(el).attr("data-sort-order");

@@ -8,30 +8,30 @@ import {FieldTypes} from '../../../api/datastore/field_types.js';
  * Template Helpers
  */
 Template.DatastoreChildTable.helpers({
-  isPrimaryColumn: function () {
+  isPrimaryColumn() {
     return this.type !== FieldTypes.custom;
   },
-  isChildColumn: function () {
+  isChildColumn() {
     return this.type === FieldTypes.custom;
   },
-  getPrimaryColumnCount: function () {
+  getPrimaryColumnCount() {
     return _.filter(this.fields, function(field){return field.type !== FieldTypes.custom}).length;
   },
-  getFieldValue: function (field, row) {
+  getFieldValue(field, row) {
     if(field && row){
       return row[field.dataKey];
     } else {
       console.error("getFieldValue: ", field, row);
     }
   },
-  childHasValue: function (field, row) {
+  childHasValue(field, row) {
     return row.hasOwnProperty(field.dataKey);
   },
-  getChildColSpan: function (schema) {
+  getChildColSpan(schema) {
     console.log("getChildColSpan:", schema);
     return _.filter(schema.fields, function(field){return field.type !== FieldTypes.custom}).length - 1;
   },
-  getChildContext: function (field, row) {
+  getChildContext(field, row) {
     var value = row[field.dataKey];
     return {
       field: field,

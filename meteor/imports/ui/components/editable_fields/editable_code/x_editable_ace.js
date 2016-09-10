@@ -23,7 +23,7 @@ import '../../roba_ace/roba_ace.js';
     /**
      * Render the editor control
      */
-    render: function() {
+    render() {
       var self  = this,
           data  = self.data || this.options.parentInstance.data,
           width = self.options.parentInstance.$(".editable").width() - 110;
@@ -47,7 +47,7 @@ import '../../roba_ace/roba_ace.js';
      @method value2input(value)
      @param {mixed} data
      **/
-    value2input: function(data) {
+    value2input(data) {
       // this is handled by the editor template
       var editor = Blaze.getView(this.$input.find(".roba-ace").get(0)).templateInstance().editor;
       if(editor && data && data.value){
@@ -62,7 +62,7 @@ import '../../roba_ace/roba_ace.js';
 
      @method input2value()
      **/
-    input2value: function() {
+    input2value() {
       return Blaze.getView(this.$input.find(".roba-ace").get(0)).templateInstance().editor.getValue();
     }
   });

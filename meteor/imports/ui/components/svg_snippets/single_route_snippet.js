@@ -9,25 +9,25 @@ import {PathBuilder} from '../../lib/doc_tree/path_builder.js';
  * Template Helpers
  */
 Template.SingleRouteSnippet.helpers({
-  width: function () {
+  width() {
     return DocTreeConfig.nodes.width * 3 + DocTreeConfig.standalone.margin * 2;
   },
-  height: function () {
+  height() {
     return DocTreeConfig.nodes.height + DocTreeConfig.standalone.margin * 2;
   },
-  scale: function () {
+  scale() {
     return this.scale || 1;
   },
-  xMargin: function () {
+  xMargin() {
     return DocTreeConfig.standalone.margin;
   },
-  yMargin: function () {
+  yMargin() {
     return DocTreeConfig.standalone.margin;
   },
-  routeNodeX: function () {
+  routeNodeX() {
     return DocTreeConfig.nodes.width * 2;
   },
-  path: function (action) {
+  path(action) {
     var startY  = DocTreeConfig.nodes.height / 2,
       startX  = DocTreeConfig.nodes.width + 2,
       endX    = DocTreeConfig.nodes.width * 2 - 6;

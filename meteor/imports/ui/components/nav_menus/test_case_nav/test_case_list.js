@@ -14,10 +14,10 @@ import './test_case_list_item.js';
  * Template Helpers
  */
 Template.TestCaseList.helpers({
-  baseGroups: function () {
+  baseGroups() {
     return TestGroups.find({ parentGroupId: null, projectVersionId: FlowRouter.getParam("projectVersionId") }, { sort: { title: 1 } });
   },
-  baseTestCases: function () {
+  baseTestCases() {
     return TestCases.find({ testGroupId: null, projectVersionId: FlowRouter.getParam("projectVersionId") }, { sort: { title: 1 } });
   }
 });
@@ -26,7 +26,7 @@ Template.TestCaseList.helpers({
  * Template Event Handlers
  */
 Template.TestCaseList.events({
-  "keyup .add-item-form input": function (e, instance) {
+  "keyup .add-item-form input"(e, instance) {
     var value = $(e.target).val();
 
     if(e.which == 13 && value.length >= 2){
@@ -45,7 +45,7 @@ Template.TestCaseList.events({
       instance.$(".add-item-form .btn-search").attr("disabled", "disabled");
     }
   },
-  "click .btn-search": function (e, instance) {
+  "click .btn-search"(e, instance) {
     var search = instance.$(".add-item-form input").val(),
         projectVersionId = FlowRouter.getParam("projectVersionId");
 
@@ -83,14 +83,14 @@ Template.TestCaseList.events({
       instance.$(".search-no-results").show();
     }
   },
-  "click .field-clear-btn": function (e, instance) {
+  "click .field-clear-btn"(e, instance) {
     instance.$(".add-item-form input").val("");
     instance.$(".field-clear-btn").hide();
     instance.$(".search-no-results").hide();
     instance.$(".test-case-list-selectable.highlight").removeClass("highlight");
     instance.$(".test-case-list-selectable").show();
   },
-  "click .add-item-form a": function (e, instance) {
+  "click .add-item-form a"(e, instance) {
     var itemType = $(e.target).closest("a").attr("data-name"),
         itemName = instance.$(".add-item-form input").val().trim(),
         projectId = FlowRouter.getParam("projectId"),
@@ -129,7 +129,7 @@ Template.TestCaseList.events({
       }
     }
   },
-  "click .test-case-list-item": function (e, instance) {
+  "click .test-case-list-item"(e, instance) {
     if(instance.data.editable){
       var selectable = $(e.target).closest(".test-case-list-item");
       instance.$(".test-case-list-item.selected").removeClass("selected");
@@ -138,10 +138,10 @@ Template.TestCaseList.events({
     }
   },
   // make sure the draggable and droppable items stay up to date
-  "mouseover .test-case-list-selectable:not(.ui-draggable)": function (e, instance) {
+  "mouseover .test-case-list-selectable:not(.ui-draggable)"(e, instance) {
     $(e.target).closest(instance.draggableSelector).draggable(instance.draggableOptions);
   },
-  "mouseover .test-case-list-group:not(.ui-droppable)": function (e, instance) {
+  "mouseover .test-case-list-group:not(.ui-droppable)"(e, instance) {
     if(instance.data.editable){
       $(e.target).closest(".test-case-list-group").droppable(instance.droppableOptions);
     }
@@ -175,10 +175,10 @@ Template.TestCaseList.rendered = function () {
   instance.draggableOptions = {
     revert: "invalid",
     distance: 5,
-    start: function (event, ui) {
+    start(event, ui) {
       ui.helper.addClass("in-drag");
     },
-    stop: function (event, ui) {
+    stop(event, ui) {
       ui.helper.removeClass("in-drag");
     }
   };
@@ -199,7 +199,7 @@ Template.TestCaseList.rendered = function () {
     instance.droppableOptions = {
       greedy: true,
       hoverClass: "test-case-list-drop-hover",
-      drop: function (event, ui) {
+      drop(event, ui) {
         var groupId = $(this).attr("data-group-id"),
           itemId = ui.draggable.attr("data-pk"),
           itemIsGroup = ui.draggable.hasClass("test-case-list-group");
@@ -222,7 +222,7 @@ Template.TestCaseList.rendered = function () {
           }
         }
       },
-      accept: function (el) {
+      accept(el) {
         var dragParentId = $(el).attr("data-parent-id"),
           dragId = $(el).attr("data-group-id"),
           targetId = $(this).attr("data-group-id"),

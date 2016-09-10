@@ -19,7 +19,7 @@ Template.TestCase.helpers({});
  * Template Event Handlers
  */
 Template.TestCase.events({
-  "edited .editable"   : function (e, instance, newValue) {
+  "edited .editable"(e, instance, newValue) {
     e.stopImmediatePropagation();
     var dataKey    = $(e.target).attr("data-key"),
         update     = { $set: {} },
@@ -45,7 +45,7 @@ Template.TestCase.events({
       RobaDialog.error("Failed to update test case value: data-key not found");
     }
   },
-  "click .btn-add-role": function (e, instance) {
+  "click .btn-add-role"(e, instance) {
     var testCase = instance.data,
         order    = testCase.roles().count();
     TestCaseRoles.insert({
@@ -170,15 +170,15 @@ Template.TestCase.rendered = function () {
     }
     
     instance.testCaseObserver = TestCaseSteps.find({ testCaseId: data.staticId }).observe({
-      added  : function (doc) {
+      added(doc) {
         //console.log("Test case step added: ", doc._id);
         instance.updateAlignment();
       },
-      removed: function () {
+      removed() {
         //console.log("Test case step removed");
         instance.updateAlignment();
       },
-      changed: function () {
+      changed() {
         //console.log("Test case step changed");
         instance.updateAlignment();
       }

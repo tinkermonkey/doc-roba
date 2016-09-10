@@ -9,10 +9,10 @@ import {TestResults} from '../../../api/test_result/test_result.js';
  * Template Helpers
  */
 Template.TestCaseRecentResultList.helpers({
-  results: function () {
+  results() {
     return Template.instance().results();
   },
-  hasMoreResults: function () {
+  hasMoreResults() {
     var limit = Template.instance().limit.get();
     if(limit > 0){
       return Template.instance().results().count() >= Template.instance().limit.get();
@@ -24,7 +24,7 @@ Template.TestCaseRecentResultList.helpers({
  * Template Event Handlers
  */
 Template.TestCaseRecentResultList.events({
-  "click .test-result-row": function (e, instance) {
+  "click .test-result-row"(e, instance) {
     var testResult = this;
     FlowRouter.go("TestResult", {
       projectId: testResult.projectId,

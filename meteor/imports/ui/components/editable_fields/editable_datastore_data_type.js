@@ -9,7 +9,7 @@ import {DatastoreDataTypes} from '../../../api/datastore/datastore_data_type.js'
  * Template Helpers
  */
 Template.EditableDatastoreDataType.helpers({
-  isCustom: function () {
+  isCustom() {
     return this.type === FieldTypes.custom;
   }
 });
@@ -38,8 +38,8 @@ Template.EditableDatastoreDataType.rendered = function () {
       type: "select",
       source: types,
       highlight: false,
-      display: function () {},
-      success: function (response, newValue) {
+      display() {},
+      success(response, newValue) {
         var editedElement = this;
         $(editedElement).trigger("edited", [newValue]);
         setTimeout(function () {

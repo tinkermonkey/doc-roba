@@ -17,7 +17,7 @@ Template.DatastoreDataTypeFieldList.helpers({
  * Template Event Handlers
  */
 Template.DatastoreDataTypeFieldList.events({
-  "click .btn-add-field": function () {
+  "click .btn-add-field"() {
     var instance = Template.instance(),
         order = parseInt(instance.$(".sortable-table-row").length || 0) + 1;
   
@@ -40,7 +40,7 @@ Template.DatastoreDataTypeFieldList.events({
       }
     });
   },
-  "click .sortable-table-row .btn-delete": function (e, instance) {
+  "click .sortable-table-row .btn-delete"(e, instance) {
     var field = this;
     console.log("Delete Field: ", field);
     
@@ -52,7 +52,7 @@ Template.DatastoreDataTypeFieldList.events({
         {text: "Cancel"},
         {text: "Delete"}
       ],
-      callback: function (btn) {
+      callback(btn) {
         if(btn == "Delete"){
           DatastoreDataTypeFields.remove(field._id, function (error) {
             RobaDialog.hide();
@@ -66,7 +66,7 @@ Template.DatastoreDataTypeFieldList.events({
       }
     });
   },
-  "edited .editable": function (e, instance, newValue) {
+  "edited .editable"(e, instance, newValue) {
     console.log("Data Store Field update: ", $(e.target).attr("data-key"));
     
     e.stopImmediatePropagation();

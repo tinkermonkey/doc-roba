@@ -14,10 +14,10 @@ import '../../../components/datastores/datastore_row_form_vert.js';
  * Template Helpers
  */
 Template.ProjectVersions.helpers({
-  projectVersions: function () {
+  projectVersions() {
     return ProjectVersions.find({ projectId: this._id }, { sort: { version: -1 } });
   },
-  project: function () {
+  project() {
     return Projects.findOne(this.projectId);
   }
 });
@@ -26,7 +26,7 @@ Template.ProjectVersions.helpers({
  * Template Helpers
  */
 Template.ProjectVersions.events({
-  "click .btn-add-version": function (event, instance) {
+  "click .btn-add-version"(event, instance) {
     var project = instance.data;
     console.log("Add Version:", project);
 
@@ -58,7 +58,7 @@ Template.ProjectVersions.events({
         { text: "Cancel" },
         { text: "Add" }
       ],
-      callback: function (btn) {
+      callback(btn) {
         console.log("Dialog button pressed: ", btn);
         if(btn == "Add"){
           // grab the form data

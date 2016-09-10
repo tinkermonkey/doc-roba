@@ -10,7 +10,7 @@ import {Util} from '../../../api/util.js';
  * Template Helpers
  */
 Template.NodeSnippet.helpers({
-  getNodeClass: function () {
+  getNodeClass() {
     switch(this.type){
       case NodeTypes.view:
         return "node-view";
@@ -20,10 +20,10 @@ Template.NodeSnippet.helpers({
         return "node-page"
     }
   },
-  titleX: function () {
+  titleX() {
     return DocTreeConfig.nodes.width / 2;
   },
-  titleY: function () {
+  titleY() {
     return DocTreeConfig.nodes.titleHeight + DocTreeConfig.nodes.borderWidth;
   }
 });

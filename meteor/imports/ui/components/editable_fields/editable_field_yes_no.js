@@ -24,8 +24,8 @@ Template.EditableFieldYesNo.rendered = function () {
     source: [{value: 0, text: 'No'}, {value: 1, text: 'Yes'}],
     value: instance.data.value ? 1 : 0,
     highlight: false,
-    display: function () {},
-    success: function (response, newValue) {
+    display() {},
+    success(response, newValue) {
       var editedElement = this;
       $(editedElement).trigger("edited", [newValue == 1]);
       setTimeout(function () {

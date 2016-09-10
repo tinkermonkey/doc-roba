@@ -13,17 +13,17 @@ import '../../../components/routes/route_map.js';
  * Template Helpers
  */
 Template.TestCaseStepNavigate.helpers({
-  source: function () {
+  source() {
     return Template.instance().nodeId.get()
   },
-  destination: function () {
+  destination() {
     return Template.instance().destinationNode.get()
   },
-  complete: function () {
+  complete() {
     var instance = Template.instance();
     return instance.nodeId.get() && instance.destinationNode.get()
   },
-  route: function () {
+  route() {
     return Template.instance().route.get()
   }
 });

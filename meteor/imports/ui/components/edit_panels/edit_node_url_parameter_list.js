@@ -6,14 +6,14 @@ import {Template} from 'meteor/templating';
  * Template Helpers
  */
 Template.EditNodeUrlParameterList.helpers({
-  indexedUrlParameters: function () {
+  indexedUrlParameters() {
     var indexedParams = _.map(this.urlParameters, function (r, i) {r.index = i; return r; });
     return _.sortBy(indexedParams, function (r) { return r.order });
   },
-  dataKeyParam: function () {
+  dataKeyParam() {
     return "urlParameters." + this.index + ".param";
   },
-  dataKeyValue: function () {
+  dataKeyValue() {
     return "urlParameters." + this.index + ".value";
   }
 });

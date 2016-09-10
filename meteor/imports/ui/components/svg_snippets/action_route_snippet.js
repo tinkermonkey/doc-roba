@@ -9,37 +9,37 @@ import {PathBuilder} from '../../lib/doc_tree/path_builder.js';
  * Template Helpers
  */
 Template.ActionRouteSnippet.helpers({
-  width: function () {
+  width() {
     var scale = Template.instance().scale.get();
     return DocTreeConfig.nodes.width * 3 * scale + DocTreeConfig.standalone.margin * 2;
   },
-  height: function () {
+  height() {
     var scale = Template.instance().scale.get();
     return (DocTreeConfig.nodes.height * this.routes.length + DocTreeConfig.nodes.yMargin / 2 * (this.routes.length - 1)) * scale + DocTreeConfig.standalone.margin * 2;
   },
-  scale: function () {
+  scale() {
     return Template.instance().scale.get();
   },
-  xMargin: function () {
+  xMargin() {
     return DocTreeConfig.standalone.margin;
   },
-  yMargin: function () {
+  yMargin() {
     return DocTreeConfig.standalone.margin;
   },
   sourceNodeY: function sourceNodeY() {
     var height = this.routes.length * DocTreeConfig.nodes.height + (this.routes.length - 1) * DocTreeConfig.nodes.yMargin / 2;
     return (height / 2) - (DocTreeConfig.nodes.height / 2);
   },
-  sortedRoutes: function () {
+  sortedRoutes() {
     return _.sortBy(this.routes, function (r) { return r.order });
   },
-  routeNodeX: function () {
+  routeNodeX() {
     return DocTreeConfig.nodes.width * 2;
   },
-  routeNodeY: function () {
+  routeNodeY() {
     return DocTreeConfig.nodes.height * this.order + DocTreeConfig.nodes.yMargin / 2 * this.order;
   },
-  path: function (action) {
+  path(action) {
     var height = action.routes.length * DocTreeConfig.nodes.height + (action.routes.length - 1) * DocTreeConfig.nodes.yMargin / 2,
       startY  = height / 2,
       endY    = (this.order + 0.5) * DocTreeConfig.nodes.height + this.order * DocTreeConfig.nodes.yMargin / 2,

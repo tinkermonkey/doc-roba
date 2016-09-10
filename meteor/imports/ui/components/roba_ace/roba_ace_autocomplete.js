@@ -62,7 +62,7 @@ futureDriverAutocomplete.keys = _.keys(futureDriverAutocomplete);
  * @type {{getCompletions: futureDriverCompleter.getCompletions}}
  */
 export const RobaCompleter = {
-  getCompletions: function (editor, session, pos, prefix, callback) {
+  getCompletions(editor, session, pos, prefix, callback) {
     if (prefix.length === 0) { callback(null, []); return }
 
     var matches = [],

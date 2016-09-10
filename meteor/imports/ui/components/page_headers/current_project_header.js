@@ -10,10 +10,10 @@ import {ProjectVersions} from '../../../api/project/project_version.js';
  * Template Helpers
  */
 Template.CurrentProjectHeader.helpers({
-  project: function () {
+  project() {
     return Template.instance().project.get()
   },
-  version: function () {
+  version() {
     return Template.instance().version.get()
   }
 });

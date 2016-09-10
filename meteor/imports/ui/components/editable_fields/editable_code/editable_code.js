@@ -48,8 +48,8 @@ Template.EditableCode.rendered = function () {
     parentInstance: instance,
     highlight: false,
     onblur: "ignore",
-    display: function () {},
-    success: function (response, newValue) {
+    display() {},
+    success(response, newValue) {
       var editedElement = this;
       $(editedElement).trigger("edited", [newValue]);
       setTimeout(function () {

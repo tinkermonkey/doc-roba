@@ -6,7 +6,7 @@ export const Auth = {
    * Global helper for methods to require authentication
    * @returns {user}
    */
-  requireAuthentication: function () {
+  requireAuthentication() {
     var user = Meteor.users.findOne(Meteor.userId());
     if(user){
       return user
@@ -18,7 +18,7 @@ export const Auth = {
    * Global helper for methods to require authentication
    * @returns {user}
    */
-  requireProjectAccess: function (projectId) {
+  requireProjectAccess(projectId) {
     let user = Meteor.users.findOne(Meteor.userId());
     if(user && user.hasProjectAccess(projectId)){
       return user;
@@ -32,7 +32,7 @@ export const Auth = {
    * @param projectId
    * @returns {boolean}
    */
-  hasProjectAccess: function (userId, projectId) {
+  hasProjectAccess(userId, projectId) {
     //console.debug("hasProjectAccess: " + userId + ", " + projectId);
     if(userId && projectId){
       var user = Meteor.users.findOne(userId);
@@ -46,14 +46,14 @@ export const Auth = {
    * @param userId
    * @returns {boolean}
    */
-  allowIfAuthenticated: function (userId) {
+  allowIfAuthenticated(userId) {
     return userId !== null;
   },
 
   /**
    * Operation not permitted client-side
    */
-  denyAlways: function () {
+  denyAlways() {
     return true;
   },
 
@@ -63,7 +63,7 @@ export const Auth = {
    * @param doc
    * @returns {boolean}
    */
-  denyIfNoProjectAccess: function (userId, doc) {
+  denyIfNoProjectAccess(userId, doc) {
     var user = Meteor.users.findOne(userId);
     if(userId && user && doc && doc.projectId){
       return !user.hasProjectAccess(doc.projectId);
@@ -77,7 +77,7 @@ export const Auth = {
    * @param doc
    * @returns {*|boolean}
    */
-  denyIfNotAdmin: function (userId, doc) {
+  denyIfNotAdmin(userId, doc) {
     var user = Meteor.users.findOne(userId);
     if(userId && user && doc && doc.projectId){
       return !user.hasAdminAccess(doc.projectId);
@@ -91,7 +91,7 @@ export const Auth = {
    * @param doc
    * @returns {*|boolean}
    */
-  denyIfNotTester: function (userId, doc) {
+  denyIfNotTester(userId, doc) {
     var user = Meteor.users.findOne(userId);
     if(userId && user && doc && doc.projectId){
       return !user.hasTesterAccess(doc.projectId);
@@ -104,7 +104,7 @@ export const Auth = {
    * @param userId
    * @returns {boolean}
    */
-  denyIfNoProjectCreation: function (userId) {
+  denyIfNoProjectCreation(userId) {
     var user = Meteor.users.findOne(userId);
     if(userId && user){
       return !(user.isSystemAdmin || Meteor.settings.allowPersonalProjects)

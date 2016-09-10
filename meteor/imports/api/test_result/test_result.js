@@ -96,34 +96,34 @@ TestResults.allow(Auth.ruleSets.allow.ifAuthenticated);
  * Helpers
  */
 TestResults.helpers({
-  roleResults: function () {
+  roleResults() {
     return TestResultRoles.find({testResultId: this._id});
   },
-  project: function () {
+  project() {
     return Projects.findOne({_id: this.projectId});
   },
-  projectVersion: function () {
+  projectVersion() {
     return ProjectVersions.findOne({_id: this.projectVersionId});
   },
-  testCase: function () {
+  testCase() {
     return TestCases.findOne({staticId: this.testCaseId, projectVersionId: this.projectVersionId});
   },
-  server: function () {
+  server() {
     return TestServers.findOne({staticId: this.serverId, projectVersionId: this.projectVersionId});
   },
-  testRun: function () {
+  testRun() {
     return TestRuns.findOne({staticId: this.testRunId, projectVersionId: this.projectVersionId});
   },
-  isStaged: function () {
+  isStaged() {
     return this.status = TestResultStatus.staged
   },
-  isLaunching: function () {
+  isLaunching() {
     return this.status = TestResultStatus.launched
   },
-  isRunning: function () {
+  isRunning() {
     return this.status = TestResultStatus.executing
   },
-  isDone: function () {
+  isDone() {
     return _.contains([
       TestResultStatus.complete,
       TestResultStatus.skipped
@@ -132,7 +132,7 @@ TestResults.helpers({
   /**
    * Launch a staged test result
    */
-  launch: function () {
+  launch() {
     console.debug("TestResult.launch: " + this._id);
     if(!Meteor.isServer) throw new Meteor.Error("server-only", "This method can only be executed on the server");
 

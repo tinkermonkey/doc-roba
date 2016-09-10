@@ -8,7 +8,7 @@ import '../../../components/editable_fields/node_selector/editable_node_selector
  * Template Helpers
  */
 Template.TestCaseStepNode.helpers({
-  getNodeId: function () {
+  getNodeId() {
     if(this.data){
       return this.data.nodeId
     }

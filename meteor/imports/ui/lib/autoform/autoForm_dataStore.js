@@ -7,13 +7,13 @@ import './autoForm_dataStore.html';
  * Addapted from bootstrap3-inline and default bootstrap3 themes
  */
 Template["quickForm_dataStore"].helpers({
-  labelClass: function () {
+  labelClass() {
     return this.atts["label-class"];
   },
-  idPrefix: function () {
+  idPrefix() {
     return this.atts["id-prefix"];
   },
-  qfAutoFormContext: function () {
+  qfAutoFormContext() {
     var ctx = _.clone(this.qfAutoFormContext || {});
     ctx = AutoForm.Utility.addClass(ctx, "form-inline");
     if (ctx["label-class"])
@@ -23,7 +23,7 @@ Template["quickForm_dataStore"].helpers({
 });
 
 Template["afFormGroup_dataStore"].helpers({
-  afFieldInputAtts: function () {
+  afFieldInputAtts() {
     var atts = _.clone(this.afFieldInputAtts || {});
     // Use the same templates as those defined for bootstrap3 template.
     atts.template = "bootstrap3";

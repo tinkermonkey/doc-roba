@@ -17,10 +17,10 @@ import TreeLayout from "../../components/tree_layout/tree_layout.js";
  * Basic helpers for the tree display
  */
 Template.DocTree.helpers({
-  project: function () {
+  project() {
     return Template.instance().project.get()
   },
-  version: function () {
+  version() {
     return Template.instance().version.get()
   }
 });

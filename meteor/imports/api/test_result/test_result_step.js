@@ -103,13 +103,13 @@ TestResultSteps.allow(Auth.ruleSets.allow.ifAuthenticated);
  * Helpers
  */
 TestResultSteps.helpers({
-  testCaseStep: function () {
+  testCaseStep() {
     return TestCaseSteps.findOne({staticId: this.testCaseStepId, projectVersionId: this.projectVersionId});
   },
   /**
    * Find all of the log messages attributed to this step
    */
-  logMessages: function () {
+  logMessages() {
     if(this.isFirst()){
       return LogMessages.find({
         $or: [
@@ -124,13 +124,13 @@ TestResultSteps.helpers({
   /**
    * Find the step context message pertaining to this step
    */
-  logContextMessage: function () {
+  logContextMessage() {
     return LogMessages.findOne({ "sender": "context", "data.type": "step", "context.testResultStepId": this._id });
   },
   /**
    * Get all of the test-map relevant context messages in order
    */
-  testMapContexts: function () {
+  testMapContexts() {
     return LogMessages.find({
       "sender": "context",
       "data.type": {$in: ["node", "action"]},
@@ -147,19 +147,19 @@ TestResultSteps.helpers({
   /**
    * Get all of the screenshots for this step
    */
-  screenshots: function () {
+  screenshots() {
     return Screenshots.find({ testResultStepId: this._id }, {sort: {uploadedAt: -1}}).map(function (image, i) {image.index = i; return image});
   },
-  isFirst: function () {
+  isFirst() {
     return this.order == 0;
   },
-  isLast: function () {
+  isLast() {
     return TestResultSteps.find({testResultRoleId: this.testResultRoleId, order: {$gt: this.order}}).count()
   },
-  nextStep: function () {
+  nextStep() {
     return TestResultSteps.findOne({testResultRoleId: this.testResultRoleId, order: this.order + 1})
   },
-  previousStep: function () {
+  previousStep() {
     return TestResultSteps.findOne({testResultRoleId: this.testResultRoleId, order: this.order - 1})
   }
 });

@@ -12,7 +12,7 @@ import '../../../components/datastores/datastore_data_table.js';
  * Template Helpers
  */
 Template.VersionCredentials.helpers({
-  userTypes: function () {
+  userTypes() {
     return Nodes.find({projectVersionId: this._id, type: NodeTypes.userType}, {sort: {title: 1}});
   }
 });

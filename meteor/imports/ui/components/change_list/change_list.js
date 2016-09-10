@@ -10,7 +10,7 @@ import './nodes_change.js';
  * Template Helpers
  */
 Template.change_list.helpers({
-  changeTemplate: function () {
+  changeTemplate() {
     var defaultTemplate = Template.default_change;
     //console.log("changeTemplate: ", this.collection);
     return Template[this.collection + "_change"] ? Template[this.collection + "_change"] : defaultTemplate;

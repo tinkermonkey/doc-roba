@@ -8,7 +8,7 @@ import {PlatformTypes} from '../../../api/node/platform_types.js';
  * Template Helpers
  */
 Template.PlatformEditPanel.helpers({
-  getPlatformSchema: function () {
+  getPlatformSchema() {
     console.log("getPlatformSchema: ", this);
     switch(parseInt(this.config.type)) {
       case PlatformTypes.web:

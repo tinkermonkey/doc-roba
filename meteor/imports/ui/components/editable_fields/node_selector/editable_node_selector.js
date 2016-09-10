@@ -37,8 +37,8 @@ Template.EditableNodeSelector.rendered = function () {
     projectVersionId: instance.data.projectVersionId,
     parentInstance: instance,
     highlight: false,
-    display: function () {},
-    success: function (response, newValue) {
+    display() {},
+    success(response, newValue) {
       console.log("EditableNodeSelector edited: ", newValue);
       var editedElement = this;
       $(editedElement).trigger("edited", [newValue]);

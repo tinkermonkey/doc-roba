@@ -15,31 +15,31 @@ import './datastore_child_table.js';
  * Template Helpers
  */
 Template.DatastoreDataTable.helpers({
-  isPrimaryColumn: function () {
+  isPrimaryColumn() {
     return this.type !== FieldTypes.custom;
   },
-  isChildColumn: function () {
+  isChildColumn() {
     return this.type === FieldTypes.custom;
   },
-  getPrimaryColumnCount: function () {
+  getPrimaryColumnCount() {
     return _.filter(this.tableSchema().fields, function (field) {
           return field.type !== FieldTypes.custom
         }).length + 2;
   },
-  getFieldValue: function (field, row) {
+  getFieldValue(field, row) {
     if (field && row) {
       return row[field.dataKey];
     }
   },
-  childHasValue: function (field, row) {
+  childHasValue(field, row) {
     return row.hasOwnProperty(field.dataKey);
   },
-  getChildColSpan: function (schema) {
+  getChildColSpan(schema) {
     return _.filter(schema.fields, function (field) {
           return field.type !== FieldTypes.custom
         }).length;
   },
-  getChildContext: function (field, row) {
+  getChildContext(field, row) {
     var value = row[field.dataKey];
     return {
       field: field,
@@ -52,7 +52,7 @@ Template.DatastoreDataTable.helpers({
  * Template Helpers
  */
 Template.DatastoreDataTable.events({
-  "click .btn-add-ds-row": function (e, instance) {
+  "click .btn-add-ds-row"(e, instance) {
     var dataStoreId = $(e.target).attr("data-store-id"),
         formContext = {
           type: "insert",
@@ -72,7 +72,7 @@ Template.DatastoreDataTable.events({
         {text: "Cancel"},
         {text: "Save"}
       ],
-      callback: function (btn) {
+      callback(btn) {
         //console.log("RobaDialog button pressed: ", btn);
         if (btn == "Save") {
           // grab the form data
@@ -110,7 +110,7 @@ Template.DatastoreDataTable.events({
       }
     });
   },
-  "click .btn-edit-row, dblclick .data-store-table-row": function (e, instance) {
+  "click .btn-edit-row, dblclick .data-store-table-row"(e, instance) {
     console.log("Edit: ", this);
     var row = this;
     
@@ -132,7 +132,7 @@ Template.DatastoreDataTable.events({
         {text: "Cancel"},
         {text: "Save"}
       ],
-      callback: function (btn) {
+      callback(btn) {
         //console.log("RobaDialog button pressed: ", btn);
         if (btn == "Save") {
           // grab the form data
@@ -155,7 +155,7 @@ Template.DatastoreDataTable.events({
       }
     });
   },
-  "click .btn-delete-row": function (e, instance) {
+  "click .btn-delete-row"(e, instance) {
     console.log("Delete: ", this);
     var row = this,
         rowTitle = row.render(row._id);
@@ -168,7 +168,7 @@ Template.DatastoreDataTable.events({
         {text: "Cancel"},
         {text: "Delete"}
       ],
-      callback: function (btn) {
+      callback(btn) {
         if (btn == "Delete") {
           DatastoreRows.remove(row._id, function (error) {
             RobaDialog.hide();

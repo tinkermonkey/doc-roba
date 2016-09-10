@@ -9,7 +9,7 @@ import {Blaze} from 'meteor/blaze';
  * Template Helpers
  */
 Template.EditableAutoform.helpers({
-  getDataVars: function () {
+  getDataVars() {
     if (this.data) {
       //console.log("EditableAutoform context:", this.schema.schema());
       var data = this.data,
@@ -26,7 +26,7 @@ Template.EditableAutoform.helpers({
           });
     }
   },
-  hasData: function () {
+  hasData() {
     return this.data && _.keys(this.data).length;
   }
 });
@@ -56,9 +56,9 @@ Template.EditableAutoform.rendered = function () {
     data: instance.data,
     parentInstance: instance,
     highlight: false,
-    display: function () {
+    display() {
     },
-    success: function (response, newValue) {
+    success(response, newValue) {
       var editedElement = this;
       $(editedElement).trigger("edited", [newValue]);
       setTimeout(function () {

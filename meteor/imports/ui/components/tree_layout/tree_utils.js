@@ -11,7 +11,7 @@ export const TreeUtils = {
    * @returns {{minX: number, maxX: number, minY: number, maxY: number}}
    * TODO: Standardize the representation of rectangles!!
    */
-  nodeListBounds: function (nodeList, margin) {
+  nodeListBounds(nodeList, margin) {
     var bounds = {
       minX: 1000000,
       maxX: -1000000,
@@ -54,7 +54,7 @@ export const TreeUtils = {
    * @param d
    * @param depth
    */
-  setNodeDepth: function (d, depth) {
+  setNodeDepth(d, depth) {
     //console.log("SetNodeDepth: ", d.title, 0);
     var children = [].concat(d.childPages, d.childViews);
     
@@ -70,7 +70,7 @@ export const TreeUtils = {
    * @param testFunction A test function to use (returns true/false)
    * @returns {number} The maximum depth of a node which passed the test
    */
-  getMaxDepth: function (nodeList, testFunction) {
+  getMaxDepth(nodeList, testFunction) {
     var maxDepth = 0,
         i;
     if (testFunction) {
@@ -97,7 +97,7 @@ export const TreeUtils = {
    * @param depth The depth to target
    * @returns {Array} The list of nodes found at that depth
    */
-  getAtDepth: function (nodeList, depth) {
+  getAtDepth(nodeList, depth) {
     var depthNodes = [];
     nodeList.forEach((node) => {
       if (node.depth === depth) {
@@ -110,7 +110,7 @@ export const TreeUtils = {
   /**
    * Parse a transform string for transform information
    */
-  parseTranslate: function (transform) {
+  parseTranslate(transform) {
     if (transform && transform.match(/translate\(\s*([0-9\.]+)\s*,\s*([0-9\.]+)\s*\)/i)) {
       var coords = transform.match(/translate\(\s*([0-9\.]+)\s*,\s*([0-9\.]+)\s*\)/i);
       

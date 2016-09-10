@@ -74,19 +74,19 @@ ChangeTracker.TrackChanges(TestCaseRoles, "test_case_roles");
  * Helpers
  */
 TestCaseRoles.helpers({
-  steps: function () {
+  steps() {
     return TestCaseSteps.find({testCaseRoleId: this.staticId, projectVersionId: this.projectVersionId}, {sort: {order: 1}});
   },
-  step: function (order) {
+  step(order) {
     return TestCaseSteps.findOne({testCaseRoleId: this.staticId, projectVersionId: this.projectVersionId, order: order});
   },
-  platform: function () {
+  platform() {
     var firstStep = this.step(0);
     if(firstStep && firstStep.firstNode()){
       return firstStep.firstNode().platform();
     }
   },
-  userType: function () {
+  userType() {
     var firstStep = TestCaseSteps.findOne({testCaseRoleId: this.staticId, projectVersionId: this.projectVersionId, order: 0});
     if(firstStep && firstStep.firstNode()){
       return firstStep.firstNode().userType();

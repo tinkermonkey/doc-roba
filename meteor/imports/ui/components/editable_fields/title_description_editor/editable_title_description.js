@@ -28,8 +28,8 @@ Template.EditableTitleDescription.rendered = function () {
     value: instance.data.value,
     emptyText: instance.data.emptyText || "No Title",
     highlight: false,
-    display: function () {},
-    success: function (response, newValue) {
+    display() {},
+    success(response, newValue) {
       var editedElement = this;
       $(editedElement).trigger("edited", [newValue]);
       setTimeout(function () {

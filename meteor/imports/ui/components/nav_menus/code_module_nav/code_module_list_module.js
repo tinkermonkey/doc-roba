@@ -8,7 +8,7 @@ import './code_module_list_function.js';
  * Template Helpers
  */
 Template.CodeModuleListModule.helpers({
-  isExpanded: function () {
+  isExpanded() {
     return Template.instance().expanded.get();
   }
 });

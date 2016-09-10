@@ -11,7 +11,7 @@ export const DSUtil = {
    * @param field
    * @return Object
    */
-  tableFieldDef: function (field) {
+  tableFieldDef(field) {
     return {
       label: field.title,
       type: field.type,
@@ -28,7 +28,7 @@ export const DSUtil = {
    * @param field
    * @return Object
    */
-  simpleFieldDef: function (field) {
+  simpleFieldDef(field) {
     return {
       label: field.title,
       type: DSUtil.dataTypeLiteral(field),
@@ -40,7 +40,7 @@ export const DSUtil = {
    * Get the data type literal for a field def
    * @param field
    */
-  dataTypeLiteral: function (field) {
+  dataTypeLiteral(field) {
     //console.log("dataTypeLiteral:", field);
     var dataTypeLiteral;
     switch(field.type) {
