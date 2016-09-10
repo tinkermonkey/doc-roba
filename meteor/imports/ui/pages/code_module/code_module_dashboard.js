@@ -11,7 +11,7 @@ import {Projects} from '../../../api/project/project.js';
 import {ProjectVersions} from '../../../api/project/project_version.js';
 
 import '../../components/page_headers/current_project_header.js';
-import '../../components/nav_menus/code_module_nav.js';
+import '../../components/nav_menus/code_module_nav/code_module_nav.js';
 import './code_module.js';
 
 /**

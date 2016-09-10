@@ -26,7 +26,7 @@ export const TestPlanItem = new SimpleSchema({
     denyUpdate: true
   },
   // Link to the template
-  templateId: {
+  testPlanId: {
     type: String,
     denyUpdate: true
   },
@@ -65,3 +65,4 @@ export const TestPlanItems = new Mongo.Collection("test_plan_items");
 TestPlanItems.attachSchema(TestPlanItem);
 TestPlanItems.deny(Auth.ruleSets.deny.ifNotTester);
 TestPlanItems.allow(Auth.ruleSets.allow.ifAuthenticated);
+

@@ -9,7 +9,7 @@ import {ProjectVersions} from '../../../api/project/project_version.js';
 import {TestCases} from '../../../api/test_case/test_case.js';
 
 import '../../components/page_headers/current_project_header.js';
-import '../../components/nav_menus/test_case_nav.js';
+import '../../components/nav_menus/test_case_nav/test_case_nav.js';
 import './test_case.js';
 
 /**

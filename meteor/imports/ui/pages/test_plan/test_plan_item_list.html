@@ -1,0 +1,13 @@
+<template name="TestPlanItemList">
+  <div class="test-plan-item-list" data-parent-id="{{staticId}}">
+    {{#unless hasItems}}
+      <div class="alert alert-info">
+        <span class="glyphicon glyphicon-info-sign"></span>
+        Drag and drop Stages, Test Cases, and Test Run Templates here to build a test run
+      </div>
+    {{/unless}}
+    {{#each testPlanItems}}
+      {{> TestPlanItem }}
+    {{/each}}
+  </div>
+</template>

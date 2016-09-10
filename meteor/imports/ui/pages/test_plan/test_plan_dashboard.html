@@ -1,0 +1,16 @@
+<template name="TestPlanDashboard">
+  {{#CenterPoleLayout}}
+    {{#if ready}}
+      {{setTitle "Test Run Dashboard" }}
+      {{setNavTitle "Test Run Dashboard" }}
+
+      {{#if testPlanId}}
+        {{> TestPlan testPlan }}
+      {{else}}
+        <div class="align-center" style="margin-top: 200px;">
+          <h2>Select a Test Run Template</h2>
+        </div>
+      {{/if}}
+    {{/if}}
+  {{/CenterPoleLayout}}
+</template>

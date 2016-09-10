@@ -1,0 +1,11 @@
+<template name="TestPlanItemTestCase">
+  {{#with getTestCase}}
+    <ol class="breadcrumb test-plan-item-test-case-breadcrumb">
+      {{#each getBreadcrumbs}}
+        <li>{{this}}</li>
+      {{/each}}
+    </ol>
+  {{else}}
+    <div class="alert alert-danger">The linked test case could not be found</div>
+  {{/with}}
+</template>

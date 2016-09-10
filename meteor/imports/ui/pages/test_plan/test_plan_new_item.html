@@ -1,0 +1,14 @@
+<template name="TestPlanNewItem">
+  <div class="test-plan-new-item test-plan-item-type-{{type}}" style="{{#if width}}width: {{width}};{{/if}}" data-type="{{type}}">
+    <div class="test-plan-item-title no-select">
+      <span class="glyphicon glyphicon-plus"></span>
+    </div>
+    <div class="test-plan-item-body-container">
+      <div class="test-plan-item-body">
+        <div class="test-plan-item-body-content">
+          Add {{ renderLookup "TestRunItemTypesLookup" type }}
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

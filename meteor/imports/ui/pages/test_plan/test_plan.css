@@ -1,0 +1,209 @@
+/**
+ * Drag state for pulling test plans in from the test plan list
+ */
+.test-plan-list-item.in-drag {
+  color: #000 !important;
+  opacity: 0.75;
+  background-color: #ffffff !important;
+  background-image: none !important;
+}
+
+/**
+ * Test plan items
+ */
+.test-plan-item {
+  padding: 2px;
+  border-radius: 10px;
+  position: relative;
+  width: 100%;
+  margin-bottom: 5px;
+  cursor: pointer;
+  -webkit-transition: box-shadow 0.25s;
+  -moz-transition: box-shadow 0.25s;
+  -ms-transition: box-shadow 0.25s;
+  -o-transition: box-shadow 0.25s;
+  transition: box-shadow 0.25s;
+}
+
+.test-plan-new-item {
+  padding: 2px;
+  border-radius: 10px;
+  position: relative;
+  margin-bottom: 5px;
+  cursor: pointer;
+  -webkit-transition: box-shadow 0.25s;
+  -moz-transition: box-shadow 0.25s;
+  -ms-transition: box-shadow 0.25s;
+  -o-transition: box-shadow 0.25s;
+  transition: box-shadow 0.25s;
+}
+
+.test-plan-new-item:hover {
+  box-shadow: 0 0 10px #999;
+}
+
+.test-plan-item-error {
+  background-color: #FF0000 !important;
+}
+
+.test-plan-item-type-0 {
+  background-color: #9701ff;
+}
+
+.test-plan-item-type-1 {
+  background-color: #5cb85c;
+}
+
+.test-plan-item-type-2 {
+  background-color: #0A7BFF;
+}
+
+.test-plan-item-type-3 {
+  background-color: #5bc0de;
+}
+
+.test-plan-item-type-4 {
+  background-color: #ff8400;
+}
+
+.test-plan-item-title {
+  color: #fff;
+  cursor: pointer;
+  display: table-cell;
+  height: 100%;
+  vertical-align: bottom;
+  padding: 3px;
+  padding-bottom: 0;
+}
+
+.test-plan-item-body-container {
+  width: 100%;
+  display: table-cell;
+}
+
+.test-plan-item-body {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 5px;
+  width: 100%;
+  height: 100%;
+  text-align: left;
+  -webkit-transition: background 0.25s;
+  -moz-transition: background 0.25s;
+  -ms-transition: background 0.25s;
+  -o-transition: background 0.25s;
+  transition: background 0.25s;
+}
+
+/**
+ * Hover needs to be done via js here because
+ * there is no way to only hover the innermost container in css
+ */
+.test-plan-item-hover > .test-plan-item-body-container > .test-plan-item-body {
+  /*background-color: #efefef;*/
+}
+
+.test-plan-item-hover {
+  box-shadow: 0 0 10px #999;
+}
+
+.test-plan-new-item .test-plan-item-body {
+  width: auto;
+  min-height: 0;
+}
+
+.test-plan-item-body-content {
+  width: 100%;
+  height: 100%;
+  padding-left: 10px;
+}
+
+.test-plan-item-delete {
+  font-size: 10px;
+  background-color: inherit;
+  color: #fff;
+  padding: 2px 4px;
+  border-top-right-radius: 7px;
+  border-bottom-left-radius: 8px;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.test-plan-item-delete:hover {
+  color: #ffff00;
+}
+
+.test-plan-item-placeholder {
+  border-radius: 10px;
+  border: 2px solid #dddddd;
+  margin-bottom: 5px;
+}
+
+.test-plan-add-item-list {
+  margin-bottom: 0px;
+}
+
+.test-plan-item-list {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.test-plan-item-list-placeholder {
+  background-color: #CCCCCC;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  -webkit-filter: blur(5px);
+  filter: blur(5px);
+}
+
+/**
+ * Test run item details
+ */
+.test-plan-item-stage-title {
+  display: block;
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+
+.test-plan-item-test-case-breadcrumb {
+  margin: 0;
+  padding-left: 0px;
+  background-color: transparent;
+}
+
+.test-plan-item-test-case-breadcrumb li {
+  vertical-align: top;
+}
+
+/**
+ * Test run item group
+ */
+.breadcrumb > li + li.test-group-info:before {
+  padding: 0;
+  content: " ";
+}
+
+.test-group-info {
+  color: #0A7BFF;
+}
+
+.test-group-expander {
+  display: inline-block;
+  vertical-align: top;
+  -webkit-transform: rotate(90deg);
+  transform: rotate(90deg);
+  -webkit-transition: -webkit-transform 0.2s;
+  transition: transform 0.2s;
+}
+
+.test-group-expander.rotate {
+  -webkit-transform: rotate(180deg);
+  transform: rotate(180deg);
+}
+
+.test-group-test-list {
+  display: none;
+  margin-top: 10px;
+}

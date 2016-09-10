@@ -18,7 +18,7 @@ export const TestRun = new SimpleSchema({
     denyUpdate: true
   },
   // Link to test run template
-  testRunTemplateId: {
+  testPlanId: {
     type: String,
     denyUpdate: true
   },

@@ -1,0 +1,30 @@
+<template name="TestPlanList">
+  {{#if ready}}
+    <div class="test-case-list-header">
+      <h3>Test Plans</h3>
+    </div>
+    <div id="{{getElementId}}" class="test-case-list">
+      <div class="input-group input-group-sm add-item-form test-case-list-search">
+        <input type="text" class="form-control" placeholder="Enter a run name">
+        <div class="input-group-btn">
+          <button type="button" class="btn btn-primary dropdown-toggle" disabled="disabled" data-toggle="dropdown">
+            Add <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-right">
+            <li>
+              <a href="#" data-name="roottestrun">
+                <span class="glyphicon glyphicon-folder-open"></span>
+                Test Run
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      {{#each testPlans}}
+        {{> TestPlanListItem }}
+      {{/each}}
+    </div>
+  {{else}}
+    {{> RobaSpinner inline=true }}
+  {{/if}}
+</template>

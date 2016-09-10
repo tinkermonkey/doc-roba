@@ -1,0 +1,18 @@
+<template name="TestPlan">
+  <h1>
+    Test Run Template
+    <small>
+      {{> EditableTextField value=title dataKey="title" emptyText="Enter Title" cssClass="inline"}}
+    </small>
+  </h1>
+  <h4>{{> EditableTextArea value=description dataKey="description" emptyText="No Description"}}</h4>
+
+  <h2>Test Run Steps</h2>
+  <div class="test-plan-item-container" data-test-plan-id="{{_id}}">
+    <div class="test-plan-add-item-list">
+      {{> TestPlanNewItem type=1 width="150px"}}
+    </div>
+    <hr>
+    {{> TestPlanItemList }}
+  </div>
+</template>
