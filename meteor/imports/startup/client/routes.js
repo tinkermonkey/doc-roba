@@ -25,6 +25,7 @@ import "../../ui/pages/home/project_home/project_home.js";
 import "../../ui/pages/home/version_home/version_home.js";
 import "../../ui/pages/test_case/test_case_dashboard.js";
 import "../../ui/pages/test_plan/test_plan_dashboard.js";
+import "../../ui/pages/test_result/test_result.js";
 
 /**
  * Config

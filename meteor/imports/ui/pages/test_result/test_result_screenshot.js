@@ -206,7 +206,7 @@ Template.TestResultScreenshot.events({
 /**
  * Template Created
  */
-Template.TestResultScreenshot.created = function () {
+Template.TestResultScreenshot.onCreated( () => {
   let instance = Template.instance();
   instance.scale = new ReactiveVar(1);
 
@@ -224,12 +224,12 @@ Template.TestResultScreenshot.created = function () {
     };
     instance.layers = new ReactiveVar(layers);
   }
-};
+});
 
 /**
  * Template Rendered
  */
-Template.TestResultScreenshot.rendered = function () {
+Template.TestResultScreenshot.onRendered( () => {
   let instance = Template.instance();
 
   // make the step_types sortable
@@ -278,11 +278,12 @@ Template.TestResultScreenshot.rendered = function () {
     added: updateLayerComparison,
     changed: updateLayerComparison
   });
-};
+});
 
 /**
  * Template Destroyed
  */
-Template.TestResultScreenshot.destroyed = function () {
-  
-};
+Template.TestResultScreenshot.onDestroyed( () => {
+ 
+   
+});

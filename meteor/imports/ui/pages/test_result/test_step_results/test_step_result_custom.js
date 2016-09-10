@@ -1,3 +1,6 @@
+import './test_step_result_custom.html';
+import { Template } from 'meteor/templating';
+
 /**
  * Template Helpers
  */
@@ -11,20 +14,20 @@ Template.TestResultStepCustom.events({});
 /**
  * Template Created
  */
-Template.TestResultStepCustom.created = function () {
+Template.TestResultStepCustom.onCreated(() => {
   
-};
+});
 
 /**
  * Template Rendered
  */
-Template.TestResultStepCustom.rendered = function () {
+Template.TestResultStepCustom.onRendered(() => {
   
-};
+});
 
 /**
  * Template Destroyed
  */
-Template.TestResultStepCustom.destroyed = function () {
+Template.TestResultStepCustom.onDestroyed(() => {
   
-};
+});

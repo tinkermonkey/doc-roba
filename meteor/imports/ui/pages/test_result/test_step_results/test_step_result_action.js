@@ -1,3 +1,7 @@
+import './test_step_result_action.html';
+import { Template } from 'meteor/templating';
+import '../common_panels/test_step_result_node_milestone.js';
+
 /**
  * Template Helpers
  */
@@ -11,20 +15,20 @@ Template.TestResultStepAction.events({});
 /**
  * Template Created
  */
-Template.TestResultStepAction.created = function () {
+Template.TestResultStepAction.onCreated(() => {
   
-};
+});
 
 /**
  * Template Rendered
  */
-Template.TestResultStepAction.rendered = function () {
+Template.TestResultStepAction.onRendered(() => {
   
-};
+});
 
 /**
  * Template Destroyed
  */
-Template.TestResultStepAction.destroyed = function () {
+Template.TestResultStepAction.onDestroyed(() => {
   
-};
+});

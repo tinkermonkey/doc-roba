@@ -1,3 +1,14 @@
+import './test_result.html';
+import './test_result.css';
+import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/kadira:flow-router';
+import { RobaDialog } from 'meteor/austinsand:roba-dialog';
+import { TestCases } from '../../../api/test_case/test_case.js';
+import { TestResults } from '../../../api/test_result/test_result.js';
+import { TestResultRoles } from '../../../api/test_result/test_result_role.js';
+import './nav/test_result_nav.html';
+import './test_result_role.js';
+
 /**
  * Template Helpers
  */
@@ -21,7 +32,7 @@ Template.TestResult.events({});
 /**
  * Template Created
  */
-Template.TestResult.created = function () {
+Template.TestResult.onCreated(() => {
   let instance        = Template.instance();
   instance.testResult = new ReactiveVar();
   instance.testCase   = new ReactiveVar();
@@ -60,17 +71,17 @@ Template.TestResult.created = function () {
       instance.testCase.set(testCase);
     }
   });
-};
+});
 
 /**
  * Template Rendered
  */
-Template.TestResult.rendered = function () {
-};
+Template.TestResult.onRendered(() => {
+});
 
 /**
  * Template Destroyed
  */
-Template.TestResult.destroyed = function () {
+Template.TestResult.onDestroyed(() => {
   
-};
+});

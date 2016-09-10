@@ -1,3 +1,8 @@
+import './test_result_step_log.html';
+import { Template } from 'meteor/templating';
+import { ReactiveVar } from 'meteor/reactive-var';
+import '../../components/log_messages/log_message_data.js';
+
 /**
  * Template Helpers
  */
@@ -15,28 +20,29 @@ Template.TestResultStepLog.events({});
 /**
  * Template Created
  */
-Template.TestResultStepLog.created = function () {
-  this.startTime = Date.now();
-  this.maxLogWidth = new ReactiveVar(parseInt(window.innerWidth / 3));
-};
+Template.TestResultStepLog.onCreated(() => {
+  let instance         = Template.instance();
+  instance.startTime   = Date.now();
+  instance.maxLogWidth = new ReactiveVar(parseInt(window.innerWidth / 3));
+});
 
 /**
  * Template Rendered
  */
-Template.TestResultStepLog.rendered = function () {
+Template.TestResultStepLog.onRendered(() => {
   console.log("TestResultStepLog.rendered: ", Date.now() - this.startTime);
   let instance = Template.instance();
   instance.autorun(function () {
     var resize = Session.get("resize");
-    if(resize.width){
+    if (resize.width) {
       instance.maxLogWidth.set(parseInt(resize.width / 3));
     }
   });
-};
+});
 
 /**
  * Template Destroyed
  */
-Template.TestResultStepLog.destroyed = function () {
+Template.TestResultStepLog.onDestroyed(() => {
   
-};
+});

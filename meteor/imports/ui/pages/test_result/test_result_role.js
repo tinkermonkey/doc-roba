@@ -1,8 +1,11 @@
+import './test_result_role.html';
+import { Template } from 'meteor/templating';
+import './test_result_step.js';
+
 /**
  * Template Helpers
  */
-Template.TestResultRole.helpers({
-});
+Template.TestResultRole.helpers({});
 
 /**
  * Template Event Handlers
@@ -12,23 +15,26 @@ Template.TestResultRole.events({});
 /**
  * Template Created
  */
-Template.TestResultRole.created = function () {
-  var instance = this,
-    context = instance.data;
-  instance.subscribe("test_system", context.projectId, context.projectVersionId, context.testSystemId);
-  instance.subscribe("test_agent", context.projectId, context.projectVersionId, context.testAgentId);
-};
+Template.TestResultRole.onCreated(() => {
+  let instance = Template.instance();
+  
+  instance.autorun(() => {
+    let data = Template.currentData();
+    instance.subscribe("test_system", data.projectId, data.projectVersionId, data.testSystemId);
+    instance.subscribe("test_agent", data.projectId, data.projectVersionId, data.testAgentId);
+  });
+});
 
 /**
  * Template Rendered
  */
-Template.TestResultRole.rendered = function () {
-
-};
+Template.TestResultRole.onRendered(() => {
+  
+});
 
 /**
  * Template Destroyed
  */
-Template.TestResultRole.destroyed = function () {
+Template.TestResultRole.onDestroyed(() => {
   
-};
+});

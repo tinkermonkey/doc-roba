@@ -1,3 +1,6 @@
+import './test_step_result_wait.html';
+import { Template } from 'meteor/templating';
+
 /**
  * Template Helpers
  */
@@ -11,20 +14,20 @@ Template.TestResultStepWait.events({});
 /**
  * Template Created
  */
-Template.TestResultStepWait.created = function () {
+Template.TestResultStepWait.onCreated(() => {
   
-};
+});
 
 /**
  * Template Rendered
  */
-Template.TestResultStepWait.rendered = function () {
+Template.TestResultStepWait.onRendered(() => {
   
-};
+});
 
 /**
  * Template Destroyed
  */
-Template.TestResultStepWait.destroyed = function () {
+Template.TestResultStepWait.onDestroyed(() => {
   
-};
+});

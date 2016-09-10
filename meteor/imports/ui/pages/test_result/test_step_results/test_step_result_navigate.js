@@ -1,3 +1,6 @@
+import './test_step_result_navigate.html';
+import { Template } from 'meteor/templating';
+
 /**
  * Template Helpers
  */
@@ -11,20 +14,20 @@ Template.TestResultStepNavigate.events({});
 /**
  * Template Created
  */
-Template.TestResultStepNavigate.created = function () {
+Template.TestResultStepNavigate.onCreated(() => {
   
-};
+});
 
 /**
  * Template Rendered
  */
-Template.TestResultStepNavigate.rendered = function () {
+Template.TestResultStepNavigate.onRendered(() => {
   
-};
+});
 
 /**
  * Template Destroyed
  */
-Template.TestResultStepNavigate.destroyed = function () {
+Template.TestResultStepNavigate.onDestroyed(() => {
   
-};
+});
