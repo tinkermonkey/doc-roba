@@ -10,7 +10,7 @@ import {TestResultSteps} from './test_result_step.js';
 import {Projects} from '../project/project.js';
 import {ProjectVersions} from '../project/project_version';
 import {TestCases} from '../test_case/test_case.js';
-import {Servers} from '../test_server/server.js';
+import {TestServers} from '../test_server/test_server.js';
 import {TestRuns} from '../test_run/test_run.js';
 import {LogMessages} from '../log_message/log_message.js';
 import {Screenshots} from '../screenshot/screenshot.js';
@@ -109,7 +109,7 @@ TestResults.helpers({
     return TestCases.findOne({staticId: this.testCaseId, projectVersionId: this.projectVersionId});
   },
   server: function () {
-    return Servers.findOne({staticId: this.serverId, projectVersionId: this.projectVersionId});
+    return TestServers.findOne({staticId: this.serverId, projectVersionId: this.projectVersionId});
   },
   testRun: function () {
     return TestRuns.findOne({staticId: this.testRunId, projectVersionId: this.projectVersionId});

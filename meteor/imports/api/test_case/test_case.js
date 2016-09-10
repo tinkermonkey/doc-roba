@@ -8,7 +8,7 @@ import {TestCaseRun} from './test_case_run.js';
 import {TestCaseRunRole} from './test_case_run_role.js';
 import {TestAgents} from '../test_agent/test_agent.js';
 import {DatastoreRows} from '../datastore/datastore_row.js';
-import {Servers} from '../test_server/server.js';
+import {TestServers} from '../test_server/test_server.js';
 import {TestSystems} from '../test_system/test_system.js';
 import {TestResults} from '../test_result/test_result.js';
 import {TestResultRoles} from '../test_result/test_result_role.js';
@@ -91,7 +91,7 @@ TestCases.helpers({
     var testCase = this;
 
     // validate that the server exists and is active
-    var server = Servers.findOne({staticId: config.serverId, projectVersionId: testCase.projectVersionId});
+    var server = TestServers.findOne({staticId: config.serverId, projectVersionId: testCase.projectVersionId});
     if(!server){
       throw new Meteor.Error("invalid-server", "Test config server not found " + config.serverId, [testCase, config]);
     } else if(!server.active === true){

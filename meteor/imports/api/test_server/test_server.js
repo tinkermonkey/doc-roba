@@ -7,7 +7,7 @@ import {ChangeTracker} from '../change_tracker/change_tracker.js';
 /**
  * Servers for testing & documenting
  */
-export const Server = new SimpleSchema({
+export const TestServer  = new SimpleSchema({
   // Create a static ID field that will be constant across versions
   // of the project node structure
   staticId: {
@@ -55,8 +55,8 @@ export const Server = new SimpleSchema({
     type: Number
   }
 });
-export const Servers = new Mongo.Collection("servers");
-Servers.attachSchema(Server);
-Servers.deny(Auth.ruleSets.deny.ifNotTester);
-Servers.allow(Auth.ruleSets.allow.ifAuthenticated);
-ChangeTracker.TrackChanges(Servers, "servers");
+export const TestServers = new Mongo.Collection("test_servers");
+TestServers.attachSchema(TestServer);
+TestServers.deny(Auth.ruleSets.deny.ifNotTester);
+TestServers.allow(Auth.ruleSets.allow.ifAuthenticated);
+ChangeTracker.TrackChanges(TestServers, "test_servers");

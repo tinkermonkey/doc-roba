@@ -47,7 +47,7 @@ Template.TestCaseRecentResultList.created = function () {
 
   // subscribe to underlying rendering data
   instance.autorun(function () {
-    instance.subscribe("servers", instance.data.projectId, instance.data.projectVersionId);
+    instance.subscribe("test_servers", instance.data.projectId, instance.data.projectVersionId);
     instance.subscribe("test_systems", instance.data.projectId, instance.data.projectVersionId);
     instance.subscribe("test_agents", instance.data.projectId, instance.data.projectVersionId);
   });

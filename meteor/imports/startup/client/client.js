@@ -16,7 +16,7 @@ import {DatastoreDataTypes} from '../../api/datastore/datastore_data_type.js';
 import {Nodes} from '../../api/node/node.js';
 import {Projects} from '../../api/project/project.js';
 import {ProjectVersions} from '../../api/project/project_version.js';
-import {Servers} from '../../api/test_server/server.js';
+import {TestServers} from '../../api/test_server/test_server.js';
 import {TestAgents} from '../../api/test_agent/test_agent.js';
 import {TestSystems} from '../../api/test_system/test_system.js';
 
@@ -348,7 +348,7 @@ Template.registerHelper("renderTestAgentNameFromStaticId", function (staticId, p
  * Render a server name
  */
 Template.registerHelper("renderServerName", function (serverId) {
-  var server = Servers.findOne(serverId);
+  var server = TestServers.findOne(serverId);
   if(server){
     return server.title;
   }
@@ -358,7 +358,7 @@ Template.registerHelper("renderServerName", function (serverId) {
  * Render a server name from a server staticId
  */
 Template.registerHelper("renderServerNameFromStaticId", function (staticId, projectVersionId) {
-  var server = Servers.findOne({staticId: staticId, projectVersionId: projectVersionId});
+  var server = TestServers.findOne({staticId: staticId, projectVersionId: projectVersionId});
   if(server){
     return server.title;
   }

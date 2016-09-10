@@ -104,7 +104,7 @@ Template.AdventureConsole.onCreated(() => {
     instance.subscribe("adventure_commands", adventureId);
     instance.subscribe("nodes", projectId, projectVersionId);
     instance.subscribe("actions", projectId, projectVersionId);
-    instance.subscribe("servers", projectId, projectVersionId);
+    instance.subscribe("test_servers", projectId, projectVersionId);
     instance.subscribe("test_systems", projectId, projectVersionId);
     instance.subscribe("test_agents", projectId, projectVersionId);
   });

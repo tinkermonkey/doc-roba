@@ -46,7 +46,7 @@ Template.DocTree.created = function () {
     instance.subscribe("datastores", projectId, projectVersionId);
     instance.subscribe("version_datastore_fields", projectId, projectVersionId);
     instance.subscribe("version_datastore_rows", projectId, projectVersionId);
-    instance.subscribe("servers", projectId, projectVersionId);
+    instance.subscribe("test_servers", projectId, projectVersionId);
     instance.subscribe("test_systems", projectId, projectVersionId);
     instance.subscribe("test_agents", projectId, projectVersionId);
     

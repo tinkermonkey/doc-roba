@@ -20,7 +20,7 @@ import {Projects}                 from '../../api/project/project.js';
 import {ProjectVersions}          from '../../api/project/project_version.js';
 import {ReferenceDocs}            from '../../api/reference_doc/reference_doc.js';
 import {Screenshots}              from '../../api/screenshot/screenshot.js';
-import {Servers}                  from '../../api/test_server/server.js';
+import {TestServers}                  from '../../api/test_server/test_server.js';
 import {TestAgents}               from '../../api/test_agent/test_agent.js';
 import {TestCases}                from '../../api/test_case/test_case.js';
 import {TestCaseRoles}            from '../../api/test_case/test_case_role.js';
@@ -85,7 +85,7 @@ var collectionList = {
       ProjectVersions: ProjectVersions,
       ReferenceDocs: ReferenceDocs, // Figure out how to best store and import the files
       Screenshots: Screenshots, // Figure out how to best store and import the files
-      Servers: Servers,
+      TestServers: TestServers,
       TestAgents: TestAgents,
       TestCases: TestCases,
       TestCaseRoles: TestCaseRoles,

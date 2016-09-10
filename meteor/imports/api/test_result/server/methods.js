@@ -7,7 +7,7 @@ import {TestResultRoles} from '../test_result_role.js';
 import {TestResultSteps} from '../test_result_step.js';
 import {TestAgents} from '../../test_agent/test_agent.js';
 import {TestSystems} from '../../test_system/test_system.js';
-import {Servers} from '../../test_server/server.js';
+import {TestServers} from '../../test_server/test_server.js';
 
 // Enums
 import {TestResultStatus} from '../test_result_status.js';
@@ -57,7 +57,7 @@ Meteor.methods({
     // load the test system, test agent, and server
     result.system = TestSystems.findOne({staticId: result.role.testSystemId, projectVersionId: result.role.projectVersionId});
     result.agent  = TestAgents.findOne({staticId: result.role.testAgentId, projectVersionId: result.role.projectVersionId});
-    result.server = Servers.findOne({staticId: result.result.serverId, projectVersionId: result.role.projectVersionId});
+    result.server = TestServers.findOne({staticId: result.result.serverId, projectVersionId: result.role.projectVersionId});
     
     return result;
   },

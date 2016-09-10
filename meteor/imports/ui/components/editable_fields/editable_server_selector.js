@@ -2,7 +2,7 @@ import './editable_server_selector.html';
 
 import {Template} from 'meteor/templating';
 
-import {Servers} from '../../../api/test_server/server.js';
+import {TestServers} from '../../../api/test_server/test_server.js';
 
 /**
  * Template Helpers
@@ -22,7 +22,7 @@ Template.EditableServerSelector.rendered = function () {
 
   instance.autorun(function () {
     var data = Template.currentData(),
-      servers = Servers.find({
+      servers = TestServers.find({
         projectVersionId: instance.data.projectVersionId,
         active: true
       }, {sort: {title: 1}}).map(function (server) {

@@ -5,7 +5,7 @@ import {AdventureStates} from '../adventure_state.js';
 import {AdventureSteps} from '../adventure_step.js';
 import {LogMessages} from '../../log_message/log_message.js';
 import {TestAgents} from '../../test_agent/test_agent.js';
-import {Servers} from '../../test_server/server.js';
+import {TestServers} from '../../test_server/test_server.js';
 import {TestSystems} from '../../test_system/test_system.js';
 
 
@@ -26,7 +26,7 @@ Meteor.publish('adventure_test_agent', function (testAgentId) {
 });
 
 Meteor.publish('adventure_server', function (serverId) {
-  return Servers.find({staticId: serverId});
+  return TestServers.find({staticId: serverId});
 });
 
 Meteor.publish('adventures', function () {

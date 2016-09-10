@@ -7,7 +7,7 @@ import { AdventureStates } from "../../../api/adventure/adventure_state.js";
 import { AdventureStatus } from "../../../api/adventure/adventure_status.js";
 import { AdventureSteps } from "../../../api/adventure/adventure_step.js";
 import { DatastoreRows } from "../../../api/datastore/datastore_row.js";
-import { Servers } from "../../../api/test_server/server.js";
+import { TestServers } from "../../../api/test_server/test_server.js";
 import { TestSystems } from "../../../api/test_system/test_system.js";
 
 import '../editable_fields/editable_user_account.js';
@@ -36,7 +36,7 @@ Template.roba_launcher.helpers({
   },
   getServer () {
     if (!this.server.get()) {
-      var server = Servers.findOne({
+      var server = TestServers.findOne({
         projectVersionId: this.projectVersionId,
         active          : true
       });
@@ -108,7 +108,7 @@ Template.roba_launcher.events({
   "click .btn-launch-drone" (e, instance) {
     // get the server
     var adventureData = instance.data,
-        server        = Servers.findOne({
+        server        = TestServers.findOne({
           staticId: adventureData.server.get(),
           projectVersionId: adventureData.projectVersionId
         }),
@@ -199,7 +199,7 @@ Template.roba_launcher.created = function () {
   instance.autorun(function () {
     instance.subscribe("nodes", adventureData.projectId, adventureData.projectVersionId);
     instance.subscribe("actions", adventureData.projectId, adventureData.projectVersionId);
-    instance.subscribe("servers", adventureData.projectId, adventureData.projectVersionId);
+    instance.subscribe("test_servers", adventureData.projectId, adventureData.projectVersionId);
     instance.subscribe("version_datastore_rows", adventureData.projectId, adventureData.projectVersionId);
     instance.subscribe("test_systems", adventureData.projectId, adventureData.projectVersionId);
     instance.subscribe("test_agents", adventureData.projectId, adventureData.projectVersionId);

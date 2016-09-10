@@ -59,7 +59,7 @@ Template.VersionHome.created = function () {
     instance.subscribe("version_datastore_rows", projectId, projectVersionId);// TODO: Move to lower level template
     
     // Test infrastructure
-    instance.subscribe("servers", projectId, projectVersionId);// TODO: Move to lower level template
+    instance.subscribe("test_servers", projectId, projectVersionId);// TODO: Move to lower level template
     instance.subscribe("test_systems", projectId, projectVersionId);// TODO: Move to lower level template
     instance.subscribe("test_agents", projectId, projectVersionId);// TODO: Move to lower level template
 

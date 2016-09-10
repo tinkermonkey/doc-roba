@@ -6,7 +6,7 @@ import {FlowRouter} from 'meteor/kadira:flow-router';
 import {RobaDialog} from 'meteor/austinsand:roba-dialog';
 
 import {TestSystems} from '../../../api/test_system/test_system.js';
-import {Servers} from '../../../api/test_server/server.js';
+import {TestServers} from '../../../api/test_server/test_server.js';
 
 import '../../components/editable_fields/editable_server_selector.js';
 import '../../components/editable_fields/editable_user_account.js';
@@ -120,7 +120,7 @@ Template.TestCaseLauncher.created = function () {
 
   instance.autorun(function () {
     instance.subscribe("nodes", instance.data.projectId, instance.data.projectVersionId);
-    instance.subscribe("servers", instance.data.projectId, instance.data.projectVersionId);
+    instance.subscribe("test_servers", instance.data.projectId, instance.data.projectVersionId);
     instance.subscribe("test_systems", instance.data.projectId, instance.data.projectVersionId);
     instance.subscribe("test_agents", instance.data.projectId, instance.data.projectVersionId);
     instance.subscribe("version_datastore_fields", instance.data.projectId, instance.data.projectVersionId);
@@ -128,7 +128,7 @@ Template.TestCaseLauncher.created = function () {
     instance.subscribe("datastores", instance.data.projectId, instance.data.projectVersionId);
 
     if(instance.subscriptionsReady()){
-      var server = Servers.findOne({projectVersionId: instance.data.projectVersionId, active: true});
+      var server = TestServers.findOne({projectVersionId: instance.data.projectVersionId, active: true});
       if(server){
         instance.config.set({
           serverId: server.staticId,

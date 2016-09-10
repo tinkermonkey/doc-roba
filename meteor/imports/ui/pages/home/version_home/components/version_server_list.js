@@ -5,7 +5,7 @@ import {RobaDialog} from 'meteor/austinsand:roba-dialog';
 import {EditableTextField} from 'meteor/austinsand:editable-text-field';
 
 import {ProjectVersions} from '../../../../../api/project/project_version.js';
-import {Servers} from '../../../../../api/test_server/server.js';
+import {TestServers} from '../../../../../api/test_server/test_server.js';
 import {Datastores} from '../../../../../api/datastore/datastore.js';
 
 import '../../../../components/editable_fields/editable_autoform/editable_autoform.js';
@@ -16,7 +16,7 @@ import '../../../../components/editable_fields/editable_field_yes_no.js';
  */
 Template.VersionServerList.helpers({
   sortedServers: function () {
-    return Servers.find({projectVersionId: this._id}, {sort: {order: 1}}).fetch();
+    return TestServers.find({projectVersionId: this._id}, {sort: {order: 1}}).fetch();
   },
   configSchema: function () {
     let projectVersion = Template.parentData(1);
@@ -33,7 +33,7 @@ Template.VersionServerList.events({
         projectVersion = this,
         order = instance.$(".server-list-row").length;
     
-    Servers.insert({
+    TestServers.insert({
       projectId: projectVersion.projectId,
       projectVersionId: projectVersion._id,
       title: "New Server",
@@ -56,7 +56,7 @@ Template.VersionServerList.events({
       callback: function (btn) {
         //console.log("Dialog button pressed: ", btn);
         if(btn == "Delete"){
-          Servers.remove(server._id, function (error, response) {
+          TestServers.remove(server._id, function (error, response) {
             RobaDialog.hide();
             if(error){
               console.error("Delete failed: " + error.message);
@@ -76,7 +76,7 @@ Template.VersionServerList.events({
       dataKey = $(e.target).attr("data-key"),
       update = {$set: {}};
     update["$set"][dataKey] = newValue;
-    Servers.update(serverId, update, function (error, response) {
+    TestServers.update(serverId, update, function (error, response) {
       if(error){
         console.error("Server update failed: " + error.message);
         RobaDialog.error("Server update failed: " + error.message);
@@ -119,7 +119,7 @@ Template.VersionServerList.rendered = function () {
           order = $(el).attr("data-sort-order");
           if(order != i){
             console.log("Updating order: ", i, $(el).attr("data-pk"));
-            Servers.update($(el).attr("data-pk"), {$set: {order: i}}, function (error, response) {
+            TestServers.update($(el).attr("data-pk"), {$set: {order: i}}, function (error, response) {
               if(error){
                 RobaDialog.error("Server order update failed: " + error.message);
               }
@@ -133,7 +133,7 @@ Template.VersionServerList.rendered = function () {
   // Make the field list sortable
   /*
   instance.autorun(function () {
-    //var servers = Servers.find({projectVersionId: instance.data.version._id});
+    //var servers = TestServers.find({projectVersionId: instance.data.version._id});
     //instance.$(".sortable-table").sortable("refresh");
   });
 
