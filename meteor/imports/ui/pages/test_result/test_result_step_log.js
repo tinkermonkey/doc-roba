@@ -7,7 +7,7 @@ import '../../components/log_messages/log_message_data.js';
  * Template Helpers
  */
 Template.TestResultStepLog.helpers({
-  maxLogWidth: function () {
+  maxLogWidth() {
     return Template.instance().maxLogWidth.get()
   }
 });

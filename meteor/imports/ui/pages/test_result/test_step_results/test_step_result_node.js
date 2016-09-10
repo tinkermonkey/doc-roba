@@ -8,7 +8,7 @@ import '../common_panels/test_step_result_node_milestone.js';
  */
 Template.TestResultStepNode.helpers({
   // TODO: this is a convoluted way to obtain the context
-  nodeContext: function () {
+  nodeContext() {
     var logContext = LogMessages.findOne({
       "context.testResultStepId": this.step._id,
       sender                    : "context",

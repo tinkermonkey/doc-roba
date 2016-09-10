@@ -2,29 +2,29 @@
  * Template Helpers
  */
 Template.TestResultScreenshot.helpers({
-  layers: function () {
+  layers() {
     if(Template.instance().layers){
       return _.values(Template.instance().layers.get());
     }
   },
-  isScaled: function () {
+  isScaled() {
     var scale = Template.instance().scale.get();
     return scale != 1
   },
-  getScale: function () {
+  getScale() {
     return Template.instance().scale.get();
   },
-  isMultiLayer: function () {
+  isMultiLayer() {
     return _.values(Template.instance().layers.get()).length > 1
   },
-  getScreenshotDimensions: function () {
+  getScreenshotDimensions() {
     var layers = Template.instance().layers.get(),
       screenshot = this;
     if(layers && screenshot && screenshot._id && layers[screenshot._id]){
       return layers[screenshot._id].naturalWidth + " px &#215; " + layers[screenshot._id].naturalHeight + " px"
     }
   },
-  getScaledDimensions: function () {
+  getScaledDimensions() {
     var layers = Template.instance().layers.get(),
       scale = Template.instance().scale.get(),
       screenshot = this;
@@ -32,10 +32,10 @@ Template.TestResultScreenshot.helpers({
       return layers[screenshot._id].scaledWidth + " px &#215; " + layers[screenshot._id].scaledHeight + " px @ " + numeral(scale).format("0.0")
     }
   },
-  getSimilarScreenshots: function () {
+  getSimilarScreenshots() {
     return Screenshots.similarScreenshots(this);
   },
-  getPreviousVersionScreenshots: function () {
+  getPreviousVersionScreenshots() {
     return Screenshots.previousVersionScreenshots(this);
   }
 });
@@ -49,7 +49,7 @@ Template.TestResultScreenshot.events({
    * @param e
    * @param instance
    */
-  "load .test-result-screenshot": function (e, instance) {
+  "load .test-result-screenshot"(e, instance) {
     console.log("Screenshot Load: ", this);
 
     // hide the spinner
@@ -114,7 +114,7 @@ Template.TestResultScreenshot.events({
    * @param e
    * @param instance
    */
-  "click .test-result-comparison-thumb": function (e, instance) {
+  "click .test-result-comparison-thumb"(e, instance) {
     e.stopImmediatePropagation();
 
     var screenshot = this,
@@ -151,7 +151,7 @@ Template.TestResultScreenshot.events({
    * @param e
    * @param instance
    */
-  "click .btn-reload-comparison": function (e, instance) {
+  "click .btn-reload-comparison"(e, instance) {
     e.stopImmediatePropagation();
 
     var layer = this;
@@ -171,7 +171,7 @@ Template.TestResultScreenshot.events({
    * @param e
    * @param instance
    */
-  "click .test-result-screenshot-comparitor-layers .btn-delete": function (e, instance) {
+  "click .test-result-screenshot-comparitor-layers .btn-delete"(e, instance) {
     var layerId = $(e.target).closest(".sortable-table-row").attr("data-pk"),
       layers = instance.layers.get();
     if(layerId != instance.data.screenshot._id){
@@ -185,7 +185,7 @@ Template.TestResultScreenshot.events({
    * @param e
    * @param instance
    */
-  "change .test-result-screenshot-layer-show": function (e, instance) {
+  "change .test-result-screenshot-layer-show"(e, instance) {
     var layerId = $(e.target).closest(".sortable-table-row").attr("data-pk"),
       checked = $(e.target).is(":checked");
     $(".test-result-screenshot[data-pk=" + layerId + "]").css("display", checked ? "block" : "none");
@@ -196,7 +196,7 @@ Template.TestResultScreenshot.events({
    * @param e
    * @param instance
    */
-  "change .test-result-screenshot-layer-opacity, input .test-result-screenshot-layer-opacity": function (e, instance) {
+  "change .test-result-screenshot-layer-opacity, input .test-result-screenshot-layer-opacity"(e, instance) {
     var layerId = $(e.target).closest(".sortable-table-row").attr("data-pk"),
       opacity = $(e.target).val();
     $(".test-result-screenshot[data-pk=" + layerId + "]").css("opacity", opacity);
@@ -236,7 +236,7 @@ Template.TestResultScreenshot.onRendered( () => {
   instance.$(".test-result-screenshot-comparitor-layers").sortable({
     items: "> .sortable-table-row",
     handle: ".drag-handle",
-    helper: function(e, ui) {
+    helper(e, ui) {
       // fix the width
       ui.children().each(function() {
         $(this).width($(this).width());
@@ -246,7 +246,7 @@ Template.TestResultScreenshot.onRendered( () => {
     axis: "y",
     distance: 5,
     forcePlaceholderSize: true,
-    update: function (event, ui) {
+    update(event, ui) {
       var baseIndex = 10;
       instance.$(".test-result-screenshot-comparitor-layers > .sortable-table-row").toArray().reverse().forEach(function (el, index) {
         var layerId = $(el).attr("data-pk");

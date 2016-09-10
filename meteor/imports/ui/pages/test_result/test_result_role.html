@@ -2,12 +2,10 @@
   {{#if ready}}
     <div class="test-result-role">
       <h3>
-        <div>
-          {{role.title}}
-          {{#if notNull resultCode}}
-            - <span class="test-result-{{resultCode}}">{{renderLookup "TestResultCodesLookup" resultCode}}</span>
-          {{/if}}
-        </div>
+        {{role.title}}
+        {{#if notNull resultCode}}
+          - <span class="test-result-{{resultCode}}">{{renderLookup "TestResultCodesLookup" resultCode}}</span>
+        {{/if}}
       </h3>
       <h4>
         {{testAgent.title}} {{testAgent.version}} on {{testSystem.title}},

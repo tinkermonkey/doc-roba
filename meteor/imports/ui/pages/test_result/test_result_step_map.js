@@ -8,20 +8,20 @@ import '../../components/svg_snippets/node_snippet.js';
  * Template Helpers
  */
 Template.TestResultStepMap.helpers({
-  height  : function () {
+  height() {
     var height = DocTreeConfig.nodes.height;
     if (this.data && this.type && this.type == "action") {
       height = DocTreeConfig.nodes.yMargin;
     }
     return height * (this.scale || 1) + DocTreeConfig.standalone.margin * 2
   },
-  xMargin : function () {
+  xMargin() {
     return DocTreeConfig.standalone.margin * 2
   },
-  yMargin : function () {
+  yMargin() {
     return DocTreeConfig.standalone.margin
   },
-  isAction: function () {
+  isAction() {
     return this.type == "action"
   }
 });

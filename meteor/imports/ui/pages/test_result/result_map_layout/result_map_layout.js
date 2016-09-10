@@ -196,6 +196,8 @@ ResultMapLayout.prototype.localToScreenCoordinates = function(point){
 /**
  * Scale and translate the global layer in order to fit a rect on the page
  * @param rect
+ * @param duration
+ * @param callback
  */
 ResultMapLayout.prototype.fitAndCenter = function(rect, duration, callback){
   // TODO: remove when proven to be not needed
@@ -204,6 +206,9 @@ ResultMapLayout.prototype.fitAndCenter = function(rect, duration, callback){
 /**
  * Zoom and translate the global layer in order to center a rect on the page
  * @param rect
+ * @param scale
+ * @param duration
+ * @param callback
  */
 ResultMapLayout.prototype.zoomAndCenter = function(rect, scale, duration, callback){
   // TODO: remove when proven to be not needed

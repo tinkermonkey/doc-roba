@@ -13,13 +13,13 @@ import './test_result_role.js';
  * Template Helpers
  */
 Template.TestResult.helpers({
-  testResult : function () {
+  testResult() {
     return Template.instance().testResult.get()
   },
-  testCase   : function () {
+  testCase() {
     return Template.instance().testCase.get()
   },
-  roleResults: function () {
+  roleResults() {
     return TestResultRoles.find({ testResultId: FlowRouter.getParam("testResultId") });
   }
 });

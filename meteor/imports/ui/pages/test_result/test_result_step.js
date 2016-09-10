@@ -18,13 +18,13 @@ var screenshotPitch = 23;
  * Template Helpers
  */
 Template.TestResultStep.helpers({
-  logRendered     : function () {
+  logRendered() {
     return Template.instance().logRendered.get();
   },
-  getScreenshotTop: function (screenshot, list) {
+  getScreenshotTop(screenshot, list) {
     return (list.length - screenshot.index - 1) * screenshotPitch;
   },
-  getStepClass    : function () {
+  getStepClass() {
     if (this.resultCode != null && this.resultCode == TestResultCodes.pass) {
       return Util.testStepContainerClass(this.type)
     } else {
@@ -38,7 +38,7 @@ Template.TestResultStep.helpers({
       }
     }
   },
-  getStepTemplate : function () {
+  getStepTemplate() {
     switch (this.type) {
       case TestCaseStepTypes.node:
         return "TestResultStepNode";
@@ -64,7 +64,7 @@ Template.TestResultStep.events({
    * @param e
    * @param instance
    */
-  "click .test-result-log-reveal"                : function (e, instance) {
+  "click .test-result-log-reveal"(e, instance) {
     var reveal = $(e.target).closest(".test-result-log-reveal"),
         detail = instance.$(".test-result-step-log");
     
@@ -87,7 +87,7 @@ Template.TestResultStep.events({
    * @param e
    * @param instance
    */
-  "load .test-result-screenshot-thumb"           : function (e, instance) {
+  "load .test-result-screenshot-thumb"(e, instance) {
     var maxHeight   = 0,
         maxWidth    = 0,
         totalHeight = 0,
@@ -117,7 +117,7 @@ Template.TestResultStep.events({
    * @param e
    * @param instance
    */
-  "click .test-result-screenshot-thumb-container": function (e, instance) {
+  "click .test-result-screenshot-thumb-container"(e, instance) {
     var screenshot     = this,
         testResultStep = instance.data;
     
