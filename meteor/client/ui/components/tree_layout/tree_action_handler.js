@@ -425,8 +425,9 @@ export default class TreeActionHandler {
       
       // measure the title width of the label
       self.dummyActionLabel.text(d.action.title);
-      d.labelWidth  = self.dummyActionLabel.node().getBBox().width;
-      d.labelHeight = self.dummyActionLabel.node().getBBox().height;
+      let labelBBox = self.dummyActionLabel.node().getBBox();
+      d.labelWidth  = labelBBox.width;
+      d.labelHeight = labelBBox.height;
       
       var node = tree.layoutRoot.select(".action-" + d._id + ".action-" + d.source._id).select(".action").node();
       if (node) {
@@ -534,19 +535,21 @@ export default class TreeActionHandler {
         .attr("transform", function (d) {
           return "translate(" + (d.x) + "," + (d.y) + ")"
         });
+    
     selection.select(".action-label-back")
         .attr("x", function (d) {
-          return d.labelWidth / -2 - self.config.textXMargin / 2
+          return d.labelWidth / -2 - self.config.textXMargin
         })
         .attr("y", function (d) {
-          return d.labelHeight / -2 - self.config.textYMargin / 2
+          return 0;
         })
         .attr("width", function (d) {
-          return d.labelWidth + self.config.textXMargin
+          return d.labelWidth + self.config.textXMargin * 2
         })
         .attr("height", function (d) {
-          return d.labelHeight + self.config.textYMargin
+          return d.labelHeight + self.config.textYMargin * 2
         });
+    
     selection.select(".action-label-text")
         .text(function (d) {
           return d.action.title

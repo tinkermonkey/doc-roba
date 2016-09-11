@@ -147,14 +147,12 @@
 
 .action-label-text-back {
   fill: #999999;
-  
 }
 
-/*
 .action-label-select .action-label-back, .action-label-hover .action-label-back {
-  stroke: #a7ff00;
+  fill: #999999;
 }
-*/
+
 .action-link-select, .action-link-hover {
   stroke: #a7ff00;
   marker-end: url(#action-arrow-hover);
