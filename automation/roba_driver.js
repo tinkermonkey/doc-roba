@@ -343,7 +343,7 @@ RobaDriver.prototype.fetchLogs = function (type, fetchLogger) {
       future.return();
     });
   } catch (e) {
-    fetchLogger.error("Fetching " + type + " log failed: ", e);
+    fetchLogger.error("Fetching " + type + " log failed: ", e.toString(), e.stack);
   }
   future.wait();
 };

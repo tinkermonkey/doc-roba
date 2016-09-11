@@ -1,17 +1,19 @@
-import { Mongo } from "meteor/mongo";
-import { SimpleSchema } from "meteor/aldeed:simple-schema";
-import { SchemaHelpers } from "../schema_helpers.js";
-import { Auth } from "../auth.js";
-import { Util } from "../util.js";
-import { ChangeTracker } from "../change_tracker/change_tracker.js";
-import { NodeTypes } from "./node_types.js";
-import { UrlParameter } from "./url_parameter.js";
-import { DatastoreCategories } from "../datastore/datastore_catagories.js";
-import { CodeModules } from "../code_module/code_module.js";
-import { Datastores } from "../datastore/datastore.js";
-import { DatastoreRows } from "../datastore/datastore_row.js";
-import { Projects } from "../project/project.js";
-import { ProjectVersions } from "../project/project_version.js";
+import { Mongo } from 'meteor/mongo';
+import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { SchemaHelpers } from '../schema_helpers.js';
+import { Auth } from '../auth.js';
+import { Util } from '../util.js';
+import { ChangeTracker } from '../change_tracker/change_tracker.js';
+import { NodeTypes } from './node_types.js';
+import { UrlParameter } from './url_parameter.js';
+import { DatastoreCategories } from '../datastore/datastore_catagories.js';
+import { CodeModules } from '../code_module/code_module.js';
+import { Datastores } from '../datastore/datastore.js';
+import { DatastoreRows } from '../datastore/datastore_row.js';
+import { Projects } from '../project/project.js';
+import { ProjectVersions } from '../project/project_version.js';
+import { PlatformTypes } from '../platform_type/platform_types.js';
+import { WebPlatformType } from '../../platform_types/web/web.js';
 
 /**
  * Documentation tree nodes
@@ -71,16 +73,6 @@ export const Node  = new SimpleSchema({
         return "required";
       }
     }
-  },
-  // Keep track of the platform entry points
-  isEntry         : {
-    type        : Boolean,
-    defaultValue: false
-  },
-  // Keep track of the platform exit points
-  isExit          : {
-    type        : Boolean,
-    defaultValue: false
   },
   // Document title, does not need to be unique
   title           : {
@@ -259,6 +251,17 @@ Nodes.helpers({
     let platform = this.platform();
     if (platform) {
       return Nodes.find({ parentId: platform.staticId, projectVersionId: platform.projectVersionId });
+    }
+  },
+  platformType(){
+    let platform = this.platform();
+    if (platform) {
+      switch (parseInt(platform.config.type)) {
+        case PlatformTypes.web:
+          return WebPlatformType;
+        default:
+          console.error("Nodes.platformType unknown platform type:", platform);
+      }
     }
   },
   userType() {

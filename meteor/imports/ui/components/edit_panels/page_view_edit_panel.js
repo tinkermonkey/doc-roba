@@ -5,12 +5,17 @@ import {Template} from 'meteor/templating';
 import '../editable_fields/editable_node_type.js';
 import '../editable_fields/editable_code/editable_code.js';
 import '../editable_fields/editable_nav_menu_list.js';
-import './edit_node_url_parameters.js';
 
 /**
  * Template Helpers
  */
 Template.PageViewEditPanel.helpers({
+  editParamsPanel(){
+    let platformType = this.platformType();
+    if(platformType){
+      return platformType.nodeEditParamsTemplate();
+    }
+  }
 });
 
 /**

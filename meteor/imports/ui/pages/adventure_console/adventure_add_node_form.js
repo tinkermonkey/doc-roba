@@ -1,10 +1,10 @@
 import './adventure_add_node_form.html';
 import { Blaze } from 'meteor/blaze';
 import { Template } from 'meteor/templating';
+import { Nodes } from '../../../api/node/node.js';
 import { NodeTypes } from '../../../api/node/node_types.js';
 import '../../components/editable_fields/node_selector/editable_node_selector.js';
 import '../../components/editable_fields/editable_node_type.js';
-import '../../components/edit_panels/edit_node_url_parameters.js';
 
 /**
  * Template Helpers
@@ -42,6 +42,15 @@ Template.AdventureAddNodeForm.helpers({
         }
       });
       return pieces;
+    }
+  },
+  addNodePanel(){
+    let platform = Nodes.findOne(this.adventure.route.platform._id);
+    if(platform){
+      let platformType = platform.platformType();
+      if(platformType){
+        return platformType.adventureAddNodeTemplate();
+      }
     }
   }
 });

@@ -30,6 +30,9 @@ import '../../api/log_message/server/methods.js'
 import '../../api/node/server/publications.js'
 import '../../api/node/server/methods.js'
 
+// Platform Configuration
+import '../../api/platform_configuration/server/publications.js'
+
 // Project
 import '../../api/project/server/publications.js'
 import '../../api/project/server/methods.js'
@@ -73,3 +76,6 @@ import '../../api/test_system/server/methods.js'
 // Users
 import '../../api/users/server/publications.js'
 import '../../api/users/server/methods.js'
+
+// Platforms
+import '../../platform_types/web/api/register-api.js';

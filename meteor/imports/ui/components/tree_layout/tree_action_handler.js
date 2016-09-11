@@ -1,7 +1,7 @@
-import {DocTreeConfig} from '../../lib/doc_tree/doc_tree_config.js';
-import {PathBuilder} from '../../lib/doc_tree/path_builder.js';
-
-import {Actions} from '../../../api/action/action.js';
+import { DocTreeConfig } from '../../lib/doc_tree/doc_tree_config.js';
+import { PathBuilder } from '../../lib/doc_tree/path_builder.js';
+import { Actions } from '../../../api/action/action.js';
+import '../edit_panels/edit_action.js';
 
 /**
  * Handle all of the accounting for the Action data structures
@@ -13,7 +13,7 @@ export default class TreeActionHandler {
    * @param config
    * @constructor
    */
-  constructor(treeLayout, config) {
+  constructor (treeLayout, config) {
     var self = this;
     
     // Make sure there's a tree layout
@@ -28,9 +28,9 @@ export default class TreeActionHandler {
     _.defaults(self.config, DocTreeConfig.actions);
     
     // Get a handle to the Link & Label layers
-    self.linkLayer = self.treeLayout.layoutRoot.select(".action-link-layer");
+    self.linkLayer       = self.treeLayout.layoutRoot.select(".action-link-layer");
     self.hoverLayerFront = self.treeLayout.layoutRoot.select(".action-hover-layer-front");
-    self.hoverLayerBack = self.treeLayout.layoutRoot.select(".action-hover-layer-back");
+    self.hoverLayerBack  = self.treeLayout.layoutRoot.select(".action-hover-layer-back");
     
     // setup a custom action label layout controller
     self.actionLabelList = [];
@@ -43,7 +43,7 @@ export default class TreeActionHandler {
         .attr("y", -10000);
     
     // create a flag to use to lock the hover state of an action
-    self.locked = false;
+    self.locked       = false;
     self.hoverActions = [];
   }
   
@@ -51,7 +51,7 @@ export default class TreeActionHandler {
    * Set the master list of actions
    * @param actionList The full flat list of actions from the DB
    */
-  setActions(actionList) {
+  setActions (actionList) {
     this.dbActionList = actionList;
   }
   
@@ -59,7 +59,7 @@ export default class TreeActionHandler {
    * Set the list of navigation menu actions
    * @param navActions
    */
-  setNavActions(navActions) {
+  setNavActions (navActions) {
     this.dbNavMenus = navActions;
     //console.log("navActions: ", navActions);
   }
@@ -68,7 +68,7 @@ export default class TreeActionHandler {
    * Get the full list of actions
    * @returns [actions]
    */
-  getActions() {
+  getActions () {
     return this.dbActionList;
   }
   
@@ -76,25 +76,25 @@ export default class TreeActionHandler {
    * Get the full list of actions
    * @returns [navActions]
    */
-  getNavActions() {
+  getNavActions () {
     return this.dbNavMenus;
   }
   
   /**
    * Add an action connecting two nodes
    */
-  addAction(sourceNode, destinationNode) {
+  addAction (sourceNode, destinationNode) {
     console.debug("addAction: ", sourceNode, destinationNode);
     
     var actionConfig = {
-      projectId: sourceNode.projectId,
+      projectId       : sourceNode.projectId,
       projectVersionId: sourceNode.projectVersionId,
-      nodeId: sourceNode.staticId,
-      routes: [{
-        order: 0,
+      nodeId          : sourceNode.staticId,
+      routes          : [ {
+        order : 0,
         nodeId: destinationNode.staticId
-      }],
-      title: 'New Action'
+      } ],
+      title           : 'New Action'
     };
     
     Actions.insert(actionConfig, function (error, response) {
@@ -109,14 +109,14 @@ export default class TreeActionHandler {
   /**
    * Add a route to an action
    */
-  addRoute(action, destinationNode) {
+  addRoute (action, destinationNode) {
     console.debug("addRoute: ", action, destinationNode);
     
-    Actions.update({_id: action._id}, {
+    Actions.update({ _id: action._id }, {
       $push: {
         routes: {
-          order: action.routes.length,
-          nodeId: destinationNode.staticId,
+          order    : action.routes.length,
+          nodeId   : destinationNode.staticId,
           routeCode: ""
         }
       }
@@ -132,9 +132,9 @@ export default class TreeActionHandler {
   /**
    * Prepare the action data structures
    */
-  prepActions() {
-    var self = this,
-        tree = self.treeLayout,
+  prepActions () {
+    var self      = this,
+        tree      = self.treeLayout,
         sourceIds = [];
     
     // map all of the standard actions, keeping in mind that the DB data may be broken and point to nodes which don't exist
@@ -155,13 +155,13 @@ export default class TreeActionHandler {
           destinationNode = tree.nodeHandler.getByStaticId(route.nodeId);
           if (destinationNode) {
             routes.push({
-              _id: action._id,
-              action: action,
-              source: sourceNode,
+              _id        : action._id,
+              action     : action,
+              source     : sourceNode,
               destination: destinationNode,
-              nav: false,
-              routeIndex: i,
-              routeOrder: route.order
+              nav        : false,
+              routeIndex : i,
+              routeOrder : route.order
             });
           } else {
             console.error("Broken route: ", route, action);
@@ -204,13 +204,13 @@ export default class TreeActionHandler {
               destinationNode = tree.nodeHandler.getByStaticId(route.nodeId);
               if (destinationNode) {
                 routes.push({
-                  _id: navAction._id,
-                  action: navAction,
-                  source: sourceNode,
+                  _id        : navAction._id,
+                  action     : navAction,
+                  source     : sourceNode,
                   destination: destinationNode,
-                  nav: true,
-                  routeIndex: i,
-                  routeOrder: route.order
+                  nav        : true,
+                  routeIndex : i,
+                  routeOrder : route.order
                 });
                 //console.log("Nav Route added: ", routes[routes.length - 1]);
               } else {
@@ -243,8 +243,8 @@ export default class TreeActionHandler {
         baseRouteLookup, rightRoutes, leftRoutes;
     
     _.each(sourceIds, function (id) {
-      rightRoutes = [];
-      leftRoutes = [];
+      rightRoutes     = [];
+      leftRoutes      = [];
       baseRouteLookup = {};
       
       // Get all of the routes for this node
@@ -261,8 +261,8 @@ export default class TreeActionHandler {
       _.each(_.sortBy(baseRoutes, function (r) {
         return r.destination.x
       }), function (r, i) {
-        baseRouteLookup[r._id] = r;
-        TreeActionHandler.setRouteDirection(r);
+        baseRouteLookup[ r._id ] = r;
+        self.setRouteDirection(r);
         
         // keep track of which x direction the destination is
         if (r.dir > 0) {
@@ -276,24 +276,24 @@ export default class TreeActionHandler {
       
       // We have to sort left to right
       _.each(_.sortBy(leftRoutes, function (id) {
-        return baseRouteLookup[id].destination.x
+        return baseRouteLookup[ id ].destination.x
       }), function (id, i) {
-        baseRouteLookup[id].actionSortIndex = i;
+        baseRouteLookup[ id ].actionSortIndex = i;
       });
       _.each(_.sortBy(rightRoutes, function (id) {
-        return baseRouteLookup[id].destination.x
+        return baseRouteLookup[ id ].destination.x
       }), function (id, i) {
-        baseRouteLookup[id].actionSortIndex = leftRoutes.length + i;
+        baseRouteLookup[ id ].actionSortIndex = leftRoutes.length + i;
       });
       
       // Now go through all routes, and set the parameters
       _.each(nodeRoutes, function (r) {
-        if (r.routeIndex > 0 && baseRouteLookup[r._id]) {
-          r.actionSortIndex = baseRouteLookup[r._id].actionSortIndex;
-          TreeActionHandler.setRouteDirection(r);
+        if (r.routeIndex > 0 && baseRouteLookup[ r._id ]) {
+          r.actionSortIndex = baseRouteLookup[ r._id ].actionSortIndex;
+          self.setRouteDirection(r);
           
           // If the lesser route direction is different from the base route direction
-          if (r.dir !== baseRouteLookup[r._id].dir) {
+          if (r.dir !== baseRouteLookup[ r._id ].dir) {
             if (r.dir > 0) {
               if (!_.contains(rightRoutes, r._id)) {
                 rightRoutes.push(r._id);
@@ -310,18 +310,18 @@ export default class TreeActionHandler {
               }
             }
           } else {
-            r.index = baseRouteLookup[r._id].index;
+            r.index = baseRouteLookup[ r._id ].index;
           }
-        } else if (!baseRouteLookup[r._id]) {
+        } else if (!baseRouteLookup[ r._id ]) {
           console.error("Base Route Lookup failed: ", r);
         }
       });
       
       // Make a final pass to store the count info
       _.each(nodeRoutes, function (r) {
-        r.baseRoute = baseRouteLookup[r._id];
+        r.baseRoute   = baseRouteLookup[ r._id ];
         r.actionCount = baseRoutes.length;
-        r.count = r.dir > 0 ? rightRoutes.length : leftRoutes.length;
+        r.count       = r.dir > 0 ? rightRoutes.length : leftRoutes.length;
       });
       
     });
@@ -331,7 +331,7 @@ export default class TreeActionHandler {
    * Calculate the direction that a route will take (left or right)
    * @param r
    */
-  static setRouteDirection(r) {
+  setRouteDirection (r) {
     // direction can get complicated
     if (r.destination.y >= r.source.y) {
       r.dir = r.destination.x > r.source.x ? 1 : -1;
@@ -340,19 +340,19 @@ export default class TreeActionHandler {
     }
   }
   
-  static getRouteIdentifier(d) {
+  getRouteIdentifier (d) {
     return d._id + "_" + d.source._id + "_" + d.routeIndex;
   }
   
   /**
    * Clear the list of visible actions
    */
-  clearVisibleActions() {
+  clearVisibleActions () {
     console.log("clearVisibleActions");
     var self = this;
     
     self.visibleActionList = [];
-    self.hoverActions = [];
+    self.hoverActions      = [];
     self.updateActionDisplay();
   }
   
@@ -360,7 +360,7 @@ export default class TreeActionHandler {
    * Update the display of all of the actions currently visible
    * @param duration
    */
-  update(duration) {
+  update (duration) {
     //console.log("TreeActionHandler.update");
     var self = this,
         actions;
@@ -368,7 +368,7 @@ export default class TreeActionHandler {
     // gather the existing action links and set the data
     actions = self.linkLayer.selectAll(".action-group")
         .data(self.actionRoutes, function (d) {
-          return TreeActionHandler.getRouteIdentifier(d)
+          return self.getRouteIdentifier(d)
         });
     
     // Update the action links
@@ -380,16 +380,16 @@ export default class TreeActionHandler {
     // Update the hover actions
     if (self.hoverActions.length) {
       var hoverActionRoutes = _.filter(self.actionRoutes, function (d) {
-        return _.contains(self.hoverActions, TreeActionHandler.getRouteIdentifier(d))
+        return _.contains(self.hoverActions, self.getRouteIdentifier(d))
       });
       if (hoverActionRoutes.length && self.treeLayout.actionControls) {
-        self.treeLayout.actionControls.action = hoverActionRoutes[0];
+        self.treeLayout.actionControls.action = hoverActionRoutes[ 0 ];
         //hoverActionRoutes[0].x = self.treeLayout.actionControls.action.x = self.hoverRoute.x;
         //hoverActionRoutes[0].y = self.treeLayout.actionControls.action.y = self.hoverRoute.y;
-        self.treeLayout.actionControls.action.x = hoverActionRoutes[0].x;
-        self.treeLayout.actionControls.action.y = hoverActionRoutes[0].y;
+        self.treeLayout.actionControls.action.x = hoverActionRoutes[ 0 ].x;
+        self.treeLayout.actionControls.action.y = hoverActionRoutes[ 0 ].y;
         self.treeLayout.actionControls.update(0);
-        self.updateHover(hoverActionRoutes[0]);
+        self.updateHover(hoverActionRoutes[ 0 ]);
       }
     }
   }
@@ -397,7 +397,7 @@ export default class TreeActionHandler {
   /**
    * Show the correct set of actions
    */
-  updateActionDisplay() {
+  updateActionDisplay () {
     var self = this,
         tree = self.treeLayout,
         startPoint;
@@ -425,7 +425,7 @@ export default class TreeActionHandler {
       
       // measure the title width of the label
       self.dummyActionLabel.text(d.action.title);
-      d.labelWidth = self.dummyActionLabel.node().getBBox().width;
+      d.labelWidth  = self.dummyActionLabel.node().getBBox().width;
       d.labelHeight = self.dummyActionLabel.node().getBBox().height;
       
       var node = tree.layoutRoot.select(".action-" + d._id + ".action-" + d.source._id).select(".action").node();
@@ -443,7 +443,7 @@ export default class TreeActionHandler {
    * @param selection
    * @param duration
    */
-  createAndUpdateLinks(selection, duration) {
+  createAndUpdateLinks (selection, duration) {
     var self = this,
         tree = self.treeLayout;
     
@@ -507,7 +507,7 @@ export default class TreeActionHandler {
    * Create or update the action labels
    * @param selection
    */
-  createAndUpdateLabels(selection) {
+  createAndUpdateLabels (selection) {
     var self = this,
         tree = self.treeLayout,
         labelGroup;
@@ -565,10 +565,10 @@ export default class TreeActionHandler {
    * @param r The node
    * @returns {string} The SVG path for the action
    */
-  generateActionPath(r) {
+  generateActionPath (r) {
     //console.log("GenerateActionPath: ", r);
-    var self = this,
-        config = self.treeLayout.nodeHandler.config,
+    var self         = this,
+        config       = self.treeLayout.nodeHandler.config,
         arrowTipComp = -3,
         source, destination, path;
     
@@ -602,30 +602,30 @@ export default class TreeActionHandler {
       
       // go through
       //var delta = r.dir > 0 ? -1 * ((r.count - 1) * 6 / 2) + r.index * 6 : -1 * ((r.count - 1) * 6 / 2) + (r.count - r.index -1) * 6,
-      var delta = 0,
+      var delta  = 0,
           pointA = {
-            x: source.x,
-            y: source.y + config.yMargin / 2 - delta,
+            x     : source.x,
+            y     : source.y + config.yMargin / 2 - delta,
             radius: (config.yMargin / 2 - delta) / 2
           },
           pointB = {
-            x: r.source.x + (r.dir > 0 ? r.source.icon.right : r.source.icon.left) + (r.dir * config.xMargin / 2) - r.dir * delta,
-            y: pointA.y,
+            x     : r.source.x + (r.dir > 0 ? r.source.icon.right : r.source.icon.left) + (r.dir * config.xMargin / 2) - r.dir * delta,
+            y     : pointA.y,
             radius: pointA.radius
           },
           pointC = {
-            x: pointB.x,
+            x     : pointB.x,
             //y: destination.y - config.yMargin / 2,
-            y: destination.y - config.yMargin / 2 - delta,
+            y     : destination.y - config.yMargin / 2 - delta,
             radius: (config.yMargin / 2 + delta) / 2
           },
           pointD = {
-            x: destination.x,
-            y: pointC.y,
+            x     : destination.x,
+            y     : pointC.y,
             radius: (destination.y - pointC.y) / 2
           },
-          dirAB = r.dir,
-          dirCD = pointD.x < pointC.x ? -1 : 1;
+          dirAB  = r.dir,
+          dirCD  = pointD.x < pointC.x ? -1 : 1;
       
       // Path that routes "up"
       if (pointD.y < pointA.y) {
@@ -649,7 +649,7 @@ export default class TreeActionHandler {
         // path that routes "down"
         pointA.radius = Math.min(pointA.radius, Math.abs(pointD.x - pointA.x) / 2);
         pointD.radius = Math.min(pointD.radius, Math.abs(pointD.x - pointA.x) / 2);
-        path = PathBuilder.start()
+        path          = PathBuilder.start()
             .M(source.x, source.y);
         
         path.L(pointA.x, (Math.max(pointA.y, pointD.y)) - pointA.radius)
@@ -673,7 +673,7 @@ export default class TreeActionHandler {
    * @param d
    * @param event
    */
-  hover(d, event) {
+  hover (d, event) {
     //console.log("hover: ", d);
     var self = this,
         tree = self.treeLayout;
@@ -688,7 +688,7 @@ export default class TreeActionHandler {
     
     // Store the id for updates
     if (d.action && d.action.staticId) {
-      self.hoverActions = [TreeActionHandler.getRouteIdentifier(d)];
+      self.hoverActions = [ self.getRouteIdentifier(d) ];
     } else {
       console.error("Action Hover Failed: invalid data point passed");
       return;
@@ -707,12 +707,12 @@ export default class TreeActionHandler {
     
     var actions = self.hoverLayerBack.selectAll(".action")
         .data(routes, function (d) {
-          return TreeActionHandler.getRouteIdentifier(d)
+          return self.getRouteIdentifier(d)
         });
     
     var labels = self.hoverLayerFront.selectAll(".action-label")
-        .data([d], function (d) {
-          return TreeActionHandler.getRouteIdentifier(d)
+        .data([ d ], function (d) {
+          return self.getRouteIdentifier(d)
         });
     
     // Update the action links
@@ -748,7 +748,7 @@ export default class TreeActionHandler {
    * Update the hover state for an action
    * @param route
    */
-  updateHover(route) {
+  updateHover (route) {
     //console.log("updateHover: ", action);
     var self = this,
         tree = self.treeLayout;
@@ -758,12 +758,12 @@ export default class TreeActionHandler {
     
     var actions = self.hoverLayerBack.selectAll(".action")
         .data(routes, function (d) {
-          return TreeActionHandler.getRouteIdentifier(d)
+          return self.getRouteIdentifier(d)
         });
     
     var labels = self.hoverLayerFront.selectAll(".action-label")
-        .data([route], function (d) {
-          return TreeActionHandler.getRouteIdentifier(d)
+        .data([ route ], function (d) {
+          return self.getRouteIdentifier(d)
         });
     
     // Update the action links
@@ -794,13 +794,13 @@ export default class TreeActionHandler {
   /**
    * Consider hiding the hovered action
    */
-  considerHiding() {
+  considerHiding () {
     //console.debug("TreeActionHandler.considerHiding()");
     var self = this;
     
     // make sure it's not locked
     if (self.locked) {
-      console.log("considerHiding: locked");
+      //console.log("considerHiding: locked");
       return;
     }
     
@@ -816,7 +816,7 @@ export default class TreeActionHandler {
   /**
    * Cancel hiding the hovered node
    */
-  cancelHiding() {
+  cancelHiding () {
     //console.debug("TreeActionHandler.cancelHiding()");
     var self = this;
     
@@ -828,7 +828,7 @@ export default class TreeActionHandler {
   /**
    * Hide the hovered node
    */
-  hideHover() {
+  hideHover () {
     var self = this;
     
     // make sure it's not locked
@@ -841,11 +841,10 @@ export default class TreeActionHandler {
     self.hoverLayerFront.selectAll(".action-label").remove();
   }
   
-  
   /**
    * Lock the current hover state
    */
-  lock() {
+  lock () {
     //console.debug("ActionHandler: lock");
     this.locked = true;
   }
@@ -853,7 +852,7 @@ export default class TreeActionHandler {
   /**
    * Unlock the hover state
    */
-  unlock() {
+  unlock () {
     //console.debug("ActionHandler: unlock");
     this.locked = false;
   }
@@ -862,9 +861,9 @@ export default class TreeActionHandler {
    * Edit an action
    * @param d The action data node to edit
    */
-  editAction(d) {
-    var self = this,
-        tree = self.treeLayout,
+  editAction (d) {
+    var self   = this,
+        tree   = self.treeLayout,
         action = Actions.findOne(d._id),
         nodeList;
     
@@ -878,6 +877,7 @@ export default class TreeActionHandler {
     // lock the action hover state and the node controls
     self.hoverLayerFront.select(".action-label-" + d._id).classed("action-label-edit", true);
     self.lock();
+    return;
     if (tree.actionControls) {
       tree.actionControls.show(d);
     }
@@ -891,7 +891,7 @@ export default class TreeActionHandler {
     // Show the drawer with the edit action template
     tree.popover(nodeList, {
       contentTemplate: 'edit_action',
-      contentData: {_id: d._id}
+      contentData    : { _id: d._id }
     }, tree.actionControls, function () {
       self.unlock();
       tree.actionControls.unlock();

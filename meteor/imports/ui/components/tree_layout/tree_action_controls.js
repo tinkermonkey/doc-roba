@@ -152,7 +152,7 @@ export default class TreeActionControls {
       var radius = self.getRadius(self.action),
           visible = self.background.attr("r") > radius / 2,
           placement = TreeUtils.parseTranslate(self.controlsBack.attr("transform"));
-      
+
       // show the control layer
       self.backLayer
           .attr("visibility", "visible")
@@ -363,7 +363,7 @@ export default class TreeActionControls {
    * Calculate the radius of the controls for a node
    * @param d
    */
-  static getRadius(d) {
+  getRadius(d) {
     return Math.sqrt(Math.pow(d.labelWidth, 2) + Math.pow(d.labelHeight, 2)) / 2 + 6;
   }
   
@@ -400,7 +400,7 @@ export default class TreeActionControls {
   /**
    * Handle the user pressing the escape key during a drag
    */
-  static dragEscapeHandler(e) {
+  dragEscapeHandler(e) {
     //console.debug("dragEscapeHandler: " + e.which);
     if (e.which == 27 && e.data) {
       e.data.addActionDragEnd();
@@ -530,7 +530,7 @@ export default class TreeActionControls {
   /**
    * Return the controls attach point for the popover
    */
-  static attachPoint() {
+  attachPoint() {
     return $(".action-controls-layer-back").get(0);
   }
 };

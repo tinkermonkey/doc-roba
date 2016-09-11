@@ -367,20 +367,20 @@ DDPLink.prototype.log = function (msg) {
  * Subscribe to a collection which is expected to return a single record
  * @param subscription
  * @param id
- * @param callback
+ * @param collectionName
  */
-DDPLink.prototype.liveRecord = function (subscription, id, collection) {
+DDPLink.prototype.liveRecord = function (subscription, id, collectionName) {
   assert(subscription, "liveRecord: subscription must not be null");
   assert(id, "liveRecord: id must not be null");
 
   // default the collection name to the subscription name
-  collection = collection || subscription;
+  collectionName = collectionName || subscription;
 
   // Make note of the subscriptions
   this.subscriptions.push({name: subscription, params: [id]});
 
   var future = new Future(), ddpClient = this.ddp;
-  logger.debug("liveRecord: ", subscription, id, collection);
+  logger.debug("liveRecord: ", subscription, id, collectionName);
   this.ddp.subscribe(subscription, [id], function () {
     logger.trace("subscribe returned: ", subscription);
     future.return();
@@ -388,7 +388,7 @@ DDPLink.prototype.liveRecord = function (subscription, id, collection) {
   future.wait();
 
   // hook up some observers
-  var observer = this.observers[subscription + "_" + id] = ddpClient.observe(collection);
+  var observer = this.observers[subscription + "_" + id] = ddpClient.observe(collectionName);
   observer.added = function (id) {
     logger.trace("A record was added to a subscription where it was not expected:", observer.name, id, ddpClient.collections[observer.name][id]);
   };
@@ -398,20 +398,26 @@ DDPLink.prototype.liveRecord = function (subscription, id, collection) {
   observer.removed = function (id, oldValue) {
     logger.error("A record was removed from a subscription where it was not expected to be:", observer.name, oldValue);
   };
+  logger.trace("liveRecord observer", observer.name, ddpClient.collections);
 
-  return ddpClient.collections[observer.name][_.keys(ddpClient.collections[observer.name])[0]];
+  if(ddpClient.collections[observer.name]){
+    return ddpClient.collections[observer.name][_.keys(ddpClient.collections[observer.name])[0]];
+  } else {
+    console.error("DDPLink.liveRecord failed with unknown collection:", observer.name);
+  }
 };
 
 /**
  * Subscribe to a collection
  * @param subscription
  * @param params
+ * @param collectionName
  */
-DDPLink.prototype.liveList = function (subscription, params, collection) {
+DDPLink.prototype.liveList = function (subscription, params, collectionName) {
   assert(subscription, "liveList: subscription must not be null");
 
   // default the collection name to the subscription name
-  collection = collection || subscription;
+  collectionName = collectionName || subscription;
 
   // Make note of the subscriptions
   this.subscriptions.push({name: subscription, params: params});
@@ -426,7 +432,7 @@ DDPLink.prototype.liveList = function (subscription, params, collection) {
 
   // hook up some observers
   var ddpClient = this.ddp,
-    observer = this.observers[subscription] = ddpClient.observe(collection);
+    observer = this.observers[subscription] = ddpClient.observe(collectionName);
   observer.added = function (id) {
     logger.trace("liveList record Added:", observer.name, id, ddpClient.collections[observer.name][id]);
   };
@@ -436,8 +442,12 @@ DDPLink.prototype.liveList = function (subscription, params, collection) {
   observer.removed = function (id, oldValue) {
     logger.trace("liveList record Removed:", observer.name, oldValue);
   };
-
-  return ddpClient.collections[collection];
+  
+  if(ddpClient.collections[collectionName]){
+    return ddpClient.collections[collectionName];
+  } else {
+    console.error("DDPLink.liveList failed with unknown collection:", collectionName);
+  }
 };
 
 /**

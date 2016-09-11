@@ -8,7 +8,6 @@ import { AdventureStatus } from '../../../api/adventure/adventure_status.js';
 import { Nodes } from '../../../api/node/node.js';
 import { NodeSearch } from '../../../api/node_search/node_search.js';
 import '../../components/editable_fields/editable_node_type.js';
-import '../../components/edit_panels/edit_node_url_parameters.js';
 import '../../components/editable_fields/editable_code/editable_code.js';
 import '../../components/editable_fields/node_selector/editable_node_selector.js';
 import './adventure_add_node_form.js';
@@ -74,6 +73,21 @@ Template.AdventureContext.helpers({
     if (node && data) {
       var result = NodeSearch.compareNode(data.state.url, data.state.title, node);
       return result;
+    }
+  },
+  searchComparisonPanel(){
+    console.log("searchComparisonPanel:", Template.parentData(1));
+    let node = Template.parentData(1),
+        platformType = node.platformType();
+    if(platformType){
+      return platformType.nodeSearchComparisonTemplate();
+    }
+  },
+  editParamsPanel(){
+    console.log("editParamsPanel:", this);
+    let platformType = this.platformType();
+    if(platformType){
+      return platformType.nodeEditParamsTemplate();
     }
   }
 });

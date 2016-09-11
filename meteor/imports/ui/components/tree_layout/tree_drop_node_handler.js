@@ -119,7 +119,8 @@ export default class TreeDropNodeHandler {
         dropNodeData,
         dropNodes,
         dropNodeEnter;
-    
+    // TODO: This is failing
+    return;
     // filter the master list of nodes because not everything is a drop target
     dropNodeData = _.filter(tree.nodeHandler.getNodes(), function (d) {
       return d.parent && d.parent.visExpanded && (d.type === NodeTypes.page || d.type === NodeTypes.view);

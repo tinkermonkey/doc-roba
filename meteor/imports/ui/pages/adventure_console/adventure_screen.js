@@ -6,6 +6,7 @@ import { AdventureStatus } from '../../../api/adventure/adventure_status.js';
 import { Actions } from '../../../api/action/action.js';
 import { Nodes } from '../../../api/node/node.js';
 import './adventure_highlight_element.js';
+import './adventure_highlight_detail.js';
 import './adventure_hover_controls.js';
 import './adventure_log_embedded.js';
 import './adventure_preview_element.js';

@@ -12,75 +12,22 @@
           <div class="alert alert-warning">
             The current node does <i>not</i> match the data below:
             {{#with nodeComparison this ..}}
-              {{#unless title.match}}
-                <div>
-                  <span class="dark-blue">title: </span>
-                  {{#each title.pieces}}
-                    <span
-                      class="inline-block node-search-result node-search-{{renderLookup "NodeSearchStatusLookup" status "dash"}}"
-                      data-toggle="popover"
-                      data-trigger="focus"
-                      data-content="{{renderLookup "NodeSearchStatusLookup" status "dash"}}: {{value}}"
-                    >{{value}}</span>
-                  {{/each}}
-                </div>
-              {{/unless}}
-              {{#unless url.match}}
-                <div>
-                  <span class="dark-blue">url: </span>
-                  <span>
-                    {{#each url.pieces}}
-                      <div class="inline-block">
-                        /<span
-                        class="node-search-result node-search-{{renderLookup "NodeSearchStatusLookup" status "dash"}}"
-                        data-toggle="popover"
-                        data-trigger="focus"
-                        data-content="{{renderLookup "NodeSearchStatusLookup" status "dash"}}: {{value}}"
-                      >{{value}}</span>
-                      </div>
-                    {{/each}}
-                  </span>
-                </div>
-              {{/unless}}
-              {{#unless params.match}}
-                <div>
-                  <span class="dark-blue align-top">parameters: </span>
-                  <div class="inline-block">
-                    {{#each params.pieces}}
-                      <div
-                        class="node-search-result node-search-{{renderLookup "NodeSearchStatusLookup" status "dash"}}"
-                        data-toggle="popover"
-                        data-trigger="focus"
-                        data-content="{{renderLookup "NodeSearchStatusLookup" status "dash"}}: {{value.param}}{{#if value.value}}={{value.value}}{{/if}}"
-                      >{{value.param}}{{#if value.value}}={{value.value}}{{/if}}</div>
-                    {{/each}}
-                  </div>
-                </div>
-              {{/unless}}
+              {{> Template.dynamic template=searchComparisonPanel }}
             {{/with}}
           </div>
         {{/unless}}
       </div>
-      <table>
-        <tr>
-          <td class="field-label">Type:</td>
-          <td>{{> EditableNodeType cssClass="inline-block" pageView=true value=type dataKey="type" emptyText="Select a node type" }}</td>
-        </tr>
-        <tr>
-          <td class="field-label">Name:</td>
-          <td>{{> EditableTextField cssClass="inline-block" value=title dataKey="title" emptyText="none"}}</td>
-        </tr>
-        <tr>
-          <td class="field-label">Page Title:</td>
-          <td>{{> EditableTextField cssClass="inline-block" value=pageTitle dataKey="pageTitle" emptyText="none"}}</td>
-        </tr>
-        <tr>
-          <td class="field-label">Base Url:</td>
-          <td>{{> EditableTextField cssClass="inline-block" value=url dataKey="url" emptyText="none"}}</td>
-        </tr>
-      </table>
-      <div>
-        {{> EditNodeUrlParameters }}
+      
+      <div class="edit-node-params">
+        <div>
+          <span class="field-label">Type:</span>
+          {{> EditableNodeType cssClass="inline-block" pageView=true value=type dataKey="type" emptyText="Select a node type" }}
+        </div>
+        <div>
+          <span class="field-label">Name:</span>
+          {{> EditableTextField cssClass="inline-block" value=title dataKey="title" emptyText="none"}}
+        </div>
+        {{> Template.dynamic template=editParamsPanel }}
       </div>
       
       <h3 class="section grey">Node Ready Code</h3>

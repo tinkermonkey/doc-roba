@@ -1,4 +1,7 @@
+// Routing
 import './routes.js';
+
+// Utility helpers
 import './client.js';
 
 // Base CSS
@@ -15,3 +18,6 @@ import '../../ui/lib/css/transitions.css';
 
 // Autoform fixes
 import '../../ui/lib/autoform/autoForm_dataStore.js';
+
+// Platform Types
+import '../../platform_types/web/client/client.js';

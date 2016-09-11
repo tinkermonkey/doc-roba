@@ -68,8 +68,7 @@ Future.task(function(){
   try {
     ExecuteAdventure();
   } catch (e) {
-    logger.error("Fatal error during adventure execution: ", e);
-    logger.error(new Error(e.toString()).trace);
+    logger.error("Fatal error during adventure execution: ", e.toString(), e.stack);
     if(ddpLink){
       ddpLink.setAdventureStatus(adventureId, AdventureStatus ? AdventureStatus.failed : 9);
       Exit(1);
@@ -127,7 +126,7 @@ function ExecuteAdventure () {
   logger.debug("Test Agent: ", testAgent);
 
   // load the server info
-  server = ddpLink.liveRecord("adventure_server", adventure.serverId, "servers");
+  server = ddpLink.liveRecord("adventure_server", adventure.serverId, "test_servers");
   logger.info("Server Loaded");
   logger.debug("Server: ", server);
 
@@ -210,10 +209,9 @@ function ExecuteAdventure () {
       ExecuteStep(step, i);
       pass = true;
     } catch (error) {
-      logger.error("Step execution failed: ", error);
+      logger.error("Step execution failed: ", error.toString(), error.stack);
       pass = false;
-      ddpLink.setTestResultStepStatus(step._id, TestResultStatus.complete);
-      ddpLink.setTestResultStepResult(step._id, TestResultCodes.fail);
+      ddpLink.setAdventureStepStatus(step._id, AdventureStepStatus.error);
     }
 
     // done
@@ -286,7 +284,7 @@ function ExecuteAdventure () {
             lastExecuted = Date.now();
           }
         } catch (e) {
-          logger.error("Exception encountered during keep-alive: ", e);
+          logger.error("Exception encountered during keep-alive: ", e.toString(), e.stack);
         }
       }
     }
@@ -370,7 +368,7 @@ function ExecuteStep (step, stepNum) {
     try {
       var result = eval(variableCode + debugCode + step.action.code);
     } catch (e) {
-      logger.error("Action failed: ", e.toString());
+      logger.error("Action failed: ", e.toString(), e.stack);
       result = e.toString();
     }
 
@@ -401,7 +399,7 @@ function ExecuteCommand(command) {
   try {
     var result = eval(command.code);
   } catch (e) {
-    logger.error("Command failed: ", e.toString());
+    logger.error("Command failed: ", e.toString(), e.stack);
     result = e.toString();
   }
 
@@ -419,7 +417,7 @@ function ExecuteCommand(command) {
     try {
       UpdateState();
     } catch (e) {
-      logger.error("Getting adventure state failed: ", e);
+      logger.error("Getting adventure state failed: ", e.toString(), e.stack);
     }
   }
 }
@@ -448,7 +446,7 @@ function ValidateNode(node) {
       result.readyResult = ready.check();
       logger.debug("Ready Code result: ", result.readyResult);
     } catch (e) {
-      logger.error("Ready code failed: ", e.toString());
+      logger.error("Ready code failed: ", e.toString(), e.stack);
       result.readyResult = e.toString();
       result.ready = false;
     }
@@ -464,7 +462,7 @@ function ValidateNode(node) {
       result.validResult = eval(node.validationCode);
       logger.debug("Validation Code result: ", result.validResult);
     } catch (e) {
-      logger.error("Validation code failed: ", e.toString());
+      logger.error("Validation code failed: ", e.toString(), e.stack);
       result.validResult = e.toString();
       result.valid = false;
     }

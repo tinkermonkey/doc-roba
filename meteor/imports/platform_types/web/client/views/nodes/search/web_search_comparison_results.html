@@ -1,0 +1,48 @@
+<template name="WebSearchComparisonResults">
+  {{#unless title.match}}
+    <div>
+      <span class="dark-blue">title: </span>
+      {{#each title.pieces}}
+        <span
+          class="inline-block node-search-result node-search-{{renderLookup "NodeSearchStatusLookup" status "dash"}}"
+          data-toggle="popover"
+          data-trigger="focus"
+          data-content="{{renderLookup "NodeSearchStatusLookup" status "dash"}}: {{value}}"
+        >{{value}}</span>
+      {{/each}}
+    </div>
+  {{/unless}}
+  {{#unless url.match}}
+    <div>
+      <span class="dark-blue">url: </span>
+      <span>
+        {{#each url.pieces}}
+          <div class="inline-block">
+                        /<span
+            class="node-search-result node-search-{{renderLookup "NodeSearchStatusLookup" status "dash"}}"
+            data-toggle="popover"
+            data-trigger="focus"
+            data-content="{{renderLookup "NodeSearchStatusLookup" status "dash"}}: {{value}}"
+          >{{value}}</span>
+                      </div>
+        {{/each}}
+      </span>
+    </div>
+  {{/unless}}
+  {{#unless params.match}}
+    <div>
+      <span class="dark-blue align-top">parameters: </span>
+      <div class="inline-block">
+        {{#each params.pieces}}
+          <div
+            class="node-search-result node-search-{{renderLookup "NodeSearchStatusLookup" status "dash"}}"
+            data-toggle="popover"
+            data-trigger="focus"
+            data-content="{{renderLookup "NodeSearchStatusLookup" status "dash"}}: {{value.param}}{{#if value.value}}={{value.value}}{{/if}}"
+          >{{value.param}}{{#if value.value}}={{value.value}}{{/if}}</div>
+        {{/each}}
+      </div>
+    </div>
+  {{/unless}}
+
+</template>

@@ -6,7 +6,7 @@ import { RobaDialog } from 'meteor/austinsand:roba-dialog';
 import { TestCases } from '../../../api/test_case/test_case.js';
 import { TestResults } from '../../../api/test_result/test_result.js';
 import { TestResultRoles } from '../../../api/test_result/test_result_role.js';
-import './nav/test_result_nav.html';
+import '../../components/nav_menus/test_result_nav/test_result_nav.html';
 import './test_result_role.js';
 
 /**

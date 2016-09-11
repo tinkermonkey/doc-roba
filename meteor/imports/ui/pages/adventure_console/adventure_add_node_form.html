@@ -6,7 +6,6 @@
       <tr>
         <td class="field-label">Parent Node</td>
         <td>
-          {{debug "Node Selector Context" this}}
           {{> EditableNodeSelector value=parentId projectVersionId=adventure.projectVersionId dataKey="parentId" emptyText="Select Parent Node"}}
         </td>
       </tr>
@@ -26,59 +25,7 @@
           {{/with}}
         </td>
       </tr>
-      <tr>
-        <td class="field-label">Page Title</td>
-        <td>
-          <div>
-            <span class="dark-orange">Current:</span>
-            {{#each splitTitle}}<span class="title-part clickable inline-block" data-type="title" data-value="{{value}}">{{value}}</span> {{/each}}
-          </div>
-          <div>
-            <span class="dark-orange">Selected:</span>
-            {{#with record}}
-              {{> EditableTextField cssClass="inline-block" emptyText="Select the node title parts which identify this node" dataKey="pageTitle" value=pageTitle }}
-            {{/with}}
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td class="field-label">URL</td>
-        <td>
-          <div>
-            <span class="dark-orange">Current:</span>
-            {{#each splitUrl}}<div class="inline-block">/<span class="url-part clickable" data-type="url" data-value="{{value}}">{{value}}</span></div>{{/each}}
-          </div>
-          <div>
-            <span class="dark-orange">Selected:</span>
-            {{#with record}}
-              {{> EditableTextField cssClass="inline-block" emptyText="Select the node url segments which identify this node" dataKey="url" value=url }}
-            {{/with}}
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td class="field-label">URL Parameters</td>
-        <td>
-          <div>
-            <span class="dark-orange">Current:</span>
-            <div class="inline-block align-top">
-              {{#each splitParams}}
-                <div class="param-part">
-                  <span class="param-name clickable" data-value="{{value.param}}">{{value.param}}</span>
-                  {{#if value.value}}
-                    = <span class="param-value clickable" data-value="{{value.value}}">{{value.value}}</span>
-                  {{/if}}
-                </div>
-              {{/each}}
-            </div>
-          </div>
-          <div>
-            <span class="dark-orange">Selected:</span>
-            <button class="btn btn-warning btn-small-round btn-add-url-parameter" data-pk="{{_id}}">+</button>
-            <div style="padding-left: 20px; width: 80%;">{{> EditNodeUrlParameters }}</div>
-          </div>
-        </td>
-      </tr>
+      {{> Template.dynamic template=addNodePanel }}
     </table>
 
     <div class="add-node-btn-bar">

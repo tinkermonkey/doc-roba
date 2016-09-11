@@ -3,7 +3,7 @@ import './editable_platform_type.html';
 import {Template} from 'meteor/templating';
 
 import {Util} from '../../../api/util.js'
-import {PlatformTypes, PlatformTypesLookup} from '../../../api/node/platform_types.js';
+import {PlatformTypes, PlatformTypesLookup} from '../../../api/platform_type/platform_types.js';
 
 /**
  * Template Helpers
