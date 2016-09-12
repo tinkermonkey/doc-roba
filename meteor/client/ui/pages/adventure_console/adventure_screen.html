@@ -70,7 +70,7 @@
     
     
     {{#each highlightElements.get}}
-      {{#with processHighlightElement}}
+      {{#with processHighlightElement @index}}
         {{> AdventureHighlightDetail }}
       {{/with}}
     {{/each}}

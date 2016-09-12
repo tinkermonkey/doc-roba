@@ -109,7 +109,7 @@ Template.AdventureScreen.helpers({
    * Process a highlight element into something usable
    * @returns {*}
    */
-  processHighlightElement () {
+  processHighlightElement (index) {
     let element        = this,
         context        = Template.parentData(1),
         localViewport  = context.viewport.get(),
@@ -120,6 +120,8 @@ Template.AdventureScreen.helpers({
     // convert the bounds of the highlight element from remote to local coordinates
     if (element.bounds && localViewport && remoteViewport) {
       let ratio = (localViewport.width / remoteViewport.width);
+      // encode the array index
+      element.index = index;
       
       // attach the local viewport
       element.localViewport = localViewport;
