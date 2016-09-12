@@ -129,7 +129,7 @@ export class AdventureAssistant {
     let commandCode = "var el = driver.element(\"" + selector + "\");\n driver.moveTo(el.ELEMENT);";
     this.executeCommand(adventure, commandCode, (error, command) => {
       callback && callback(error, command);
-    }, false );
+    }, true );
   }
   
   /**
@@ -143,6 +143,18 @@ export class AdventureAssistant {
     let commandCode = "driver.setValue(\"" + selector + "\", \"" + value + "\");";
     this.executeCommand(adventure, commandCode, (error, command) => {
       callback && callback(error, command);
-    }, false );
+    }, true );
+  }
+  
+  /**
+   * Get an updated screenshot of the browser
+   * @param adventure
+   * @param callback
+   */
+  refreshScreen(adventure, callback){
+    let commandCode = "true;";
+    this.executeCommand(adventure, commandCode, (error, command) => {
+      callback && callback(error, command);
+    }, true );
   }
 }

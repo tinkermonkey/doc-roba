@@ -76,14 +76,14 @@ Template.AdventureContext.helpers({
       return result.url.match && result.params.match && result.title.match;
     }
   },
-  nodeComparison (node, data) {
-    if (node && data) {
+  nodeComparison (node, context) {
+    if (node && context) {
       let state = context.state.get();
       return NodeSearch.compareNode(state.url, state.title, node);
     }
   },
   searchComparisonPanel(){
-    //console.log("searchComparisonPanel:", Template.parentData(1));
+    console.log("searchComparisonPanel:", Template.parentData(1));
     let node         = Template.parentData(1),
         platformType = node.platformType();
     if (platformType) {

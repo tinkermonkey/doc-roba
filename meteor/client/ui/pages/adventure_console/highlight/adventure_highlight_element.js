@@ -14,6 +14,10 @@ Template.AdventureHighlightElement.events({
     var element  = $(e.target),
         detail   = $("#adventure-highlight-detail-" + instance.data.index);
     
+    if(!detail.length){
+      console.error("AdventureHighlightElement.click failed to find detail item:", instance.data, e.target);
+    }
+    
     if (element.hasClass("active")) {
       element.removeClass("active");
       detail.removeClass("active");

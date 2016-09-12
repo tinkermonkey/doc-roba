@@ -13,7 +13,17 @@ Template.NodeUrlSearchResults.helpers({});
 /**
  * Template Event Handlers
  */
-Template.NodeUrlSearchResults.events({});
+Template.NodeUrlSearchResults.events({
+  "click .node-search-icon"(e, instance){
+    let context = Template.parentData(1),
+        nodeId = $(e.target).closest(".node-search-icon").attr("data-node-staticId");
+    console.log("NodeUrlSearchResults click:", nodeId, context);
+    if(context && context.currentNodeId && nodeId){
+      console.log("NodeUrlSearchResults setting current no to", nodeId);
+      context.currentNodeId.set(nodeId);
+    }
+  }
+});
 
 /**
  * Template Created

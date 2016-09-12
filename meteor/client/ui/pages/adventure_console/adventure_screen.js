@@ -1,6 +1,7 @@
 import './adventure_screen.html';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
+import { RobaAccordion } from 'meteor/austinsand:roba-accordion';
 import { AdventureStatus } from '../../../../imports/api/adventure/adventure_status.js';
 import { Actions } from '../../../../imports/api/action/action.js';
 import { Nodes } from '../../../../imports/api/node/node.js';
@@ -119,7 +120,7 @@ Template.AdventureScreen.helpers({
     
     // convert the bounds of the highlight element from remote to local coordinates
     if (element.bounds && localViewport && remoteViewport) {
-      let ratio = (localViewport.width / remoteViewport.width);
+      let ratio     = (localViewport.width / remoteViewport.width);
       // encode the array index
       element.index = index;
       
@@ -373,6 +374,7 @@ Template.AdventureScreen.events({
   "click .adventure-selector-action-menu a" (e, instance) {
     // check for a data command
     var item        = $(e.target),
+        menu        = item.closest(".adventure-selector-action-menu"),
         selector    = atob(item.closest("[data-selector]").attr("data-selector")),
         command     = item.closest("[data-command]").attr("data-command"),
         commandType = item.closest("[data-command-type]").attr("data-command-type"),
@@ -381,64 +383,70 @@ Template.AdventureScreen.events({
     
     console.log("Select: ", commandType, command, nodeId, targetId, selector);
     
-    // make sure the change we'll make is visible
-    switch (commandType) {
-      case "ready":
-      case "valid":
-        Accordion.activate("current-node");
-        setTimeout(function () {
-          let adventureSidebar = $(".adventure-sidebar"),
-              targetTop        = $(".node-edit-form").offset().top,
-              currentScroll    = adventureSidebar.scrollTop(),
-              sidebarTop       = adventureSidebar.offset().top;
-          
-          adventureSidebar.animate({ scrollTop: targetTop + currentScroll - 10 - sidebarTop }, 200, function () {
-            var field  = commandType == "ready" ? "readyCode" : "validationCode",
-                update = { $set: {} },
-                node   = Nodes.findOne(nodeId);
-            if (node[ field ] && node[ field ].length) {
-              update.$set[ field ] = node[ field ] + "\n" + commandType + "." + command + "('" + selector + "');";
-            } else {
-              update.$set[ field ] = commandType + "." + command + "('" + selector + "');";
-            }
-            Nodes.update(nodeId, update, function (error, result) {
-              if (error) {
-                RobaDialog.error("Failed to update node value: " + error.message);
-                console.error("Attempted update:", update);
-              }
-            });
-          });
-        }, 250);
-        break;
-      case "action":
-        Accordion.activate("current-node-actions");
-        if (targetId) {
-          $(".action-control-buttons[data-action-id='" + targetId + "'] .btn-edit-action").trigger("click");
+    // Need either an action targetId or a nodeId
+    if (commandType && command && (nodeId || targetId) && selector) {
+      // make sure the change we'll make is visible
+      switch (commandType) {
+        case "ready":
+        case "valid":
+          RobaAccordion.activate("current-node");
           setTimeout(function () {
             let adventureSidebar = $(".adventure-sidebar"),
-                targetTop        = $(".action-edit-form[data-action-id='" + targetId + "']").offset().top,
+                targetTop        = $(".node-edit-form").offset().top,
                 currentScroll    = adventureSidebar.scrollTop(),
                 sidebarTop       = adventureSidebar.offset().top;
             
-            adventureSidebar
-                .animate({ scrollTop: targetTop + currentScroll - 10 - sidebarTop }, 200, function () {
-                  var action = Actions.findOne(targetId),
-                      update = { $set: {} };
-                  if (action.code && action.code.length) {
-                    update.$set.code = action.code + "\n" + "driver." + command + "('" + selector + "');";
-                  } else {
-                    update.$set.code = "driver." + command + "('" + selector + "');";
-                  }
-                  Actions.update(targetId, update, function (error, result) {
-                    if (error) {
-                      RobaDialog.error("Failed to update action value: " + error.message);
-                      console.log("Attempted update:", update);
-                    }
-                  });
-                });
+            adventureSidebar.animate({ scrollTop: targetTop + currentScroll - 10 - sidebarTop }, 200, function () {
+              var field  = commandType == "ready" ? "readyCode" : "validationCode",
+                  update = { $set: {} },
+                  node   = Nodes.findOne(nodeId);
+              if (node[ field ] && node[ field ].length) {
+                update.$set[ field ] = node[ field ] + "\n" + commandType + "." + command + "('" + selector + "');";
+              } else {
+                update.$set[ field ] = commandType + "." + command + "('" + selector + "');";
+              }
+              Nodes.update(nodeId, update, function (error, result) {
+                if (error) {
+                  RobaDialog.error("Failed to update node value: " + error.message);
+                  console.error("Attempted update:", update);
+                }
+              });
+            });
           }, 250);
-        }
-        break;
+          break;
+        case "action":
+          RobaAccordion.activate("current-node-actions");
+          if (targetId) {
+            $(".action-control-buttons[data-action-id='" + targetId + "'] .btn-edit-action").trigger("click");
+            setTimeout(function () {
+              let adventureSidebar = $(".adventure-sidebar"),
+                  targetTop        = $(".action-edit-form[data-action-id='" + targetId + "']").offset().top,
+                  currentScroll    = adventureSidebar.scrollTop(),
+                  sidebarTop       = adventureSidebar.offset().top;
+              
+              adventureSidebar
+                  .animate({ scrollTop: targetTop + currentScroll - 10 - sidebarTop }, 200, function () {
+                    var action = Actions.findOne(targetId),
+                        update = { $set: {} };
+                    if (action.code && action.code.length) {
+                      update.$set.code = action.code + "\n" + "driver." + command + "('" + selector + "');";
+                    } else {
+                      update.$set.code = "driver." + command + "('" + selector + "');";
+                    }
+                    Actions.update(targetId, update, function (error, result) {
+                      if (error) {
+                        RobaDialog.error("Failed to update action value: " + error.message);
+                        console.log("Attempted update:", update);
+                      }
+                    });
+                  });
+            }, 250);
+          }
+          break;
+      }
+    } else {
+      console.error("Menu Select failed: ", commandType, command, nodeId, targetId, selector);
+      console.error("Menu Select failed: ", item.get(0), menu.get(0));
     }
   }
 });

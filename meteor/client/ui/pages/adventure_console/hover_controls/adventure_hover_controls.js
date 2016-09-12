@@ -34,7 +34,7 @@ Template.AdventureHoverControls.events({
     
     // send the command to clear all of the highlighted elements
     if (selector) {
-      let code = "driver." + command + "(\"" + Util.escapeDoubleQuotes(selector) + "\");";
+      let code = "driver." + command + "(\"" + selector + "\");";
       adventure.assistant().executeCommand(adventure, code, (error, command) => {
         if (error) {
           console.error("Error adding adventure command: " + error.message);

@@ -151,7 +151,7 @@ Template.AdventureToolbar.events({
     }
     
     // send the command to clear all of the highlighted elements
-    adventure.assistant().executeCommand(adventure, "true", (error, command) => {
+    adventure.assistant().refreshScreen(adventure, (error, command) => {
       if (error) {
         RobaDialog.error("Error adding adventure command: " + error.message);
       }

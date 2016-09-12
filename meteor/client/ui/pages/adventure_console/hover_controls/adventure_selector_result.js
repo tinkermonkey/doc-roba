@@ -8,8 +8,10 @@ import './adventure_selector_action_menu.js';
  */
 Template.AdventureSelectorResult.helpers({
   currentNode(){
-    if(this.currentNodeId && this.adventure){
-      return Nodes.findOne({staticId: this.currentNodeId, projectVersionId: this.adventure.projectVersionId});
+    console.log("AdventureSelectorResult:", context);
+    let context = Template.parentData(1);
+    if(context.currentNodeId && context.adventure){
+      return Nodes.findOne({staticId: context.currentNodeId, projectVersionId: context.adventure.projectVersionId});
     }
   }
 });
