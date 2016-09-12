@@ -1140,7 +1140,7 @@ export default class TreeLayout {
     self.linkHandler.update(duration);
     
     // Update the actions
-    //self.actionHandler.update(duration);
+    self.actionHandler.update(duration);
     
     // Update the inset view
     self.insetLayout.update(duration);
@@ -1151,7 +1151,7 @@ export default class TreeLayout {
     }, duration);
     
     setTimeout(() => {
-      self.actionHandler.update(duration);
+      //self.actionHandler.update(duration);
     }, 1000);
   };
   
