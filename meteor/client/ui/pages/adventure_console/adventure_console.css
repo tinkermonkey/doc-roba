@@ -181,6 +181,7 @@
 .adventure-highlight-element:hover, .adventure-highlight-element.active {
   background-color: rgba(255, 255, 0, 0.85);
   border-radius: 3px;
+  z-index: 100;
 }
 
 .adventure-highlight-element.highlight {
@@ -229,6 +230,7 @@
 .adventure-highlight-detail.active {
   display: block;
   margin-bottom: 100px;
+  z-index: 100;
 }
 
 .adventure-highlight-hierarchy {

@@ -70,6 +70,7 @@ Template.AdventureHighlightDetail.helpers({
    * Get the maximum width
    */
   getMaxWidth () {
+    return this.localViewport.width;
     if (this.localBounds && this.localViewport) {
       let maskLayer  = this.localViewport.offset,
           adjustment = this.localViewport.parentOffset,
