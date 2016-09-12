@@ -1,7 +1,7 @@
 import './adventure_highlight_detail.html';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
-import { Util } from '../../../../imports/api/util.js';
+import { Util } from '../../../../../imports/api/util.js';
 import './adventure_highlight_detail_item.js';
 
 /**
@@ -12,10 +12,13 @@ Template.AdventureHighlightDetail.helpers({
    * Get the processed list of parent elements for this element
    */
   getHierarchy () {
-    let el     = this,
-        parent = Template.parentData(2),
-        scroll = parent.state.scroll,
-        ratio  = (parent.viewport.width / parent.state.viewportSize.width);
+    let el            = this,
+        context       = Template.parentData(2),
+        state         = context.state.get(),
+        adventure     = context.adventure.get(),
+        currentNodeId = context.currentNodeId.get(),
+        scroll        = state.scroll,
+        ratio         = (context.viewport.get().width / state.viewportSize.width);
     
     if (el.parent) {
       let elements = Util.getHighlightHierarchy(el);
@@ -28,8 +31,8 @@ Template.AdventureHighlightDetail.helpers({
           height: parseInt(e.bounds.height * ratio),
           width : parseInt(e.bounds.width * ratio)
         };
-        e.currentNodeId = el.currentNodeId;
-        e.adventure     = el.adventure;
+        e.currentNodeId = currentNodeId;
+        e.adventure     = adventure;
       });
       return elements;
     }

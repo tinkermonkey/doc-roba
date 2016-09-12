@@ -1,6 +1,6 @@
 import './adventure_highlight_detail_item.html';
 import { Template } from 'meteor/templating';
-import './adventure_selector_result.js';
+import '../hover_controls/adventure_selector_result.js';
 
 /**
  * Template Helpers

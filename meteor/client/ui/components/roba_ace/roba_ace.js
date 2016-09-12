@@ -196,7 +196,7 @@ Template.RobaAce.rendered = function () {
         var data = Template.currentData();
         if(data.value !== self.editor.getValue()){
           console.debug("RobaAce Data update");
-          self.editor.setValue(data.value);
+          self.editor.setValue(data.value || '');
           self.editor.clearSelection();
         }
       });

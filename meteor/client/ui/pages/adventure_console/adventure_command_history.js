@@ -3,15 +3,18 @@ import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
 import { AdventureCommands } from '../../../../imports/api/adventure/adventure_command.js';
 import { AdventureStepStatus } from '../../../../imports/api/adventure/adventure_step_status.js';
+import '../../lib/pretty_code/pretty_code.js';
+import '../../components/log_messages/log_message_data.js';
 
 /**
  * Helpers
  */
 Template.AdventureCommandHistory.helpers({
   getCommands () {
-    if (this.adventure._id) {
-      var count = Template.instance().historyLength.get();
-      return AdventureCommands.find({ adventureId: this.adventure._id }, { sort: { dateCreated: -1 } });
+    let adventure = this.adventure.get(),
+        limit = Template.instance().historyLength.get();
+    if (adventure._id) {
+      return AdventureCommands.find({ adventureId: adventure._id }, { sort: { dateCreated: -1 }, limit: limit });
     }
   },
   formatResult () {
@@ -43,14 +46,7 @@ Template.AdventureCommandHistory.events({
     console.log("Copy command: ", result.code);
     
     // find the editor
-    try {
-      var editorInstance = Blaze.getView($(".command-editor").get(0)).templateInstance();
-      
-      editorInstance.editor.insert(result.code);
-    } catch (e) {
-      console.error("Failed to insert command in editor: " + e.message);
-      RobaDialog.error("Failed to insert command in editor: " + e.message);
-    }
+    instance.editor.insert(result.code);
   }
 });
 
@@ -60,4 +56,11 @@ Template.AdventureCommandHistory.events({
 Template.AdventureCommandHistory.onCreated(() => {
   let instance           = Template.instance();
   instance.historyLength = new ReactiveVar(10);
+  
+  try {
+    let editorInstance = Blaze.getView($(".command-editor").get(0)).templateInstance();
+    instance.editor = editorInstance.editor;
+  } catch (e) {
+    console.error("Failed to identify command editor: " + e.message);
+  }
 });

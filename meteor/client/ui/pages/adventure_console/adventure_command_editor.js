@@ -1,8 +1,8 @@
 import './adventure_command_editor.html';
 import { Blaze } from 'meteor/blaze';
 import { Template } from 'meteor/templating';
+import { ReactiveVar } from 'meteor/reactive-var';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
-import { AdventureCommands } from '../../../../imports/api/adventure/adventure_command.js';
 import { AdventureStatus } from '../../../../imports/api/adventure/adventure_status.js';
 import '../../components/roba_ace/roba_ace.js';
 
@@ -11,9 +11,13 @@ import '../../components/roba_ace/roba_ace.js';
  */
 Template.AdventureCommandEditor.helpers({
   isExecuting () {
-    return this.adventure.status != AdventureStatus.complete
-        && this.adventure.status != AdventureStatus.queued
-        && this.adventure.status != AdventureStatus.staged
+    let adventure = this.adventure.get();
+    return adventure.status != AdventureStatus.complete
+        && adventure.status != AdventureStatus.queued
+        && adventure.status != AdventureStatus.staged
+  },
+  commandExecuting(){
+    return Template.instance().commandExecuting.get()
   }
 });
 
@@ -22,35 +26,28 @@ Template.AdventureCommandEditor.helpers({
  */
 Template.AdventureCommandEditor.events({
   "click .btn-run-command" (e, instance) {
-    console.log("btn-run: ", this);
+    let code      = instance.editor.getValue(),
+        adventure = instance.data.adventure.get();
     
     // make sure the adventure is operating
-    if (instance.data.adventure.status == AdventureStatus.complete) {
-      return;
-    }
-    
-    // get the roba-ace instance for access to the editor
-    try {
-      var editorInstance = Blaze.getView(instance.$(".roba-ace").get(0)).templateInstance();
-    } catch (e) {
-      RobaDialog.error("Failed to get editor instance: " + e.message);
+    if (adventure.status == AdventureStatus.complete) {
       return;
     }
     
     // make sure there's an adventure to work with
-    var code = editorInstance.editor.getValue();
     
-    console.log("runCommand: ", code);
     if (code.length) {
-      AdventureCommands.insert({
-        projectId  : instance.data.adventure.projectId,
-        adventureId: instance.data.adventure._id,
-        code       : code
-      }, function (error) {
+      instance.commandExecuting.set(true);
+      adventure.assistant().executeCommand(adventure, code, (error, command) => {
+        instance.commandExecuting.set(false);
         if (error) {
           RobaDialog.error("Error adding adventure command: " + error.message);
         } else {
-          editorInstance.editor.setValue("");
+          instance.editor.setValue("");
+          if (command.result.highlightElements) {
+            console.log("instance.data:", instance.data);
+            instance.data.highlightElements.set(command.result.highlightElements);
+          }
         }
       });
     }
@@ -58,8 +55,22 @@ Template.AdventureCommandEditor.events({
 });
 
 /**
- * Enable the Ace editor
+ * Template created
  */
-Template.AdventureCommandEditor.onRendered( () =>  {
-  
+Template.AdventureCommandEditor.onCreated(() => {
+  let instance              = Template.instance();
+  instance.commandExecuting = new ReactiveVar(false);
+});
+
+/**
+ * Template rendered
+ */
+Template.AdventureCommandEditor.onRendered(() => {
+  let instance = Template.instance();
+  try {
+    let editorInstance = Blaze.getView(instance.$(".roba-ace").get(0)).templateInstance();
+    instance.editor    = editorInstance.editor;
+  } catch (e) {
+    console.error("Failed to get editor instance: ", e);
+  }
 });

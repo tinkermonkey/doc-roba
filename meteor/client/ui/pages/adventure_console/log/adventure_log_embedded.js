@@ -1,17 +1,16 @@
 import './adventure_log_embedded.html';
 import './adventure_log.css';
 import { Template } from 'meteor/templating';
-import { LogMessages } from '../../../../imports/api/log_message/log_message.js';
-import '../../components/log_messages/log_message_data.js';
+import { LogMessages } from '../../../../../imports/api/log_message/log_message.js';
+import '../../../components/log_messages/log_message_data.js';
 
 /**
  * Template Helpers
  */
 Template.AdventureLogEmbedded.helpers({
   messages () {
-    var instance  = Template.instance();
-    var adventure = this.adventure;
-    console.log("AdventureLogEmbedded messages: ", instance.data, adventure);
+    var adventure = this.adventure.get();
+
     return LogMessages.find({
       "context.adventureId": adventure._id
     }, {
@@ -34,7 +33,7 @@ Template.AdventureLogEmbedded.onCreated(() => {
   
   instance.autorun(function () {
     let data = Template.currentData();
-    instance.subscribe("adventure_log", data.adventure._id);
+    instance.subscribe("adventure_log", data.adventure.get()._id);
   });
 });
 

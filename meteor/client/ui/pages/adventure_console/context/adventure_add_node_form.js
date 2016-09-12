@@ -1,10 +1,11 @@
 import './adventure_add_node_form.html';
 import { Blaze } from 'meteor/blaze';
 import { Template } from 'meteor/templating';
-import { Nodes } from '../../../../imports/api/node/node.js';
-import { NodeTypes } from '../../../../imports/api/node/node_types.js';
-import '../../components/editable_fields/node_selector/editable_node_selector.js';
-import '../../components/editable_fields/editable_node_type.js';
+import { Nodes } from '../../../../../imports/api/node/node.js';
+import { NodeTypes } from '../../../../../imports/api/node/node_types.js';
+import { Util } from '../../../../../imports/api/util.js';
+import '../../../components/editable_fields/node_selector/editable_node_selector.js';
+import '../../../components/editable_fields/editable_node_type.js';
 
 /**
  * Template Helpers
@@ -14,9 +15,10 @@ Template.AdventureAddNodeForm.helpers({
     return Template.instance().nodeRecord.get();
   },
   splitUrl () {
-    if (this.state && this.state.url) {
+    let state = this.state.get();
+    if (state && state.url) {
       var pieces = [];
-      _.each(Util.urlPath(this.state.url).split("/"), function (part, i) {
+      _.each(Util.urlPath(state.url).split("/"), function (part, i) {
         if (part.length) {
           pieces.push({
             index: i,
@@ -31,9 +33,10 @@ Template.AdventureAddNodeForm.helpers({
     
   },
   splitTitle () {
-    if (this.state && this.state.title) {
+    let state = this.state.get();
+    if (state && state.title) {
       var pieces = [];
-      _.each(this.state.title.split(/\s/), function (part, i) {
+      _.each(state.title.split(/\s/), function (part, i) {
         if (part.trim().length) {
           pieces.push({
             index: i,
@@ -45,7 +48,8 @@ Template.AdventureAddNodeForm.helpers({
     }
   },
   addNodePanel(){
-    let platform = Nodes.findOne(this.adventure.route.platform._id);
+    let adventure = this.adventure.get(),
+        platform = adventure.platform();
     if(platform){
       let platformType = platform.platformType();
       if(platformType){
@@ -134,13 +138,14 @@ Template.AdventureAddNodeForm.events({
  * Template Created
  */
 Template.AdventureAddNodeForm.onCreated(() => {
-  let instance = Template.instance();
+  let instance = Template.instance(),
+      adventure = instance.data.adventure.get();
   
   // Use this construct to build up the new node record
   instance.nodeRecord = new ReactiveVar({
-    parentId        : instance.data.adventure.lastKnownNode,
-    projectId       : instance.data.adventure.projectId,
-    projectVersionId: instance.data.adventure.projectVersionId,
+    parentId        : adventure.lastKnownNode,
+    projectId       : adventure.projectId,
+    projectVersionId: adventure.projectVersionId,
     type            : NodeTypes.page,
     title           : "",
     pageTitle       : "",

@@ -2,11 +2,12 @@ import './adventure_edit_node_action_row.html';
 import { Blaze } from 'meteor/blaze';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
-import { Actions } from '../../../../imports/api/action/action.js';
-import { AdventureCommands } from '../../../../imports/api/adventure/adventure_command.js';
-import { AdventureStatus } from '../../../../imports/api/adventure/adventure_status.js';
+import { Actions } from '../../../../../imports/api/action/action.js';
+import { AdventureCommands } from '../../../../../imports/api/adventure/adventure_command.js';
+import { AdventureStatus } from '../../../../../imports/api/adventure/adventure_status.js';
+import { Util } from '../../../../../imports/api/util.js';
 import './adventure_edit_action_form.js';
-import '../../lib/dialogs/modals.js';
+import '../../../lib/dialogs/modals.js';
 
 /**
  * Template Helpers
@@ -20,7 +21,7 @@ Template.AdventureEditNodeActionRow.helpers({
     var i = 0, context = Template.parentData(i);
     while (i < 10 && context) {
       context = Template.parentData(i++);
-      if (context.adventure && context.adventure.status) {
+      if (context.adventure && context.adventure.get().status) {
         return context;
       }
     }
@@ -45,21 +46,25 @@ Template.AdventureEditNodeActionRow.events({
   },
   "click .btn-execute-action" (e, instance) {
     // make sure there's an adventure to work with
-    var adventure = Util.findParentData("adventure"),
-        code      = this.code;
+    var adventure = Util.findParentData("adventure").get(),
+        code      = '',
+        action    = this;
+    console.log("Execute Action: ", action);
+    // build up the code to define the action variables using the default values
+    if(action.variables){
+      code += 'var ' + (_.map(action.variables, (variable) => { return variable.name + ' = ' + (variable.defaultValue || '""')})).join(",\r\n    ") + ";\r\n";
+    }
+    
+    // Add in the code for the action
+    code += action.code;
     
     // make sure the adventure is operating
     if (adventure.status == AdventureStatus.complete) {
       return;
     }
     
-    console.log("Execute Action: ", code);
     if (code.length) {
-      AdventureCommands.insert({
-        projectId  : adventure.projectId,
-        adventureId: adventure._id,
-        code       : code
-      }, function (error) {
+      adventure.assistant().executeCommand(adventure, code, (error, command) => {
         if (error) {
           RobaDialog.error("Error executing action: " + error.message);
         }

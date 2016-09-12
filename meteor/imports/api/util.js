@@ -408,8 +408,7 @@ export const Util = {
    * @param width
    */
   wrapSvgText(text, width) {
-    //console.log("wrapSvgText:", text, width);
-    text.each(function() {
+    text.each(function () {
       var text = d3.select(this),
           words = text.text().split(/\s+/).reverse(),
           word,
@@ -419,6 +418,7 @@ export const Util = {
           y = text.attr("y"),
           dy = parseFloat(text.attr("dy") || 0),
           tspan = text.text(null).append("tspan").attr("x", text.attr("x")).attr("y", y).attr("dy", dy + "em");
+
       while (word = words.pop()) {
         line.push(word);
         tspan.text(line.join(" "));

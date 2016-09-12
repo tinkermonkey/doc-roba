@@ -3,6 +3,7 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import {SchemaHelpers} from '../schema_helpers.js';
 import {Auth} from '../auth.js';
 import {AdventureStatus} from './adventure_status.js';
+import {Nodes} from '../node/node.js';
 
 /**
  * A single excursion into the AUT
@@ -85,3 +86,33 @@ export const Adventures = new Mongo.Collection("adventures");
 Adventures.attachSchema(Adventure);
 Adventures.deny(Auth.ruleSets.deny.ifNoProjectAccess);
 Adventures.allow(Auth.ruleSets.allow.ifAuthenticated);
+
+/**
+ * Helpers
+ */
+Adventures.helpers({
+  platform(){
+    if(this.route && this.route.platform){
+      return Nodes.findOne({_id: this.route.platform._id});
+    } else if(this.lastKnownNode) {
+      return Nodes.findOne({staticId: this.lastKnownNode, projectVerisonId: this.projectVerisonId});
+    }
+  },
+  /**
+   * Get the platformType for this adventure
+   * @return {*}
+   */
+  platformType(){
+    return this.platform().platformType();
+  },
+  /**
+   * Get the adventureAssistant for this adventure
+   * @return {*}
+   */
+  assistant(){
+    let platformType = this.platformType();
+    if(platformType){
+      return platformType.adventureAssistant()
+    }
+  }
+});

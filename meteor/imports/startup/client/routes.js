@@ -17,7 +17,7 @@ import "../../../client/ui/insecure/login/login.js";
 import "../../../client/ui/insecure/logout/logout.js";
 import "../../../client/ui/insecure/not_found/not_found.js";
 import "../../../client/ui/pages/adventure_console/adventure_console.js";
-import "../../../client/ui/pages/adventure_console/adventure_log.js";
+import "../../../client/ui/pages/adventure_console/log/adventure_log.js";
 import "../../../client/ui/pages/code_module/code_module_dashboard.js";
 import "../../../client/ui/pages/doc_tree/doc_tree.js";
 import "../../../client/ui/pages/home/home.js";

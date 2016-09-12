@@ -12,15 +12,15 @@
         </div>
 
         <div class="panel-body">
-          <div class="break-word">{{code}}</div>
+          {{> PrettyCode value=code }}
         </div>
         <div class="panel-footer">
           {{#if complete}}
             {{#if result}}
-              <div class="dark-blue break-word">{{formatResult}}</div>
+              {{> Template.dynamic template=LogMessageData data=result }}
             {{/if}}
           {{else}}
-            {{> RobaSpinner inline=true scale=0.3 }}
+            {{> RobaSpinner scale=0.3 }}
           {{/if}}
         </div>
       </div>

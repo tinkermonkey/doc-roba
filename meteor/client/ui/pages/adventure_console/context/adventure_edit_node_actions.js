@@ -2,10 +2,10 @@ import './adventure_edit_node_actions.html';
 import { Blaze } from 'meteor/blaze';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
-import { Actions } from '../../../../imports/api/action/action.js';
-import { Nodes } from '../../../../imports/api/node/node.js';
+import { Actions } from '../../../../../imports/api/action/action.js';
+import { Nodes } from '../../../../../imports/api/node/node.js';
 import './adventure_edit_node_action_row.js';
-import '../../components/editable_fields/editable_nav_menu_list.js';
+import '../../../components/editable_fields/editable_nav_menu_list.js';
 
 /**
  * Template Helpers

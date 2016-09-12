@@ -1,40 +1,41 @@
 <template name="AdventureScreen">
   <div class="live-adventure-view">
-    {{#if state.url}}
+    {{#if state.get.url}}
       <div class="live-adventure-header">
-        {{#with state}}
-        <h4>{{title}}</h4>
-        <div>{{url}}</div>
-        <div>
-          <small>viewport is {{viewportSize.width}}px x {{viewportSize.height}}px,</small>
-          <small>scrolled to ({{scroll.x}}, {{scroll.y}})</small>
-          <small>Mouse at ({{mouse.x}}, {{mouse.y}})</small>
-        </div>
+        {{#with state.get}}
+          <h4>{{title}}</h4>
+          <div>{{url}}</div>
+          <div>
+            <small>viewport is {{viewportSize.width}}px x {{viewportSize.height}}px,</small>
+            <small>scrolled to ({{scroll.x}}, {{scroll.y}})</small>
+            <small>Mouse at ({{mouse.x}}, {{mouse.y}})</small>
+          </div>
         {{/with}}
       </div>
     {{/if}}
-
-    {{#if state.screenshot}}
+    
+    {{#if state.get.screenshot}}
       {{updateViewport}}
-      <img class="remote-screen" src="data:image/png;base64,{{state.screenshot}}">
-      <div class="remote-screen-mask" style="{{#with getScreenMaskPosition}}top: {{top}}px; left: {{left}}px; height: {{height}}px; width: {{width}}px;{{/with}}">
+      <img class="remote-screen" src="data:image/png;base64,{{state.get.screenshot}}">
+      <div class="remote-screen-mask"
+           style="{{#with getScreenMaskPosition}}top: {{top}}px; left: {{left}}px; height: {{height}}px; width: {{width}}px;{{/with}}">
         {{#with getMousePosition}}
           <div class="remote-screen-pointer" style="top: {{y}}px; left: {{x}}px;">
             <span class="glyphicon glyphicon-screenshot"></span>
           </div>
         {{/with}}
-
+        
         <div class="adventure-hover-element-highlight" style="visibility: hidden;"></div>
-
-        {{> AdventureHoverControls fullContext}}
-
-        {{#each getHighlightElements}}
+        
+        {{> AdventureHoverControls }}
+        
+        {{#each highlightElements.get}}
           {{#with processHighlightElement}}
             {{> AdventureHighlightElement }}
           {{/with}}
         {{/each}}
-
-        {{#each getPreviewElements}}
+        
+        {{#each previewElements.get}}
           {{#each getPreviewMatches}}
             {{#with processHighlightElement}}
               {{> AdventurePreviewElement }}
@@ -42,16 +43,16 @@
           {{/each}}
         {{/each}}
       </div>
-
+      
       <div class="live-adventure-toolbar">
-        {{> AdventureToolbar fullContext}}
+        {{> AdventureToolbar }}
       </div>
       {{#if getCheckResult}}
         {{#with getCheckResult}}
           <div class="well">
-            {{> AdventureSelectorResult }}
+            {{> AdventureSelectorResult currentNodeId=../currentNodeId.get adventure=../adventure.get}}
             {{#each selectors}}
-              {{> AdventureSelectorResult }}
+              {{> AdventureSelectorResult selector=this currentNodeId=../../currentNodeId.get adventure=../../adventure.get}}
             {{/each}}
           </div>
         {{/with}}
@@ -66,46 +67,47 @@
         {{/unless}}
       </div>
     {{/if}}
-
-
-    {{#each getHighlightElements}}
+    
+    
+    {{#each highlightElements.get}}
       {{#with processHighlightElement}}
         {{> AdventureHighlightDetail }}
       {{/with}}
     {{/each}}
-
-    {{#each getPreviewElements}}
+    
+    {{#each previewElements.get}}
       {{#each getPreviewMatches}}
         {{#with processHighlightElement}}
           {{> AdventurePreviewDetail }}
         {{/with}}
       {{/each}}
     {{/each}}
-
+    
     <div class="adventure-highlight-list">
-      {{#if getHighlightElements ..}}
+      {{#if highlightElements.get}}
         <div class="">
           <table class="table table-striped">
             <caption>Matched Elements</caption>
             <tbody>
-            {{#each getHighlightElements}}
+            {{#each highlightElements.get}}
               <tr>
-                <td>{{index}}</td>
+                <td>{{@index}}</td>
                 <td>
                   <span class="glyphicon glyphicon-chevron-down pull-right detail-toggle"></span>
                   <div class="adventure-highlight-list-row-header">
                     &lt;<span class="clickable tag">{{tag}}</span>
-                      {{#each attributes}}
-                        <span class="attr">{{name}}</span>="{{#each splitValues ..}}<span class="clickable value">{{value}}</span>{{#unless last}} {{/unless}}{{/each}}"
-                      {{/each}}&gt;
+                    {{#each attributes}}
+                      <span class="attr">{{name}}</span>="{{#each splitValues ..}}<span
+                      class="clickable value">{{value}}</span>{{#unless last}} {{/unless}}{{/each}}"
+                    {{/each}}&gt;
                   </div>
-
+                  
                   <div class="adventure-highlight-list-row-detail">
                     <div class="">
                       <h4>Selectors</h4>
-                        {{#each selectors}}
-                          {{> AdventureSelectorResult selector=this currentNodeId=../currentNodeId adventure=../adventure}}
-                        {{/each}}
+                      {{#each selectors}}
+                        {{> AdventureSelectorResult selector=this currentNodeId=../../currentNodeId.get adventure=../../adventure.get }}
+                      {{/each}}
                       <h4>Text</h4>
                       <div>{{text}}</div>
                       <h4>HTML</h4>

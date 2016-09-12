@@ -1,6 +1,6 @@
 import './adventure_preview_detail.html';
 import { Template } from 'meteor/templating';
-import { Util } from '../../../../imports/api/util.js';
+import { Util } from '../../../../../imports/api/util.js';
 import './adventure_highlight_detail_item.js';
 
 /**
@@ -11,14 +11,16 @@ Template.AdventurePreviewDetail.helpers({
    * Get the processed list of parent elements for this element
    */
   getHierarchy () {
-    var el     = this,
-        parent = Template.parentData(3),
-        scroll = parent.state.scroll,
-        ratio  = (parent.viewport.width / parent.state.viewportSize.width);
+    var element       = this,
+        context  = Template.parentData(3),
+        state    = context.state.get(),
+        viewport = context.viewport.get(),
+        scroll   = state.scroll,
+        ratio    = (viewport.width / state.viewportSize.width);
     
-    if (el.parent) {
-      var elements = Util.getHighlightHierarchy(el);
-      elements.push(_.omit(el, "parent"));
+    if (element.parent) {
+      var elements = Util.getHighlightHierarchy(element);
+      elements.push(_.omit(element, "parent"));
       _.each(elements, function (e, i) {
         e.index       = i;
         e.localBounds = {

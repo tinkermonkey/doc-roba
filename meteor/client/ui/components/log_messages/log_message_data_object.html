@@ -1,10 +1,12 @@
 <template name="LogMessageDataObject">
   <div class="log-data-object-container">
     {{#if getKeys}}
+      {{#if showExpander}}
       <div class="log-data-object-expander">
         <span class="glyphicon glyphicon-arrow-right"></span>
       </div>
-      <div class="log-data-object" style="display: none;">
+      {{/if}}
+      <div class="log-data-object" style="{{#if showExpander}}display: none;{{/if}}">
         <table>
           {{#each getKeys}}
             <tr>

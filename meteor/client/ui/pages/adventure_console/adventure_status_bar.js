@@ -5,7 +5,11 @@ import { Template } from 'meteor/templating';
 /**
  * Template Helpers
  */
-Template.AdventureStatusBar.helpers({});
+Template.AdventureStatusBar.helpers({
+  adventureStatus(){
+    return this.adventure.get().status
+  }
+});
 
 /**
  * Template Event Handlers

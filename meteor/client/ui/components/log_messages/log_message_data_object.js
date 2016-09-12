@@ -15,6 +15,9 @@ Template.LogMessageDataObject.helpers({
       return value.toString();
     }
     return value;
+  },
+  showExpander(){
+    return Template.instance().showExpander.get();
   }
 });
 
@@ -43,14 +46,16 @@ Template.LogMessageDataObject.events({
  * Template Created
  */
 Template.LogMessageDataObject.created = function () {
-  
+  let instance = Template.instance();
+  instance.showExpander = new ReactiveVar(true);
 };
 
 /**
  * Template Rendered
  */
 Template.LogMessageDataObject.rendered = function () {
-  
+  let instance = Template.instance();
+  instance.showExpander.set($(instance.firstNode).parent().closest(".log-data-object-container").length > 0);
 };
 
 /**

@@ -1,14 +1,16 @@
 import './adventure_selector_action_target_menu.html';
 import { Template } from 'meteor/templating';
-import { Actions } from '../../../../imports/api/action/action.js';
-import { Nodes } from '../../../../imports/api/node/node.js';
+import { Actions } from '../../../../../imports/api/action/action.js';
+import { Nodes } from '../../../../../imports/api/node/node.js';
+import { NodeTypes } from '../../../../../imports/api/node/node_types.js';
 
 /**
  * Template Helpers
  */
 Template.AdventureSelectorActionTargetMenu.helpers({
   getActions () {
-    var node = (this.type && this.type == NodeTypes.navMenu) ? this : this.node;
+    let node = (this.type && this.type == NodeTypes.navMenu) ? this : this.node;
+    
     if (node) {
       return Actions.find({ nodeId: node.staticId, projectVersionId: node.projectVersionId }, { sort: { title: 1 } });
     }

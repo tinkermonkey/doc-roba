@@ -1,17 +1,15 @@
 import './node_snippet.html';
-
-import {Template} from 'meteor/templating';
-
-import {DocTreeConfig} from '../../lib/doc_tree/doc_tree_config.js';
-import {NodeTypes} from '../../../../imports/api/node/node_types.js';
-import {Util} from '../../../../imports/api/util.js';
+import { Template } from 'meteor/templating';
+import { DocTreeConfig } from '../../lib/doc_tree/doc_tree_config.js';
+import { NodeTypes } from '../../../../imports/api/node/node_types.js';
+import { Util } from '../../../../imports/api/util.js';
 
 /**
  * Template Helpers
  */
 Template.NodeSnippet.helpers({
   getNodeClass() {
-    switch(this.type){
+    switch (this.type) {
       case NodeTypes.view:
         return "node-view";
       case NodeTypes.navMenu:
@@ -37,21 +35,23 @@ Template.NodeSnippet.events({});
  * Template Created
  */
 Template.NodeSnippet.onCreated(() => {
-
+  
 });
 
 /**
  * Template Rendered
  */
 Template.NodeSnippet.onRendered(() => {
-  let self = Template.instance();
+  let instance = Template.instance();
   
-  self.autorun(() => {
+  instance.autorun(() => {
     let data = Template.currentData();
-
-    d3.select("#" + self.elementId)
-        .selectAll("text.node-title")
-        .call(Util.wrapSvgText, DocTreeConfig.nodes.width - 2 * DocTreeConfig.nodes.borderWidth);
+    
+    setTimeout(() => {
+      d3.select("#" + instance.elementId)
+          .selectAll("text.node-title")
+          .call(Util.wrapSvgText, DocTreeConfig.nodes.width - 2 * DocTreeConfig.nodes.borderWidth);
+    }, 100);
   });
 });
 
@@ -59,5 +59,5 @@ Template.NodeSnippet.onRendered(() => {
  * Template Destroyed
  */
 Template.NodeSnippet.onDestroyed(() => {
-
+  
 });

@@ -3,11 +3,11 @@
     <h4 class="inline-block">
       Status:
       <small>
-        {{renderLookup "AdventureStatusLookup" adventure.status}}
+        {{renderLookup "AdventureStatusLookup" adventureStatus}}
       </small>
     </h4>
-    {{#unless adventureIsComplete adventure}}
-      {{#if adventureIsPaused adventure}}
+    {{#unless adventureIsComplete adventure.get}}
+      {{#if adventureIsPaused adventure.get}}
         <button type="button" class="btn btn-xs btn-info btn-unpause-adventure">
           <span class="glyphicon glyphicon-play"></span>
         </button>

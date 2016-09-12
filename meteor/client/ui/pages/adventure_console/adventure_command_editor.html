@@ -3,7 +3,7 @@
     {{> RobaAce minLines=4 maxLines=30 color="grey" cssClass="command-editor"}}
     <div class="align-right">
       <div class="btn-group command-editor-btn-bar">
-        <button type="button" class="btn btn-success btn-run-command">
+        <button type="button" class="btn btn-success btn-run-command" disabled="{{#if commandExecuting}}disabled{{/if}}">
           <span class="glyphicon glyphicon-play"></span>
           Execute Command
         </button>

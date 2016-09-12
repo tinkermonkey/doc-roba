@@ -46,7 +46,7 @@ Meteor.methods({
             Adventures.update(adventure._id, { $set: { status: AdventureStatus.failed } });
           } else {
             Adventures.update({
-              _id: adventure._id,
+              _id   : adventure._id,
               status: { $nin: [ AdventureStatus.failed ] }
             }, { $set: { status: AdventureStatus.complete } });
           }
@@ -134,7 +134,6 @@ Meteor.methods({
     check(status, Number);
     
     var adventure = Adventures.findOne({ _id: adventureId });
-    check(adventure, Object);
     Adventures.update({ _id: adventure._id }, { $set: { status: status } });
   },
   
@@ -161,7 +160,6 @@ Meteor.methods({
     check(nodeId, String);
     
     var adventure = Adventures.findOne({ _id: adventureId });
-    check(adventure, Object);
     Adventures.update({ _id: adventure._id }, { $set: { lastKnownNode: nodeId } });
   },
   
@@ -189,8 +187,6 @@ Meteor.methods({
     check(status, Number);
     
     var step = AdventureSteps.findOne({ _id: stepId });
-    check(step, Object);
-    
     AdventureSteps.update({ _id: step._id }, { $set: { status: status } });
   },
   
@@ -205,10 +201,8 @@ Meteor.methods({
     check(stepId, String);
     check(type, String);
     
-    var step = AdventureSteps.findOne({ _id: stepId });
-    check(step, Object);
-    
-    var stepResult = step.result || {};
+    var step       = AdventureSteps.findOne({ _id: stepId }),
+        stepResult = step.result || {};
     
     if (!stepResult[ type ]) {
       stepResult[ type ] = [];
@@ -232,7 +226,6 @@ Meteor.methods({
     
     // Load the command
     var command = AdventureCommands.findOne({ _id: commandId });
-    check(command, Object);
     
     // Don't write the result unless it exists to prevent losing an existing result
     if (result) {

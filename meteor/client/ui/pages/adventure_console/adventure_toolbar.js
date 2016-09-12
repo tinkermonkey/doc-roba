@@ -2,10 +2,10 @@ import './adventure_toolbar.html';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
 import { AdventureCommands } from '../../../../imports/api/adventure/adventure_command.js';
-import { AdventureStepStatus, AdventureStepStatusLookup } from '../../../../imports/api/adventure/adventure_step_status.js';
 import { AdventureStatus } from '../../../../imports/api/adventure/adventure_status.js';
 import { Nodes } from '../../../../imports/api/node/node.js';
-import './adventure_selector_action_menu.js';
+import { Util } from '../../../../imports/api/util.js';
+import './hover_controls/adventure_selector_action_menu.js';
 
 /**
  * Template Helpers
@@ -60,7 +60,7 @@ Template.AdventureToolbar.helpers({
   getCurrentNode () {
     var nodeId = this.currentNodeId.get();
     if (nodeId) {
-      return Nodes.findOne({ staticId: nodeId, projectVersionId: this.adventure.projectVersionId });
+      return Nodes.findOne({ staticId: nodeId, projectVersionId: this.adventure.get().projectVersionId });
     }
   },
   getSelector () {
@@ -80,56 +80,38 @@ Template.AdventureToolbar.events({
   },
   "click .btn-refine" (e, instance) {
     var selector     = instance.$(".selector-value").val(),
-        lastLocation = this.lastClickLocation.get();
+        lastLocation = this.lastClickLocation.get(),
+        adventure    = instance.data.adventure.get();
     
     console.log("Last click location: ", lastLocation);
     
     if (selector && lastLocation) {
       // send the command to clear all of the highlighted elements
-      var commandId = AdventureCommands.insert({
-        projectId  : instance.data.adventure.projectId,
-        adventureId: instance.data.adventure._id,
-        code       : "driver.refineSelector(" + lastLocation.x + ", " + lastLocation.y + ", \"" + Util.escapeDoubleQuotes(selector) + "\");"
-      }, function (error) {
-        if (error) {
-          RobaDialog.error("Error adding adventure command: " + error.message);
-        } else {
-          // wait for the command to return
-          var cursor = AdventureCommands.find({ _id: commandId }).observe({
-            changed (newDoc) {
-              if (newDoc.status == AdventureStepStatus.complete) {
-                console.log("Command Complete: ", newDoc.result);
-                cursor.stop();
-                instance.data.checkResult.set(newDoc.result);
-              } else if (newDoc.status == AdventureStepStatus.error) {
-                console.log("Command Failed: ", newDoc.result);
-                cursor.stop();
-              } else {
-                console.log("Command status: ", AdventureStepStatusLookup[ newDoc.status ]);
-              }
+      adventure.assistant()
+          .refineSelector(adventure, lastLocation.x, lastLocation.y, selector, (error, command) => {
+            if (error) {
+              console.error("Error refining selector: " + error.message);
+            } else {
+              instance.data.checkResult.set(command.result)
             }
           });
-        }
-      });
     }
   },
   "click .btn-highlight" (e, instance) {
+    let selector  = instance.$(".selector-value").val(),
+        adventure = instance.data.adventure.get();
+    
     // make sure the adventure is operating
-    if (instance.data.adventure.status == AdventureStatus.complete) {
+    if (instance.data.adventure.get().status == AdventureStatus.complete) {
       return;
     }
     
-    // get the selector
-    var selector = instance.$(".selector-value").val();
-    
     // send the command to clear all of the highlighted elements
-    AdventureCommands.insert({
-      projectId  : instance.data.adventure.projectId,
-      adventureId: instance.data.adventure._id,
-      code       : "driver.testSelector(\"" + Util.escapeDoubleQuotes(selector) + "\");"
-    }, function (error) {
-      if (error) {
-        RobaDialog.error("Error adding adventure command: " + error.message);
+    adventure.assistant().testSelector(adventure, selector, (error, command) => {
+      if(error){
+        console.error("Error testing selector: " + error.message);
+      } else if(command.result.highlightElements){
+        instance.data.highlightElements.set(command.result.highlightElements);
       }
     });
   },
@@ -161,18 +143,15 @@ Template.AdventureToolbar.events({
    * @param e
    */
   "click .btn-refresh" (e, instance) {
+    let adventure = instance.data.adventure.get();
+    
     // make sure the adventure is operating
-    if (instance.data.adventure.status == AdventureStatus.complete) {
+    if (adventure.status == AdventureStatus.complete) {
       return;
     }
     
     // send the command to clear all of the highlighted elements
-    AdventureCommands.insert({
-      projectId  : instance.data.adventure.projectId,
-      adventureId: instance.data.adventure._id,
-      updateState: true,
-      code       : "true"
-    }, function (error) {
+    adventure.assistant().executeCommand(adventure, "true", (error, command) => {
       if (error) {
         RobaDialog.error("Error adding adventure command: " + error.message);
       }
@@ -183,26 +162,26 @@ Template.AdventureToolbar.events({
    * @param e
    */
   "click .btn-clear-highlight" (e, instance) {
+    let adventure = instance.data.adventure.get();
+    
     // make sure the adventure is operating
-    if (instance.data.adventure.status == AdventureStatus.complete) {
+    if (adventure.status == AdventureStatus.complete) {
       return;
     }
     
     // clear the last click location and check result
-    this.lastClickLocation.set();
-    this.checkResult.set();
+    instance.data.highlightElements.set([]);
+    instance.data.lastClickLocation.set();
+    instance.data.checkResult.set();
     
     // send the command to clear all of the highlighted elements
-    AdventureCommands.insert({
-      projectId  : instance.data.adventure.projectId,
-      adventureId: instance.data.adventure._id,
-      updateState: false,
-      code       : "driver.clearHighlight();"
-    }, function (error) {
+    /*
+    adventure.assistant().executeCommand(adventure, "driver.clearHighlight();", (error, command) => {
       if (error) {
         RobaDialog.error("Error adding adventure command: " + error.message);
       }
     });
+    */
   }
 });
 

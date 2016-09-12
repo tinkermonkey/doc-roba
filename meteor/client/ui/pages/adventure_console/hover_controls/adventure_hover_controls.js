@@ -1,9 +1,9 @@
 import './adventure_hover_controls.html';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
-import { AdventureCommands } from '../../../../imports/api/adventure/adventure_command.js';
-import { AdventureStatus } from '../../../../imports/api/adventure/adventure_status.js';
-import { Util } from '../../../../imports/api/util.js';
+import { AdventureCommands } from '../../../../../imports/api/adventure/adventure_command.js';
+import { AdventureStatus } from '../../../../../imports/api/adventure/adventure_status.js';
+import { Util } from '../../../../../imports/api/util.js';
 
 /**
  * Template Helpers
@@ -15,12 +15,13 @@ Template.AdventureHoverControls.helpers({});
  */
 Template.AdventureHoverControls.events({
   "click .btn-left-click, click .btn-right-click" (e, instance) {
-    var element = instance.data.controlledElement,
-        command = $(e.target).closest(".btn").attr("data-command"),
+    var adventure = instance.data.adventure.get(),
+        element   = instance.data.controlledElement.get(),
+        command   = $(e.target).closest(".btn").attr("data-command"),
         selector;
     
     // make sure the adventure is operating
-    if (instance.data.adventure.status == AdventureStatus.complete) {
+    if (adventure.status == AdventureStatus.complete) {
       return;
     }
     
@@ -33,13 +34,10 @@ Template.AdventureHoverControls.events({
     
     // send the command to clear all of the highlighted elements
     if (selector) {
-      AdventureCommands.insert({
-        projectId  : instance.data.adventure.projectId,
-        adventureId: instance.data.adventure._id,
-        code       : "driver." + command + "(\"" + selector + "\");"
-      }, (error) => {
+      let code = "driver." + command + "(\"" + Util.escapeDoubleQuotes(selector) + "\");";
+      adventure.assistant().executeCommand(adventure, code, (error, command) => {
         if (error) {
-          RobaDialog.error("Error adding adventure command: " + error.message);
+          console.error("Error adding adventure command: " + error.message);
         }
       });
     } else {
@@ -48,11 +46,12 @@ Template.AdventureHoverControls.events({
     }
   },
   "click .btn-hover" (e, instance) {
-    var element = instance.data.controlledElement,
+    var adventure = instance.data.adventure.get(),
+        element   = instance.data.controlledElement.get(),
         selector;
     
     // make sure the adventure is operating
-    if (instance.data.adventure.status == AdventureStatus.complete) {
+    if (adventure.status == AdventureStatus.complete) {
       return;
     }
     
@@ -65,13 +64,9 @@ Template.AdventureHoverControls.events({
     
     // send the command to clear all of the highlighted elements
     if (selector) {
-      AdventureCommands.insert({
-        projectId  : instance.data.adventure.projectId,
-        adventureId: instance.data.adventure._id,
-        code       : "var el = driver.element(\"" + selector + "\"); driver.moveTo(el.ELEMENT);"
-      }, (error) => {
+      adventure.assistant().hoverElement(adventure, selector, (error, command) => {
         if (error) {
-          RobaDialog.error("Error adding adventure command: " + error.message);
+          console.error("Error adding adventure command: " + error.message);
         }
       });
     } else {
@@ -89,6 +84,7 @@ Template.AdventureHoverControls.events({
  */
 Template.AdventureHoverControls.onRendered(() => {
   let instance = Template.instance();
+  
   instance.$(".hidden-editable").editable({
     mode     : "popup",
     value    : "",
@@ -97,7 +93,8 @@ Template.AdventureHoverControls.onRendered(() => {
     display () {
     },
     success (response, newValue) {
-      var element = instance.data.controlledElement,
+      var adventure = instance.data.adventure.get(),
+          element   = instance.data.controlledElement.get(),
           selector;
       
       if (element.selectors && element.selectors.length) {
@@ -107,15 +104,11 @@ Template.AdventureHoverControls.onRendered(() => {
       }
       
       if (selector) {
-        AdventureCommands.insert({
-          projectId  : instance.data.adventure.projectId,
-          adventureId: instance.data.adventure._id,
-          code       : "driver.setValue(\"" + selector + "\", \"" + newValue + "\");"
-        }, (error) => {
-          instance.$(".hidden-editable").editable("setValue", "");
+        adventure.assistant().setValue(adventure, selector, newValue, (error, command) => {
           if (error) {
-            RobaDialog.error("Error adding adventure command: " + error.message);
+            console.error("Error adding adventure command: " + error.message);
           }
+          instance.$(".hidden-editable").editable("setValue", "");
         });
       } else {
         console.error("Hover Controls type, no selector found");

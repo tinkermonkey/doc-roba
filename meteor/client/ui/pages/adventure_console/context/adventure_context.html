@@ -1,6 +1,6 @@
 <template name="AdventureContext">
   {{#with getNode}}
-    <div class="node-edit-form {{#unless adventureIsStill ../adventure}}hide{{/unless}}" data-node-id="{{_id}}">
+    <div class="node-edit-form {{#unless adventureIsStill ../adventure.get}}hide{{/unless}}" data-node-id="{{_id}}">
       <div class="btn btn-warning pull-right btn-wrong-node"
            data-toggle="popover"
            data-trigger="focus"
@@ -38,9 +38,9 @@
     
     </div>
   {{else}}
-    <div class="{{#unless adventureIsStill}}hide{{/unless}}">
+    <div class="{{#unless adventureIsStill adventure.get}}hide{{/unless}}">
       <div class="full-width align-center">
-        {{> EditableNodeSelector cssClass="current-node-selector" dataKey="currentNodeId" emptyText="Select Node" projectVersionId=adventure.projectVersionId}}
+        {{> EditableNodeSelector cssClass="current-node-selector" dataKey="currentNodeId" emptyText="Select Node" projectVersionId=adventure.get.projectVersionId}}
       </div>
       <div class="full-width align-center">
         <button class="btn btn-primary btn-add-node" data-type="page">Add Node</button>

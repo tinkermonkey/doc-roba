@@ -24,9 +24,10 @@ Template.AdventureMap.onCreated(() => {
   let instance = Template.instance();
   
   instance.autorun(function () {
-    var data = Template.currentData();
-    instance.subscribe("nodes", data.adventure.projectId, data.adventure.projectVersionId);
-    instance.subscribe("actions", data.adventure.projectId, data.adventure.projectVersionId);
+    var data = Template.currentData(),
+        adventure = data.adventure.get();
+    instance.subscribe("nodes", adventure.projectId, adventure.projectVersionId);
+    instance.subscribe("actions", adventure.projectId, adventure.projectVersionId);
   });
 });
 

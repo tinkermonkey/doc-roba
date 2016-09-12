@@ -3,7 +3,7 @@
     {{#if ready}}
       {{setTitle "Adventure Console" }}
       
-      {{#with getFullContext}}
+      {{#with getContext}}
         <div class="fluid-container full-page adventure">
           <div class="adventure-main-view">
             {{> AdventureScreen }}
@@ -16,12 +16,12 @@
                 {{> AdventureMap }}
               {{/RobaAccordion}}
               {{#RobaAccordion name="adventure-route" title="Route" icon="glyphicon glyphicon-picture"}}
-                {{> AdventureRoute adventure }}
+                {{> AdventureRoute adventure.get }}
               {{/RobaAccordion}}
-              {{#RobaAccordion name="current-node" title="Current Location" icon="glyphicon glyphicon-pencil" cssClass="accordion-grey"}}
+              {{#RobaAccordion name="current-node" title="Current Location" icon="glyphicon glyphicon-pencil" color="#A5A5A5"}}
                 {{> AdventureContext }}
               {{/RobaAccordion}}
-              {{#RobaAccordion name="current-actions" title="Current Location Actions" icon="glyphicon glyphicon-pencil" cssClass="accordion-grey"}}
+              {{#RobaAccordion name="current-actions" title="Current Location Actions" icon="glyphicon glyphicon-pencil" color="#A5A5A5"}}
                 {{> AdventureEditNodeActions getCurrentNode }}
               {{/RobaAccordion}}
               {{#unless adventureIsComplete}}
@@ -29,7 +29,7 @@
                   {{> AdventureCommandEditor }}
                 {{/RobaAccordion}}
               {{/unless}}
-              {{#RobaAccordion name="command-history" title="Command History" icon="glyphicon glyphicon-list"}}
+              {{#RobaAccordion name="command-history" title="Command History" icon="glyphicon glyphicon-list" sticky=true}}
                 {{> AdventureCommandHistory }}
               {{/RobaAccordion}}
             {{/RobaAccordionGroup}}

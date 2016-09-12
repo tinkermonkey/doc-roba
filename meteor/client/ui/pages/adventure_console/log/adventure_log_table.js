@@ -2,9 +2,9 @@ import './adventure_log_table.html';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
-import { LogMessages } from '../../../../imports/api/log_message/log_message.js';
-import '../../components/editable_fields/editable_log_filters/editable_filter_time.js';
-import '../../components/editable_fields/editable_log_filters/editable_filter_option.js';
+import { LogMessages } from '../../../../../imports/api/log_message/log_message.js';
+import '../../../components/editable_fields/editable_log_filters/editable_filter_time.js';
+import '../../../components/editable_fields/editable_log_filters/editable_filter_option.js';
 
 /**
  * Template Helpers

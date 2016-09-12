@@ -9,9 +9,7 @@
             <span class="glyphicon glyphicon-plus"></span>
             <span class="caret"></span>
           </button>
-          {{#with fullContext}}
-            {{> AdventureSelectorActionMenu }}
-          {{/with}}
+          {{> AdventureSelectorActionMenu selector=this node=currentNode}}
         </div>
       {{else}}
         {{#if matchCount}}

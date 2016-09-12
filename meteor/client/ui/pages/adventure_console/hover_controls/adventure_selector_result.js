@@ -1,24 +1,15 @@
 import './adventure_selector_result.html';
 import { Template } from 'meteor/templating';
-import { Nodes } from '../../../../imports/api/node/node.js';
+import { Nodes } from '../../../../../imports/api/node/node.js';
 import './adventure_selector_action_menu.js';
 
 /**
  * Template Helpers
  */
 Template.AdventureSelectorResult.helpers({
-  fullContext () {
-    var instance      = Template.instance(),
-        selector      = this,
-        currentNodeId = instance.data.currentNodeId,
-        adventure     = instance.data.adventure;
-    
-    if (currentNodeId && adventure) {
-      return {
-        selector : selector,
-        node     : Nodes.findOne({ staticId: currentNodeId, projectVersionId: adventure.projectVersionId }),
-        adventure: adventure
-      };
+  currentNode(){
+    if(this.currentNodeId && this.adventure){
+      return Nodes.findOne({staticId: this.currentNodeId, projectVersionId: this.adventure.projectVersionId});
     }
   }
 });

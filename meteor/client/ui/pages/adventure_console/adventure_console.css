@@ -130,6 +130,7 @@
 
 .remote-screen-mask {
   position: absolute;
+  z-index: 99;
 }
 
 .remote-screen-pointer {

@@ -3,15 +3,15 @@ import './adventure_context.css';
 import { Blaze } from 'meteor/blaze';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
-import { AdventureCommands } from '../../../../imports/api/adventure/adventure_command.js';
-import { AdventureStatus } from '../../../../imports/api/adventure/adventure_status.js';
-import { Nodes } from '../../../../imports/api/node/node.js';
-import { NodeSearch } from '../../../../imports/api/node_search/node_search.js';
-import '../../components/editable_fields/editable_node_type.js';
-import '../../components/editable_fields/editable_code/editable_code.js';
-import '../../components/editable_fields/node_selector/editable_node_selector.js';
+import { AdventureCommands } from '../../../../../imports/api/adventure/adventure_command.js';
+import { AdventureStatus } from '../../../../../imports/api/adventure/adventure_status.js';
+import { Nodes } from '../../../../../imports/api/node/node.js';
+import { NodeSearch } from '../../../../../imports/api/node_search/node_search.js';
+import '../../../components/editable_fields/editable_node_type.js';
+import '../../../components/editable_fields/editable_code/editable_code.js';
+import '../../../components/editable_fields/node_selector/editable_node_selector.js';
 import './adventure_add_node_form.js';
-import '../../components/node_search/node_url_search_results.js';
+import '../../../components/node_search/node_url_search_results.js';
 
 /**
  * Template Helpers
@@ -19,24 +19,30 @@ import '../../components/node_search/node_url_search_results.js';
 Template.AdventureContext.helpers({
   getNode () {
     //console.log("AdventureContext: ", this);
-    if (this.currentNodeId && this.currentNodeId.get()) {
-      var node = Nodes.findOne({
-        staticId        : this.currentNodeId.get(),
-        projectVersionId: this.adventure.projectVersionId
+    let currentNodeId = this.currentNodeId.get(),
+        adventure     = this.adventure.get();
+    
+    if (currentNodeId && adventure) {
+      let node = Nodes.findOne({
+        staticId        : currentNodeId,
+        projectVersionId: adventure.projectVersionId
       });
       //console.log("AdventureContext, node: ", node);
       if (node) {
         // clear the ignore list once a node is found
-        delete this.ignore;
+        delete Template.instance().ignore;
       }
       return node;
     }
   },
   searchNodes () {
-    if (this.state && this.state.url) {
+    let state     = this.state.get(),
+        adventure = this.adventure.get();
+    
+    if (state && state.url) {
       // check the results for an exact match
       var instance   = Template.instance(),
-          results    = NodeSearch.byUrl(this.state.url, this.state.title, this.adventure.projectVersionId),
+          results    = NodeSearch.byUrl(state.url, state.title, adventure.projectVersionId),
           matchCount = 0, match;
       
       _.each(results, function (result) {
@@ -63,30 +69,30 @@ Template.AdventureContext.helpers({
       }
     }
   },
-  isMatch (node, data) {
-    if (node && data) {
-      var result = NodeSearch.compareNode(data.state.url, data.state.title, node);
+  isMatch (node, context) {
+    if (node && context) {
+      let state  = context.state.get(),
+          result = NodeSearch.compareNode(state.url, state.title, node);
       return result.url.match && result.params.match && result.title.match;
     }
   },
   nodeComparison (node, data) {
     if (node && data) {
-      var result = NodeSearch.compareNode(data.state.url, data.state.title, node);
-      return result;
+      let state = context.state.get();
+      return NodeSearch.compareNode(state.url, state.title, node);
     }
   },
   searchComparisonPanel(){
-    console.log("searchComparisonPanel:", Template.parentData(1));
-    let node = Template.parentData(1),
+    //console.log("searchComparisonPanel:", Template.parentData(1));
+    let node         = Template.parentData(1),
         platformType = node.platformType();
-    if(platformType){
+    if (platformType) {
       return platformType.nodeSearchComparisonTemplate();
     }
   },
   editParamsPanel(){
-    console.log("editParamsPanel:", this);
     let platformType = this.platformType();
-    if(platformType){
+    if (platformType) {
       return platformType.nodeEditParamsTemplate();
     }
   }
@@ -208,19 +214,16 @@ Template.AdventureContext.events({
     }
   },
   "click .btn-preview" (e, instance) {
-    var field            = $(e.target).closest(".btn").attr("data-field"),
+    var adventure        = instance.data.adventure.get(),
+        field            = $(e.target).closest(".btn").attr("data-field"),
         node             = this,
         adventureContext = Template.parentData(1);
     console.log("Preview: ", field);
     
     // send the command to get information about the "clicked" element
     if (field && node[ field ] && _.contains([ AdventureStatus.awaitingCommand ], adventureContext.adventure.status)) {
-      AdventureCommands.insert({
-        projectId  : adventureContext.adventure.projectId,
-        adventureId: adventureContext.adventure._id,
-        updateState: false,
-        code       : "driver.previewCode(\"" + btoa(node[ field ]) + "\");"
-      }, function (error) {
+      let code = "driver.previewCode(\"" + btoa(node[ field ]) + "\");";
+      adventure.assistant.executeCommand(adventure, code, (error, command) => {
         if (error) {
           RobaDialog.error("Error adding adventure command: " + error.message);
         }
