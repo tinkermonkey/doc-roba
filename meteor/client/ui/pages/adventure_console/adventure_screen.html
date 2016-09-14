@@ -1,11 +1,11 @@
 <template name="AdventureScreen">
-  <div class="live-adventure-view">
+  <div class="adventure-screen-container">
     {{#if state.get.url}}
-      <div class="live-adventure-header">
+      <div class="adventure-header">
         {{#with state.get}}
-          <h4>{{title}}</h4>
-          <div>{{url}}</div>
-          <div>
+          <h4 class="adventure-page-title">{{title}}</h4>
+          <div class="adventure-page-url">{{url}}</div>
+          <div class="adventure-view-info">
             <small>viewport is {{viewportSize.width}}px x {{viewportSize.height}}px,</small>
             <small>scrolled to ({{scroll.x}}, {{scroll.y}})</small>
             <small>Mouse at ({{mouse.x}}, {{mouse.y}})</small>
@@ -19,12 +19,28 @@
       <img class="remote-screen" src="data:image/png;base64,{{state.get.screenshot}}">
       <div class="remote-screen-mask"
            style="{{#with getScreenMaskPosition}}top: {{top}}px; left: {{left}}px; height: {{height}}px; width: {{width}}px;{{/with}}">
-        {{#with getMousePosition}}
-          <div class="remote-screen-pointer" style="top: {{y}}px; left: {{x}}px;">
-            <span class="glyphicon glyphicon-screenshot"></span>
-          </div>
-        {{/with}}
+  
+        {{#unless adventureIsComplete adventure.get}}
+          {{#with getMousePosition}}
+            <div class="remote-screen-pointer" style="top: {{y}}px; left: {{x}}px;">
+              <span class="glyphicon glyphicon-screenshot"></span>
+            </div>
+          {{/with}}
         
+          <div class="adventure-screen-tools">
+            <div class="btn-group" role="group">
+              {{#if highlightElements}}
+                <button type="button" class="btn btn-xs btn-primary btn-clear-highlight">
+                  <span class="glyphicon glyphicon-ban-circle"></span>
+                </button>
+              {{/if}}
+              <button type="button" class="btn btn-xs btn-primary btn-refresh">
+                <span class="glyphicon glyphicon-refresh"></span>
+              </button>
+            </div>
+          </div>
+        {{/unless}}
+  
         <div class="adventure-hover-element-highlight" style="visibility: hidden;"></div>
         
         {{> AdventureHoverControls }}
@@ -44,9 +60,12 @@
         {{/each}}
       </div>
       
-      <div class="live-adventure-toolbar">
-        {{> AdventureToolbar }}
-      </div>
+      {{#unless adventureIsComplete adventure}}
+        <div class="adventure-toolbar">
+          {{> AdventureToolbar }}
+        </div>
+      {{/unless}}
+      
       {{#if getCheckResult}}
         {{#with getCheckResult}}
           <div class="well">

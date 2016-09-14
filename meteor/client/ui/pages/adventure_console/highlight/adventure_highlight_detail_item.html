@@ -1,32 +1,34 @@
 <template name="AdventureHighlightDetailItem">
-  <div class="adventure-highlight-hierarchy" style="padding-left: {{getLeftPadding}}px;">
-    &lt;<span class="clickable tag">{{tag}}</span>
+  <div class="adventure-highlight-level" data-index="{{index}}" data-tag="{{tag}}">
+    <div class="adventure-highlight-hierarchy" style="padding-left: {{getLeftPadding}}px;">
+      &lt;<span class="clickable tag">{{tag}}</span>
     
-    {{#each attributes}}
-      <span class="attr">{{name}}</span>="{{#each splitValues ..}}<span
-      class="clickable value">{{value}}</span>{{#unless last}} {{/unless}}{{/each}}"
-    {{/each}}&gt;
+      {{#each attributes}}
+        <span class="attr">{{name}}</span>="{{#each splitValues ..}}<span
+        class="clickable value">{{value}}</span>{{#unless last}} {{/unless}}{{/each}}"
+      {{/each}}&gt;
     
-    <div class="toggle">
-      <span class="glyphicon glyphicon-chevron-down"></span>
-    </div>
-  </div>
-  <div class="adventure-highlight-hierarchy-content" style="padding-left: {{getLeftPadding}}px;">
-    <h4>Selectors</h4>
-    {{#each selectors}}
-      {{> AdventureSelectorResult selector=this currentNodeId=../currentNodeId adventure=../adventure}}
-    {{/each}}
-    
-    {{#if text}}
-      <h4>Text</h4>
-      <div>
-        <span class="attr hide">text</span><span class="clickable value">{{text}}</span>
+      <div class="toggle">
+        <span class="glyphicon glyphicon-chevron-down"></span>
       </div>
-    {{/if}}
+    </div>
+    <div class="adventure-highlight-hierarchy-content" style="padding-left: {{getLeftPadding}}px;">
+      <h4>Selectors</h4>
+      {{#each selectors}}
+        {{> AdventureSelectorResult selector=this currentNodeId=../currentNodeId adventure=../adventure}}
+      {{/each}}
     
-    {{#if html}}
-      <h4>HTML</h4>
-      <div>{{html}}</div>
-    {{/if}}
+      {{#if text}}
+        <h4>Text</h4>
+        <div class="adventure-highlight-text">
+          <span class="attr hide">text</span><span class="clickable value">{{text}}</span>
+        </div>
+      {{/if}}
+    
+      {{#if html}}
+        <h4>HTML</h4>
+        <div>{{html}}</div>
+      {{/if}}
+    </div>
   </div>
 </template>

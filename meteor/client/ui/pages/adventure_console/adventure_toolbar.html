@@ -6,8 +6,7 @@
           <input type="text"
                  class="form-control selector-value"
                  aria-label="..."
-                 placeholder="Enter a selector to highlight matched elements"
-                 value="{{getXPath}}">
+                 placeholder="Enter a selector to highlight matched elements">
           <div class="input-group-btn">
             <button type="button" class="btn btn-primary btn-clear" disabled="disabled">
               <span class="glyphicon glyphicon-remove"></span>
@@ -28,21 +27,6 @@
           </div>
         </div>
       </td>
-      {{#unless adventureIsComplete adventure}}
-      <td style="padding-left: 10px; {{#if highlightElements}}min-width: 185px;{{/if}} text-align: right;">
-        <div class="btn-group" role="group">
-          {{#if highlightElements}}
-            <button type="button" class="btn btn-primary btn-clear-highlight">
-              <span class="glyphicon glyphicon-ban-circle"></span>
-              Clear Highlight
-            </button>
-          {{/if}}
-          <button type="button" class="btn btn-primary btn-refresh">
-            <span class="glyphicon glyphicon-refresh"></span>
-          </button>
-        </div>
-      </td>
-      {{/unless}}
     </tr>
   </table>
 </template>

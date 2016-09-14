@@ -1,4 +1,5 @@
 import './edit_node_url_parameters.html';
+import './edit_node_url_parameters.css';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
 import { Nodes } from '../../../../../../api/node/node.js';

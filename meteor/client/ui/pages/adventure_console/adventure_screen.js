@@ -218,6 +218,38 @@ Template.AdventureScreen.events({
           }
         });
   },
+  /**
+   * Click event for the refresh button
+   * @param e
+   */
+  "click .btn-refresh" (e, instance) {
+    let adventure = instance.data.adventure.get();
+    
+    // make sure the adventure is operating
+    if (adventure.status == AdventureStatus.complete) {
+      return;
+    }
+    
+    // send the command to clear all of the highlighted elements
+    adventure.assistant().refreshScreen(adventure, (error, command) => {
+      if (error) {
+        RobaDialog.error("Error adding adventure command: " + error.message);
+      }
+    });
+  },
+  /**
+   * Click event for the clear-highlight button
+   * @param e
+   */
+  "click .btn-clear-highlight" (e, instance) {
+    let adventure = instance.data.adventure.get();
+    
+    // clear the last click location and check result
+    instance.data.highlightElements.set([]);
+    instance.data.previewElements.set([]);
+    instance.data.lastClickLocation.set();
+    instance.data.checkResult.set();
+  },
   "mouseenter .adventure-highlight-list-row-header" (e, instance) {
     instance.$(".adventure-highlight-element.index-" + this.index).addClass("highlight");
   },
@@ -246,6 +278,8 @@ Template.AdventureScreen.events({
         el               = $(e.target),
         selectorElements = instance.data.selectorElements.get();
     
+    console.log("selected: ", context.index, el);
+    
     el.toggleClass("selected");
     
     // Do the rollup for this row
@@ -253,7 +287,8 @@ Template.AdventureScreen.events({
       index     : context.index,
       attributes: []
     };
-    el.closest(".adventure-highlight-detail").find(".selected").each(function (i, detailEl) {
+    el.closest(".adventure-highlight-level").find(".selected").each((i, detailEl) => {
+      console.log("Element", element.index, "selected item:", detailEl);
       let detail = $(detailEl);
       
       if (detail.hasClass("tag")) {
@@ -292,7 +327,7 @@ Template.AdventureScreen.events({
     });
     
     // done
-    //console.log("updating elements: ", sortedElements);
+    console.log("updating elements: ", sortedElements);
     instance.data.selectorElements.set(sortedElements);
   },
   

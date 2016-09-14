@@ -51,7 +51,7 @@ Template.AdventureEditNodeActionRow.events({
         action    = this;
     console.log("Execute Action: ", action);
     // build up the code to define the action variables using the default values
-    if(action.variables){
+    if(action.variables && action.variables.length){
       code += 'var ' + (_.map(action.variables, (variable) => { return variable.name + ' = ' + (variable.defaultValue || '""')})).join(",\r\n    ") + ";\r\n";
     }
     
