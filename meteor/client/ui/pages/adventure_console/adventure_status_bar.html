@@ -1,6 +1,6 @@
 <template name="AdventureStatusBar">
   <div class="adventure-status-bar">
-    <h4 class="inline-block">
+    <h4 class="inline-block adventure-status-header" style="margin-top: {{getHeaderMargin}}px;">
       Status:
       <small>
         {{renderLookup "AdventureStatusLookup" adventureStatus}}

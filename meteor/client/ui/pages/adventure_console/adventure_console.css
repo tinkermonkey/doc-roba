@@ -24,6 +24,11 @@
   margin-bottom: 5px;
 }
 
+.adventure-status-header {
+  -webkit-transition: margin 0.25s;
+  transition: margin 0.25s;
+}
+
 /**
  * map container
  */
