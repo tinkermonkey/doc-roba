@@ -249,6 +249,9 @@ Template.AdventureScreen.events({
     instance.data.previewElements.set([]);
     instance.data.lastClickLocation.set();
     instance.data.checkResult.set();
+    
+    // Hide any orphaned highlights
+    instance.$(".adventure-hover-element-highlight").css("visibility", "hidden");
   },
   "mouseenter .adventure-highlight-list-row-header" (e, instance) {
     instance.$(".adventure-highlight-element.index-" + this.index).addClass("highlight");

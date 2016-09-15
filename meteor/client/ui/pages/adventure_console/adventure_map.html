@@ -1,7 +1,7 @@
 <template name="AdventureMap">
   <div class="adventure-map-container">
     {{#if ready }}
-      {{> MapTree projectVersionId=adventure.get.projectVersionId currentNodeId=currentNodeId.get }}
+      {{> MapTree projectVersionId=adventure.get.projectVersionId currentNodeId=currentNodeId.get adventureContext=this }}
     {{else}}
       {{> RobaSpinner }}
     {{/if}}

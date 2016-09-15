@@ -145,6 +145,13 @@ export class AdventureConsoleContext {
   }
   
   /**
+   * Get the node finder for the correct platform type
+   */
+  comparitor(){
+    return this.adventure.get().platformType().nodeComparitor();
+  }
+  
+  /**
    * Update the dimensions of the viewport
    */
   updateViewport () {

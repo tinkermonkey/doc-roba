@@ -15,7 +15,8 @@ Template.AdventureMap.helpers({
 /**
  * Template Event Handlers
  */
-Template.AdventureMap.events({});
+Template.AdventureMap.events({
+});
 
 /**
  * Template Created

@@ -296,15 +296,16 @@ export const NodeSearch = {
         params = Util.urlParams(url),
         i;
     
-    //console.log("compareParams, params: ", params);
+    console.log("compareParams, params: ", params);
     
     // calculate the param match score
     //console.log("compareParams, scoring params");
     if (nodeUrlParameters) {
       // compare the two urls
       var pieceCount = Math.min(params.length, nodeUrlParameters.length);
-      //console.log("compareParams, pieceCount: ", pieceCount);
+      console.log("compareParams, pieceCount: ", pieceCount);
       for (i = 0; i < pieceCount; i++) {
+        console.log("Checking piece [", i, "]:", nodeUrlParameters[ i ], params[ i ] );
         if (params[ i ].param == nodeUrlParameters[ i ].param && params[ i ].value == nodeUrlParameters[ i ].value) {
           result.pieces.push({
             index : i,
@@ -319,7 +320,7 @@ export const NodeSearch = {
             }
           });
           result.score += NodeSearch.score.param;
-          //console.log("compareParams, param match: ", params[i].param, params[i].value);
+          console.log("compareParams, param match: ", params[i].param, params[i].value);
         } else {
           result.pieces.push({
             index : i,
@@ -335,7 +336,7 @@ export const NodeSearch = {
           });
           //result.score -= NodeSearch.score.param;
           result.match = false;
-          //console.log("compareParams, param noMatch: ", params[i].param, params[i].value);
+          console.log("compareParams, param noMatch: ", params[i].param, params[i].value);
         }
       }
       
@@ -355,7 +356,7 @@ export const NodeSearch = {
           }
         });
         result.match = false;
-        //console.log("compareParams, param missing: ", params[i].param, params[i].value);
+        console.log("compareParams, param missing: ", params[i].param, params[i].value);
       }
       
       // catalog the extra pieces
@@ -396,7 +397,7 @@ export const NodeSearch = {
             value: params[ i ].value
           }
         });
-        //console.log("compareParams, param noMatch: ", params[i].param, params[i].value);
+        console.log("compareParams, param noMatch: ", params[i].param, params[i].value);
         result.match = false;
       }
       //result.score -= params.length * NodeSearch.score.param;

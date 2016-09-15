@@ -17,6 +17,7 @@ export default class MapLayout {
     
     // store the project context
     self.context = context;
+    console.log("MapLayout context: ", self.context);
     
     // set the default config
     self.config = config || {};
@@ -51,7 +52,7 @@ export default class MapLayout {
     // Setup the panning-zoomer
     console.debug("Configuring zoomer");
     self.zoomer = d3.behavior.zoom(".global-layer")
-        .scaleExtent([ 0.25, 1.5 ])
+        .scaleExtent([ 0.01, 1.5 ])
         .on("zoom", function () {
           self.scaleAndTranslate(d3.event.scale, d3.event.translate);
         });
@@ -555,7 +556,8 @@ export default class MapLayout {
    * Front line event handler for clicks on nodes
    */
   nodeClickHandler (e, d) {
-    let self = this;
+    let self = this,
+        adventureContext = self.context.adventureContext;
     
     console.debug('click: ' + d._id + " (" + d.title + ")");
     
@@ -569,7 +571,11 @@ export default class MapLayout {
     } else if (e.altKey) {
       
     } else {
-      
+      console.log("Checking for context");
+      if(adventureContext && adventureContext.currentNodeId){
+        console.log("Setting node ID:", node.staticId);
+        adventureContext.currentNodeId.set(node.staticId);
+      }
     }
   }
   

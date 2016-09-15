@@ -48,6 +48,10 @@
   min-height: 300px;
 }
 
+.map-tree-base .node-group {
+  cursor: pointer;
+}
+
 /**
  * Live command editor
  */
