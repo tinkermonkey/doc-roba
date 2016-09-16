@@ -1,5 +1,5 @@
 /**
- * Standard format for node comparison results
+ * Standard format for node search results
  */
 export class NodeSearchResult {
   /**
@@ -14,12 +14,10 @@ export class NodeSearchResult {
   
   /**
    * Add a piece of information to the list of pieces for this comparison
-   * @param result NodeComparisonResult
+   * @param result NodeComparisonResultNode
    * @param node The node that was being compared to
    */
-  addResult (result, node) {
-    result.node = node;
-    
+  addResult (result) {
     // maintain the max score
     maxScore = result.score > maxScore ? result.score : maxScore;
     
@@ -52,5 +50,18 @@ export class NodeSearchResult {
     }), (result) => {
       return self.maxScore - result.score
     });
+  }
+  
+  /**
+   * Is there a clear winner?
+   */
+  clearWinner () {
+    let results = this.sortedResults();
+    
+    if(results.length == 1){
+      return results[0];
+    } else if(results[0].score - results[1].score > results[0].score * 0.1){
+      return results[0];
+    }
   }
 }

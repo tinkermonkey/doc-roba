@@ -42,29 +42,19 @@ Template.AdventureContext.helpers({
     if (state && state.url) {
       // check the results for an exact match
       var instance   = Template.instance(),
-          results    = NodeSearch.byUrl(state.url, state.title, adventure.projectVersionId),
-          matchCount = 0, match;
+          results    = instance.comparitor.searchByContext(state, adventure.projectVersionId),
+          winner     = results.clearWinner();
       
-      _.each(results, function (result) {
-        if (result.url.match && result.params.match && result.title.match) {
-          matchCount++;
-          match = result;
-        }
-        //console.log("searchNodes: ", result.node.title, result.url.match, result.params.match, result.title.match);
-      });
-      
-      if (matchCount == 1 && match) {
-        // Check to make sure we don't find what was asked to be ignored
-        if (instance.ignore && instance.ignore == match.node.staticId) {
-          console.debug("searchNodes found a single match but it was to be ignored: " + match.node.staticId);
+      // see if there's a clear winner
+      if(winner){
+        if (instance.ignore && instance.ignore == winner.node.staticId) {
+          console.debug("searchNodes found a single match but it was to be ignored: " + winner.node.staticId);
           return results;
         }
         
-        // One and only one match, just figure we know the location
-        console.debug("searchNodes found a single match: " + match.node.staticId);
-        this.currentNodeId.set(match.node.staticId);
+        console.debug("searchNodes found a single match: " + winner.node.staticId);
+        this.currentNodeId.set(winner.node.staticId);
       } else {
-        console.debug("searchNodes result count: " + results.length);
         return results;
       }
     }
@@ -72,14 +62,16 @@ Template.AdventureContext.helpers({
   isMatch (node, context) {
     if (node && context) {
       let state  = context.state.get(),
-          result = NodeSearch.compareNode(state.url, state.title, node);
+          instance = Template.instance(),
+          result = instance.comparitor.compareNode(state, node);
       return result.url.match && result.params.match && result.title.match;
     }
   },
   nodeComparison (node, context) {
     if (node && context) {
-      let state = context.state.get();
-      return NodeSearch.compareNode(state.url, state.title, node);
+      let state = context.state.get(),
+          instance = Template.instance();
+      return instance.comparitor.compareNode(state, node);
     }
   },
   searchComparisonPanel(){
@@ -236,6 +228,12 @@ Template.AdventureContext.events({
  * Template Created
  */
 Template.AdventureContext.onCreated(() => {
+  let instance = Template.instance();
+  
+  instance.autorun(() => {
+    let adventure = instance.data.adventure.get();
+    instance.comparitor = adventure.platformType().nodeComparitor();
+  });
 });
 
 /**

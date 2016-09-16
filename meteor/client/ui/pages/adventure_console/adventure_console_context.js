@@ -101,9 +101,10 @@ export class AdventureConsoleContext {
             //console.log("Adventure changed: ", fields);
             if (_.contains(_.keys(fields), "lastKnownNode")) {
               //console.log("AdventureConsole: checking current location against updated lastKnownNode ", fields.lastKnownNode);
-              setTimeout(function () {
-                NodeSearch.checkAdventureLocation(context);
-              }, 100);
+              _.debounce(() => {
+                context.adventure.get().platformType().nodeComparitor().checkAdventureLocation(context);
+                //NodeSearch;
+              }, 250);
             }
           }
         });
@@ -114,9 +115,10 @@ export class AdventureConsoleContext {
             //console.log("Adventure State changed: ", _.keys(fields));
             if (_.contains(_.keys(fields), "url") || _.contains(_.keys(fields), "title")) {
               //console.log("AdventureConsole: checking current location", fields);
-              setTimeout(function () {
-                NodeSearch.checkAdventureLocation(context);
-              }, 100);
+              _.debounce(() => {
+                context.adventure.get().platformType().nodeComparitor().checkAdventureLocation(context);
+                //NodeSearch;
+              }, 250);
             }
           }
         });
