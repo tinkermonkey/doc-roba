@@ -31,7 +31,6 @@ export const Util = {
    * @param url
    */
   urlPath(url) {
-    check(url, String);
     return url.replace(/^[https\:\/]*/, "").replace(/^[^\/]+/, "").split("?")[0];
   },
 
@@ -40,7 +39,6 @@ export const Util = {
    * @param url
    */
   urlQuery(url) {
-    check(url, String);
     return url.split("?")[1];
   },
 
@@ -49,7 +47,6 @@ export const Util = {
    * @param url
    */
   urlParams(url) {
-    check(url, String);
     var query = Util.urlQuery(url),
       params = [], paramPieces;
 

@@ -3,7 +3,8 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Adventures } from '../../../../imports/api/adventure/adventure.js';
 import { AdventureStates } from '../../../../imports/api/adventure/adventure_state.js';
 import { TestSystems } from '../../../../imports/api/test_system/test_system.js';
-import { NodeSearch } from '../../../../imports/api/node_search/node_search.js';
+
+var debug = false;
 
 export class AdventureConsoleContext {
   /**
@@ -59,7 +60,7 @@ export class AdventureConsoleContext {
     
     // Load the adventure record
     instance.autorun(() => {
-      console.log("AdventureConsoleContext adventure autorun");
+      debug && console.log("AdventureConsoleContext adventure autorun");
       let adventureId = FlowRouter.getParam("adventureId");
       
       if (instance.subscriptionsReady()) {
@@ -70,7 +71,7 @@ export class AdventureConsoleContext {
     
     // Load the adventure state record
     instance.autorun(() => {
-      console.log("AdventureConsoleContext adventure state autorun");
+      debug && console.log("AdventureConsoleContext adventure state autorun");
       let adventureId = FlowRouter.getParam("adventureId");
       
       if (instance.subscriptionsReady()) {
@@ -80,19 +81,22 @@ export class AdventureConsoleContext {
     
     // Load the other supporting data that is less likely to react
     instance.autorun(() => {
-      console.log("AdventureConsoleContext stable data autorun");
+      debug && console.log("AdventureConsoleContext stable data autorun");
       // Test System
       let adventure = context.adventure.get();
-      if(adventure && adventure.testSystemId){
+      if (adventure && adventure.testSystemId) {
         context.testSystem.set(TestSystems.findOne({
           staticId: adventure.testSystemId, projectVersionId: adventure.projectVersionId
         }));
       }
     });
     
+    // Create a debounced version of the check function
+    var lazyLocationCheck = _.debounce(context.checkLocation, 250);
+    
     // Monitor the adventure location
     instance.autorun(() => {
-      console.log("AdventureConsoleContext location monitoring autorun");
+      debug && console.log("AdventureConsoleContext location monitoring autorun");
       let adventureId = FlowRouter.getParam("adventureId");
       if (instance.subscriptionsReady()) {
         // pick up any updates to the last known node
@@ -100,25 +104,19 @@ export class AdventureConsoleContext {
           changed (id, fields) {
             //console.log("Adventure changed: ", fields);
             if (_.contains(_.keys(fields), "lastKnownNode")) {
-              //console.log("AdventureConsole: checking current location against updated lastKnownNode ", fields.lastKnownNode);
-              _.debounce(() => {
-                context.adventure.get().platformType().nodeComparitor().checkAdventureLocation(context);
-                //NodeSearch;
-              }, 250);
+              debug && console.log("AdventureConsoleContext: checking current location against updated lastKnownNode ", fields.lastKnownNode);
+              lazyLocationCheck.call(context)
             }
           }
         });
-  
+        
         // React to changes in the url
         AdventureStates.find({ adventureId: adventureId }).observeChanges({
           changed (id, fields) {
             //console.log("Adventure State changed: ", _.keys(fields));
             if (_.contains(_.keys(fields), "url") || _.contains(_.keys(fields), "title")) {
-              //console.log("AdventureConsole: checking current location", fields);
-              _.debounce(() => {
-                context.adventure.get().platformType().nodeComparitor().checkAdventureLocation(context);
-                //NodeSearch;
-              }, 250);
+              debug && console.log("AdventureConsoleContext: checking current location", fields);
+              lazyLocationCheck.call(context)
             }
           }
         });
@@ -127,11 +125,11 @@ export class AdventureConsoleContext {
     
     // Respond to the adventure current node changing
     instance.autorun(() => {
-      console.log("AdventureConsoleContext currentNodeId monitoring autorun");
+      debug && console.log("AdventureConsoleContext currentNodeId monitoring autorun");
       let currentLocation = context.currentNodeId.get();
-      console.log("currentLocation:", currentLocation);
+      debug && console.log("currentLocation:", currentLocation);
       if (context.previousLocation && currentLocation && context.previousLocation !== currentLocation) {
-        console.log("Current node changed, clearing highlights:", currentLocation, instance.previousLocation);
+        debug && console.log("Current node changed, clearing highlights:", currentLocation, instance.previousLocation);
         instance.$(".btn-clear-highlight").trigger("click");
       }
       context.previousLocation = currentLocation;
@@ -149,7 +147,7 @@ export class AdventureConsoleContext {
   /**
    * Get the node finder for the correct platform type
    */
-  comparitor(){
+  comparitor () {
     return this.adventure.get().platformType().nodeComparitor();
   }
   
@@ -157,7 +155,7 @@ export class AdventureConsoleContext {
    * Update the dimensions of the viewport
    */
   updateViewport () {
-    let context = this,
+    let context      = this,
         remoteScreen = $(".remote-screen");
     if (remoteScreen.length) {
       let parent   = remoteScreen.offsetParent(),
@@ -171,7 +169,7 @@ export class AdventureConsoleContext {
       viewport.parentOffset.height = parent.height();
       viewport.parentOffset.width  = parent.width();
       
-      if(context.viewport){
+      if (context.viewport) {
         context.viewport.set(viewport);
       } else {
         console.error("viewport not set: ", context);
@@ -179,5 +177,22 @@ export class AdventureConsoleContext {
     }
     
     return context;
+  }
+  
+  /**
+   * Check the current location
+   */
+  checkLocation () {
+    debug && console.log("AdventureConsoleContext.checkLocation");
+    var context     = this,
+        adventure   = context.adventure.get(),
+        state       = context.state.get(),
+        comparitor  = adventure.platformType().nodeComparitor(),
+        clearWinner = comparitor.searchByContext(state, adventure.projectVersionId).clearWinner();
+    
+    if (clearWinner) {
+      console.log("AdventureConsoleContext.checkLocation location identified:", clearWinner.node);
+      context.currentNodeId.set(clearWinner.node.staticId);
+    }
   }
 }

@@ -1,5 +1,9 @@
 import { NodeComparitor } from '../../../api/platform_type/node_comparitor.js';
+import { NodeComparison } from '../../../api/platform_type/node_comparison.js';
+import { NodeSearchResult } from '../../../api/platform_type/node_search_result.js';
 import { Util } from '../../../api/util.js';
+
+var debug = false;
 
 export class WebNodeComparitor extends NodeComparitor {
   constructor () {
@@ -12,10 +16,11 @@ export class WebNodeComparitor extends NodeComparitor {
    * @param node The node to compare
    */
   compareNode (context, node) {
+    debug && console.log("WebNodeComparitor.compareNode:", context, node);
     // check the local locationIdentifier
     if (context && node) {
       let self   = this,
-          result = new NodeSearchResultNode(node);
+          result = new NodeSearchResult(node);
       result.addComparison('url', self.compareUrl(context, node));
       result.addComparison('params', self.compareParams(context, node));
       result.addComparison('pageTitle', self.comparePageTitle(context, node));
@@ -31,16 +36,16 @@ export class WebNodeComparitor extends NodeComparitor {
    * @param node
    */
   compareUrl (context, node) {
+    debug && console.log("WebNodeComparitor.compareUrl:", context, node);
     let contextUrl    = context.url || '',
         nodeUrl       = node.url || '',
         contextPieces = Util.urlPath(contextUrl).split("/").filter((piece) => {
-          return piece.length
+          return piece.length > 0
         }),
-        nodePieces    = Util.urlPath(nodeUrl).split("/").filter((piece) => {
-          return piece.length
+        nodePieces    = nodeUrl.split("/").filter((piece) => {
+          return piece.length > 0
         });
-    
-    return this.orderedComparison(contextPieces, nodePieces);
+    return new NodeComparison(contextUrl, nodeUrl).orderedComparison(contextPieces, nodePieces);
   }
   
   /**
@@ -49,10 +54,11 @@ export class WebNodeComparitor extends NodeComparitor {
    * @param node
    */
   compareParams (context, node) {
+    debug && console.log("WebNodeComparitor.compareParams:", context, node);
     let contextParams = Util.urlParams(context.url || ''),
         nodeParams    = node.urlParameters || [];
-    
-    return this.unOrderedComparison(contextParams, nodeParams, WebNodeComparitor.containsUrlParam);
+    return new NodeComparison(contextParams, nodeParams)
+        .unOrderedComparison(contextParams, nodeParams, WebNodeComparitor.containsUrlParam, WebNodeComparitor.uniqUrlParam);
   }
   
   /**
@@ -61,7 +67,8 @@ export class WebNodeComparitor extends NodeComparitor {
    * @param node
    */
   comparePageTitle (context, node) {
-    return this.compareText(context.title, node.pageTitle);
+    debug && console.log("WebNodeComparitor.comparePageTitle:", context, node);
+    return new NodeComparison(context.title, node.pageTitle || node.title).textComparison();
   }
   
   /**
@@ -71,12 +78,21 @@ export class WebNodeComparitor extends NodeComparitor {
    */
   static containsUrlParam (paramList, searchParam) {
     let match = _.find(paramList, (compareParam) => {
-      if (searchParam.name && searchParam.value) {
-        return compareParam.name == searchParam.name && compareParam.value == searchParam.value
+      if (searchParam.param && searchParam.value) {
+        return compareParam.param == searchParam.param && compareParam.value == searchParam.value
       } else {
-        return compareParam.name == searchParam.name
+        return compareParam.param == searchParam.param
       }
     });
+    debug && console.log("WebNodeComparitor.containsUrlParam:", paramList, searchParam, match);
     return match != undefined;
+  }
+  
+  /**
+   * Check if a param list contains a param
+   * @param param
+   */
+  static uniqUrlParam (param) {
+    return param.name;
   }
 }

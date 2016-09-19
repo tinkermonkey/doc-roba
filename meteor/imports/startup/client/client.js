@@ -28,7 +28,7 @@ import {DatastoreCategories, DatastoreCategoriesLookup} from '../../api/datastor
 import {FieldTypes, FieldTypesLookup} from '../../api/datastore/field_types.js';
 import {FunctionParamTypes, FunctionParamTypesLookup} from '../../api/code_module/function_param_types.js';
 import {NodeTypes, NodeTypesLookup} from '../../api/node/node_types.js';
-import {NodeSearchStatus, NodeSearchStatusLookup} from '../../api/node_search/node_search_status.js';
+import {NodeComparisonDatumResult, NodeComparisonDatumResultLookup} from '../../api/platform_type/node_comparison_datum_result.js';
 import {ProjectRoles, ProjectRolesLookup} from '../../api/project/project_roles.js';
 import {ReferenceTypes, ReferenceTypesLookup} from '../../api/reference_doc/reference_types.js';
 import {TestAgentOS, TestAgentOSLookup} from '../../api/test_agent/test_agent_os.js';
@@ -65,9 +65,12 @@ Meteor.startup(function(){
  */
 Template.registerHelper("debug", function(){
   if(arguments.length){
-    _.each(_.toArray(arguments).slice(0, -1), function (d){
-      console.log("Debug: ", d);
-    });
+    var argv = _.toArray(arguments).slice(0, -1);
+    if(typeof argv[0] == "string"){
+      console.log(argv[0], argv.slice(1));
+    } else {
+      console.log("Debug: ", argv);
+    }
   } else {
     console.log("Debug: ", this);
   }

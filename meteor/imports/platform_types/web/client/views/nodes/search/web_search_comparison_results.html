@@ -1,44 +1,45 @@
 <template name="WebSearchComparisonResults">
-  {{#unless title.match}}
+  {{debug "WebSearchComparisonResults:" this}}
+  {{#unless comparisons.pageTitle.isMatch}}
     <div>
       <span class="dark-blue">title: </span>
-      {{#each title.pieces}}
+      {{#each comparisons.pageTitle.pieces}}
         <span
-          class="inline-block node-search-result node-search-{{renderLookup "NodeSearchStatusLookup" status "dash"}}"
+          class="inline-block node-search-result node-search-{{renderLookup "NodeComparisonDatumResultLookup" status "dash"}}"
           data-toggle="popover"
           data-trigger="focus"
-          data-content="{{renderLookup "NodeSearchStatusLookup" status "dash"}}: {{value}}"
-        >{{value}}</span>
+          data-content="{{popoverText}}"
+        >{{search}}</span>
       {{/each}}
     </div>
   {{/unless}}
-  {{#unless url.match}}
+  {{#unless comparisons.url.isMatch}}
     <div>
       <span class="dark-blue">url: </span>
       <span>
-        {{#each url.pieces}}
+        {{#each comparisons.url.pieces}}
           <div class="inline-block">
-                        /<span
-            class="node-search-result node-search-{{renderLookup "NodeSearchStatusLookup" status "dash"}}"
-            data-toggle="popover"
-            data-trigger="focus"
-            data-content="{{renderLookup "NodeSearchStatusLookup" status "dash"}}: {{value}}"
-          >{{value}}</span>
-                      </div>
+            /<span
+              class="node-search-result node-search-{{renderLookup "NodeComparisonDatumResultLookup" status "dash"}}"
+              data-toggle="popover"
+              data-trigger="focus"
+              data-content="{{renderLookup "NodeComparisonDatumResultLookup" status "dash"}}: {{search}}"
+            >{{search}}</span>
+          </div>
         {{/each}}
       </span>
     </div>
   {{/unless}}
-  {{#unless params.match}}
+  {{#unless comparisons.params.isMatch}}
     <div>
       <span class="dark-blue align-top">parameters: </span>
       <div class="inline-block">
-        {{#each params.pieces}}
+        {{#each comparisons.params.pieces}}
           <div
-            class="node-search-result node-search-{{renderLookup "NodeSearchStatusLookup" status "dash"}}"
+            class="node-search-result node-search-{{renderLookup "NodeComparisonDatumResultLookup" status "dash"}}"
             data-toggle="popover"
             data-trigger="focus"
-            data-content="{{renderLookup "NodeSearchStatusLookup" status "dash"}}: {{value.param}}{{#if value.value}}={{value.value}}{{/if}}"
+            data-content="{{renderLookup "NodeComparisonDatumResultLookup" status "dash"}}: {{value.param}}{{#if value.value}}={{value.value}}{{/if}}"
           >{{value.param}}{{#if value.value}}={{value.value}}{{/if}}</div>
         {{/each}}
       </div>

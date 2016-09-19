@@ -1,67 +1,50 @@
+var debug = false;
+
 /**
- * Standard format for node search results
+ * Standard format for node comparison results
  */
 export class NodeSearchResult {
   /**
-   * NodeSearchResult
-   * @return {NodeSearchResult}
+   * NodeSearch
+   * The node being compared
+   * @return {NodeSearch}
    */
-  constructor () {
-    this.results  = [];
-    this.maxScore = -100000;
+  constructor (node) {
+    this.comparisons = {};
+    this.node        = node;
+    this.score       = 0;
     return this;
   }
   
   /**
    * Add a piece of information to the list of pieces for this comparison
-   * @param result NodeComparisonResultNode
-   * @param node The node that was being compared to
+   * @param key The key identifying the comparison
+   * @param result NodeComparison
    */
-  addResult (result) {
-    // maintain the max score
-    maxScore = result.score > maxScore ? result.score : maxScore;
-    
-    this.results.push(result);
+  addComparison (key, result) {
+    debug && console.log("NodeSearchResult.addComparison:", key);
+    this.score += result.getScore();
+    this.comparisons[ key ] = result;
   }
   
   /**
-   * Get the processed results
+   * Get the score
+   * @return {*|number}
    */
-  processedResults () {
-    let self = this;
-    
-    //
-    self.results.forEach((result, i) => {
-      self.results[ i ].maxScore = this.maxScore;
-    });
-    
-    return this.results
+  getScore () {
+    debug && console.log("NodeSearchResult.getScore:", this.score);
+    return this.score;
   }
   
   /**
-   * Get the total score for all of the pieces
+   * Is this a complete match
    */
-  sortedResults () {
-    let self = this;
-    
-    // filter out zero point scores and sort by score descending
-    return _.sortBy(self.processedResults().filter((result) => {
-      return result.score
-    }), (result) => {
-      return self.maxScore - result.score
-    });
-  }
-  
-  /**
-   * Is there a clear winner?
-   */
-  clearWinner () {
-    let results = this.sortedResults();
-    
-    if(results.length == 1){
-      return results[0];
-    } else if(results[0].score - results[1].score > results[0].score * 0.1){
-      return results[0];
-    }
+  isMatch () {
+    debug && console.log("NodeSearchResult.isMatch:", _.values(this.comparisons).map(el => el.isMatch()).reduce((pre, cur) => {
+      return pre && cur
+    }));
+    return _.values(this.comparisons).map(el => el.isMatch()).reduce((pre, cur) => {
+      return pre && cur
+    })
   }
 }

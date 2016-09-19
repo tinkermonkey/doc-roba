@@ -1,9 +1,11 @@
-import { NodeComparitorDatumResult } from './node_comparitor_datum_result.js';
+import { NodeComparisonDatumResult } from './node_comparison_datum_result.js';
+
+var debug = false;
 
 /**
  * Standard component of a node comparison result
  */
-export class NodeComparisonResultPiece {
+export class NodeComparisonDatum {
   /**
    * Create a node comparison result piece
    * @param index
@@ -13,15 +15,13 @@ export class NodeComparisonResultPiece {
    * @param score
    */
   constructor (index, status, search, value, score) {
+    debug && console.log("NodeComparisonDatum:", index, status, search, value, score);
     // validate
-    if (!(this.index !== undefined && this.index >= 0)) {
+    if (!(index != undefined && index >= 0)) {
       throw new Error("invalid-index");
     }
-    if (!(this.status !== undefined && _.contains(_.values(NodeComparitorDatumResult), status))) {
+    if (!(status != undefined && _.contains(_.values(NodeComparisonDatumResult), status))) {
       throw new Error("invalid-status");
-    }
-    if (!(this.search !== undefined && search.length > 0)) {
-      throw new Error("invalid-search");
     }
     
     // Valid

@@ -1,6 +1,5 @@
 import './x_editable_node_search.html';
 import { Template } from 'meteor/templating';
-import { NodeSearch } from '../../../../../imports/api/node_search/node_search.js';
 import { NodeComparitor } from '../../../../../imports/api/platform_type/node_comparitor.js';
 import '../../node_search/node_term_search_results.js';
 
