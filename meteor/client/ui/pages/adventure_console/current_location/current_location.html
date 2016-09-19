@@ -1,6 +1,6 @@
 <template name="CurrentLocation">
-  {{#with getNode}}
-    <div class="current-location-container hide {{#unless adventureIsStill ../adventure.get}}hide{{/unless}}" data-node-id="{{_id}}">
+  {{#with currentNode}}
+    <div class="current-location" data-node-id="{{_id}}" style="display: none;">
       <div class="btn btn-warning pull-right btn-wrong-node"
            data-toggle="popover"
            data-trigger="focus"

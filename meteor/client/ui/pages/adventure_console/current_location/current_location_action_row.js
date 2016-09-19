@@ -1,12 +1,11 @@
-import './adventure_edit_node_action_row.html';
+import './current_location_action_row.html';
 import { Blaze } from 'meteor/blaze';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
 import { Actions } from '../../../../../imports/api/action/action.js';
-import { AdventureCommands } from '../../../../../imports/api/adventure/adventure_command.js';
 import { AdventureStatus } from '../../../../../imports/api/adventure/adventure_status.js';
 import { Util } from '../../../../../imports/api/util.js';
-import './adventure_edit_action_form.js';
+import './edit_action_form.js';
 import '../../../lib/dialogs/modals.js';
 
 /**
@@ -40,7 +39,7 @@ Template.CurrentLocationActionRow.events({
     if (formRow.hasClass("hide")) {
       actionRow.addClass("disabled");
       formRow.removeClass("hide");
-      Blaze.renderWithData(Template.AdventureEditActionForm, action, formRow.get(0));
+      Blaze.renderWithData(Template.EditActionForm, action, formRow.get(0));
       $(e.target).closest("button").attr("disabled", "disabled");
     }
   },
@@ -51,8 +50,10 @@ Template.CurrentLocationActionRow.events({
         action    = this;
     console.log("Execute Action: ", action);
     // build up the code to define the action variables using the default values
-    if(action.variables && action.variables.length){
-      code += 'var ' + (_.map(action.variables, (variable) => { return variable.name + ' = ' + (variable.defaultValue || '""')})).join(",\r\n    ") + ";\r\n";
+    if (action.variables && action.variables.length) {
+      code += 'var ' + (_.map(action.variables, (variable) => {
+            return variable.name + ' = ' + (variable.defaultValue || '""')
+          })).join(",\r\n    ") + ";\r\n";
     }
     
     // Add in the code for the action

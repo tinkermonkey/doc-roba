@@ -15,8 +15,10 @@
             
               {{> AdventureStatusBar }}
             
-              {{> CurrentLocation }}
-              {{> CurrentLocationActions }}
+              <div class="current-location-container">
+                {{> CurrentLocation }}
+                {{> CurrentLocationActions }}
+              </div>
               
               {{#RobaAccordion display=true sticky=true name="adventure-map" title="Map" icon="glyphicon glyphicon-map-marker" unpadded=true}}
                 {{> AdventureMap }}

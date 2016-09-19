@@ -4,7 +4,7 @@ import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
 import { Actions } from '../../../../../imports/api/action/action.js';
 import { Nodes } from '../../../../../imports/api/node/node.js';
-import './adventure_edit_node_action_row.js';
+import './current_location_action_row.js';
 import '../../../components/editable_fields/editable_nav_menu_list.js';
 
 /**
@@ -32,10 +32,9 @@ Template.CurrentLocationActions.helpers({
     return navs
   },
   currentNode () {
-    let context = Template.instance().context,
-        nodeId  = context.currentNodeId.get();
-    if (nodeId) {
-      return Nodes.findOne({ staticId: nodeId, projectVersionId: context.adventure.get().projectVersionId });
+    let context = this;
+    if (context && context.currentNodeId) {
+      return Nodes.findOne({ staticId: context.currentNodeId.get(), projectVersionId: context.adventure.get().projectVersionId });
     }
   }
 });

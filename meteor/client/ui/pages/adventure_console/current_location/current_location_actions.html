@@ -1,41 +1,43 @@
 <template name="CurrentLocationActions">
-  {{#with currentNode}}
-    <h3>Actions for this <span class="dark-blue">{{renderLookup "NodeTypesLookup" type}}</span></h3>
+  <div class="current-location-actions" style="display: none;">
+    {{#with currentNode}}
+        <h3>Actions for this <span class="dark-blue">{{renderLookup "NodeTypesLookup" type}}</span></h3>
     
-    {{#each getActions}}
-      {{> CurrentLocationActionRow }}
-    {{/each}}
-    <div>
-      <button class="btn btn-warning btn-xs btn-add-action">
-        <span class="glyphicon glyphicon-plus"></span>
-        Add an Action to {{title}}
-      </button>
-    </div>
+        {{#each getActions}}
+          {{> CurrentLocationActionRow }}
+        {{/each}}
+        <div>
+          <button class="btn btn-warning btn-xs btn-add-action">
+            <span class="glyphicon glyphicon-plus"></span>
+            Add an Action to {{title}}
+          </button>
+        </div>
     
-    <h3>Nav Menus on this <span class="dark-blue">{{renderLookup "NodeTypesLookup" type}}</span></h3>
-    {{> EditableNavMenuList projectVersionId=projectVersionId value=navMenus dataKey="navMenus" }}
-    <div>
-      <button class="btn btn-warning btn-xs btn-add-action">
-        <span class="glyphicon glyphicon-plus"></span>
-        Create a new Nav Menu
-      </button>
-    </div>
+        <h3>Nav Menus on this <span class="dark-blue">{{renderLookup "NodeTypesLookup" type}}</span></h3>
+        {{> EditableNavMenuList projectVersionId=projectVersionId value=navMenus dataKey="navMenus" }}
+        <div>
+          <button class="btn btn-warning btn-xs btn-add-action">
+            <span class="glyphicon glyphicon-plus"></span>
+            Create a new Nav Menu
+          </button>
+        </div>
     
     
-    {{#each getNodeNavMenus}}
-      <h3>Actions from <span class="dark-blue">{{title}}</span></h3>
+        {{#each getNodeNavMenus}}
+          <h3>Actions from <span class="dark-blue">{{title}}</span></h3>
       
-      {{#each actions}}
-        {{> CurrentLocationActionRow }}
-      {{/each}}
-      <div>
-        <button class="btn btn-warning btn-xs btn-add-action">
-          <span class="glyphicon glyphicon-plus"></span>
-          Add an Action to {{title}}
-        </button>
-      </div>
-    {{/each}}
-  {{else}}
-    <div class="alert alert-info">Use the current node section to identify the current context.</div>
-  {{/with}}
+          {{#each actions}}
+            {{> CurrentLocationActionRow }}
+          {{/each}}
+          <div>
+            <button class="btn btn-warning btn-xs btn-add-action">
+              <span class="glyphicon glyphicon-plus"></span>
+              Add an Action to {{title}}
+            </button>
+          </div>
+        {{/each}}
+    {{else}}
+      <div class="alert alert-info">Use the current node section to identify the current context.</div>
+    {{/with}}
+  </div>
 </template>

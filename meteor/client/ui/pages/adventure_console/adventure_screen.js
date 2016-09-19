@@ -6,8 +6,8 @@ import { AdventureStatus } from '../../../../imports/api/adventure/adventure_sta
 import { Actions } from '../../../../imports/api/action/action.js';
 import { Nodes } from '../../../../imports/api/node/node.js';
 import './adventure_toolbar.js';
-import './highlight_elements/adventure_highlight_element.js';
-import './highlight_elements/adventure_highlight_detail.js';
+import './highlight_elements/highlight_element.js';
+import './highlight_elements/highlight_element_detail.js';
 import './hover_controls/adventure_hover_controls.js';
 import './hover_controls/adventure_selector_result.js';
 import './log/adventure_log_embedded.js';
@@ -392,7 +392,7 @@ Template.AdventureScreen.events({
           RobaAccordion.activate("current-node");
           setTimeout(function () {
             let adventureSidebar = $(".adventure-sidebar"),
-                targetTop        = $(".current-location-container").offset().top,
+                targetTop        = $(".current-location").offset().top,
                 currentScroll    = adventureSidebar.scrollTop(),
                 sidebarTop       = adventureSidebar.offset().top;
             

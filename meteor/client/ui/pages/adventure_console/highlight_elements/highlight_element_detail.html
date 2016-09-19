@@ -1,9 +1,9 @@
-<template name="AdventureHighlightDetail">
+<template name="HighlightElementDetail">
   <div id="adventure-highlight-detail-{{index}}"
        class="adventure-highlight-detail"
        style="top: {{getDetailTop}}px; left: {{getDetailLeft}}px; max-width: {{getMaxWidth}}px;">
     {{#each getHierarchy}}
-      {{> AdventureHighlightDetailItem }}
+      {{> HighlightElementDetailRow }}
     {{/each}}
   </div>
 </template>

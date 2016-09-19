@@ -1,4 +1,4 @@
-import './adventure_edit_action_form.html';
+import './edit_action_form.html';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
 import { Actions } from '../../../../../imports/api/action/action.js';
@@ -9,7 +9,7 @@ import '../../../components/edit_panels/action_edit_routes.js';
 /**
  * Template Helpers
  */
-Template.AdventureEditActionForm.helpers({
+Template.EditActionForm.helpers({
   // sometimes the action record end up being non-reactive
   getActionRecord () {
     return Actions.findOne(this._id);
@@ -19,7 +19,7 @@ Template.AdventureEditActionForm.helpers({
 /**
  * Template Event Handlers
  */
-Template.AdventureEditActionForm.events({
+Template.EditActionForm.events({
   "edited .editable" (e, instance, newValue) {
     e.stopImmediatePropagation();
     var target  = $(e.target),
@@ -43,20 +43,20 @@ Template.AdventureEditActionForm.events({
 /**
  * Template Created
  */
-Template.AdventureEditActionForm.onCreated(() => {
+Template.EditActionForm.onCreated(() => {
   
 });
 
 /**
  * Template Rendered
  */
-Template.AdventureEditActionForm.onRendered(() => {
+Template.EditActionForm.onRendered(() => {
   
 });
 
 /**
  * Template Destroyed
  */
-Template.AdventureEditActionForm.onDestroyed(() => {
+Template.EditActionForm.onDestroyed(() => {
   
 });

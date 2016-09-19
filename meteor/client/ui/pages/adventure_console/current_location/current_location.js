@@ -15,7 +15,7 @@ import '../../../components/node_search/node_url_search_results.js';
  * Template Helpers
  */
 Template.CurrentLocation.helpers({
-  getNode () {
+  currentNode () {
     //console.log("CurrentLocation: ", this);
     let currentNodeId = this.currentNodeId.get(),
         adventure     = this.adventure.get();
@@ -65,7 +65,6 @@ Template.CurrentLocation.helpers({
     }
   },
   searchComparisonPanel(){
-    console.log("searchComparisonPanel:", Template.parentData(1));
     let node         = Template.parentData(1),
         platformType = node.platformType();
     if (platformType) {
@@ -169,7 +168,7 @@ Template.CurrentLocation.events({
   },
   "edited .node-edit-form .editable" (e, instance, newValue) {
     e.stopImmediatePropagation();
-    var nodeId  = $(e.target).closest(".current-location-container").attr("data-node-id"),
+    var nodeId  = $(e.target).closest(".current-location").attr("data-node-id"),
         target  = $(e.target),
         dataKey = target.attr("data-key"),
         update  = { $set: {} };

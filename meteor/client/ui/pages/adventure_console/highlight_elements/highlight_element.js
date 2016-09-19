@@ -1,21 +1,21 @@
-import './adventure_highlight_element.html';
+import './highlight_element.html';
 import { Template } from 'meteor/templating';
 
 /**
  * Template helpers
  */
-Template.AdventureHighlightElement.helpers({});
+Template.HighlightElement.helpers({});
 
 /**
  * Event Handlers
  */
-Template.AdventureHighlightElement.events({
+Template.HighlightElement.events({
   "click .adventure-highlight-element" (e, instance) {
     var element  = $(e.target),
         detail   = $("#adventure-highlight-detail-" + instance.data.index);
     
     if(!detail.length){
-      console.error("AdventureHighlightElement.click failed to find detail item:", instance.data, e.target);
+      console.error("HighlightElement.click failed to find detail item:", instance.data, e.target);
     }
     
     if (element.hasClass("active")) {

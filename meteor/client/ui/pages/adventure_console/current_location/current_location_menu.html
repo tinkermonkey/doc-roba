@@ -1,13 +1,31 @@
 <template name="CurrentLocationMenu">
   <div class="current-location-menu">
     <div class="btn-group" role="group">
-      <button type="button" class="btn btn-large btn-primary btn-show-current-node">
-        <span class="glyphicon glyphicon-stop"></span>
-        Current Location
+      <button type="button" class="btn btn-primary btn-show-current-node">
+        <span class="glyphicon glyphicon-map-marker"></span>
+        Current Node
       </button>
-      <button type="button" class="btn btn-large btn-primary btn-show-current-node-actions">
+      <button type="button" class="btn btn-primary btn-show-current-node-actions">
         <span class="glyphicon glyphicon-play"></span>
         Current Actions
+      </button>
+      {{#unless adventureIsComplete adventure.get}}
+        {{#if adventureIsPaused adventure.get}}
+          <button type="button" class="btn btn-info btn-unpause-adventure">
+            <span class="glyphicon glyphicon-play"></span>
+          </button>
+        {{else}}
+          <button type="button" class="btn btn-info btn-pause-adventure">
+            <span class="glyphicon glyphicon-pause"></span>
+          </button>
+        {{/if}}
+        <button type="button" class="btn btn-danger btn-end-adventure">
+          <span class="glyphicon glyphicon-stop"></span>
+        </button>
+      {{/unless}}
+      <button type="button" class="btn btn-primary btn-view-log">
+        <span class="glyphicon glyphicon-share-alt"></span>
+        View Log
       </button>
     </div>
   </div>

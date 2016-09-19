@@ -17,7 +17,7 @@ export default class MapLayout {
     
     // store the project context
     self.context = context;
-    console.log("MapLayout context: ", self.context);
+    //console.log("MapLayout context: ", self.context);
     
     // set the default config
     self.config = config || {};

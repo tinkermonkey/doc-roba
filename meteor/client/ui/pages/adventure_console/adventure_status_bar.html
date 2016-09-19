@@ -6,23 +6,5 @@
         {{renderLookup "AdventureStatusLookup" adventureStatus}}
       </small>
     </h4>
-    {{#unless adventureIsComplete adventure.get}}
-      {{#if adventureIsPaused adventure.get}}
-        <button type="button" class="btn btn-xs btn-info btn-unpause-adventure">
-          <span class="glyphicon glyphicon-play"></span>
-        </button>
-      {{else}}
-        <button type="button" class="btn btn-xs btn-info btn-pause-adventure">
-          <span class="glyphicon glyphicon-pause"></span>
-        </button>
-      {{/if}}
-      <button type="button" class="btn btn-xs btn-danger btn-end-adventure">
-        <span class="glyphicon glyphicon-stop"></span>
-      </button>
-    {{/unless}}
-    <button type="button" class="btn btn-xs btn-default btn-view-log">
-      <span class="glyphicon glyphicon-share-alt"></span>
-      View Log
-    </button>
   </div>
 </template>

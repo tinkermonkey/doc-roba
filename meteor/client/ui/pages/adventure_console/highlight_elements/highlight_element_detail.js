@@ -1,13 +1,13 @@
-import './adventure_highlight_detail.html';
+import './highlight_element_detail.html';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
 import { Util } from '../../../../../imports/api/util.js';
-import './adventure_highlight_detail_item.js';
+import './highlight_element_detail_row.js';
 
 /**
  * Template helpers
  */
-Template.AdventureHighlightDetail.helpers({
+Template.HighlightElementDetail.helpers({
   /**
    * Get the processed list of parent elements for this element
    */

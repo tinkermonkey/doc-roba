@@ -20,31 +20,16 @@
 }
 
 .adventure-status-bar {
-  margin-top: 5px;
-  margin-bottom: 5px;
+
+}
+
+.adventure-status-bar h4 {
+ margin-bottom: 0;
 }
 
 .adventure-status-header {
   -webkit-transition: margin 0.25s;
   transition: margin 0.25s;
-}
-
-/**
- * Adventure current location menu
- */
-.current-location-menu {
-  border-radius: 4px;
-  background-color: #0A7BFF;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-}
-
-.current-location-menu .btn-group button:first-child {
-  border-top-left-radius: 0;
-}
-
-.current-location-menu .btn-group button:last-child {
-  border-top-right-radius: 0;
 }
 
 /**
@@ -411,13 +396,10 @@
 }
 
 /**
- * Node edit form
+ * Current Location container
  */
-.current-location-container {
-  padding: 10px;
-}
-.current-location-action-row td {
-  vertical-align: middle !important;
+.current-location-container > div {
+  border-top: 3px solid #0A7BFF;
 }
 
 /**

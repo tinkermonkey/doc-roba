@@ -1,11 +1,11 @@
-import './adventure_highlight_detail_item.html';
+import './highlight_element_detail_row.html';
 import { Template } from 'meteor/templating';
 import '../hover_controls/adventure_selector_result.js';
 
 /**
  * Template Helpers
  */
-Template.AdventureHighlightDetailItem.helpers({
+Template.HighlightElementDetailRow.helpers({
   /**
    * Get the padding based on the hierarchy element padding
    * @returns {number}
@@ -34,7 +34,7 @@ Template.AdventureHighlightDetailItem.helpers({
 /**
  * Event Handlers
  */
-Template.AdventureHighlightDetailItem.events({
+Template.HighlightElementDetailRow.events({
   "click .adventure-highlight-hierarchy .toggle" (e) {
     var content    = $(e.target).closest(".adventure-highlight-hierarchy").next(".adventure-highlight-hierarchy-content"),
         toggleIcon = $(e.target).closest(".toggle").find(".glyphicon");
