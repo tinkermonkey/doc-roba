@@ -15,12 +15,12 @@
 /**
  * Create node form
  */
-.add-node-form {
+.create-node-form {
   padding-bottom: 10px;
 }
 
 
-.add-node-form .clickable {
+.create-node-form .clickable {
   padding-left: 2px;
   padding-right: 2px;
   margin-left: 1px;
@@ -28,17 +28,17 @@
   border-radius: 2px;
 }
 
-.add-node-form .clickable:hover {
+.create-node-form .clickable:hover {
   cursor: pointer;
   background: #dddddd;
 }
 
-.add-node-form .clickable.selected {
+.create-node-form .clickable.selected {
   cursor: pointer;
   background: #50d7ff;
 }
 
-.add-node-btn-bar {
+.create-node-btn-bar {
   padding: 10px 0px 10px 0px;
   width: 100%;
   text-align: center;

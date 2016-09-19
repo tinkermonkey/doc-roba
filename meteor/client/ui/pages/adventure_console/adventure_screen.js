@@ -5,13 +5,14 @@ import { RobaAccordion } from 'meteor/austinsand:roba-accordion';
 import { AdventureStatus } from '../../../../imports/api/adventure/adventure_status.js';
 import { Actions } from '../../../../imports/api/action/action.js';
 import { Nodes } from '../../../../imports/api/node/node.js';
-import './highlight/adventure_highlight_element.js';
-import './highlight/adventure_highlight_detail.js';
-import './hover_controls/adventure_hover_controls.js';
-import './log/adventure_log_embedded.js';
-import './highlight/adventure_preview_element.js';
-import './hover_controls/adventure_selector_result.js';
 import './adventure_toolbar.js';
+import './highlight_elements/adventure_highlight_element.js';
+import './highlight_elements/adventure_highlight_detail.js';
+import './hover_controls/adventure_hover_controls.js';
+import './hover_controls/adventure_selector_result.js';
+import './log/adventure_log_embedded.js';
+import './remote_screen_pointer.js';
+import './remote_screen_tools.js';
 
 /**
  * Template helpers
@@ -32,36 +33,32 @@ Template.AdventureScreen.helpers({
    * Get the coordinates for the screen shot mask
    * @returns {{top: number, left: number, height: number, width: number}}
    */
-  getScreenMaskPosition () {
-    let viewport = this.viewport.get();
+  screenSize () {
+    let viewport    = this.viewport.get(),
+        borderWidth = 3;
     if (viewport && viewport.offset) {
       return {
-        top   : viewport.offset.top - viewport.parentOffset.top,
-        left  : viewport.offset.left - viewport.parentOffset.left,
-        height: viewport.height,
-        width : viewport.width
+        height: viewport.height - borderWidth,
+        width : viewport.width - borderWidth
       };
     }
   },
+  
   /**
-   * Get the local coordinates of the remove mouse
+   * Get the coordinates for the screen shot mask
+   * @returns {{top: number, left: number, height: number, width: number}}
    */
-  getMousePosition () {
-    let viewport = this.viewport.get(),
-        state    = this.state.get(),
-        coords;
-    if (state && state.mouse && state.mouse.x >= 0 && viewport && state.viewportSize) {
-      let remoteViewport = state.viewportSize,
-          ratio          = (viewport.width / remoteViewport.width),
-          adjust         = $(".remote-screen").parent().offset();
-      
-      coords = {
-        x: parseInt(state.mouse.x * ratio + adjust.left),
-        y: parseInt(state.mouse.y * ratio + adjust.top)
+  maskPosition () {
+    let viewport    = this.viewport.get(),
+        borderWidth = 3;
+    if (viewport && viewport.offset) {
+      return {
+        top   : viewport.offset.top - viewport.parentOffset.top + borderWidth,
+        left  : viewport.offset.left - viewport.parentOffset.left + borderWidth,
+        height: viewport.height - 3 * borderWidth,
+        width : viewport.width - 3 * borderWidth
       };
-      
     }
-    return coords;
   },
   
   /**
@@ -217,41 +214,6 @@ Template.AdventureScreen.events({
             instance.data.highlightElements.set(command.result.highlightElements);
           }
         });
-  },
-  /**
-   * Click event for the refresh button
-   * @param e
-   */
-  "click .btn-refresh" (e, instance) {
-    let adventure = instance.data.adventure.get();
-    
-    // make sure the adventure is operating
-    if (adventure.status == AdventureStatus.complete) {
-      return;
-    }
-    
-    // send the command to clear all of the highlighted elements
-    adventure.assistant().refreshScreen(adventure, (error, command) => {
-      if (error) {
-        RobaDialog.error("Error adding adventure command: " + error.message);
-      }
-    });
-  },
-  /**
-   * Click event for the clear-highlight button
-   * @param e
-   */
-  "click .btn-clear-highlight" (e, instance) {
-    let adventure = instance.data.adventure.get();
-    
-    // clear the last click location and check result
-    instance.data.highlightElements.set([]);
-    instance.data.previewElements.set([]);
-    instance.data.lastClickLocation.set();
-    instance.data.checkResult.set();
-    
-    // Hide any orphaned highlights
-    instance.$(".adventure-hover-element-highlight").css("visibility", "hidden");
   },
   "mouseenter .adventure-highlight-list-row-header" (e, instance) {
     instance.$(".adventure-highlight-element.index-" + this.index).addClass("highlight");
@@ -430,7 +392,7 @@ Template.AdventureScreen.events({
           RobaAccordion.activate("current-node");
           setTimeout(function () {
             let adventureSidebar = $(".adventure-sidebar"),
-                targetTop        = $(".node-edit-form").offset().top,
+                targetTop        = $(".current-location-container").offset().top,
                 currentScroll    = adventureSidebar.scrollTop(),
                 sidebarTop       = adventureSidebar.offset().top;
             
@@ -458,7 +420,7 @@ Template.AdventureScreen.events({
             $(".action-control-buttons[data-action-id='" + targetId + "'] .btn-edit-action").trigger("click");
             setTimeout(function () {
               let adventureSidebar = $(".adventure-sidebar"),
-                  targetTop        = $(".action-edit-form[data-action-id='" + targetId + "']").offset().top,
+                  targetTop        = $(".edit-action-form[data-action-id='" + targetId + "']").offset().top,
                   currentScroll    = adventureSidebar.scrollTop(),
                   sidebarTop       = adventureSidebar.offset().top;
               

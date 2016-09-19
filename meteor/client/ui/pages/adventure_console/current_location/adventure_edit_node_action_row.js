@@ -12,7 +12,7 @@ import '../../../lib/dialogs/modals.js';
 /**
  * Template Helpers
  */
-Template.AdventureEditNodeActionRow.helpers({
+Template.CurrentLocationActionRow.helpers({
   actionWithScale () {
     this.scale = 0.5;
     return this;
@@ -31,10 +31,10 @@ Template.AdventureEditNodeActionRow.helpers({
 /**
  * Template Event Handlers
  */
-Template.AdventureEditNodeActionRow.events({
+Template.CurrentLocationActionRow.events({
   "click .btn-edit-action" (e, instance) {
     var action    = this,
-        actionRow = $(e.target).closest(".edit-node-action-row"),
+        actionRow = $(e.target).closest(".current-location-action-row"),
         formRow   = actionRow.next();
     
     if (formRow.hasClass("hide")) {
@@ -107,20 +107,20 @@ Template.AdventureEditNodeActionRow.events({
 /**
  * Template Created
  */
-Template.AdventureEditNodeActionRow.onCreated(() => {
+Template.CurrentLocationActionRow.onCreated(() => {
   
 });
 
 /**
  * Template Rendered
  */
-Template.AdventureEditNodeActionRow.onRendered(() => {
+Template.CurrentLocationActionRow.onRendered(() => {
   
 });
 
 /**
  * Template Destroyed
  */
-Template.AdventureEditNodeActionRow.onDestroyed(() => {
+Template.CurrentLocationActionRow.onDestroyed(() => {
   
 });

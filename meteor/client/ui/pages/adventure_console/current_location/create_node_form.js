@@ -1,4 +1,4 @@
-import './adventure_add_node_form.html';
+import './create_node_form.html';
 import { Blaze } from 'meteor/blaze';
 import { Template } from 'meteor/templating';
 import { Nodes } from '../../../../../imports/api/node/node.js';
@@ -10,7 +10,7 @@ import '../../../components/editable_fields/editable_node_type.js';
 /**
  * Template Helpers
  */
-Template.AdventureAddNodeForm.helpers({
+Template.CreateNodeForm.helpers({
   record () {
     return Template.instance().nodeRecord.get();
   },
@@ -47,7 +47,7 @@ Template.AdventureAddNodeForm.helpers({
       return pieces;
     }
   },
-  addNodePanel(){
+  createNodePanel(){
     let adventure = this.adventure.get(),
         platform = adventure.platform();
     if(platform){
@@ -62,7 +62,7 @@ Template.AdventureAddNodeForm.helpers({
 /**
  * Template Event Handlers
  */
-Template.AdventureAddNodeForm.events({
+Template.CreateNodeForm.events({
   "click .url-part.clickable" (e, instance) {
     $(e.target).toggleClass("selected");
     
@@ -137,7 +137,7 @@ Template.AdventureAddNodeForm.events({
 /**
  * Template Created
  */
-Template.AdventureAddNodeForm.onCreated(() => {
+Template.CreateNodeForm.onCreated(() => {
   let instance = Template.instance(),
       adventure = instance.data.adventure.get();
   
@@ -157,7 +157,7 @@ Template.AdventureAddNodeForm.onCreated(() => {
 /**
  * Template Rendered
  */
-Template.AdventureAddNodeForm.onRendered(() => {
+Template.CreateNodeForm.onRendered(() => {
   var instance = Template.instance();
   
   instance.autorun(function () {
@@ -178,6 +178,6 @@ Template.AdventureAddNodeForm.onRendered(() => {
 /**
  * Template Destroyed
  */
-Template.AdventureAddNodeForm.onDestroyed(() => {
+Template.CreateNodeForm.onDestroyed(() => {
   
 });

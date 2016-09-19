@@ -1,45 +1,81 @@
 /**
  * TODO: do this right and just customize the bootstrap I'm using
  */
-.label-primary {
-  background-color: #298cff;
-}
 
 .btn {
   border: none !important;
 }
 
-.btn-primary {
-  background-color: #298cff;
+.btn:focus, .btn:active:focus, .btn.active:focus {
+  outline: 0 none;
+}
+
+.label-primary {
+  background-color: #0a7bff;
+}
+
+.btn-primary,
+.btn-primary:focus,
+.btn-primary:active {
+  color: #ffffff;
+  background-color: #0a7bff;
   border-color: #247cd4;
 }
 
 .btn-primary:hover,
-.btn-primary:focus,
-.btn-primary.focus,
-.btn-primary:active,
-.btn-primary.active,
 .open > .dropdown-toggle.btn-primary {
-  color: #fff;
-  background-color: #298cff;
+  color: #ffff00;
+  background-color: #0a7bff;
+}
+
+.label-info {
+  background-color: #5bc0de;
+}
+
+.btn-info,
+.btn-info.focus,
+.btn-info:active {
+  background-color: #5bc0de;
+  border-color: #46b8da;
+}
+
+.btn-info:hover,
+.open > .dropdown-toggle.btn-info {
+  color: #ffff00;
+  background-color: #5bc0de;
+}
+
+.label-danger {
+  background-color: #d9534f;
+}
+
+.btn-danger,
+.btn-danger:focus,
+.btn-danger:active {
+  background-color: #d9534f;
+  border-color: #d43f3a;
+}
+
+.btn-danger:hover,
+.open > .dropdown-toggle.btn-danger {
+  color: #ffff00;
+  background-color: #d9534f;
 }
 
 .label-warning {
   background-color: #ff8400;
 }
 
-.btn-warning {
+.btn-warning,
+.btn-warning:focus,
+.btn-warning:active {
   background-color: #ff8400;
   border-color: #d46d00;
 }
 
 .btn-warning:hover,
-.btn-warning:focus,
-.btn-warning.focus,
-.btn-warning:active,
-.btn-warning.active,
 .open > .dropdown-toggle.btn-warning {
-  color: #fff;
+  color: #ffff00;
   background-color: #ff8400;
 }
 
@@ -47,17 +83,15 @@
   background-color: #9701ff;
 }
 
-.btn-purple {
+.btn-purple,
+.btn-purple:focus,
+.btn-purple:active {
   background-color: #9701ff;
   border-color: #7802cc;
   color: #fff;
 }
 
 .btn-purple:hover,
-.btn-purple:focus,
-.btn-purple.focus,
-.btn-purple:active,
-.btn-purple.active,
 .open > .dropdown-toggle.btn-purple {
   color: #fff;
   background-color: #9701ff;

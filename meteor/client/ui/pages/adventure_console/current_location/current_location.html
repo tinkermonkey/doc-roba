@@ -1,6 +1,6 @@
-<template name="AdventureContext">
+<template name="CurrentLocation">
   {{#with getNode}}
-    <div class="node-edit-form {{#unless adventureIsStill ../adventure.get}}hide{{/unless}}" data-node-id="{{_id}}">
+    <div class="current-location-container hide {{#unless adventureIsStill ../adventure.get}}hide{{/unless}}" data-node-id="{{_id}}">
       <div class="btn btn-warning pull-right btn-wrong-node"
            data-toggle="popover"
            data-trigger="focus"
@@ -8,14 +8,14 @@
       >X
       </div>
       <div>
-        {{#unless isMatch this ..}}
-          <div class="alert alert-warning">
-            The current node does <i>not</i> match the data below:
-            {{#with nodeComparison this ..}}
-              {{> Template.dynamic template=searchComparisonPanel }}
-            {{/with}}
-          </div>
-        {{/unless}}
+        {{#with nodeComparison this ..}}
+          {{#unless isMatch}}
+            <div class="alert alert-warning">
+              The current node does <i>not</i> match the data below:
+                {{> Template.dynamic template=searchComparisonPanel }}
+            </div>
+          {{/unless}}
+        {{/with}}
       </div>
       
       <div class="edit-node-params">
@@ -43,10 +43,10 @@
         {{> EditableNodeSelector cssClass="current-node-selector" dataKey="currentNodeId" emptyText="Select Node" projectVersionId=adventure.get.projectVersionId}}
       </div>
       <div class="full-width align-center">
-        <button class="btn btn-primary btn-add-node" data-type="page">Add Node</button>
+        <button class="btn btn-primary btn-create-node" data-type="page">Create Node</button>
       </div>
-      <div class="full-width add-node-form hide">
-        {{> AdventureAddNodeForm }}
+      <div class="full-width create-node-form hide">
+        {{> CreateNodeForm }}
       </div>
       <div class="node-url-search">
         <label>Best Matches:</label>

@@ -1,24 +1,24 @@
 <template name="AdventureEditActionForm">
-  <div class="action-edit-form" data-action-id="{{_id}}">
+  <div class="edit-action-form" data-action-id="{{_id}}">
     {{#with getActionRecord}}
-      <div class="action-edit-form-section">
+      <div class="edit-action-form-section">
         <span class="field-label">Title:</span>
         {{> EditableTextField cssClass="inline" value=title dataKey="title" }}
-        <button class="btn btn-warning btn-xs btn-close-action-edit-form pull-right">Done Editing</button>
+        <button class="btn btn-warning btn-xs btn-close-edit-action-form pull-right">Done Editing</button>
       </div>
       
       <h4 class="section blue">Action Code</h4>
-      <div class="action-edit-form-section">
+      <div class="edit-action-form-section">
         {{> EditableCode dataKey="code" value=code emptyText="Click to add code for this action." }}
       </div>
       
       <h4 class="section blue">Action Variables</h4>
-      <div class="action-edit-form-section">
+      <div class="edit-action-form-section">
         {{> ActionEditVariables }}
       </div>
       
       <h4 class="section blue">Action Routes</h4>
-      <div class="action-edit-form-section">
+      <div class="edit-action-form-section">
         {{> ActionEditRoutes }}
       </div>
     

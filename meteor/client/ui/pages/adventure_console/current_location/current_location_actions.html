@@ -1,9 +1,9 @@
-<template name="AdventureEditNodeActions">
-  {{#if this}}
+<template name="CurrentLocationActions">
+  {{#with currentNode}}
     <h3>Actions for this <span class="dark-blue">{{renderLookup "NodeTypesLookup" type}}</span></h3>
     
     {{#each getActions}}
-      {{> AdventureEditNodeActionRow }}
+      {{> CurrentLocationActionRow }}
     {{/each}}
     <div>
       <button class="btn btn-warning btn-xs btn-add-action">
@@ -26,7 +26,7 @@
       <h3>Actions from <span class="dark-blue">{{title}}</span></h3>
       
       {{#each actions}}
-        {{> AdventureEditNodeActionRow }}
+        {{> CurrentLocationActionRow }}
       {{/each}}
       <div>
         <button class="btn btn-warning btn-xs btn-add-action">
@@ -37,5 +37,5 @@
     {{/each}}
   {{else}}
     <div class="alert alert-info">Use the current node section to identify the current context.</div>
-  {{/if}}
+  {{/with}}
 </template>

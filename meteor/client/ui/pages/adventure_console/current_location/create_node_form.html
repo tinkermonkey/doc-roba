@@ -1,5 +1,5 @@
-<template name="AdventureAddNodeForm">
-  <div class="add-node-form full-width">
+<template name="CreateNodeForm">
+  <div class="create-node-form full-width">
     <h4>Define a new node:</h4>
 
     <table>
@@ -25,10 +25,10 @@
           {{/with}}
         </td>
       </tr>
-      {{> Template.dynamic template=addNodePanel }}
+      {{> Template.dynamic template=createNodePanel }}
     </table>
 
-    <div class="add-node-btn-bar">
+    <div class="create-node-btn-bar">
       <button class="btn btn-warning btn-cancel-node">Cancel</button>
       <button class="btn btn-success btn-create-node">Create Node</button>
     </div>

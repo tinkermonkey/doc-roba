@@ -1,0 +1,14 @@
+<template name="RemoteScreenTools">
+  <div class="remote-screen-tools">
+    <div class="btn-group" role="group">
+      {{#if highlightElements}}
+        <button type="button" class="btn btn-xs btn-primary btn-clear-highlight">
+          <span class="glyphicon glyphicon-ban-circle"></span>
+        </button>
+      {{/if}}
+      <button type="button" class="btn btn-xs btn-primary btn-refresh">
+        <span class="glyphicon glyphicon-refresh"></span>
+      </button>
+    </div>
+  </div>
+</template>

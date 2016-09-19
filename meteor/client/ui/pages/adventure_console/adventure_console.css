@@ -1,5 +1,5 @@
 /**
- * main console layout
+ * Main console layout
  */
 .adventure-main-view {
   display: inline-block;
@@ -30,7 +30,25 @@
 }
 
 /**
- * map container
+ * Adventure current location menu
+ */
+.current-location-menu {
+  border-radius: 4px;
+  background-color: #0A7BFF;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.current-location-menu .btn-group button:first-child {
+  border-top-left-radius: 0;
+}
+
+.current-location-menu .btn-group button:last-child {
+  border-top-right-radius: 0;
+}
+
+/**
+ * Map container
  */
 .adventure-map-container {
   width: 100%;
@@ -53,7 +71,7 @@
 }
 
 /**
- * Live command editor
+ * Adventure command editor
  */
 .command-editor-btn-bar {
   padding: 10px 0 10px 0;
@@ -61,7 +79,7 @@
 }
 
 /**
- * Live command results
+ * Adventure command results
  */
 .command-history-container {
 }
@@ -101,12 +119,13 @@
 }
 
 /**
- * Live drone view
+ * Adventure screen view
  */
 .adventure-screen-container {
   width: 100%;
   height: 100%;
   padding: 10px;
+  padding-top: 0;
 }
 
 .adventure-toolbar {
@@ -120,36 +139,22 @@
   margin-bottom: 10px;
   margin-top: 0;
   color: #888;
+  padding: 10px;
+  padding-bottom: 0;
 }
 
-.adventure-page-url {
+.adventure-page-title, .adventure-page-url {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.adventure-screen-tools {
-  float: right;
-  position: relative;
-  height: 20px;
-  top: -20px;
-}
-
-.adventure-screen-tools .btn-group {
-  vertical-align: top;
-}
-
-.adventure-screen-tools .btn-group button:first-child {
-  border-bottom-left-radius: 0;
-}
-
-.adventure-screen-tools .btn-group button:last-child {
-  border-bottom-right-radius: 0;
-}
-
 .remote-screen {
   width: 100%;
-  box-shadow: 0 0 15px #888;
+  /*box-shadow: 0 0 15px #888;*/
+  border-radius: 10px;
+  border-top-right-radius: 0;
+  border: 3px solid #0a7bff;
 }
 
 .remote-screen-loading {
@@ -165,6 +170,8 @@
 .remote-screen-mask {
   position: absolute;
   z-index: 99;
+  border-radius: 7px;
+  border-top-right-radius: 0;
 }
 
 .remote-screen-pointer {
@@ -172,13 +179,32 @@
   height: 14px;
   margin-top: -7px;
   margin-left: -7px;
-  color: #298cff;
+  color: #0a7bff;
   position: absolute;
   pointer-events: none;
 }
 
+.remote-screen-tools {
+  position: absolute;
+  height: 20px;
+  top: -20px;
+  right: -3px; /* adjust for being flush with the border of the remote screen, not the mask */
+}
+
+.remote-screen-tools .btn-group {
+  vertical-align: top;
+}
+
+.remote-screen-tools .btn-group button:first-child {
+  border-bottom-left-radius: 0;
+}
+
+.remote-screen-tools .btn-group button:last-child {
+  border-bottom-right-radius: 0;
+}
+
 /**
- * Live console toolbar components
+ * Adventure console toolbar components
  */
 .toolbar-icon {
   max-width: 18px;
@@ -187,7 +213,7 @@
 }
 
 /**
- * Live console hover controls components
+ * Adventure console hover controls components
  */
 .hover-controls-container {
   display: none;
@@ -202,7 +228,7 @@
 }
 
 /**
- * Live console highlight components
+ * Adventure console highlight components
  */
 .adventure-highlight-element {
   position: absolute;
@@ -223,7 +249,7 @@
 }
 
 /**
- * Live console preview components
+ * Adventure console preview components
  */
 .adventure-preview-element {
   position: absolute;
@@ -249,7 +275,7 @@
 }
 
 /**
- * Live console Highlight Detail
+ * Adventure console Highlight Detail
  */
 .adventure-highlight-detail {
   position: absolute;
@@ -342,7 +368,7 @@
 }
 
 /**
- * Live console Highlight List
+ * Adventure console Highlight List
  */
 .adventure-highlight-list {
   margin-top: 20px;
@@ -387,56 +413,59 @@
 /**
  * Node edit form
  */
-.node-edit-form {
+.current-location-container {
   padding: 10px;
 }
-.edit-node-action-row td {
+.current-location-action-row td {
   vertical-align: middle !important;
 }
 
 /**
  * Action edit form
  */
-.action-edit-form {
+.edit-action-form {
   width: 100%;
-  border: 2px solid #298cff;
+  border: 2px solid #0a7bff;
   border-radius: 10px;
   margin-bottom: 20px;
 }
 
-.action-edit-form-section {
+.edit-action-form-section {
   padding: 10px;
 }
 
-.action-edit-form-container td {
+.edit-action-form-container td {
   border-top: none !important;
 }
 
-.edit-node-action-row {
+/**
+ * Current Location Actions
+ */
+.current-location-action-row {
   width: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
 }
 
-.edit-node-action-row.disabled {
+.current-location-action-row.disabled {
   opacity: 0.5;
 }
 
-.edit-node-action-row > div {
+.current-location-action-row > div {
   flex: 1 1 auto;
 }
 
-.edit-node-action-row .title-cell {
+.current-location-action-row .title-cell {
   flex: 2 2 300px;
 }
 
-.edit-node-action-row .route-cell {
+.current-location-action-row .route-cell {
   text-align: right;
   flex-basis: 200px;
 }
 
-.edit-node-action-row .action-cell {
+.current-location-action-row .action-cell {
   text-align: right;
   flex-basis: 100px;
 }

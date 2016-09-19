@@ -1,24 +1,22 @@
-import './adventure_context.html';
-import './adventure_context.css';
+import './current_location.html';
+import './current_location.css';
 import { Blaze } from 'meteor/blaze';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
-import { AdventureCommands } from '../../../../../imports/api/adventure/adventure_command.js';
 import { AdventureStatus } from '../../../../../imports/api/adventure/adventure_status.js';
 import { Nodes } from '../../../../../imports/api/node/node.js';
-import { NodeSearch } from '../../../../../imports/api/node_search/node_search.js';
 import '../../../components/editable_fields/editable_node_type.js';
 import '../../../components/editable_fields/editable_code/editable_code.js';
 import '../../../components/editable_fields/node_selector/editable_node_selector.js';
-import './adventure_add_node_form.js';
+import './create_node_form.js';
 import '../../../components/node_search/node_url_search_results.js';
 
 /**
  * Template Helpers
  */
-Template.AdventureContext.helpers({
+Template.CurrentLocation.helpers({
   getNode () {
-    //console.log("AdventureContext: ", this);
+    //console.log("CurrentLocation: ", this);
     let currentNodeId = this.currentNodeId.get(),
         adventure     = this.adventure.get();
     
@@ -27,7 +25,7 @@ Template.AdventureContext.helpers({
         staticId        : currentNodeId,
         projectVersionId: adventure.projectVersionId
       });
-      //console.log("AdventureContext, node: ", node);
+      //console.log("CurrentLocation, node: ", node);
       if (node) {
         // clear the ignore list once a node is found
         delete Template.instance().ignore;
@@ -41,12 +39,12 @@ Template.AdventureContext.helpers({
     
     if (state && state.url) {
       // check the results for an exact match
-      var instance   = Template.instance(),
-          results    = instance.comparitor.searchByContext(state, adventure.projectVersionId),
-          winner     = results.clearWinner();
+      var instance = Template.instance(),
+          results  = instance.comparitor.searchByContext(state, adventure.projectVersionId),
+          winner   = results.clearWinner();
       
       // see if there's a clear winner
-      if(winner){
+      if (winner) {
         if (instance.ignore && instance.ignore == winner.node.staticId) {
           console.debug("searchNodes found a single match but it was to be ignored: " + winner.node.staticId);
           return results;
@@ -59,17 +57,9 @@ Template.AdventureContext.helpers({
       }
     }
   },
-  isMatch (node, context) {
-    if (node && context) {
-      let state  = context.state.get(),
-          instance = Template.instance(),
-          result = instance.comparitor.compareNode(state, node);
-      return result.url.match && result.params.match && result.title.match;
-    }
-  },
   nodeComparison (node, context) {
     if (node && context) {
-      let state = context.state.get(),
+      let state    = context.state.get(),
           instance = Template.instance();
       return instance.comparitor.compareNode(state, node);
     }
@@ -93,13 +83,13 @@ Template.AdventureContext.helpers({
 /**
  * Template Event Handlers
  */
-Template.AdventureContext.events({
-  "click .btn-add-node" (e, instance) {
+Template.CurrentLocation.events({
+  "click .btn-create-node" (e, instance) {
     // Show the form
-    instance.$(".add-node-form").removeClass("hide");
+    instance.$(".create-node-form").removeClass("hide");
     
     // Hide the buttons
-    instance.$(".btn-add-node").addClass("hide");
+    instance.$(".btn-create-node").addClass("hide");
     
     // Hide the search results
     //instance.$(".node-url-search").addClass("hide");
@@ -120,10 +110,10 @@ Template.AdventureContext.events({
   },
   "click .btn-cancel-node" (e, instance) {
     // Hide the form
-    instance.$(".add-node-form").addClass("hide");
+    instance.$(".create-node-form").addClass("hide");
     
     // Show the buttons
-    instance.$(".btn-add-node").removeClass("hide");
+    instance.$(".btn-create-node").removeClass("hide");
     
     // Show the search results
     //instance.$(".node-url-search").removeClass("hide");
@@ -179,7 +169,7 @@ Template.AdventureContext.events({
   },
   "edited .node-edit-form .editable" (e, instance, newValue) {
     e.stopImmediatePropagation();
-    var nodeId  = $(e.target).closest(".node-edit-form").attr("data-node-id"),
+    var nodeId  = $(e.target).closest(".current-location-container").attr("data-node-id"),
         target  = $(e.target),
         dataKey = target.attr("data-key"),
         update  = { $set: {} };
@@ -227,11 +217,11 @@ Template.AdventureContext.events({
 /**
  * Template Created
  */
-Template.AdventureContext.onCreated(() => {
+Template.CurrentLocation.onCreated(() => {
   let instance = Template.instance();
   
   instance.autorun(() => {
-    let adventure = instance.data.adventure.get();
+    let adventure       = instance.data.adventure.get();
     instance.comparitor = adventure.platformType().nodeComparitor();
   });
 });
@@ -239,7 +229,7 @@ Template.AdventureContext.onCreated(() => {
 /**
  * Template Rendered
  */
-Template.AdventureContext.onRendered(() => {
+Template.CurrentLocation.onRendered(() => {
   let instance = Template.instance();
   
   // Enable the popover hint for the wrong-node button
@@ -255,6 +245,6 @@ Template.AdventureContext.onRendered(() => {
 /**
  * Template Destroyed
  */
-Template.AdventureContext.onDestroyed(() => {
+Template.CurrentLocation.onDestroyed(() => {
   
 });

@@ -1,0 +1,15 @@
+<template name="AdventureHeader">
+  {{#if state.get.url}}
+    <div class="adventure-header">
+      {{#with state.get}}
+        <h4 class="adventure-page-title">{{title}}</h4>
+        <div class="adventure-page-url">{{url}}</div>
+        <div class="adventure-view-info">
+          <small>viewport is {{viewportSize.width}}px x {{viewportSize.height}}px,</small>
+          <small>scrolled to ({{scroll.x}}, {{scroll.y}})</small>
+          <small>Mouse at ({{mouse.x}}, {{mouse.y}})</small>
+        </div>
+      {{/with}}
+    </div>
+  {{/if}}
+</template>

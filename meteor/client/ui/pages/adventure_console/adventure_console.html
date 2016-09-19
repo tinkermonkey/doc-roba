@@ -6,11 +6,17 @@
       {{#with getContext}}
         <div class="fluid-container full-page adventure">
           <div class="adventure-main-view">
+            {{> AdventureHeader }}
             {{> AdventureScreen }}
           </div>
           <div class="adventure-sidebar" style="height: {{relativeHeight 1.0}}px;">
             {{#RobaAccordionGroup}}
+              {{> CurrentLocationMenu }}
+            
               {{> AdventureStatusBar }}
+            
+              {{> CurrentLocation }}
+              {{> CurrentLocationActions }}
               
               {{#RobaAccordion display=true sticky=true name="adventure-map" title="Map" icon="glyphicon glyphicon-map-marker" unpadded=true}}
                 {{> AdventureMap }}
@@ -18,14 +24,8 @@
               {{#RobaAccordion name="adventure-route" title="Route" icon="glyphicon glyphicon-picture"}}
                 {{> AdventureRoute adventure.get }}
               {{/RobaAccordion}}
-              {{#RobaAccordion name="current-node" title="Current Location" icon="glyphicon glyphicon-pencil" color="#A5A5A5"}}
-                {{> AdventureContext }}
-              {{/RobaAccordion}}
-              {{#RobaAccordion name="current-actions" title="Current Location Actions" icon="glyphicon glyphicon-pencil" color="#A5A5A5"}}
-                {{> AdventureEditNodeActions getCurrentNode }}
-              {{/RobaAccordion}}
               {{#unless adventureIsComplete}}
-                {{#RobaAccordion name="command-console" title="Command Console" icon="glyphicon glyphicon-play"}}
+                {{#RobaAccordion name="command-console" title="Command Editor" icon="glyphicon glyphicon-play"}}
                   {{> AdventureCommandEditor }}
                 {{/RobaAccordion}}
               {{/unless}}

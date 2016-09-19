@@ -6,16 +6,17 @@ import { RobaDialog } from 'meteor/austinsand:roba-dialog';
 import { Adventures } from '../../../../imports/api/adventure/adventure.js';
 import { AdventureStatus } from '../../../../imports/api/adventure/adventure_status.js';
 import { Nodes } from '../../../../imports/api/node/node.js';
-import { NodeSearch } from '../../../../imports/api/node_search/node_search.js';
 import { AdventureConsoleContext } from './adventure_console_context.js';
+import './adventure_header.js';
+import './adventure_map.js';
 import './adventure_screen.js';
 import './adventure_status_bar.js';
-import './adventure_map.js';
-import '../../components/routes/adventure_route.js';
-import './context/adventure_context.js';
-import './context/adventure_edit_node_actions.js';
 import './adventure_command_editor.js';
 import './adventure_command_history.js';
+import '../../components/routes/adventure_route.js';
+import './current_location/current_location.js';
+import './current_location/current_location_menu.js';
+import './current_location/current_location_actions.js';
 
 /**
  * Template Helpers
@@ -23,13 +24,6 @@ import './adventure_command_history.js';
 Template.AdventureConsole.helpers({
   getContext () {
     return Template.instance().context;
-  },
-  getCurrentNode () {
-    let context = Template.instance().context,
-        nodeId = context.currentNodeId.get();
-    if (nodeId) {
-      return Nodes.findOne({ staticId: nodeId, projectVersionId: context.adventure.get().projectVersionId });
-    }
   }
 });
 
@@ -46,7 +40,7 @@ Template.AdventureConsole.events({
     });
   },
   "click .btn-pause-adventure" (e, instance) {
-    let adventure = instance.context.adventure.get();
+    let adventure           = instance.context.adventure.get();
     instance.prePauseStatus = adventure.status;
     Adventures.update(adventure._id, { $set: { status: AdventureStatus.paused } }, function (error, result) {
       if (error) {

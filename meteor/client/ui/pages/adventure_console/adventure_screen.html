@@ -1,46 +1,17 @@
 <template name="AdventureScreen">
   <div class="adventure-screen-container">
-    {{#if state.get.url}}
-      <div class="adventure-header">
-        {{#with state.get}}
-          <h4 class="adventure-page-title">{{title}}</h4>
-          <div class="adventure-page-url">{{url}}</div>
-          <div class="adventure-view-info">
-            <small>viewport is {{viewportSize.width}}px x {{viewportSize.height}}px,</small>
-            <small>scrolled to ({{scroll.x}}, {{scroll.y}})</small>
-            <small>Mouse at ({{mouse.x}}, {{mouse.y}})</small>
-          </div>
-        {{/with}}
-      </div>
-    {{/if}}
-    
     {{#if state.get.screenshot}}
       {{updateViewport}}
-      <img class="remote-screen" src="data:image/png;base64,{{state.get.screenshot}}">
+      <img class="remote-screen" src="data:image/png;base64,{{state.get.screenshot}}"
+           style="{{#with screenSize}}height: {{height}}px; width: {{width}}px;{{/with}}">
       <div class="remote-screen-mask"
-           style="{{#with getScreenMaskPosition}}top: {{top}}px; left: {{left}}px; height: {{height}}px; width: {{width}}px;{{/with}}">
-  
-        {{#unless adventureIsComplete adventure.get}}
-          {{#with getMousePosition}}
-            <div class="remote-screen-pointer" style="top: {{y}}px; left: {{x}}px;">
-              <span class="glyphicon glyphicon-screenshot"></span>
-            </div>
-          {{/with}}
+           style="{{#with maskPosition}}top: {{top}}px; left: {{left}}px; height: {{height}}px; width: {{width}}px;{{/with}}">
         
-          <div class="adventure-screen-tools">
-            <div class="btn-group" role="group">
-              {{#if highlightElements}}
-                <button type="button" class="btn btn-xs btn-primary btn-clear-highlight">
-                  <span class="glyphicon glyphicon-ban-circle"></span>
-                </button>
-              {{/if}}
-              <button type="button" class="btn btn-xs btn-primary btn-refresh">
-                <span class="glyphicon glyphicon-refresh"></span>
-              </button>
-            </div>
-          </div>
+        {{#unless adventureIsComplete adventure.get}}
+          {{> RemoteScreenPointer }}
+          {{> RemoteScreenTools }}
         {{/unless}}
-  
+        
         <div class="adventure-hover-element-highlight" style="visibility: hidden;"></div>
         
         {{> AdventureHoverControls }}
@@ -50,20 +21,10 @@
             {{> AdventureHighlightElement }}
           {{/with}}
         {{/each}}
-        
-        {{#each previewElements.get}}
-          {{#each getPreviewMatches}}
-            {{#with processHighlightElement @index}}
-              {{> AdventurePreviewElement }}
-            {{/with}}
-          {{/each}}
-        {{/each}}
       </div>
       
-      {{#unless adventureIsComplete adventure}}
-        <div class="adventure-toolbar">
-          {{> AdventureToolbar }}
-        </div>
+      {{#unless adventureIsComplete adventure.get}}
+        {{> AdventureToolbar }}
       {{/unless}}
       
       {{#if getCheckResult}}
@@ -76,6 +37,13 @@
           </div>
         {{/with}}
       {{/if}}
+  
+      {{#each highlightElements.get}}
+        {{#with processHighlightElement @index}}
+          {{> AdventureHighlightDetail }}
+        {{/with}}
+      {{/each}}
+      
     {{else}}
       <div class="remote-screen remote-screen-loading">
         <div class="remote-screen-loading-log">
@@ -86,60 +54,5 @@
         {{/unless}}
       </div>
     {{/if}}
-    
-    
-    {{#each highlightElements.get}}
-      {{#with processHighlightElement @index}}
-        {{> AdventureHighlightDetail }}
-      {{/with}}
-    {{/each}}
-    
-    {{#each previewElements.get}}
-      {{#each getPreviewMatches}}
-        {{#with processHighlightElement @index}}
-          {{> AdventurePreviewDetail }}
-        {{/with}}
-      {{/each}}
-    {{/each}}
-    
-    <div class="adventure-highlight-list">
-      {{#if highlightElements.get}}
-        <div class="">
-          <table class="table table-striped">
-            <caption>Matched Elements</caption>
-            <tbody>
-            {{#each highlightElements.get}}
-              <tr>
-                <td>{{@index}}</td>
-                <td>
-                  <span class="glyphicon glyphicon-chevron-down pull-right detail-toggle"></span>
-                  <div class="adventure-highlight-list-row-header">
-                    &lt;<span class="clickable tag">{{tag}}</span>
-                    {{#each attributes}}
-                      <span class="attr">{{name}}</span>="{{#each splitValues ..}}<span
-                      class="clickable value">{{value}}</span>{{#unless last}} {{/unless}}{{/each}}"
-                    {{/each}}&gt;
-                  </div>
-                  
-                  <div class="adventure-highlight-list-row-detail">
-                    <div class="">
-                      <h4>Selectors</h4>
-                      {{#each selectors}}
-                        {{> AdventureSelectorResult selector=this currentNodeId=../../currentNodeId.get adventure=../../adventure.get }}
-                      {{/each}}
-                      <h4>Text</h4>
-                      <div>{{text}}</div>
-                      <h4>HTML</h4>
-                      <div>{{html}}</div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            {{/each}}
-            </tbody>
-          </table>
-        </div>
-      {{/if}}
-    </div>
   </div>
 </template>

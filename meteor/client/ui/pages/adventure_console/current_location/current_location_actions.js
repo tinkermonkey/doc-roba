@@ -1,4 +1,4 @@
-import './adventure_edit_node_actions.html';
+import './current_location_actions.html';
 import { Blaze } from 'meteor/blaze';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
@@ -10,7 +10,7 @@ import '../../../components/editable_fields/editable_nav_menu_list.js';
 /**
  * Template Helpers
  */
-Template.AdventureEditNodeActions.helpers({
+Template.CurrentLocationActions.helpers({
   getActions () {
     return Actions.find({ nodeId: this.staticId, projectVersionId: this.projectVersionId }, { sort: { title: 1 } })
   },
@@ -30,16 +30,23 @@ Template.AdventureEditNodeActions.helpers({
       }
     });
     return navs
+  },
+  currentNode () {
+    let context = Template.instance().context,
+        nodeId  = context.currentNodeId.get();
+    if (nodeId) {
+      return Nodes.findOne({ staticId: nodeId, projectVersionId: context.adventure.get().projectVersionId });
+    }
   }
 });
 
 /**
  * Template Event Handlers
  */
-Template.AdventureEditNodeActions.events({
-  "click .btn-close-action-edit-form" (e, instance) {
-    var view          = Blaze.getView($(e.target).closest(".action-edit-form").get(0)),
-        formContainer = $(e.target).closest(".action-edit-form-container"),
+Template.CurrentLocationActions.events({
+  "click .btn-close-edit-action-form" (e, instance) {
+    var view          = Blaze.getView($(e.target).closest(".edit-action-form").get(0)),
+        formContainer = $(e.target).closest(".edit-action-form-container"),
         actionRow     = formContainer.prev();
     
     formContainer.addClass("hide");
@@ -76,20 +83,20 @@ Template.AdventureEditNodeActions.events({
 /**
  * Template Created
  */
-Template.AdventureEditNodeActions.onCreated(() => {
+Template.CurrentLocationActions.onCreated(() => {
   
 });
 
 /**
  * Template Rendered
  */
-Template.AdventureEditNodeActions.onRendered(() => {
+Template.CurrentLocationActions.onRendered(() => {
   
 });
 
 /**
  * Template Destroyed
  */
-Template.AdventureEditNodeActions.onDestroyed(() => {
+Template.CurrentLocationActions.onDestroyed(() => {
   
 });

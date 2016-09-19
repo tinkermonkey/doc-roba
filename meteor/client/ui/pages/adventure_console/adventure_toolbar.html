@@ -1,7 +1,5 @@
 <template name="AdventureToolbar">
-  <table class="full-width">
-    <tr>
-      <td>
+  <div class="adventure-toolbar">
         <div class="input-group" role="group">
           <input type="text"
                  class="form-control selector-value"
@@ -26,7 +24,5 @@
             {{> AdventureSelectorActionMenu selector=getSelector node=getCurrentNode }}
           </div>
         </div>
-      </td>
-    </tr>
-  </table>
+    </div>
 </template>
