@@ -76,8 +76,5 @@ Template.AdventureConsole.onCreated(() => {
  * Setup an adventure if one isn't active
  */
 Template.AdventureConsole.onRendered(() => {
-  let instance = Template.instance();
-  
-  // perform an initial check
-  //NodeSearch.checkAdventureLocation(instance.context);
+
 });

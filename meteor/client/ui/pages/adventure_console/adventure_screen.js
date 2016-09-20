@@ -6,6 +6,7 @@ import { AdventureStatus } from '../../../../imports/api/adventure/adventure_sta
 import { Actions } from '../../../../imports/api/action/action.js';
 import { Nodes } from '../../../../imports/api/node/node.js';
 import './adventure_toolbar.js';
+import './highlight_elements/click_spot.js';
 import './highlight_elements/highlight_element.js';
 import './highlight_elements/highlight_element_detail.js';
 import './hover_controls/adventure_hover_controls.js';
@@ -58,8 +59,11 @@ Template.AdventureScreen.events({
    * @param instance
    */
   "click .remote-screen-mask, click .remote-screen" (e, instance) {
-    let adventure     = instance.data.adventure.get(),
-        localViewport = instance.data.screenMask.get();
+    let context        = this,
+        adventure      = context.adventure.get(),
+        localViewport  = context.screenMask.get(),
+        state          = context.state.get(),
+        removeViewport = state.viewportSize;
     
     // make sure the adventure is operating
     if (adventure.status == AdventureStatus.complete) {
@@ -72,28 +76,29 @@ Template.AdventureScreen.events({
     }
     
     // take the image coordinates and convert them to window coordinates
-    let aspectRatio = localViewport.width / localViewport.height,
+    let ratio  = removeViewport.width / localViewport.width,
         coords = {
-      x: parseInt(e.offsetX * aspectRatio),
-      y: parseInt(e.offsetY * aspectRatio)
-    };
-    console.log("Click:", localViewport, {mouseX: e.offsetX, mouseY: e.offsetY}, coords)
+          x: parseInt(e.offsetX * ratio),
+          y: parseInt(e.offsetY * ratio)
+        };
     
     // clear the last click location
-    this.lastClickLocation.set({ x: coords.x, y: coords.y });
+    context.lastClickLocation.set(coords);
+    context.setClickSpot(coords.x, coords.y, e);
     
     // clear the current highlights
-    this.selectorElements.set({});
-    this.checkResult.set();
+    context.selectorElements.set({});
+    context.checkResult.set();
     $(".adventure-highlight-detail").find(".selected").removeClass("selected");
     
     // execute the command
     adventure.assistant()
         .getElementAtLocation(adventure, coords.x, coords.y, (error, command) => {
+          console.log("getElementAtLocation returned: ", command);
           if (error) {
             RobaDialog.error("Error adding adventure command: " + error.message);
           } else if (command && command.result && command.result.highlightElements) {
-            instance.data.highlightElements.set(command.result.highlightElements);
+            context.highlightElements.set(command.result.highlightElements);
           }
         });
   },

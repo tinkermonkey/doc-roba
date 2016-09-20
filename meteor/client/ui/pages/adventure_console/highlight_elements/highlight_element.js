@@ -23,6 +23,9 @@ Template.HighlightElement.events({
     // make sure the adventure is operating
     if (adventure.status == AdventureStatus.complete) {
       return;
+    } else if (element.placeholder) {
+      console.log("HighlightElement.mouseenter encountered placeholder element");
+      return;
     }
     
     clearTimeout(instance.hideHoverControlsTimeout);
@@ -44,21 +47,26 @@ Template.HighlightElement.events({
    * @param instance
    */
   "click .adventure-highlight-element" (e, instance) {
-    var element  = $(e.target),
-        detail   = $("#adventure-highlight-detail-" + instance.data.index);
+    var element = this,
+        clickEl = $(e.target),
+        detail  = $("#adventure-highlight-detail-" + instance.data.index);
     
-    if(!detail.length){
+    if (element.placeholder) {
+      console.log("HighlightElement.mouseenter encountered placeholder element");
+      return;
+    } else if (!detail.length) {
       console.error("HighlightElement.click failed to find detail item:", instance.data, e.target);
+      return;
     }
     
-    if (element.hasClass("active")) {
-      element.removeClass("active");
+    if (clickEl.hasClass("active")) {
+      clickEl.removeClass("active");
       detail.removeClass("active");
     } else {
       // clear the currently active
       $(".adventure-highlight-element.active").removeClass("active");
       $(".adventure-highlight-detail.active").removeClass("active");
-      element.addClass("active");
+      clickEl.addClass("active");
       detail.addClass("active");
     }
   }

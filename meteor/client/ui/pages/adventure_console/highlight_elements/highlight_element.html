@@ -1,4 +1,4 @@
 <template name="HighlightElement">
-	<div class="adventure-highlight-element index-{{index}}"
+	<div class="adventure-highlight-element index-{{index}} {{#if placeholder}}highlight-element-placeholder{{/if}}"
        style="top: {{localBounds.top}}px; left: {{localBounds.left}}px; height: {{localBounds.height}}px; width: {{localBounds.width}}px;"></div>
 </template>

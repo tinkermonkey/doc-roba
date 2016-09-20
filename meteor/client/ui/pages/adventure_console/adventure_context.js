@@ -21,6 +21,7 @@ export class AdventureContext {
     this.testSystem        = new ReactiveVar();
     this.viewport          = new ReactiveVar();
     this.screenMask        = new ReactiveVar();
+    this.clickSpot         = new ReactiveVar();
     this.highlightElements = new ReactiveVar([]);
     this.processedElements = new ReactiveVar([]);
     this.selectorElements  = new ReactiveVar({});
@@ -257,5 +258,31 @@ export class AdventureContext {
       console.log("AdventureContext.checkLocation location identified:", clearWinner.node);
       context.currentNodeId.set(clearWinner.node.staticId);
     }
+  }
+  
+  /**
+   * Create a highlight element placeholder at the point of a click
+   * @param remoteX
+   * @param remoteY
+   * @param clickEvent
+   */
+  setClickSpot (remoteX, remoteY, clickEvent) {
+    debug && console.log("setClickSpot:", remoteX, remoteY, clickEvent);
+    let context = this;
+    context.clickSpot.set({ x: clickEvent.offsetX, y: clickEvent.offsetY });
+    context.highlightElements.set([{
+      placeholder: true,
+      bounds: {
+        top: remoteY - 25,
+        left: remoteX - 25,
+        width: 50,
+        height: 50,
+        scrollY: 0,
+        scrollX: 0
+      }
+    }]);
+    setTimeout(() => {
+      context.clickSpot.set();
+    }, 1250);
   }
 }

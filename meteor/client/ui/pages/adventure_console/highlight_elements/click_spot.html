@@ -1,0 +1,9 @@
+<template name="ClickSpot">
+  <div class="click-spot-container" style="top:{{y}}px; left:{{x}}px;">
+    <svg class="click-spot {{#if loaded}}click-spot-loaded{{/if}}">
+      <circle style="stroke: none; fill: #298cff;" cx="50%" cy="50%" r="2"></circle>
+      <circle style="stroke-width: 2px; stroke: #298cff; fill: transparent;" cx="50%" cy="50%" r="40%"></circle>
+      <circle style="stroke-width: 2px; stroke: #298cff; fill: transparent;" cx="50%" cy="50%" r="20%"></circle>
+    </svg>
+  </div>
+</template>
