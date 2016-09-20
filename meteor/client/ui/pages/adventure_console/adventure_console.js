@@ -6,7 +6,7 @@ import { RobaDialog } from 'meteor/austinsand:roba-dialog';
 import { Adventures } from '../../../../imports/api/adventure/adventure.js';
 import { AdventureStatus } from '../../../../imports/api/adventure/adventure_status.js';
 import { Nodes } from '../../../../imports/api/node/node.js';
-import { AdventureConsoleContext } from './adventure_console_context.js';
+import { AdventureContext } from './adventure_context.js';
 import './adventure_header.js';
 import './adventure_map.js';
 import './adventure_screen.js';
@@ -67,7 +67,7 @@ Template.AdventureConsole.events({
 Template.AdventureConsole.onCreated(() => {
   let instance = Template.instance();
   
-  instance.context = new AdventureConsoleContext(instance)
+  instance.context = new AdventureContext(instance)
       .setupSubscriptions()
       .loadData();
 });
