@@ -26,124 +26,7 @@ Template.AdventureScreen.helpers({
     let context = this;
     setTimeout(() => {
       context.updateViewport();
-    }, 1000);
-  },
-  
-  /**
-   * Get the coordinates for the screen shot mask
-   * @returns {{top: number, left: number, height: number, width: number}}
-   */
-  screenSize () {
-    let viewport    = this.viewport.get(),
-        borderWidth = 3;
-    if (viewport && viewport.offset) {
-      return {
-        height: viewport.height - borderWidth,
-        width : viewport.width - borderWidth
-      };
-    }
-  },
-  
-  /**
-   * Get the coordinates for the screen shot mask
-   * @returns {{top: number, left: number, height: number, width: number}}
-   */
-  maskPosition () {
-    let viewport    = this.viewport.get(),
-        borderWidth = 3;
-    if (viewport && viewport.offset) {
-      return {
-        top   : viewport.offset.top - viewport.parentOffset.top + borderWidth,
-        left  : viewport.offset.left - viewport.parentOffset.left + borderWidth,
-        height: viewport.height - 3 * borderWidth,
-        width : viewport.width - 3 * borderWidth
-      };
-    }
-  },
-  
-  /**
-   * Get the elements to highlight from the last command that returned highlight elements
-   * @returns [elements]
-   */
-  getHighlightElements () {
-    return this.highlightElements.get()
-  },
-  
-  /**
-   * Get the preview elements from the last preview command
-   * @returns [elements]
-   */
-  getPreviewElements () {
-    return this.previewElements.get().map(function (el, i) {
-      el.index = i;
-      return el
-    })
-  },
-  
-  /**
-   * Get the preview elements from the last preview command
-   * @returns [elements]
-   */
-  getPreviewMatches () {
-    if (this.matches) {
-      let parent = this;
-      return parent.matches.map(function (el, i) {
-        el.index   = parent.index + "" + i;
-        el.preview = parent;
-        return el
-      })
-    }
-  },
-  
-  /**
-   * Get the element which the hover controls are for
-   * @returns [elements]
-   */
-  getControlledElement () {
-    return this.controlledElement.get()
-  },
-  
-  /**
-   * Process a highlight element into something usable
-   * @returns {*}
-   */
-  processHighlightElement (index) {
-    let element        = this,
-        context        = Template.parentData(1),
-        localViewport  = context.viewport.get(),
-        state          = context.state.get(),
-        remoteViewport = state.viewportSize,
-        scroll         = state.scroll;
-    
-    // convert the bounds of the highlight element from remote to local coordinates
-    if (element.bounds && localViewport && remoteViewport) {
-      let ratio     = (localViewport.width / remoteViewport.width);
-      // encode the array index
-      element.index = index;
-      
-      // attach the local viewport
-      element.localViewport = localViewport;
-      
-      // add in the adventure and nodeId context
-      element.adventure     = context.adventure.get();
-      element.currentNodeId = context.currentNodeId.get();
-      
-      // setup the local position of the highlight element
-      element.localBounds = {
-        top   : parseInt((element.bounds.top - scroll.y + element.bounds.scrollY) * ratio),
-        left  : parseInt((element.bounds.left - scroll.x + element.bounds.scrollX) * ratio),
-        height: parseInt(element.bounds.height * ratio),
-        width : parseInt(element.bounds.width * ratio)
-      };
-      
-      return element;
-    }
-  },
-  /**
-   * Get the results of a selector check
-   */
-  getCheckResult () {
-    return this.checkResult.get();
+    }, 500);
   },
   
   /**
@@ -175,8 +58,8 @@ Template.AdventureScreen.events({
    * @param instance
    */
   "click .remote-screen-mask, click .remote-screen" (e, instance) {
-    let adventure = instance.data.adventure.get(),
-        state     = instance.data.state.get();
+    let adventure     = instance.data.adventure.get(),
+        localViewport = instance.data.screenMask.get();
     
     // make sure the adventure is operating
     if (adventure.status == AdventureStatus.complete) {
@@ -189,13 +72,12 @@ Template.AdventureScreen.events({
     }
     
     // take the image coordinates and convert them to window coordinates
-    let viewport = state.viewportSize,
-        bounds   = { width: $(e.target).width(), height: $(e.target).height() },
-        ratio    = (viewport.width / bounds.width),
-        coords   = {
-          x: parseInt(e.offsetX * ratio),
-          y: parseInt(e.offsetY * ratio)
-        };
+    let aspectRatio = localViewport.width / localViewport.height,
+        coords = {
+      x: parseInt(e.offsetX * aspectRatio),
+      y: parseInt(e.offsetY * aspectRatio)
+    };
+    console.log("Click:", localViewport, {mouseX: e.offsetX, mouseY: e.offsetY}, coords)
     
     // clear the last click location
     this.lastClickLocation.set({ x: coords.x, y: coords.y });
@@ -214,162 +96,6 @@ Template.AdventureScreen.events({
             instance.data.highlightElements.set(command.result.highlightElements);
           }
         });
-  },
-  "mouseenter .adventure-highlight-list-row-header" (e, instance) {
-    instance.$(".adventure-highlight-element.index-" + this.index).addClass("highlight");
-  },
-  "mouseleave .adventure-highlight-list-row-header" (e, instance) {
-    instance.$(".adventure-highlight-element.index-" + this.index).removeClass("highlight");
-  },
-  /**
-   * Click event for the highlight element list toggle
-   * @param e
-   */
-  "click .adventure-highlight-list-row-header, click .detail-toggle" (e, instance) {
-    let cell   = $(e.target).closest("td"),
-        toggle = cell.find(".detail-toggle");
-    
-    cell.find(".adventure-highlight-list-row-detail").toggleClass("active");
-    toggle.toggleClass("glyphicon-chevron-up");
-    toggle.toggleClass("glyphicon-chevron-down");
-  },
-  /**
-   * Click one of the selectable xpath components
-   * @param e
-   * @param instance
-   */
-  "click .adventure-highlight-hierarchy .clickable, click .adventure-highlight-hierarchy-content .clickable" (e, instance) {
-    var context          = this,
-        el               = $(e.target),
-        selectorElements = instance.data.selectorElements.get();
-    
-    console.log("selected: ", context.index, el);
-    
-    el.toggleClass("selected");
-    
-    // Do the rollup for this row
-    var element = {
-      index     : context.index,
-      attributes: []
-    };
-    el.closest(".adventure-highlight-level").find(".selected").each((i, detailEl) => {
-      console.log("Element", element.index, "selected item:", detailEl);
-      let detail = $(detailEl);
-      
-      if (detail.hasClass("tag")) {
-        element.tag = detail.text().trim();
-      } else {
-        let attribute = detail.prevAll(".attr").first(),
-            value     = detail.text().trim();
-        
-        if (attribute && attribute.text()) {
-          element.attributes.push({
-            attribute: attribute.text().trim(),
-            value    : value
-          });
-        } else {
-          RobaDialog.error("clickable failure: could not identify attribute or tag: " + el.text());
-        }
-      }
-    });
-    
-    // update the selector elements
-    var index = ("0000" + parseInt(element.index)).slice(-4);
-    if (element.tag || element.attributes.length) {
-      // set the element
-      selectorElements[ "_" + index ] = element;
-    } else {
-      // make sure the element is nulled
-      delete selectorElements[ "_" + index ];
-    }
-    
-    // sort by index
-    var sortedElements = {};
-    _.each(_.sortBy(_.keys(selectorElements), (key) => {
-      return selectorElements[ key ].index
-    }), (key) => {
-      sortedElements[ key ] = selectorElements[ key ];
-    });
-    
-    // done
-    console.log("updating elements: ", sortedElements);
-    instance.data.selectorElements.set(sortedElements);
-  },
-  
-  /**
-   * Show the hover controls for a highlight element
-   */
-  "mouseenter .adventure-highlight-element" (e, instance) {
-    let element        = this,
-        adventure      = instance.data.adventure.get(),
-        hoverContainer = instance.$(".hover-controls-container");
-    
-    // make sure the adventure is operating
-    if (adventure.status == AdventureStatus.complete) {
-      return;
-    }
-    
-    clearTimeout(instance.hideHoverControlsTimeout);
-    
-    //console.log("mouseenter: ", element);
-    if (element.localBounds && hoverContainer) {
-      hoverContainer
-          .css("top", element.localBounds.top - 40)
-          .css("left", element.localBounds.left)
-          .css("display", "block");
-      
-      instance.data.controlledElement.set(element);
-    }
-  },
-  /**
-   * Hide the hover controls
-   */
-  "mouseleave .adventure-highlight-element, mouseleave .hover-controls-container" (e, instance) {
-    if (instance.hideHoverControlsTimeout) {
-      clearTimeout(instance.hideHoverControlsTimeout);
-    }
-    
-    instance.hideHoverControlsTimeout = setTimeout(function () {
-      delete instance.hideHoverControlsTimeout;
-      instance.$(".hover-controls-container").css("display", "");
-      instance.data.controlledElement.set();
-    }, 500);
-  },
-  /**
-   * Hide the hover controls
-   */
-  "mouseenter .hover-controls-container" (e, instance) {
-    clearTimeout(instance.hideHoverControlsTimeout);
-  },
-  "mouseenter .adventure-highlight-hierarchy" (e, instance) {
-    var localBounds   = this.localBounds,
-        activeElement = instance.$(".adventure-highlight-detail.active .adventure-highlight-hierarchy:last")[ 0 ];
-    
-    if (activeElement && activeElement == e.target) {
-      return;
-    }
-    
-    // this needs to be delayed slightly to ensure any mouseleave triggers first
-    if (localBounds) {
-      setTimeout(function () {
-        instance.$(".adventure-hover-element-highlight")
-            .css("visibility", "visible")
-            .css("top", localBounds.top + "px")
-            .css("left", localBounds.left + "px")
-            .css("width", localBounds.width + "px")
-            .css("height", localBounds.height + "px");
-      }, 10);
-    } else {
-      console.error("mouseenter adventure-highlight-hierarchy without bounds");
-    }
-  },
-  "mouseleave .adventure-highlight-hierarchy" (e, instance) {
-    instance.$(".adventure-hover-element-highlight")
-        .css("top", "50%")
-        .css("left", "50%")
-        .css("width", "1px")
-        .css("height", "1px")
-        .css("visibility", "hidden");
   },
   "click .adventure-selector-action-menu a" (e, instance) {
     // check for a data command
