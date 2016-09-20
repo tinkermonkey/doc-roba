@@ -1,7 +1,6 @@
 import './adventure_hover_controls.html';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
-import { AdventureCommands } from '../../../../../imports/api/adventure/adventure_command.js';
 import { AdventureStatus } from '../../../../../imports/api/adventure/adventure_status.js';
 import { Util } from '../../../../../imports/api/util.js';
 
@@ -14,6 +13,27 @@ Template.AdventureHoverControls.helpers({});
  * Template Helpers
  */
 Template.AdventureHoverControls.events({
+  
+  /**
+   * Hide the hover controls
+   */
+  "mouseleave .adventure-highlight-element, mouseleave .hover-controls-container" (e, instance) {
+    clearTimeout(instance.hideHoverControlsTimeout);
+    
+    instance.hideHoverControlsTimeout = setTimeout(() => {
+      delete instance.hideHoverControlsTimeout;
+      instance.$(".hover-controls-container").css("display", "");
+      instance.data.controlledElement.set();
+    }, 500);
+  },
+  
+  /**
+   * Prevent the hover controls from hiding during the timeout
+   */
+  "mouseenter .hover-controls-container" (e, instance) {
+    clearTimeout(instance.hideHoverControlsTimeout);
+  },
+  
   "click .btn-left-click, click .btn-right-click" (e, instance) {
     var adventure = instance.data.adventure.get(),
         element   = instance.data.controlledElement.get(),

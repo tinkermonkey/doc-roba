@@ -4,13 +4,13 @@
       <div class="btn btn-warning pull-right btn-wrong-node"
            data-toggle="popover"
            data-trigger="focus"
-           data-content="This is not the correct node"
-      >X
+           data-content="Chose a different node as the current location"
+      >Wrong Node <span class="glyphicon glyphicon-remove"></span>
       </div>
       <div>
         {{#with nodeComparison this ..}}
           {{#unless isMatch}}
-            <div class="alert alert-warning">
+            <div class="alert alert-info">
               The current node does <i>not</i> match the data below:
                 {{> Template.dynamic template=searchComparisonPanel }}
             </div>
@@ -30,10 +30,10 @@
         {{> Template.dynamic template=editParamsPanel }}
       </div>
       
-      <h3 class="section grey">Node Ready Code</h3>
+      <h3 class="section grey">{{#if title}}{{title}}{{else}}Node{{/if}} Ready Check</h3>
       {{> EditableCode value=readyCode dataKey="readyCode" emptyText="Code to validate that the node is ready" color="grey" minLines=3 maxLines=20}}
       
-      <h3 class="section grey">Node Valid Code</h3>
+      <h3 class="section grey">{{#if title}}{{title}}{{else}}Node{{/if}} Validation</h3>
       {{> EditableCode value=validationCode dataKey="validationCode" emptyText="Code to validate the node is correct" color="grey" minLines=3 maxLines=20}}
     
     </div>

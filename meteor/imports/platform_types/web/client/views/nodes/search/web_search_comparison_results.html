@@ -8,7 +8,7 @@
           class="inline-block node-search-result node-search-{{renderLookup "NodeComparisonDatumResultLookup" status "dash"}}"
           data-toggle="popover"
           data-trigger="focus"
-          data-content="{{popoverText}}"
+          data-content="{{renderLookup "NodeComparisonDatumResultLookup" status "dash"}}: {{search}}"
         >{{search}}</span>
       {{/each}}
     </div>

@@ -19,6 +19,23 @@
   transition: height 0.25s, width 0.25s;
 }
 
+.adventure-header {
+  margin-bottom: 10px;
+  margin-top: 0;
+  color: #888;
+  padding: 10px;
+  padding-bottom: 0;
+}
+
+.adventure-page-title, .adventure-page-url {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/**
+ * Status bar
+ */
 .adventure-status-bar {
 
 }
@@ -56,7 +73,7 @@
 }
 
 /**
- * Adventure command editor
+ * Command editor
  */
 .command-editor-btn-bar {
   padding: 10px 0 10px 0;
@@ -64,7 +81,7 @@
 }
 
 /**
- * Adventure command results
+ * Command results
  */
 .command-history-container {
 }
@@ -104,7 +121,7 @@
 }
 
 /**
- * Adventure screen view
+ *  screen view
  */
 .adventure-screen-container {
   width: 100%;
@@ -113,27 +130,9 @@
   padding-top: 0;
 }
 
-.adventure-toolbar {
-  margin-top: 10px;
-  margin-bottom: 5px;
-  padding-top: 3px;
-  padding-bottom: 3px;
-}
-
-.adventure-header {
-  margin-bottom: 10px;
-  margin-top: 0;
-  color: #888;
-  padding: 10px;
-  padding-bottom: 0;
-}
-
-.adventure-page-title, .adventure-page-url {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
+/**
+ * Remote screen
+ */
 .remote-screen {
   width: 100%;
   /*box-shadow: 0 0 15px #888;*/
@@ -157,6 +156,9 @@
   z-index: 99;
   border-radius: 7px;
   border-top-right-radius: 0;
+  /*
+  background-color: rgba(255, 0, 0, 0.5);
+  */
 }
 
 .remote-screen-pointer {
@@ -189,8 +191,15 @@
 }
 
 /**
- * Adventure console toolbar components
+ * Toolbar components
  */
+.adventure-toolbar {
+  margin-top: 10px;
+  margin-bottom: 5px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
 .toolbar-icon {
   max-width: 18px;
   max-height: 18px;
@@ -198,7 +207,7 @@
 }
 
 /**
- * Adventure console hover controls components
+ * Hover controls components
  */
 .hover-controls-container {
   display: none;
@@ -210,244 +219,4 @@
 
 .hidden-editable {
   display: inline-block;
-}
-
-/**
- * Adventure console highlight components
- */
-.adventure-highlight-element {
-  position: absolute;
-  background-color: rgba(255, 255, 0, 0.0);
-  border: 1px dashed #f00;
-  border-radius: 3px;
-  cursor: pointer;
-}
-
-.adventure-highlight-element:hover, .adventure-highlight-element.active {
-  background-color: rgba(255, 255, 0, 0.85);
-  border-radius: 3px;
-  z-index: 100;
-}
-
-.adventure-highlight-element.highlight {
-  background-color: rgba(255, 255, 0, 0.5);
-}
-
-/**
- * Adventure console preview components
- */
-.adventure-preview-element {
-  position: absolute;
-  background-color: rgba(0, 255, 0, 0.5);
-  border: 1px dashed #0d0;
-  border-radius: 3px;
-  overflow: hidden;
-  padding: 3px;
-  cursor: pointer;
-}
-
-.adventure-preview-element:hover, .adventure-preview-element.active {
-  background-color: rgba(255, 255, 0, 0.85);
-  border-radius: 3px;
-}
-
-.adventure-preview-element.preview {
-  background-color: rgba(255, 255, 0, 0.5);
-}
-
-.adventure-preview-detail-command {
-  color: #00ff00;
-}
-
-/**
- * Adventure console Highlight Detail
- */
-.adventure-highlight-detail {
-  position: absolute;
-  display: none;
-  background-color: rgba(18, 18, 18, 0.85);
-  padding: 10px;
-  margin-right: 10px;
-  color: #fff;
-  border-radius: 3px;
-}
-
-.adventure-highlight-detail.active {
-  display: block;
-  margin-bottom: 100px;
-  z-index: 100;
-}
-
-.adventure-highlight-hierarchy {
-  padding-left: 5px;
-  padding-right: 5px;
-  overflow: hidden;
-}
-
-.adventure-highlight-hierarchy:hover {
-  background-color: rgba(90, 90, 90, 0.65);
-  border-radius: 2px;
-}
-
-.adventure-highlight-hierarchy .toggle {
-  cursor: pointer;
-  visibility: hidden;
-  font-size: .75em;
-  color: rgba(255, 255, 0, 1);
-  display: inline-block;
-}
-
-.adventure-highlight-hierarchy:hover .toggle {
-  visibility: visible;
-}
-
-.adventure-highlight-detail .clickable {
-  padding-left: 1px;
-  padding-right: 1px;
-  margin-left: 1px;
-  margin-right: 1px;
-  border-radius: 2px;
-}
-
-.adventure-highlight-detail .clickable:hover, .adventure-highlight-detail .clickable.selected {
-  cursor: pointer;
-  background: #0A7BFF;
-}
-
-.adventure-highlight-hierarchy .tag {
-  color: #ff5900;
-}
-
-.adventure-highlight-hierarchy .attr {
-  color: #00d4e6;
-}
-
-.adventure-highlight-hierarchy .value {
-  color: #ffff00;
-}
-
-.adventure-highlight-hierarchy-content {
-  display: none;
-  /*visibility: hidden;
-  height: 0px;
-  -webkit-transition: height 1.25s;
-  transition: height 1.25s;*/
-}
-
-.adventure-highlight-hierarchy-content.active {
-  display: block;
-  /*visibility: visible;
-  height: auto;*/
-}
-
-.adventure-highlight-hierarchy-content h4 {
-  color: #ffff00;
-}
-
-.adventure-hover-element-highlight {
-  position: absolute;
-  -webkit-transition: height .25s, width .25s, top .25s, left .25s;
-  transition: height .25s, width .25s, top .25s, left .25s;
-  border: 1px dashed #f00;
-  border-radius: 3px;
-}
-
-/**
- * Adventure console Highlight List
- */
-.adventure-highlight-list {
-  margin-top: 20px;
-  width: 100%;
-}
-
-.adventure-highlight-list .tag {
-  color: #ff0000;
-  text-transform: lowercase;
-}
-
-.adventure-highlight-list .attr {
-  color: #00d4e6;
-}
-
-.adventure-highlight-list .value {
-  color: #ff5900;
-}
-
-.adventure-highlight-list-row {
-}
-
-.adventure-highlight-list-row-header {
-  cursor: pointer;
-  margin-right: 20px;
-  border-radius: 3px;
-  padding: 3px;
-}
-
-.adventure-highlight-list-row-header:hover {
-  background-color: rgba(225, 225, 225, 0.75);
-}
-
-.adventure-highlight-list-row-detail {
-  display: none;
-}
-
-.adventure-highlight-list-row-detail.active {
-  display: block;
-}
-
-/**
- * Current Location container
- */
-.current-location-container > div {
-  border-top: 3px solid #0A7BFF;
-}
-
-/**
- * Action edit form
- */
-.edit-action-form {
-  width: 100%;
-  border: 2px solid #0a7bff;
-  border-radius: 10px;
-  margin-bottom: 20px;
-}
-
-.edit-action-form-section {
-  padding: 10px;
-}
-
-.edit-action-form-container td {
-  border-top: none !important;
-}
-
-/**
- * Current Location Actions
- */
-.current-location-action-row {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.current-location-action-row.disabled {
-  opacity: 0.5;
-}
-
-.current-location-action-row > div {
-  flex: 1 1 auto;
-}
-
-.current-location-action-row .title-cell {
-  flex: 2 2 300px;
-}
-
-.current-location-action-row .route-cell {
-  text-align: right;
-  flex-basis: 200px;
-}
-
-.current-location-action-row .action-cell {
-  text-align: right;
-  flex-basis: 100px;
 }

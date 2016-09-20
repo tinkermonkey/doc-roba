@@ -3,11 +3,11 @@
     {{#if state.get.screenshot}}
       {{updateViewport}}
       <img class="remote-screen" src="data:image/png;base64,{{state.get.screenshot}}"
-           style="{{#with screenSize}}height: {{height}}px; width: {{width}}px;{{/with}}">
+           style="{{#with viewport.get}}height: {{height}}px; width: {{width}}px;{{/with}}">
       <div class="remote-screen-mask"
-           style="{{#with maskPosition}}top: {{top}}px; left: {{left}}px; height: {{height}}px; width: {{width}}px;{{/with}}">
+           style="{{#with screenMask.get}}top: {{top}}px; left: {{left}}px; height: {{height}}px; width: {{width}}px;{{/with}}">
         
-        {{#unless adventureIsComplete adventure.get}}
+        {{#unless adventureIsComplete adventure.get }}
           {{> RemoteScreenPointer }}
           {{> RemoteScreenTools }}
         {{/unless}}
@@ -16,34 +16,29 @@
         
         {{> AdventureHoverControls }}
         
-        {{#each highlightElements.get}}
-          {{#with processHighlightElement @index}}
-            {{> HighlightElement }}
-          {{/with}}
+        {{#each processedElements.get }}
+          {{> HighlightElement }}
         {{/each}}
       </div>
       
-      {{#unless adventureIsComplete adventure.get}}
+      {{#unless adventureIsComplete adventure.get }}
         {{> AdventureToolbar }}
       {{/unless}}
       
-      {{#if getCheckResult}}
-        {{#with getCheckResult}}
-          <div class="well">
-            {{> AdventureSelectorResult currentNodeId=../currentNodeId.get adventure=../adventure.get}}
-            {{#each selectors}}
-              {{> AdventureSelectorResult selector=this currentNodeId=../../currentNodeId.get adventure=../../adventure.get}}
-            {{/each}}
-          </div>
-        {{/with}}
-      {{/if}}
-  
-      {{#each highlightElements.get}}
-        {{#with processHighlightElement @index}}
-          {{> HighlightElementDetail }}
-        {{/with}}
-      {{/each}}
+      {{#with checkResult.get }}
+        <div class="well">
+          {{> AdventureSelectorResult currentNodeId=../currentNodeId.get adventure=../adventure.get }}
+          {{#each selectors}}
+            {{> AdventureSelectorResult selector=this currentNodeId=../../currentNodeId.get adventure=../../adventure.get }}
+          {{/each}}
+        </div>
+      {{else}}
+      {{/with}}
       
+      {{#each processedElements.get }}
+        {{> HighlightElementDetail }}
+      {{/each}}
+    
     {{else}}
       <div class="remote-screen remote-screen-loading">
         <div class="remote-screen-loading-log">
@@ -51,7 +46,7 @@
         </div>
         {{#unless adventureIsStill }}
           {{> RobaSpinner }}
-        {{/unless}}
+        {{/unless }}
       </div>
     {{/if}}
   </div>

@@ -1,0 +1,119 @@
+/**
+ * Highlight elements
+ */
+.adventure-highlight-element {
+  position: absolute;
+  background-color: rgba(255, 255, 0, 0.0);
+  border: 1px dashed #f00;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.adventure-highlight-element:hover, .adventure-highlight-element.active {
+  background-color: rgba(255, 255, 0, 0.85);
+  border-radius: 3px;
+  z-index: 100;
+}
+
+.adventure-highlight-element.highlight {
+  background-color: rgba(255, 255, 0, 0.5);
+}
+
+/**
+ * Highlight hierarchy
+ */
+.adventure-highlight-hierarchy {
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow: hidden;
+}
+
+.adventure-highlight-hierarchy:hover {
+  background-color: rgba(90, 90, 90, 0.65);
+  border-radius: 2px;
+}
+
+.adventure-highlight-hierarchy .toggle {
+  cursor: pointer;
+  visibility: hidden;
+  font-size: .75em;
+  color: rgba(255, 255, 0, 1);
+  display: inline-block;
+}
+
+.adventure-highlight-hierarchy:hover .toggle {
+  visibility: visible;
+}
+
+.adventure-highlight-hierarchy .tag {
+  color: #ff5900;
+}
+
+.adventure-highlight-hierarchy .attr {
+  color: #00d4e6;
+}
+
+.adventure-highlight-hierarchy .value {
+  color: #ffff00;
+}
+
+.adventure-highlight-hierarchy-content {
+  display: none;
+  /*visibility: hidden;
+  height: 0px;
+  -webkit-transition: height 1.25s;
+  transition: height 1.25s;*/
+}
+
+.adventure-highlight-hierarchy-content.active {
+  display: block;
+  /*visibility: visible;
+  height: auto;*/
+}
+
+.adventure-highlight-hierarchy-content h4 {
+  color: #ffff00;
+}
+
+/**
+ * Highlight detail
+ */
+.adventure-highlight-detail {
+  position: absolute;
+  display: none;
+  background-color: rgba(18, 18, 18, 0.85);
+  padding: 10px;
+  margin-right: 10px;
+  color: #fff;
+  border-radius: 3px;
+}
+
+.adventure-highlight-detail.active {
+  display: block;
+  margin-bottom: 100px;
+  z-index: 100;
+}
+
+.adventure-highlight-detail .clickable {
+  padding-left: 1px;
+  padding-right: 1px;
+  margin-left: 1px;
+  margin-right: 1px;
+  border-radius: 2px;
+}
+
+.adventure-highlight-detail .clickable:hover, .adventure-highlight-detail .clickable.selected {
+  cursor: pointer;
+  background: #0A7BFF;
+}
+
+/**
+ * Adventure console Highlight Detail
+ */
+.adventure-hover-element-highlight {
+  position: absolute;
+  -webkit-transition: height .25s, width .25s, top .25s, left .25s;
+  transition: height .25s, width .25s, top .25s, left .25s;
+  border: 1px dashed #f00;
+  border-radius: 3px;
+}

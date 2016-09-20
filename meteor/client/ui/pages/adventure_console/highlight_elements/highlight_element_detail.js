@@ -1,87 +1,78 @@
 import './highlight_element_detail.html';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
-import { Util } from '../../../../../imports/api/util.js';
 import './highlight_element_detail_row.js';
 
 /**
  * Template helpers
  */
-Template.HighlightElementDetail.helpers({
+Template.HighlightElementDetail.helpers({});
+
+/**
+ * Template events
+ */
+Template.HighlightElementDetail.events({
+  
   /**
-   * Get the processed list of parent elements for this element
+   * Click one of the selectable xpath components
+   * @param e
+   * @param instance
    */
-  getHierarchy () {
-    let el            = this,
-        context       = Template.parentData(2),
-        state         = context.state.get(),
-        adventure     = context.adventure.get(),
-        currentNodeId = context.currentNodeId.get(),
-        scroll        = state.scroll,
-        ratio         = (context.viewport.get().width / state.viewportSize.width);
+  "click .adventure-highlight-hierarchy .clickable, click .adventure-highlight-hierarchy-content .clickable" (e, instance) {
+    var highlightElement = this,
+        el               = $(e.target),
+        selectorElements = instance.data.context.selectorElements.get();
     
-    if (el.parent) {
-      let elements = Util.getHighlightHierarchy(el);
-      elements.push(_.omit(el, "parent"));
-      _.each(elements, function (e, i) {
-        e.index         = i;
-        e.localBounds   = {
-          top   : parseInt((e.bounds.top - scroll.y + e.bounds.scrollY) * ratio),
-          left  : parseInt((e.bounds.left - scroll.x + e.bounds.scrollX) * ratio),
-          height: parseInt(e.bounds.height * ratio),
-          width : parseInt(e.bounds.width * ratio)
-        };
-        e.currentNodeId = currentNodeId;
-        e.adventure     = adventure;
-      });
-      return elements;
-    }
-  },
-  /**
-   * Get the adjusted top position for this element
-   * @returns {number}
-   */
-  getDetailTop () {
-    if (this.bounds && this.localViewport) {
-      let maskLayer  = this.localViewport.offset,
-          adjustment = this.localViewport.parentOffset;
+    console.log("selected: ", highlightElement.index, el);
+    
+    el.toggleClass("selected");
+    
+    // Do the rollup for this row
+    var element = {
+      index     : highlightElement.index,
+      attributes: []
+    };
+    el.closest(".adventure-highlight-level").find(".selected").each((i, detailEl) => {
+      console.log("Element", element.index, "selected item:", detailEl);
+      let detail = $(detailEl);
       
-      return maskLayer.top + this.localBounds.top + this.localBounds.height - adjustment.top + 5;
-    }
-  },
-  /**
-   * Get the adjusted left position for this element
-   * @returns {number}
-   */
-  getDetailLeft () {
-    if (this.bounds && this.localViewport) {
-      let maskLayer  = this.localViewport.offset,
-          adjustment = this.localViewport.parentOffset,
-          midPoint   = this.localViewport.width * 0.5;
-      
-      if (this.localBounds.left > midPoint) {
-        return midPoint + maskLayer.left - adjustment.left;
+      if (detail.hasClass("tag")) {
+        element.tag = detail.text().trim();
+      } else {
+        let attribute = detail.prevAll(".attr").first(),
+            value     = detail.text().trim();
+        
+        if (attribute && attribute.text()) {
+          element.attributes.push({
+            attribute: attribute.text().trim(),
+            value    : value
+          });
+        } else {
+          RobaDialog.error("clickable failure: could not identify attribute or tag: " + el.text());
+        }
       }
-      
-      return this.localBounds.left + maskLayer.left - adjustment.left;
+    });
+    
+    // update the selector elements
+    var index = ("0000" + parseInt(element.index)).slice(-4);
+    if (element.tag || element.attributes.length) {
+      // set the element
+      selectorElements[ "_" + index ] = element;
+    } else {
+      // make sure the element is nulled
+      delete selectorElements[ "_" + index ];
     }
-  },
-  /**
-   * Get the maximum width
-   */
-  getMaxWidth () {
-    return this.localViewport.width;
-    if (this.localBounds && this.localViewport) {
-      let maskLayer  = this.localViewport.offset,
-          adjustment = this.localViewport.parentOffset,
-          midPoint   = this.localViewport.width * 0.5,
-          left       = this.localBounds.left + maskLayer.left - adjustment.left;
-      
-      if (this.localBounds.left > midPoint) {
-        left = midPoint + maskLayer.left - adjustment.left;
-      }
-      
-      return this.localViewport.width - left;
-    }
+    
+    // sort by index
+    var sortedElements = {};
+    _.each(_.sortBy(_.keys(selectorElements), (key) => {
+      return selectorElements[ key ].index
+    }), (key) => {
+      sortedElements[ key ] = selectorElements[ key ];
+    });
+    
+    // done
+    console.log("updating elements: ", sortedElements);
+    instance.data.context.selectorElements.set(sortedElements);
   }
 });

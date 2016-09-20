@@ -40,7 +40,6 @@ Template.RemoteScreenTools.events({
     
     // clear the last click location and check result
     instance.data.highlightElements.set([]);
-    instance.data.previewElements.set([]);
     instance.data.lastClickLocation.set();
     instance.data.checkResult.set();
     

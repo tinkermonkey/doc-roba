@@ -11,6 +11,7 @@ Template.WebSearchComparisonResults.helpers({
         statusText = NodeComparisonDatumResultLookup[ result.status ],
         text       = '';
     
+    return text;
   }
 });
 
