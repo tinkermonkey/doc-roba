@@ -42,9 +42,9 @@ export class NodeSearchResult {
   isMatch () {
     debug && console.log("NodeSearchResult.isMatch:", _.values(this.comparisons).map(el => el.isMatch()).reduce((pre, cur) => {
       return pre && cur
-    }));
+    }, true));
     return _.values(this.comparisons).map(el => el.isMatch()).reduce((pre, cur) => {
       return pre && cur
-    })
+    }, true)
   }
 }

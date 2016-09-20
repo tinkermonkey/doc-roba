@@ -55,14 +55,15 @@ export class NodeComparison {
    */
   isMatch () {
     if(this.pieces.length){
-      debug && console.log("NodeComparison.isMatch:", this.pieces.map(el => el.status).reduce((pre, cur) => {
+      debug && console.log("NodeComparison.isMatch:", this.search, this.comparison, this.pieces.map(el => el.status).reduce((pre, cur) => {
         return pre && cur == NodeComparisonDatumResult.match
-      }, 0));
+      }, true));
       return this.pieces.map(el => el.status).reduce((pre, cur) => {
         return pre && cur == NodeComparisonDatumResult.match
-      })
+      }, true)
     } else {
       debug && console.log("NodeComparison.isMatch has no pieces:", this.search, this.comparison);
+      return true;
     }
   }
   
