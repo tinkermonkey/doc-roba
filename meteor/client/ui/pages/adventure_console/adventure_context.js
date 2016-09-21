@@ -2,6 +2,7 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Adventures } from '../../../../imports/api/adventure/adventure.js';
 import { AdventureStates } from '../../../../imports/api/adventure/adventure_state.js';
+import { Nodes } from '../../../../imports/api/node/node.js';
 import { TestSystems } from '../../../../imports/api/test_system/test_system.js';
 import { Util } from '../../../../imports/api/util.js';
 
@@ -15,18 +16,17 @@ export class AdventureContext {
     this.instance = instance;
     
     // Create the set of reactive vars
-    this.currentNodeId     = new ReactiveVar();
     this.adventure         = new ReactiveVar();
+    this.controlledElement = new ReactiveVar();
+    this.clickSpot         = new ReactiveVar();
+    this.currentNodeId     = new ReactiveVar();
+    this.currentNode       = new ReactiveVar();
+    this.highlightElements = new ReactiveVar([]);
+    this.processedElements = new ReactiveVar([]);
+    this.screenMask        = new ReactiveVar();
     this.state             = new ReactiveVar();
     this.testSystem        = new ReactiveVar();
     this.viewport          = new ReactiveVar();
-    this.screenMask        = new ReactiveVar();
-    this.clickSpot         = new ReactiveVar();
-    this.highlightElements = new ReactiveVar([]);
-    this.processedElements = new ReactiveVar([]);
-    this.selectorElements  = new ReactiveVar({});
-    this.controlledElement = new ReactiveVar();
-    this.checkResult       = new ReactiveVar();
     this.lastClickLocation = new ReactiveVar();
   }
   
@@ -34,9 +34,10 @@ export class AdventureContext {
    * Subscribe to all of the data needed for the adventure console
    */
   setupSubscriptions () {
-    let instance = this.instance;
+    let context  = this,
+        instance = context.instance;
     instance.autorun(() => {
-      var projectId        = FlowRouter.getParam("projectId"),
+      let projectId        = FlowRouter.getParam("projectId"),
           projectVersionId = FlowRouter.getParam("projectVersionId"),
           adventureId      = FlowRouter.getParam("adventureId");
       
@@ -129,13 +130,21 @@ export class AdventureContext {
     // Respond to the adventure current node changing
     instance.autorun(() => {
       debug && console.log("AdventureContext.currentNodeId autorun");
-      let currentLocation = context.currentNodeId.get();
-      debug && console.log("currentLocation:", currentLocation);
-      if (context.previousLocation && currentLocation && context.previousLocation !== currentLocation) {
-        debug && console.log("Current node changed, clearing highlights:", currentLocation, instance.previousLocation);
+      let currentNodeId = context.currentNodeId.get();
+      debug && console.log("currentLocation:", currentNodeId);
+      if (context.previousLocation && currentNodeId && context.previousLocation !== currentNodeId) {
+        debug && console.log("Current node changed, clearing highlights:", currentNodeId, instance.previousLocation);
         instance.$(".btn-clear-highlight").trigger("click");
       }
-      context.previousLocation = currentLocation;
+      context.previousLocation = currentNodeId;
+    });
+    
+    // Keep a live record of the current node
+    instance.autorun(() => {
+      debug && console.log("AdventureContext.currentNode autorun");
+      let currentNodeId    = context.currentNodeId.get(),
+          projectVersionId = FlowRouter.getParam("projectVersionId");
+      context.currentNode.set(Nodes.findOne({ staticId: currentNodeId, projectVersionId: projectVersionId }));
     });
     
     // Monitor screen resizing
@@ -157,7 +166,8 @@ export class AdventureContext {
         let remoteViewport    = state.viewportSize,
             remoteScroll      = state.scroll,
             highlightElements = context.highlightElements.get(),
-            aspectRatio       = localViewport.width / remoteViewport.width;
+            aspectRatio       = localViewport.width / remoteViewport.width,
+            windowSize        = Session.get("resize");
         
         highlightElements.forEach((element, i) => {
           element.index        = i;
@@ -170,8 +180,8 @@ export class AdventureContext {
           };
           element.detailBounds = {
             top     : localViewport.top + element.localBounds.top + element.localBounds.height + 5,
-            left    : localViewport.left + element.localBounds.left > localViewport.width * 0.5 ? localViewport.width * 0.5 : localViewport.left + element.localBounds.left,
-            maxWidth: localViewport.width
+            left    : localViewport.left + element.localBounds.left,
+            maxWidth: Math.min(localViewport.width, windowSize.width - localViewport.left)
           };
           
           // get the hierarchy
@@ -272,17 +282,17 @@ export class AdventureContext {
     //context.clickSpot.set({ x: clickEvent.offsetX, y: clickEvent.offsetY });
     context.highlightElements.set([]);
     setTimeout(() => {
-      context.highlightElements.set([{
+      context.highlightElements.set([ {
         placeholder: true,
-        bounds: {
-          top: remoteY - 25,
-          left: remoteX - 25,
-          width: 50,
-          height: 50,
+        bounds     : {
+          top    : remoteY - 25,
+          left   : remoteX - 25,
+          width  : 50,
+          height : 50,
           scrollY: 0,
           scrollX: 0
         }
-      }]);
+      } ]);
     }, 30);
     setTimeout(() => {
       //context.clickSpot.set();

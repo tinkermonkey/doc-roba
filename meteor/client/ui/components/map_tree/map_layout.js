@@ -8,7 +8,13 @@ import TreeNodeHandler from '../tree_layout/tree_node_handler.js';
 /**
  * Custom tree layout for providing navigational guidance
  */
-export default class MapLayout {
+export class MapLayout {
+  /**
+   * Create a new map layout
+   * @param elementId
+   * @param context AdventureContext
+   * @param config
+   */
   constructor (elementId, context, config) {
     let self = this;
     
@@ -556,8 +562,7 @@ export default class MapLayout {
    * Front line event handler for clicks on nodes
    */
   nodeClickHandler (e, d) {
-    let self = this,
-        adventureContext = self.context.adventureContext;
+    let self = this;
     
     console.debug('click: ' + d._id + " (" + d.title + ")");
     
@@ -572,9 +577,9 @@ export default class MapLayout {
       
     } else {
       console.log("Checking for context");
-      if(adventureContext && adventureContext.currentNodeId){
+      if(self.context && self.context.currentNodeId){
         console.log("Setting node ID:", node.staticId);
-        adventureContext.currentNodeId.set(node.staticId);
+        self.context.currentNodeId.set(node.staticId);
       }
     }
   }

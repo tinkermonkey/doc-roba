@@ -25,14 +25,11 @@
         {{/with}}
       </div>
       
-      {{#unless adventureIsComplete adventure.get }}
-      {{/unless}}
-      
       {{#with checkResult.get }}
         <div class="well">
-          {{> AdventureSelectorResult currentNodeId=../currentNodeId.get adventure=../adventure.get }}
+          {{> AdventureSelectorResult adventureContext=.. }}
           {{#each selectors}}
-            {{> AdventureSelectorResult selector=this currentNodeId=../../currentNodeId.get adventure=../../adventure.get }}
+            {{> AdventureSelectorResult selector=this adventureContext=.. }}
           {{/each}}
         </div>
       {{else}}

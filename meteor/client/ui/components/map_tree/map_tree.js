@@ -2,7 +2,7 @@ import './map_tree.html';
 import { Template } from 'meteor/templating';
 import { Actions } from '../../../../imports/api/action/action.js';
 import { Nodes } from '../../../../imports/api/node/node.js';
-import MapLayout from './map_layout.js';
+import { MapLayout } from './map_layout.js';
 
 /**
  * Template Helpers
@@ -39,11 +39,10 @@ Template.MapTree.rendered = function () {
     
     // for the data binding we just need to setup an update call
     instance.autorun(function () {
-      console.debug("Auto-run executing map_tree: ");
-      
       // get the nodes and actions
-      var mapNodes   = Nodes.find({ projectVersionId: instance.data.projectVersionId }).fetch(),
-          mapActions = Actions.find({ projectVersionId: instance.data.projectVersionId }).fetch();
+      var projectVersionId = instance.data.adventure.get().projectVersionId,
+          mapNodes         = Nodes.find({ projectVersionId: projectVersionId }).fetch(),
+          mapActions       = Actions.find({ projectVersionId: projectVersionId }).fetch();
       
       if (instance.lastUpdate && Date.now() - instance.lastUpdate > 1000) {
         console.log("MapLayout: direct update");
@@ -88,11 +87,10 @@ Template.MapTree.rendered = function () {
     // respond to asking for a node to be centered
     instance.autorun(function () {
       console.log("responding to current node change");
-      var data = Template.currentData(),
-          node = data.currentNodeId;
-      if (node) {
-        instance.mapLayout.centerNode(node, 0.66);
-        instance.mapLayout.showNodeActions(node);
+      var nodeId = instance.data.currentNodeId.get();
+      if (nodeId) {
+        instance.mapLayout.centerNode(nodeId, 0.66);
+        instance.mapLayout.showNodeActions(nodeId);
       } else {
         instance.mapLayout.zoomAll();
         instance.mapLayout.actionHandler.clearVisibleActions();
@@ -105,7 +103,7 @@ Template.MapTree.rendered = function () {
     instance.mapLayout.init();
     
     // zoom all if there is nothing to zoom to
-    if (!instance.data.currentNodeId) {
+    if (!instance.data.currentNodeId.get()) {
       instance.mapLayout.zoomAll();
       instance.mapLayout.showLocationUnknown();
     }

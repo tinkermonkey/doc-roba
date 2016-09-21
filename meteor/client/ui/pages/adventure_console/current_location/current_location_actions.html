@@ -1,9 +1,9 @@
 <template name="CurrentLocationActions">
   <div class="current-location-actions" style="display: none;">
-    {{#with currentNode}}
+    {{#with currentNode.get}}
         <h3>Actions for this <span class="dark-blue">{{renderLookup "NodeTypesLookup" type}}</span></h3>
     
-        {{#each getActions}}
+        {{#each nodeActions}}
           {{> CurrentLocationActionRow }}
         {{/each}}
         <div>
@@ -23,7 +23,7 @@
         </div>
     
     
-        {{#each getNodeNavMenus}}
+        {{#each nodeNavMenus}}
           <h3>Actions from <span class="dark-blue">{{title}}</span></h3>
       
           {{#each actions}}

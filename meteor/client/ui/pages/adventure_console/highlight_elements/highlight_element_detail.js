@@ -1,19 +1,23 @@
 import './highlight_element_detail.html';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
+import { HighlightElementContext } from './highlight_element_context.js';
 import './highlight_element_detail_row.js';
 import '../adventure_toolbar.js';
 
 /**
  * Template helpers
  */
-Template.HighlightElementDetail.helpers({});
+Template.HighlightElementDetail.helpers({
+  detailContext(){
+    return Template.instance().detailContext;
+  }
+});
 
 /**
  * Template events
  */
 Template.HighlightElementDetail.events({
-  
   /**
    * Click one of the selectable xpath components
    * @param e
@@ -21,19 +25,20 @@ Template.HighlightElementDetail.events({
    */
   "click .adventure-highlight-hierarchy .clickable, click .adventure-highlight-hierarchy-content .clickable" (e, instance) {
     var highlightElement = this,
-        el               = $(e.target),
-        selectorElements = instance.data.context.selectorElements.get();
+        clickedElement   = $(e.target),
+        selectedElements = instance.detailContext.selectedElements.get();
     
-    console.log("HighlightElementDetail.click selected: ", highlightElement.index, el);
+    console.log("HighlightElementDetail.click selected: ", highlightElement.index, clickedElement);
     
-    el.toggleClass("selected");
+    // Select or deselect
+    clickedElement.toggleClass("selected");
     
     // Do the rollup for this row
     var element = {
       index     : highlightElement.index,
       attributes: []
     };
-    el.closest(".adventure-highlight-level").find(".selected").each((i, detailEl) => {
+    clickedElement.closest(".adventure-highlight-level").find(".selected").each((i, detailEl) => {
       //console.log("Element", element.index, "selected item:", detailEl);
       let detail = $(detailEl);
       
@@ -49,7 +54,7 @@ Template.HighlightElementDetail.events({
             value    : value
           });
         } else {
-          RobaDialog.error("clickable failure: could not identify attribute or tag: " + el.text());
+          RobaDialog.error("clickable failure: could not identify attribute or tag: " + clickedElement.text());
         }
       }
     });
@@ -58,22 +63,30 @@ Template.HighlightElementDetail.events({
     var index = ("0000" + parseInt(element.index)).slice(-4);
     if (element.tag || element.attributes.length) {
       // set the element
-      selectorElements[ "_" + index ] = element;
+      selectedElements[ "_" + index ] = element;
     } else {
       // make sure the element is nulled
-      delete selectorElements[ "_" + index ];
+      delete selectedElements[ "_" + index ];
     }
     
     // sort by index
     var sortedElements = {};
-    _.each(_.sortBy(_.keys(selectorElements), (key) => {
-      return selectorElements[ key ].index
+    _.each(_.sortBy(_.keys(selectedElements), (key) => {
+      return selectedElements[ key ].index
     }), (key) => {
-      sortedElements[ key ] = selectorElements[ key ];
+      sortedElements[ key ] = selectedElements[ key ];
     });
     
     // done
     console.log("updating elements: ", sortedElements);
-    instance.data.context.selectorElements.set(sortedElements);
+    instance.detailContext.selectedElements.set(sortedElements);
   }
+});
+
+/**
+ * Template created
+ */
+Template.HighlightElementDetail.onCreated(() => {
+  let instance           = Template.instance();
+  instance.detailContext = new HighlightElementContext(instance, instance.data.context);
 });

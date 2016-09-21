@@ -3,9 +3,9 @@
     <div id="adventure-highlight-detail-{{index}}"
          class="adventure-highlight-detail"
          style="{{#with detailBounds}}top: {{top}}px; left: {{left}}px; max-width: {{maxWidth}}px;{{/with}}">
-      {{> AdventureToolbar context}}
+      {{> AdventureToolbar detailContext}}
       {{#each hierarchyElements}}
-        {{> HighlightElementDetailRow }}
+        {{> HighlightElementDetailRow highlightElement=this detailContext=detailContext}}
       {{/each}}
     </div>
   {{/unless}}

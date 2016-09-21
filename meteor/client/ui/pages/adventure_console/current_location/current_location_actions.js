@@ -11,10 +11,10 @@ import '../../../components/editable_fields/editable_nav_menu_list.js';
  * Template Helpers
  */
 Template.CurrentLocationActions.helpers({
-  getActions () {
+  nodeActions () {
     return Actions.find({ nodeId: this.staticId, projectVersionId: this.projectVersionId }, { sort: { title: 1 } })
   },
-  getNodeNavMenus () {
+  nodeNavMenus () {
     var navs = [],
         node = this;
     _.each(node.navMenus, function (navMenuId) {
@@ -30,12 +30,6 @@ Template.CurrentLocationActions.helpers({
       }
     });
     return navs
-  },
-  currentNode () {
-    let context = this;
-    if (context && context.currentNodeId) {
-      return Nodes.findOne({ staticId: context.currentNodeId.get(), projectVersionId: context.adventure.get().projectVersionId });
-    }
   }
 });
 

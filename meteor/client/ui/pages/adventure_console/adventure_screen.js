@@ -87,8 +87,8 @@ Template.AdventureScreen.events({
     context.setClickSpot(coords.x, coords.y, e);
     
     // clear the current highlights
-    context.selectorElements.set({});
-    context.checkResult.set();
+    //context.selectorElements.set({});
+    //context.checkResult.set();
     $(".adventure-highlight-detail").find(".selected").removeClass("selected");
     
     // execute the command

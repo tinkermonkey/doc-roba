@@ -9,7 +9,7 @@
             <span class="glyphicon glyphicon-plus"></span>
             <span class="caret"></span>
           </button>
-          {{> AdventureSelectorActionMenu selector=this node=currentNode}}
+          {{> AdventureSelectorActionMenu selector=this node=../adventureContext.currentNode.get}}
         </div>
       {{else}}
         {{#if matchCount}}

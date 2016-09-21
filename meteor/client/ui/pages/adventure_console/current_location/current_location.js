@@ -15,24 +15,25 @@ import '../../../components/node_search/node_url_search_results.js';
  * Template Helpers
  */
 Template.CurrentLocation.helpers({
+  /**
+   * Get the current node
+   * @return {*}
+   */
   currentNode () {
     //console.log("CurrentLocation: ", this);
-    let currentNodeId = this.currentNodeId.get(),
-        adventure     = this.adventure.get();
+    let currentNode = this.currentNode.get();
     
-    if (currentNodeId && adventure) {
-      let node = Nodes.findOne({
-        staticId        : currentNodeId,
-        projectVersionId: adventure.projectVersionId
-      });
-      //console.log("CurrentLocation, node: ", node);
-      if (node) {
-        // clear the ignore list once a node is found
-        delete Template.instance().ignore;
-      }
-      return node;
+    if (currentNode) {
+      // clear the ignore list once a node is found
+      delete Template.instance().ignore;
+      return currentNode;
     }
   },
+  
+  /**
+   * Search for nodes which match the current location
+   * @return {*}
+   */
   searchNodes () {
     let state     = this.state.get(),
         adventure = this.adventure.get();
@@ -57,6 +58,13 @@ Template.CurrentLocation.helpers({
       }
     }
   },
+  
+  /**
+   * Compare the current context to the selected node
+   * @param node
+   * @param context
+   * @return {*}
+   */
   nodeComparison (node, context) {
     if (node && context) {
       let state    = context.state.get(),
@@ -64,6 +72,11 @@ Template.CurrentLocation.helpers({
       return instance.comparitor.compareNode(state, node);
     }
   },
+  
+  /**
+   * Get the correct Comparison panel template for the current platformType
+   * @return {*}
+   */
   searchComparisonPanel(){
     let node         = Template.parentData(1),
         platformType = node.platformType();
@@ -71,6 +84,11 @@ Template.CurrentLocation.helpers({
       return platformType.nodeSearchComparisonTemplate();
     }
   },
+  
+  /**
+   * Get the correct Edit Params template for the current platformType
+   * @return {*}
+   */
   editParamsPanel(){
     let platformType = this.platformType();
     if (platformType) {
@@ -83,6 +101,11 @@ Template.CurrentLocation.helpers({
  * Template Event Handlers
  */
 Template.CurrentLocation.events({
+  /**
+   * Show the create node form
+   * @param e
+   * @param instance
+   */
   "click .btn-create-node" (e, instance) {
     // Show the form
     instance.$(".create-node-form").removeClass("hide");
@@ -107,6 +130,12 @@ Template.CurrentLocation.events({
       console.error("Failed to locate map container: " + e.message);
     }
   },
+  
+  /**
+   * Cancel the create node form and discard the data
+   * @param e
+   * @param instance
+   */
   "click .btn-cancel-node" (e, instance) {
     // Hide the form
     instance.$(".create-node-form").addClass("hide");
@@ -129,6 +158,12 @@ Template.CurrentLocation.events({
       console.error("Failed to locate map container: " + e.message);
     }
   },
+  
+  /**
+   * Clear the current nodeId and block this one from matching again
+   * @param e
+   * @param instance
+   */
   "click .btn-wrong-node" (e, instance) {
     try {
       // set the state so that we don't just re-run the search
@@ -140,6 +175,12 @@ Template.CurrentLocation.events({
       RobaDialog.error("Failed to clear node context: " + e.message);
     }
   },
+  
+  /**
+   * Create a new node
+   * @param e
+   * @param instance
+   */
   "click .btn-create-node" (e, instance) {
     try {
       var record = Blaze.getView($(".btn-create-node").get(0)).templateInstance().nodeRecord.get();
@@ -166,6 +207,13 @@ Template.CurrentLocation.events({
       console.error("Failed to load new record: " + e.message);
     }
   },
+  
+  /**
+   * Capture edited events for the current node
+   * @param e
+   * @param instance
+   * @param newValue
+   */
   "edited .node-edit-form .editable" (e, instance, newValue) {
     e.stopImmediatePropagation();
     var nodeId  = $(e.target).closest(".current-location").attr("data-node-id"),
@@ -187,6 +235,13 @@ Template.CurrentLocation.events({
       RobaDialog.error("Failed to update node value: data-key not found");
     }
   },
+  
+  /**
+   * Capture a forced change of node context
+   * @param e
+   * @param instance
+   * @param newValue
+   */
   "edited .current-node-selector" (e, instance, newValue) {
     e.stopImmediatePropagation();
     if (newValue) {
@@ -194,6 +249,12 @@ Template.CurrentLocation.events({
       instance.data.currentNodeId.set(newValue)
     }
   },
+  
+  /**
+   * TBD
+   * @param e
+   * @param instance
+   */
   "click .btn-preview" (e, instance) {
     var adventure        = instance.data.adventure.get(),
         field            = $(e.target).closest(".btn").attr("data-field"),

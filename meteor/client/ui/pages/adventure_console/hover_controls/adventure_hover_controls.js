@@ -24,7 +24,7 @@ Template.AdventureHoverControls.events({
     
     context.hideHoverControlsTimeout = setTimeout(() => {
       delete context.hideHoverControlsTimeout;
-      context.$(".hover-controls-container").css("display", "");
+      instance.$(".hover-controls-container").css("display", "");
       context.controlledElement.set();
     }, 500);
   },
