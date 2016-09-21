@@ -18,26 +18,22 @@ Template.HighlightElement.events({
   "mouseenter .adventure-highlight-element" (e, instance) {
     let element        = this,
         adventure      = element.context.adventure.get(),
-        hoverContainer = instance.$(".hover-controls-container");
+        hoverContainer = $(".hover-controls-container");
     
     // make sure the adventure is operating
-    if (adventure.status == AdventureStatus.complete) {
-      return;
-    } else if (element.placeholder) {
-      console.log("HighlightElement.mouseenter encountered placeholder element");
+    if (adventure.status == AdventureStatus.complete || element.placeholder) {
       return;
     }
     
-    clearTimeout(instance.hideHoverControlsTimeout);
+    clearTimeout(element.context.hideHoverControlsTimeout);
     
-    //console.log("mouseenter: ", element);
     if (element.localBounds && hoverContainer) {
       hoverContainer
           .css("top", element.localBounds.top - 40)
           .css("left", element.localBounds.left)
           .css("display", "block");
-      
-      instance.data.context.controlledElement.set(element);
+  
+      element.context.controlledElement.set(element);
     }
   },
   
@@ -48,25 +44,25 @@ Template.HighlightElement.events({
    */
   "click .adventure-highlight-element" (e, instance) {
     var element = this,
-        clickEl = $(e.target),
-        detail  = $("#adventure-highlight-detail-" + instance.data.index);
+        clickElement = $(e.target),
+        highlightElement = clickElement.closest(".adventure-highlight-element"),
+        detail  = $("#adventure-highlight-detail-" + element.index);
     
-    if (element.placeholder) {
-      console.log("HighlightElement.mouseenter encountered placeholder element");
-      return;
-    } else if (!detail.length) {
-      console.error("HighlightElement.click failed to find detail item:", instance.data, e.target);
+    if (!detail.length || element.placeholder) {
       return;
     }
     
-    if (clickEl.hasClass("active")) {
-      clickEl.removeClass("active");
+    // make sure the hover controls are visible
+    highlightElement.mouseenter();
+    
+    if (clickElement.hasClass("active")) {
+      clickElement.removeClass("active");
       detail.removeClass("active");
     } else {
       // clear the currently active
       $(".adventure-highlight-element.active").removeClass("active");
       $(".adventure-highlight-detail.active").removeClass("active");
-      clickEl.addClass("active");
+      clickElement.addClass("active");
       detail.addClass("active");
     }
   }

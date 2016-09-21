@@ -4,25 +4,54 @@
 .adventure-highlight-element {
   position: absolute;
   background-color: rgba(255, 255, 0, 0.0);
-  border: 1px dashed #f00;
+  border: 2px dashed #f00;
   border-radius: 3px;
   cursor: pointer;
-  -webkit-transition: height .25s, width .25s, top .25s, left .25s;
-  transition: height .25s, width .25s, top .25s, left .25s;
+  -webkit-transition: height 0.5s, width 0.5s, top 0.5s, left 0.5s;
+  transition: height 0.5s, width 0.5s, top 0.5s, left 0.5s;
 }
 
 .adventure-highlight-element:hover, .adventure-highlight-element.active {
   background-color: rgba(255, 255, 0, 0.85);
+  /*background: repeating-linear-gradient(
+    -55deg,
+    rgba(255, 255, 0, 0.55),
+    rgba(255, 255, 0, 0.55) 5px,
+    rgba(255, 98, 0, 0.55) 5px,
+    rgba(255, 98, 0, 0.55) 10px
+  );*/
   border-radius: 3px;
   z-index: 100;
 }
 
-.adventure-highlight-element.highlight {
-  background-color: rgba(255, 255, 0, 0.5);
-}
-
 .adventure-highlight-element.highlight-element-placeholder {
   border-radius: 50%;
+  -webkit-animation: placeholder-spin 5s infinite;
+  animation: placeholder-spin 5s infinite;
+  -webkit-animation-timing-function: linear;
+  animation-timing-function: linear;
+  cursor: wait;
+  border: 2px dashed #ff6200;
+  background-image: url('/dot.svg');
+  background-position: 50% 50%;
+}
+
+@-webkit-keyframes placeholder-spin {
+  from {
+    transform: rotate(0turn);
+  }
+  to {
+    transform: rotate(-1turn);
+  }
+}
+
+@keyframes placeholder-spin {
+  from {
+    transform: rotate(0turn);
+  }
+  to {
+    transform: rotate(-1turn);
+  }
 }
 
 /**

@@ -2,6 +2,7 @@ import './highlight_element_detail.html';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
 import './highlight_element_detail_row.js';
+import '../adventure_toolbar.js';
 
 /**
  * Template helpers
@@ -23,7 +24,7 @@ Template.HighlightElementDetail.events({
         el               = $(e.target),
         selectorElements = instance.data.context.selectorElements.get();
     
-    console.log("selected: ", highlightElement.index, el);
+    console.log("HighlightElementDetail.click selected: ", highlightElement.index, el);
     
     el.toggleClass("selected");
     
@@ -33,7 +34,7 @@ Template.HighlightElementDetail.events({
       attributes: []
     };
     el.closest(".adventure-highlight-level").find(".selected").each((i, detailEl) => {
-      console.log("Element", element.index, "selected item:", detailEl);
+      //console.log("Element", element.index, "selected item:", detailEl);
       let detail = $(detailEl);
       
       if (detail.hasClass("tag")) {

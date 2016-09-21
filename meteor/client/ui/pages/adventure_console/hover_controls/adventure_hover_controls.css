@@ -1,0 +1,12 @@
+/**
+ * Hover controls components
+ */
+.hover-controls-container {
+  display: none;
+  position: absolute;
+  z-index: 100;
+}
+
+.hover-controls-hidden-editable {
+  display: inline-block;
+}

@@ -1,4 +1,5 @@
 import './click_spot.html';
+import './click_spot.css';
 import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
 

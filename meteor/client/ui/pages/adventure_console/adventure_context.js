@@ -170,7 +170,7 @@ export class AdventureContext {
           };
           element.detailBounds = {
             top     : localViewport.top + element.localBounds.top + element.localBounds.height + 5,
-            left    : localViewport.left + element.localBounds.left > localViewport.width * 0.5 ? localViewport.width * 0.5 : element.localBounds.left,
+            left    : localViewport.left + element.localBounds.left > localViewport.width * 0.5 ? localViewport.width * 0.5 : localViewport.left + element.localBounds.left,
             maxWidth: localViewport.width
           };
           
@@ -269,20 +269,23 @@ export class AdventureContext {
   setClickSpot (remoteX, remoteY, clickEvent) {
     debug && console.log("setClickSpot:", remoteX, remoteY, clickEvent);
     let context = this;
-    context.clickSpot.set({ x: clickEvent.offsetX, y: clickEvent.offsetY });
-    context.highlightElements.set([{
-      placeholder: true,
-      bounds: {
-        top: remoteY - 25,
-        left: remoteX - 25,
-        width: 50,
-        height: 50,
-        scrollY: 0,
-        scrollX: 0
-      }
-    }]);
+    //context.clickSpot.set({ x: clickEvent.offsetX, y: clickEvent.offsetY });
+    context.highlightElements.set([]);
     setTimeout(() => {
-      context.clickSpot.set();
+      context.highlightElements.set([{
+        placeholder: true,
+        bounds: {
+          top: remoteY - 25,
+          left: remoteX - 25,
+          width: 50,
+          height: 50,
+          scrollY: 0,
+          scrollX: 0
+        }
+      }]);
+    }, 30);
+    setTimeout(() => {
+      //context.clickSpot.set();
     }, 1250);
   }
 }

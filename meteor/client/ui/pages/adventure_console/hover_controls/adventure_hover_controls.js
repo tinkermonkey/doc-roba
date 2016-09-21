@@ -1,4 +1,5 @@
 import './adventure_hover_controls.html';
+import './adventure_hover_controls.css';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
 import { AdventureStatus } from '../../../../../imports/api/adventure/adventure_status.js';
@@ -13,17 +14,18 @@ Template.AdventureHoverControls.helpers({});
  * Template Helpers
  */
 Template.AdventureHoverControls.events({
-  
   /**
    * Hide the hover controls
    */
   "mouseleave .adventure-highlight-element, mouseleave .hover-controls-container" (e, instance) {
-    clearTimeout(instance.hideHoverControlsTimeout);
+    let context = this;
     
-    instance.hideHoverControlsTimeout = setTimeout(() => {
-      delete instance.hideHoverControlsTimeout;
-      instance.$(".hover-controls-container").css("display", "");
-      instance.data.controlledElement.set();
+    clearTimeout(context.hideHoverControlsTimeout);
+    
+    context.hideHoverControlsTimeout = setTimeout(() => {
+      delete context.hideHoverControlsTimeout;
+      context.$(".hover-controls-container").css("display", "");
+      context.controlledElement.set();
     }, 500);
   },
   
@@ -31,12 +33,19 @@ Template.AdventureHoverControls.events({
    * Prevent the hover controls from hiding during the timeout
    */
   "mouseenter .hover-controls-container" (e, instance) {
-    clearTimeout(instance.hideHoverControlsTimeout);
+    let context = this;
+    clearTimeout(context.hideHoverControlsTimeout);
   },
   
+  /**
+   * Handle a click for one of the buttons
+   * @param e
+   * @param instance
+   */
   "click .btn-left-click, click .btn-right-click" (e, instance) {
-    var adventure = instance.data.adventure.get(),
-        element   = instance.data.controlledElement.get(),
+    var context = this,
+        adventure = context.adventure.get(),
+        element   = context.controlledElement.get(),
         command   = $(e.target).closest(".btn").attr("data-command"),
         selector;
     
@@ -66,8 +75,9 @@ Template.AdventureHoverControls.events({
     }
   },
   "click .btn-hover" (e, instance) {
-    var adventure = instance.data.adventure.get(),
-        element   = instance.data.controlledElement.get(),
+    var context = this,
+        adventure = context.adventure.get(),
+        element   = context.controlledElement.get(),
         selector;
     
     // make sure the adventure is operating
@@ -95,7 +105,7 @@ Template.AdventureHoverControls.events({
     }
   },
   "click .btn-type" (e, instance) {
-    instance.$(".hidden-editable").editable("show");
+    instance.$(".hover-controls-hidden-editable").editable("show");
   }
 });
 
@@ -105,7 +115,7 @@ Template.AdventureHoverControls.events({
 Template.AdventureHoverControls.onRendered(() => {
   let instance = Template.instance();
   
-  instance.$(".hidden-editable").editable({
+  instance.$(".hover-controls-hidden-editable").editable({
     mode     : "popup",
     value    : "",
     emptyText: "",
@@ -128,7 +138,7 @@ Template.AdventureHoverControls.onRendered(() => {
           if (error) {
             console.error("Error adding adventure command: " + error.message);
           }
-          instance.$(".hidden-editable").editable("setValue", "");
+          instance.$(".hover-controls-hidden-editable").editable("setValue", "");
         });
       } else {
         console.error("Hover Controls type, no selector found");

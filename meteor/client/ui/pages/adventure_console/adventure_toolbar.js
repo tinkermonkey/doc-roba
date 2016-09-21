@@ -9,8 +9,6 @@ import './hover_controls/adventure_selector_action_menu.js';
  * Template Helpers
  */
 Template.AdventureToolbar.helpers({
-  getXPath () {
-  },
   getCurrentNode () {
     var nodeId = this.currentNodeId.get();
     if (nodeId) {
@@ -27,15 +25,17 @@ Template.AdventureToolbar.helpers({
  */
 Template.AdventureToolbar.events({
   "click .btn-clear" (e, instance) {
-    this.selectorElements.set({});
-    this.checkResult.set();
-    $(".adventure-highlight-detail").find(".selected").removeClass("selected");
+    let context = this;
+    context.selectorElements.set({});
+    context.checkResult.set();
+    $(e.target).closest(".adventure-highlight-detail").find(".selected").removeClass("selected");
     instance.$(".selector-value").val("");
   },
   "click .btn-refine" (e, instance) {
-    var selector     = instance.$(".selector-value").val(),
-        lastLocation = this.lastClickLocation.get(),
-        adventure    = instance.data.adventure.get();
+    var context      = this,
+        selector     = instance.$(".selector-value").val(),
+        lastLocation = context.lastClickLocation.get(),
+        adventure    = context.adventure.get();
     
     console.log("Last click location: ", lastLocation);
     
@@ -46,17 +46,18 @@ Template.AdventureToolbar.events({
             if (error) {
               console.error("Error refining selector: " + error.message);
             } else {
-              instance.data.checkResult.set(command.result)
+              context.checkResult.set(command.result)
             }
           });
     }
   },
   "click .btn-highlight" (e, instance) {
-    let selector  = instance.$(".selector-value").val(),
-        adventure = instance.data.adventure.get();
+    let context   = this,
+        selector  = instance.$(".selector-value").val(),
+        adventure = context.adventure.get();
     
     // make sure the adventure is operating
-    if (instance.data.adventure.get().status == AdventureStatus.complete) {
+    if (adventure.status == AdventureStatus.complete) {
       return;
     }
     
@@ -65,14 +66,14 @@ Template.AdventureToolbar.events({
       if (error) {
         console.error("Error testing selector: " + error.message);
       } else if (command.result.highlightElements) {
-        instance.data.highlightElements.set(command.result.highlightElements);
+        context.highlightElements.set(command.result.highlightElements);
       }
     });
   },
   "keyup input.selector-value, change input.selector-value" (e, instance) {
-    var selector     = instance.$(".selector-value").val(),
-        lastLocation = this.lastClickLocation.get();
-    console.log("Selector: ", selector);
+    var context      = this,
+        selector     = instance.$(".selector-value").val(),
+        lastLocation = context.lastClickLocation.get();
     
     if (selector.length && lastLocation) {
       instance.$(".btn-clear").removeAttr("disabled");
@@ -90,7 +91,8 @@ Template.AdventureToolbar.events({
       instance.$(".btn-highlight").attr("disabled", "disabled");
       instance.$(".btn-selector-dropdown").attr("disabled", "disabled");
     }
-    instance.selector.set(selector);
+    //context.selector.set(selector);
+    $(e.target).closest(".adventure-highlight-detail").find(".selected").removeClass("selected");
   }
 });
 
@@ -98,8 +100,7 @@ Template.AdventureToolbar.events({
  * Template Rendered
  */
 Template.AdventureToolbar.onCreated(() => {
-  let instance      = Template.instance();
-  instance.selector = new ReactiveVar("");
+  
 });
 
 /**
