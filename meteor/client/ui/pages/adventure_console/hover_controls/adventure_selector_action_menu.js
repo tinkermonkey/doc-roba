@@ -1,11 +1,24 @@
 import './adventure_selector_action_menu.html';
 import { Template } from 'meteor/templating';
+import { NodeReadyCheckFns } from '../../../../../imports/api/node/node_ready_check_fns.js';
+import { NodeValidCheckFns } from '../../../../../imports/api/node/node_valid_check_fns.js';
 import './adventure_selector_action_target_menu.js';
 
 /**
  * Template Helpers
  */
-Template.AdventureSelectorActionMenu.helpers({});
+Template.AdventureSelectorActionMenu.helpers({
+  readyCheckFns () {
+    return _.values(NodeReadyCheckFns)
+  },
+  validCheckFns () {
+    return _.values(NodeValidCheckFns)
+  },
+  getSelector () {
+    let selector = this.selector;
+    return selector.selector || selector;
+  }
+});
 
 /**
  * Template Event Handlers
