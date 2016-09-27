@@ -16,7 +16,7 @@
       <div class="adventure-highlight-hierarchy-content" style="padding-left: {{getLeftPadding}}px;">
         <h4>Selectors</h4>
         {{#each selectors}}
-          {{> AdventureSelectorResult selector=this adventureContext=../adventureContext}}
+          {{> AdventureSelectorResult selector=this adventureContext=../context}}
         {{/each}}
         
         {{#if text}}
