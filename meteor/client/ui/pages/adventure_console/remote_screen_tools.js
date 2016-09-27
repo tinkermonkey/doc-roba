@@ -41,7 +41,6 @@ Template.RemoteScreenTools.events({
     // clear the last click location and check result
     instance.data.highlightElements.set([]);
     instance.data.lastClickLocation.set();
-    instance.data.checkResult.set();
     
     // Hide any orphaned highlights
     instance.$(".adventure-hover-element-highlight").css("visibility", "hidden");
