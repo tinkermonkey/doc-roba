@@ -4,8 +4,8 @@ import { RobaDialog } from 'meteor/austinsand:roba-dialog';
 import { RobaAccordion } from 'meteor/austinsand:roba-accordion';
 import { AdventureStatus } from '../../../../imports/api/adventure/adventure_status.js';
 import { Actions } from '../../../../imports/api/action/action.js';
-import { Nodes } from '../../../../imports/api/node/node.js';
-import './adventure_toolbar.js';
+import { NodeCheckTypes } from '../../../../imports/api/node/node_check_types.js';
+import './highlight_elements/highlight_element_toolbar.js';
 import './highlight_elements/click_spot.js';
 import './highlight_elements/highlight_element.js';
 import './highlight_elements/highlight_element_detail.js';
@@ -105,6 +105,8 @@ Template.AdventureScreen.events({
   "click .adventure-selector-action-menu a" (e, instance) {
     // check for a data command
     var item        = $(e.target),
+        context     = instance.data,
+        currentNode = context.currentNode.get(),
         menu        = item.closest(".adventure-selector-action-menu"),
         selector    = atob(item.closest("[data-selector]").attr("data-selector")),
         command     = item.closest("[data-command]").attr("data-command"),
@@ -120,33 +122,17 @@ Template.AdventureScreen.events({
       switch (commandType) {
         case "ready":
         case "valid":
-          RobaAccordion.activate("current-node");
-          setTimeout(function () {
-            let adventureSidebar = $(".adventure-sidebar"),
-                targetTop        = $(".current-location").offset().top,
-                currentScroll    = adventureSidebar.scrollTop(),
-                sidebarTop       = adventureSidebar.offset().top;
+          context.showCurrentLocation(false, () => {
+            let checkType = commandType == "ready" ? NodeCheckTypes.ready : NodeCheckTypes.valid;
             
-            adventureSidebar.animate({ scrollTop: targetTop + currentScroll - 10 - sidebarTop }, 200, function () {
-              var field  = commandType == "ready" ? "readyCode" : "validationCode",
-                  update = { $set: {} },
-                  node   = Nodes.findOne(nodeId);
-              if (node[ field ] && node[ field ].length) {
-                update.$set[ field ] = node[ field ] + "\n" + commandType + "." + command + "('" + selector + "');";
-              } else {
-                update.$set[ field ] = commandType + "." + command + "('" + selector + "');";
+            currentNode.addCheck(checkType, command, selector, null, (error) => {
+              if (error) {
+                RobaDialog.error("Failed to insert NodeCheck: " + error.toString());
               }
-              Nodes.update(nodeId, update, function (error, result) {
-                if (error) {
-                  RobaDialog.error("Failed to update node value: " + error.message);
-                  console.error("Attempted update:", update);
-                }
-              });
             });
-          }, 250);
+          });
           break;
         case "action":
-          RobaAccordion.activate("current-node-actions");
           if (targetId) {
             $(".action-control-buttons[data-action-id='" + targetId + "'] .btn-edit-action").trigger("click");
             setTimeout(function () {
