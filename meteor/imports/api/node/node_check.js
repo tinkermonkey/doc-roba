@@ -1,7 +1,11 @@
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { Auth } from '../auth.js';
+import { ChangeTracker } from '../change_tracker/change_tracker.js';
 import { SchemaHelpers } from '../schema_helpers.js';
 import { NodeCheckTypes } from './node_check_types.js';
+import { NodeReadyCheckFns } from './node_ready_check_fns.js';
+import { NodeValidCheckFns } from './node_valid_check_fns.js';
 
 /**
  * ============================================================================
@@ -37,10 +41,24 @@ export const NodeCheck = new SimpleSchema({
     type         : Number,
     allowedValues: _.values(NodeCheckTypes)
   },
+  // The key from NodeReadyCheckFns or NodeReadyCheckFns
+  checkFn         : {
+    type         : String,
+    allowedValues: _.keys(NodeReadyCheckFns).concat(_.keys(NodeValidCheckFns)),
+    optional     : true
+  },
+  checkFnArgs     : {
+    type    : [ String ],
+    optional: true
+  },
   // Check selector
   selector        : {
     type    : String,
     optional: true
+  },
+  // Sort order
+  order           : {
+    type: Number
   },
   // Standard tracking fields
   dateCreated     : {
@@ -66,6 +84,9 @@ export const NodeCheck = new SimpleSchema({
 
 export const NodeChecks = new Mongo.Collection("node_checks");
 NodeChecks.attachSchema(NodeCheck);
+NodeChecks.deny(Auth.ruleSets.deny.ifNotTester);
+NodeChecks.allow(Auth.ruleSets.allow.ifAuthenticated);
+ChangeTracker.TrackChanges(NodeChecks, "node_checks");
 
 /**
  * Helpers

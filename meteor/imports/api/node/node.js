@@ -5,6 +5,8 @@ import { Auth } from '../auth.js';
 import { Util } from '../util.js';
 import { ChangeTracker } from '../change_tracker/change_tracker.js';
 import { NodeTypes } from './node_types.js';
+import { NodeChecks } from './node_check.js';
+import { NodeCheckTypes } from './node_check_types.js';
 import { UrlParameter } from './url_parameter.js';
 import { DatastoreCategories } from '../datastore/datastore_catagories.js';
 import { CodeModules } from '../code_module/code_module.js';
@@ -315,6 +317,26 @@ Nodes.helpers({
         return Datastores.findOne({ _id: dataStoreId });
       }
     }
+  },
+  readyChecks () {
+    return NodeChecks.find({parentId: this.staticId, projectVersionId: this.projectVersionId, type: NodeCheckTypes.ready}, {sort:{order: 1}})
+  },
+  validChecks () {
+    return NodeChecks.find({parentId: this.staticId, projectVersionId: this.projectVersionId, type: NodeCheckTypes.valid}, {sort:{order: 1}})
+  },
+  addCheck (checkType, checkFn, selector, checkFnArgs, callback) {
+    let node = this,
+        checkCount = NodeChecks.find({parentId: node.staticId, projectVersionId: node.projectVersionId, type: checkType}).count();
+    NodeChecks.insert({
+      projectId: node.projectId,
+      projectVersionId: node.projectVersionId,
+      parentId: node.staticId,
+      type: checkType,
+      checkFn: checkFn,
+      checkFnArgs: checkFnArgs,
+      selector: selector,
+      order: checkCount
+    }, callback);
   }
 });
 
