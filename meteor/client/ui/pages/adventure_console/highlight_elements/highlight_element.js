@@ -13,28 +13,27 @@ Template.HighlightElement.helpers({});
  */
 Template.HighlightElement.events({
   /**
+   * Hide the hover controls
+   */
+  "mouseleave .adventure-highlight-element" (e, instance) {
+    let context = this.context;
+    context.considerHidingHoverControls();
+  },
+  
+  /**
    * Show the hover controls for a highlight element
    */
   "mouseenter .adventure-highlight-element" (e, instance) {
     let element        = this,
-        adventure      = element.context.adventure.get(),
-        hoverContainer = $(".hover-controls-container");
+        context        = element.context,
+        adventure      = context.adventure.get();
     
     // make sure the adventure is operating
     if (adventure.status == AdventureStatus.complete || element.placeholder) {
       return;
     }
     
-    clearTimeout(element.context.hideHoverControlsTimeout);
-    
-    if (element.localBounds && hoverContainer) {
-      hoverContainer
-          .css("top", element.localBounds.top - 40)
-          .css("left", element.localBounds.left)
-          .css("display", "block");
-  
-      element.context.controlledElement.set(element);
-    }
+    context.showHoverControls(element);
   },
   
   /**
@@ -43,10 +42,10 @@ Template.HighlightElement.events({
    * @param instance
    */
   "click .adventure-highlight-element" (e, instance) {
-    var element = this,
-        clickElement = $(e.target),
+    var element          = this,
+        clickElement     = $(e.target),
         highlightElement = clickElement.closest(".adventure-highlight-element"),
-        detail  = $("#adventure-highlight-detail-" + element.index);
+        detail           = $("#adventure-highlight-detail-" + element.index);
     
     if (!detail.length || element.placeholder) {
       return;

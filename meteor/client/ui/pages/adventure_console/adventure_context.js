@@ -46,6 +46,7 @@ export class AdventureContext {
       instance.subscribe("adventure_actions", adventureId);
       instance.subscribe("adventure_commands", adventureId);
       instance.subscribe("nodes", projectId, projectVersionId);
+      instance.subscribe("node_checks", projectId, projectVersionId);
       instance.subscribe("actions", projectId, projectVersionId);
       instance.subscribe("test_servers", projectId, projectVersionId);
       instance.subscribe("test_systems", projectId, projectVersionId);
@@ -143,13 +144,14 @@ export class AdventureContext {
     instance.autorun(() => {
       debug && console.log("AdventureContext.currentNode autorun");
       let currentNodeId    = context.currentNodeId.get(),
-          projectVersionId = FlowRouter.getParam("projectVersionId");
-      context.currentNode.set(Nodes.findOne({ staticId: currentNodeId, projectVersionId: projectVersionId }));
+          projectVersionId = FlowRouter.getParam("projectVersionId"),
+          node             = Nodes.findOne({ staticId: currentNodeId, projectVersionId: projectVersionId });
+      context.currentNode.set(node);
     });
     
     // Monitor screen resizing
     instance.autorun(() => {
-      debug && console.log("AdventureContext.resize autorun");
+      debug &&console.log("AdventureContext.resize autorun");
       var resize = Session.get("resize");
       context.updateViewport();
     });
@@ -222,8 +224,8 @@ export class AdventureContext {
    * Update the dimensions of the viewport and screen mask
    */
   updateViewport () {
-    let context      = this,
-        remoteScreen = $(".remote-screen");
+    let context               = this,
+        remoteScreen          = $(".remote-screen");
     if (remoteScreen.length) {
       let parent      = remoteScreen.offsetParent(),
           borderWidth = parseInt(remoteScreen.css("border-width")),
@@ -297,5 +299,114 @@ export class AdventureContext {
     setTimeout(() => {
       //context.clickSpot.set();
     }, 1250);
+  }
+  
+  /**
+   * Show the hover controls connected to an element
+   * @param element
+   */
+  showHoverControls (element) {
+    let context        = this,
+        hoverContainer = $(".hover-controls-container");
+    
+    clearTimeout(context.hideHoverControlsTimeout);
+    
+    if (element.localBounds && hoverContainer) {
+      hoverContainer
+          .css("top", element.localBounds.top - 40)
+          .css("left", element.localBounds.left)
+          .css("display", "block");
+      
+      context.controlledElement.set(element);
+    }
+    
+  }
+  
+  /**
+   * Set a timeout to hide the hover controls
+   */
+  considerHidingHoverControls () {
+    let context = this;
+    
+    clearTimeout(context.hideHoverControlsTimeout);
+    
+    context.hideHoverControlsTimeout = setTimeout(() => {
+      context.hideHoverControls();
+    }, 500);
+  }
+  
+  /**
+   * Hide the hover controls
+   */
+  hideHoverControls () {
+    let context = this;
+    
+    delete context.hideHoverControlsTimeout;
+    $(".hover-controls-container").css("display", "");
+    context.controlledElement.set();
+  }
+  
+  /**
+   * Show the current location section
+   * @param toggle Toggle the section?
+   */
+  showCurrentLocation (toggle, callback) {
+    let locationContainer = $('.current-location'),
+        actionsContainer  = $('.current-location-actions'),
+        actionsIsVisible  = actionsContainer.css("display") != "none",
+        isHidden          = locationContainer.css("display") == "none";
+    
+    if (isHidden && actionsIsVisible) {
+      actionsContainer.slideUp(250, () => {
+        locationContainer.slideDown(250, callback);
+      });
+    } else if (isHidden) {
+      locationContainer.slideDown(250, callback);
+    } else if (toggle) {
+      locationContainer.slideUp(250, callback);
+    } else if(callback) {
+      callback()
+    }
+  }
+  
+  /**
+   * Show the current location actions section
+   * @param toggle Toggle the section?
+   */
+  showCurrentLocationActions (toggle, callback) {
+    let locationContainer = $('.current-location'),
+        actionsContainer  = $('.current-location-actions'),
+        locationIsVisible = locationContainer.css("display") != "none",
+        isHidden          = actionsContainer.css("display") == "none";
+    
+    if (isHidden && locationIsVisible) {
+      locationContainer.slideUp(250, () => {
+        actionsContainer.slideDown(250, callback);
+      });
+    } else if (isHidden) {
+      actionsContainer.slideDown(250, callback);
+    } else if (toggle) {
+      actionsContainer.slideUp(250, callback);
+    } else if(callback) {
+      callback()
+    }
+  }
+  
+  /**
+   * Hide either current location or current location actions if either are visible
+   */
+  hideLocationPanel (callback) {
+    let locationContainer = $('.current-location'),
+        actionsContainer  = $('.current-location-actions'),
+        actionsIsVisible  = actionsContainer.css("display") != "none",
+        locationIsVisible = locationContainer.css("display") != "none";
+    
+    if (locationIsVisible) {
+      locationContainer.slideUp(250, callback);
+    } else if (actionsIsVisible) {
+      actionsContainer.slideDown(250, callback);
+    } else if(callback) {
+      callback()
+    }
   }
 }

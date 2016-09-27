@@ -17,16 +17,9 @@ Template.AdventureHoverControls.events({
   /**
    * Hide the hover controls
    */
-  "mouseleave .adventure-highlight-element, mouseleave .hover-controls-container" (e, instance) {
+  "mouseleave .hover-controls-container" (e, instance) {
     let context = this;
-    
-    clearTimeout(context.hideHoverControlsTimeout);
-    
-    context.hideHoverControlsTimeout = setTimeout(() => {
-      delete context.hideHoverControlsTimeout;
-      instance.$(".hover-controls-container").css("display", "");
-      context.controlledElement.set();
-    }, 500);
+    context.considerHidingHoverControls();
   },
   
   /**
@@ -74,6 +67,12 @@ Template.AdventureHoverControls.events({
       console.log("element: ", element);
     }
   },
+  
+  /**
+   * Hover the remote pointer over an element
+   * @param e
+   * @param instance
+   */
   "click .btn-hover" (e, instance) {
     var context = this,
         adventure = context.adventure.get(),
