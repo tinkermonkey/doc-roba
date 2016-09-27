@@ -5,7 +5,6 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
 import { Adventures } from '../../../../imports/api/adventure/adventure.js';
 import { AdventureStatus } from '../../../../imports/api/adventure/adventure_status.js';
-import { Nodes } from '../../../../imports/api/node/node.js';
 import { AdventureContext } from './adventure_context.js';
 import './adventure_header.js';
 import './adventure_map.js';
@@ -76,5 +75,5 @@ Template.AdventureConsole.onCreated(() => {
  * Setup an adventure if one isn't active
  */
 Template.AdventureConsole.onRendered(() => {
-
+  
 });
