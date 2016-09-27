@@ -1,0 +1,16 @@
+<template name="NodeCheckEditList">
+  {{debug "NodeCheckEditList:" this}}
+  {{#if nodeChecks.count}}
+    <table class="sortable-table">
+      {{#each nodeChecks}}
+        <tr class="sortable-table-row" data-pk="{{_id}}" data-sort-order="{{order}}">
+          <td class="drag-handle"><span class="glyphicon glyphicon-record"></span></td>
+          <td>{{> EditableXpath value=selector dataKey="selector"}}</td>
+          <td>{{> EditableEnumSelector value=checkFn dataKey="checkFn" enum=checkFnEnum displayKey="label"}}</td>
+          <td>{{> EditableTextArray value=checkFnArgs dataKey="checkFnArgs"}}</td>
+          <td class="btn-delete"><span class="glyphicon glyphicon-remove"></span></td>
+        </tr>
+      {{/each}}
+    </table>
+  {{/if}}
+</template>
