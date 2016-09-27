@@ -12,7 +12,7 @@ export class HighlightElementContext {
     // Create the set of reactive vars
     this.adventureContext = adventureContext;
     this.selectedElements = new ReactiveVar([]);
-    this.inputText        = new ReactiveVar();
+    this.selector         = new ReactiveVar();
     this.checkResult      = new ReactiveVar();
   }
 }
