@@ -12,11 +12,13 @@
   <div class="full-width">
     {{#RobaTabGroup name="edit-panel-tabs" navClass="nav-tabs"}}
       {{#RobaTab name="ready" title="Ready"}}
-        <div class="sub-heading">Code to determine if this {{renderLookup "NodeTypesLookup" type}} is ready:</div>
+        <div class="sub-heading">{{renderLookup "NodeTypesLookup" type}} Ready Checks:</div>
+        {{> NodeCheckEditList node=this type=nodeChecks.ready}}
         {{> EditableCode dataKey="readyCode" value=readyCode emptyText="Click to define ready code for this node."}}
       {{/RobaTab}}
       {{#RobaTab name="validations" title="Validations"}}
-        <div class="sub-heading">Code to determine if this {{renderLookup "NodeTypesLookup" type}} is valid:</div>
+        <div class="sub-heading">{{renderLookup "NodeTypesLookup" type}} Valid Checks:</div>
+        {{> NodeCheckEditList node=this type=nodeChecks.valid}}
         {{> EditableCode dataKey="validationCode" value=validationCode  emptyText="Click to define validation code for this node."}}
       {{/RobaTab}}
       {{#RobaTab name="nav-menus" title="Nav Menus"}}
