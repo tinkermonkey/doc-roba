@@ -5,6 +5,7 @@ import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
 import { AdventureStatus } from '../../../../../imports/api/adventure/adventure_status.js';
 import { Nodes } from '../../../../../imports/api/node/node.js';
+import { NodeCheckTypes } from '../../../../../imports/api/node/node_check_types.js';
 import '../../../components/editable_fields/editable_node_type.js';
 import '../../../components/editable_fields/editable_code/editable_code.js';
 import '../../../components/editable_fields/node_selector/editable_node_selector.js';
@@ -94,6 +95,13 @@ Template.CurrentLocation.helpers({
     if (platformType) {
       return platformType.nodeEditParamsTemplate();
     }
+  },
+  
+  /**
+   * Node Check Types
+   */
+  nodeChecks(){
+    return NodeCheckTypes;
   }
 });
 
@@ -214,7 +222,7 @@ Template.CurrentLocation.events({
    * @param instance
    * @param newValue
    */
-  "edited .node-edit-form .editable" (e, instance, newValue) {
+  "edited .current-location .editable" (e, instance, newValue) {
     e.stopImmediatePropagation();
     var nodeId  = $(e.target).closest(".current-location").attr("data-node-id"),
         target  = $(e.target),
