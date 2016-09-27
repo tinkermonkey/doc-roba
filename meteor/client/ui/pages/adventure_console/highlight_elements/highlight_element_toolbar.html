@@ -1,10 +1,11 @@
-<template name="AdventureToolbar">
-  <div class="adventure-toolbar">
+<template name="HighlightElementToolbar">
+  <div class="highlight-element-toolbar">
     <div class="input-group input-group-sm" role="group">
       <input type="text"
-             class="form-control selector-value"
+             class="form-control selector-value hide"
              aria-label="..."
              placeholder="Enter a selector to highlight matched elements">
+      {{> EditableXpath value=selector.get dataKey="selector" emptyText="No elements selected"}}
       <div class="input-group-btn">
         <button type="button" class="btn btn-primary btn-clear" disabled="disabled">
           <span class="glyphicon glyphicon-remove"></span>
@@ -22,7 +23,8 @@
           <span class="glyphicon glyphicon-plus"></span>
           <span class="caret"></span>
         </button>
-        {{> AdventureSelectorActionMenu selector=inputText.get node=adventureContext.currentNode.get }}
+        {{debug "AdventureSelectorActionMenu:" selector.get }}
+        {{> AdventureSelectorActionMenu selector=selector.get node=adventureContext.currentNode.get }}
       </div>
     </div>
   </div>

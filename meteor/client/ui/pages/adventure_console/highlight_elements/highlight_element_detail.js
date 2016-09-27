@@ -3,7 +3,7 @@ import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
 import { HighlightElementContext } from './highlight_element_context.js';
 import './highlight_element_detail_row.js';
-import '../adventure_toolbar.js';
+import './highlight_element_toolbar.js';
 
 /**
  * Template helpers
