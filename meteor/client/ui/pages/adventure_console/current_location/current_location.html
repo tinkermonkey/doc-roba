@@ -12,7 +12,7 @@
           {{#unless isMatch}}
             <div class="alert alert-info">
               The current node does <i>not</i> match the data below:
-                {{> Template.dynamic template=searchComparisonPanel }}
+              {{> Template.dynamic template=searchComparisonPanel }}
             </div>
           {{/unless}}
         {{/with}}
@@ -30,11 +30,23 @@
         {{> Template.dynamic template=editParamsPanel }}
       </div>
       
-      <h3 class="section grey">{{#if title}}{{title}}{{else}}Node{{/if}} Ready Check</h3>
-      {{> EditableCode value=readyCode dataKey="readyCode" emptyText="Code to validate that the node is ready" color="grey" minLines=3 maxLines=20}}
-      
-      <h3 class="section grey">{{#if title}}{{title}}{{else}}Node{{/if}} Validation</h3>
-      {{> EditableCode value=validationCode dataKey="validationCode" emptyText="Code to validate the node is correct" color="grey" minLines=3 maxLines=20}}
+      {{#RobaTabGroup name="ready-tabs" navClass="nav-tabs"}}
+        {{#RobaTab name="quick-checks" title="Ready Checks"}}
+          {{> NodeCheckEditList node=this type=nodeChecks.ready}}
+        {{/RobaTab}}
+        {{#RobaTab name="code" title="Ready Code"}}
+          {{> EditableCode value=readyCode dataKey="readyCode" emptyText="Code to validate that the node is ready" color="grey" minLines=3 maxLines=20}}
+        {{/RobaTab}}
+      {{/RobaTabGroup}}
+
+      {{#RobaTabGroup name="valid-tabs" navClass="nav-tabs"}}
+        {{#RobaTab name="quick-checks" title="Validation Checks"}}
+          {{> NodeCheckEditList node=this type=nodeChecks.valid}}
+        {{/RobaTab}}
+        {{#RobaTab name="code" title="Validation Code"}}
+          {{> EditableCode value=validationCode dataKey="validationCode" emptyText="Code to validate the node is correct" color="grey" minLines=3 maxLines=20}}
+        {{/RobaTab}}
+      {{/RobaTabGroup}}
     
     </div>
   {{else}}
