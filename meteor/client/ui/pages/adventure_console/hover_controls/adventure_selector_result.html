@@ -1,7 +1,7 @@
 <template name="AdventureSelectorResult">
   {{#with selector}}
     <div>
-      <span>{{selector}}</span>
+      <span>{{> Xpath selector}}</span>
       {{#if match}}
         <span class="label label-success">Matched a single element</span>
         <div class="btn-group">
