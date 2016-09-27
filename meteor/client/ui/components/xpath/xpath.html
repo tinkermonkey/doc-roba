@@ -1,0 +1,57 @@
+<template name="Xpath">
+  {{#each steps}}
+    {{> Template.dynamic template=xPathTemplate}}
+    {{#if predicates.length}}
+      <span class="xpath-plain">[</span>
+      {{#each predicates}}
+        {{> Template.dynamic template=xPathTemplate}}
+      {{/each}}
+      <span class="xpath-plain">]</span>
+    {{/if}}
+  {{/each}}
+</template>
+
+<template name="XPathPathExpr">
+  {{#each steps}}
+    {{> Template.dynamic template=xPathTemplate}}
+    {{#each predicates}}
+      {{> Template.dynamic template=xPathTemplate}}
+    {{/each}}
+  {{/each}}
+</template>
+
+<template name="XPathStep">
+  {{#each stepElements}}
+    <span class="{{cssClass}}">{{text}}</span>
+  {{/each}}
+</template>
+
+<template name="XPathBoolExpr">
+  {{#with left}}
+    {{> Template.dynamic template=xPathTemplate}}
+  {{/with}}
+  <span class="xpath-operator">{{type}}</span>
+  {{#with right}}
+    {{> Template.dynamic template=xPathTemplate}}
+  {{/with}}
+</template>
+
+<template name="XPathEqExpr">
+  {{#with left}}
+    {{> Template.dynamic template=xPathTemplate}}
+  {{/with}}
+  <span class="xpath-operator">{{type}}</span>
+  {{#with right}}
+    {{> Template.dynamic template=xPathTemplate}}
+  {{/with}}
+</template>
+
+<template name="XPathFuncExpr">
+  <span class="xpath-operator">{{id}}(</span>
+  {{#each args}}{{#if @index}}<span class="xpath-operator">, </span>{{/if}}{{> Template.dynamic template=xPathTemplate}}{{/each}}
+  <span class="xpath-operator">)</span>
+</template>
+
+<template name="XPathStringLiteral">
+  <span class="xpath-value">{{valueDisplay}}</span>
+</template>

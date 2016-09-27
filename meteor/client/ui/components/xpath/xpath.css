@@ -1,0 +1,19 @@
+.xpath-plain {
+  color: inherit;
+}
+
+.xpath-operator {
+  color: #e200a5;
+}
+
+.xpath-tag {
+  color: #ff5900;
+}
+
+.xpath-attr {
+  color: #00d4e6;
+}
+
+.xpath-value {
+  color: #ffb800;
+}

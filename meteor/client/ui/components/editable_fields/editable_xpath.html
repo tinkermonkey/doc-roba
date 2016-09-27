@@ -1,0 +1,8 @@
+<template name="EditableXpath">
+  <div class="{{cssClass}} editable editable-xpath" data-key="{{dataKey}}">
+    <div class="editable-xpath-display {{#unless value}}hide{{/unless}}">
+      {{> Xpath value}}
+    </div>
+    <span class="{{#if value}}hide {{/if}}empty-text"><i>{{{emptyText}}}</i></span>
+  </div>
+</template>
