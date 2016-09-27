@@ -2,8 +2,7 @@
   <div class="adventure-screen-container">
     {{#if state.get.screenshot}}
       {{updateViewport}}
-      <img class="remote-screen" src="data:image/png;base64,{{state.get.screenshot}}"
-           style="{{#with viewport.get}}height: {{height}}px; width: {{width}}px;{{/with}}">
+      <img class="remote-screen" src="data:image/png;base64,{{state.get.screenshot}}">
       <div class="remote-screen-mask"
            style="{{#with screenMask.get}}top: {{top}}px; left: {{left}}px; height: {{height}}px; width: {{width}}px;{{/with}}">
         

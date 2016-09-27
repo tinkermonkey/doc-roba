@@ -379,6 +379,9 @@ export class MapLayout {
       }
     }
     
+    // cache the node that is centered
+    self.centeredNode = node;
+    
     // hide the location unknown
     self.hideLocationUnknown();
     
@@ -410,6 +413,9 @@ export class MapLayout {
   clearCenteredNode (callback) {
     let self = this;
     console.log("clearCenteredNode");
+  
+    // Delete centered node
+    delete self.centeredNode;
     
     self.highlightCircle
         .classed("hide", true);
@@ -756,6 +762,11 @@ export class MapLayout {
     
     // Update the actions
     self.actionHandler.update(duration);
+    
+    // If there is a node that is centered, re-center
+    if(self.centeredNode){
+      self.centerNode(self.centeredNode, self.scale);
+    }
   }
   
   /**
