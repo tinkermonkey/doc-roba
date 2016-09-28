@@ -20,7 +20,7 @@ function getXPathType (item) {
  */
 Template.registerHelper("xPathTemplate", function () {
   let context = this;
-  console.log("xPathTemplate[", getXPathType(context), "]:", context);
+  //console.log("xPathTemplate[", getXPathType(context), "]:", context);
   return getXPathType(context)
 });
 
