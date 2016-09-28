@@ -14,9 +14,8 @@ import '../editable_fields/editable_xpath.js';
 Template.NodeCheckEditList.helpers({
   /**
    * Get the list of node checks for this node
-   * @return {*}
    */
-  nodeChecks(){
+  nodeChecks () {
     return NodeChecks.find({
       parentId        : this.node.staticId,
       projectVersionId: this.node.projectVersionId,
@@ -27,11 +26,34 @@ Template.NodeCheckEditList.helpers({
   /**
    * Get the correct enum for this list
    */
-  checkFnEnum(){
+  checkFnEnum () {
     if (this.type == NodeCheckTypes.ready) {
       return NodeReadyCheckFns;
     } else {
       return NodeValidCheckFns;
+    }
+  },
+  
+  /**
+   * Get the list of args for this function
+   */
+  checkFnArgList () {
+    let fnList = this.type == NodeCheckTypes.ready ? NodeReadyCheckFns : NodeValidCheckFns,
+        checkFn = fnList[this.checkFn];
+    if(checkFn && checkFn.args && checkFn.args.length){
+      return checkFn.args
+    }
+  },
+  
+  /**
+   * Get the list of args for this function
+   */
+  checkFnArgEmptyText () {
+    let fnList = this.type == NodeCheckTypes.ready ? NodeReadyCheckFns : NodeValidCheckFns,
+        checkFn = fnList[this.checkFn];
+    if(checkFn && checkFn.args && checkFn.args.length){
+      //console.log("checkFnArgEmptyText: ", checkFn.args[0].label);
+      return checkFn.args[0].label
     }
   }
 });
@@ -46,7 +68,7 @@ Template.NodeCheckEditList.events({
         checkId            = target.closest(".sortable-table-row").attr("data-pk"),
         dataKey            = target.attr("data-key"),
         update             = { $set: {} };
-    update.$set[ dataKey ] = newValue.trim();
+    update.$set[ dataKey ] = newValue;
     console.log("Edited: ", checkId, dataKey, newValue, update);
     
     if (checkId && dataKey) {
