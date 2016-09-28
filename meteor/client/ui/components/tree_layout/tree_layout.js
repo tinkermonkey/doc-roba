@@ -1201,10 +1201,10 @@ export default class TreeLayout {
     var self = this;
     //console.log("Popover nodes:", nodeList);
     
-    var bounds      = TreeUtils.nodeListBounds(nodeList, self.config.highlightSurroundMargin),
+    var bounds      = TreeUtils.nodeListBounds(nodeList, self.config.highlightSurroundMargin * 2),
         mainNavMenu = $(".main-nav-menu"),
         insetX      = self.insetLayout.config.radius * 2 + self.insetLayout.config.margin * 2,
-        insetY      = mainNavMenu.height() + mainNavMenu.position().top + self.insetLayout.config.margin * 2,
+        insetY      = mainNavMenu.height() + mainNavMenu.position().top + self.insetLayout.config.margin,
         scale       = self.scale;
     
     // Auto-scale based on the bounds of the nodes being operated on
@@ -1234,7 +1234,6 @@ export default class TreeLayout {
       
       // setup the popover config
       popoverConfig.callback = function () {
-        console.log("Popover Closed");
         try {
           controls.unlock();
         } catch (e) {
@@ -1252,18 +1251,11 @@ export default class TreeLayout {
       popoverConfig.minWidth  = Math.min(self.config.popover.minWidth, self.width * 0.6);
       
       // set the target size
-      popoverConfig.height = self.config.popover.targetHeight;
+      //popoverConfig.height = self.config.popover.targetHeight;
       popoverConfig.width  = self.config.popover.targetWidth;
       
-      // attempt to get the controls attach point
-      try {
-        //popoverConfig.sourceElement = controls.attachPoint();
-      } catch (e) {
-        console.error("Popover failed to obtain control attach point");
-      }
-      
       // Wait until the scaleAndTranslate is complete so that the placement is correct
-      setTimeout(function () {
+      setTimeout(() => {
         // get the final popover position
         var corner         = self.localToScreenCoordinates({
           x: bounds.x + bounds.width,
