@@ -1,29 +1,42 @@
 <template name="PageViewEditPanel">
   <div class="full-width">
-    <div>
-      <span class="field-label">Type: </span>
-      {{> EditableNodeType cssClass="inline-block" pageView=true value=type dataKey="type" emptyText="Select a node type" }}
-    </div>
-    <hr>
-    {{#if editParamsPanel}}
-      {{> Template.dynamic template=editParamsPanel }}
-    {{/if}}
-  </div>
-  <div class="full-width">
     {{#RobaTabGroup name="edit-panel-tabs" navClass="nav-tabs"}}
-      {{#RobaTab name="ready" title="Ready"}}
-        <div class="sub-heading">{{renderLookup "NodeTypesLookup" type}} Ready Checks:</div>
-        {{> NodeCheckEditList node=this type=nodeChecks.ready}}
+      {{#RobaTab name="details" title="Details"}}
+        <div class="flex">
+          <div style="flex-basis: 65%; margin:5px;">
+            <table class="node-details-table">
+              <tr>
+                <td class="node-details-label">
+                  Type:
+                </td>
+                <td class="node-details-value break-word">
+                  {{> EditableNodeType cssClass="inline-block" pageView=true value=type dataKey="type" emptyText="Select a node type" }}
+                </td>
+              </tr>
+              {{#if editParamsPanel}}
+                {{> Template.dynamic template=editParamsPanel }}
+              {{/if}}
+            </table>
+          </div>
+          <div style="flex-basis: 35%; margin:5px;">
+            <h4>Navigation Menus on this page:</h4>
+            {{> EditableNavMenuList projectVersionId=projectVersionId value=navMenus dataKey="navMenus" }}
+          </div>
+        </div>
+      {{/RobaTab}}
+      {{#RobaTab name="ready" title="Ready Checks"}}
+        <h4>{{renderLookup "NodeTypesLookup" type}} Ready Checks:</h4>
+        {{> NodeCheckEditList node=this type=checkTypes.ready}}
+      
+        <h4>{{renderLookup "NodeTypesLookup" type}} Ready Code:</h4>
         {{> EditableCode dataKey="readyCode" value=readyCode emptyText="Click to define ready code for this node."}}
       {{/RobaTab}}
       {{#RobaTab name="validations" title="Validations"}}
-        <div class="sub-heading">{{renderLookup "NodeTypesLookup" type}} Valid Checks:</div>
-        {{> NodeCheckEditList node=this type=nodeChecks.valid}}
+        <h4>{{renderLookup "NodeTypesLookup" type}} Valid Checks:</h4>
+        {{> NodeCheckEditList node=this type=checkTypes.valid}}
+      
+        <h4>{{renderLookup "NodeTypesLookup" type}} Valid Code:</h4>
         {{> EditableCode dataKey="validationCode" value=validationCode  emptyText="Click to define validation code for this node."}}
-      {{/RobaTab}}
-      {{#RobaTab name="nav-menus" title="Nav Menus"}}
-        <div class="sub-heading">Navigation Menus on this page:</div>
-        {{> EditableNavMenuList projectVersionId=projectVersionId value=navMenus dataKey="navMenus" }}
       {{/RobaTab}}
       {{#RobaTab name="documentation" title="Documentation"}}
         Documentation

@@ -2,3 +2,20 @@
   font-size: 30px;
 }
 
+/**
+ * Node Details Table
+ */
+.node-details-table {
+  width: 100%;
+}
+
+.node-details-label {
+  color: #0A7BFF;
+  text-align: right;
+  padding-right: 5px;
+  width: 20%;
+}
+
+.node-details-value {
+  
+}

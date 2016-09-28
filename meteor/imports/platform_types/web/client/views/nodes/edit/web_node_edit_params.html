@@ -1,13 +1,17 @@
 <template name="WebNodeEditParams">
-  <div>
-    <span class="field-label">Page Title: </span>
-    {{> EditableTextField cssClass="inline-block" value=pageTitle dataKey="pageTitle" emptyText="none"}}
-  </div>
-  <div>
-    <span class="dark-blue">Base Url:</span>
-    {{> EditableTextField cssClass="edit-node-url" value=url dataKey="url" emptyText="none"}}
-  </div>
-  <div>
-    {{> EditNodeUrlParameters }}
-  </div>
+  <tr>
+    <td class="node-details-label">Page Title:</td>
+    <td class="node-details-value">
+      {{> EditableTextField cssClass="inline-block" value=pageTitle dataKey="pageTitle" emptyText="none"}}
+    </td>
+  </tr>
+  <tr>
+    <td class="node-details-label">Base Url:</td>
+    <td class="node-details-value">
+      {{> EditableTextField cssClass="edit-node-url" value=url dataKey="url" emptyText="none"}}
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2">{{> EditNodeUrlParameters }}</td>
+  </tr>
 </template>
