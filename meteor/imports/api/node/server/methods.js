@@ -89,5 +89,22 @@ Meteor.methods({
     let user = Auth.requireProjectAccess(projectId),
         userType = Nodes.findOne({projectVersionId: projectVersionId, staticId: userTypeId});
     return userType.dataStore();
+  },
+  
+  /**
+   * Create a platform configuration for a platform node
+   * @param projectId
+   * @param projectVersionId
+   * @param platformId Node.staticId
+   */
+  createPlatformConfiguration(projectId, projectVersionId, platformId){
+    console.debug("createPlatformConfiguration:", projectId, projectVersionId, platformId);
+    check(projectId, String);
+    check(projectVersionId, String);
+    check(platformId, String);
+    
+    let user = Auth.requireProjectAccess(projectId),
+        platform = Nodes.findOne({projectVersionId: projectVersionId, staticId: platformId});
+    return platform.platformConfig();
   }
 });
