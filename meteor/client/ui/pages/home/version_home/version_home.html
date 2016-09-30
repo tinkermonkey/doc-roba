@@ -1,10 +1,10 @@
 <template name="VersionHome">
   {{#CenterPoleLayout}}
     {{#if ready}}
-      {{#with version}}
-        {{setTitle project.title "v" version.version }}
-        {{setNavTitle project.title "v" version.version }}
+      {{setTitle project.title "v" version.version }}
+      {{setNavTitle project.title "v" version.version }}
       
+      {{#with version}}
         {{#RobaTabGroup name="version-tabs"}}
           {{#RobaTab name="activity" title="Activity"}}
             {{> VersionActivity }}
@@ -18,15 +18,18 @@
           {{#RobaTab name="data_types" title="Data Types"}}
             {{> VersionDataTypes }}
           {{/RobaTab}}
-          {{#RobaTab name="servers" title="Server Configuration"}}
+          {{#RobaTab name="platforms" title="Platforms"}}
+            {{> VersionPlatformConfig }}
+          {{/RobaTab}}
+          {{#RobaTab name="servers" title="Servers"}}
             {{> VersionServers }}
           {{/RobaTab}}
-          {{#RobaTab name="test-systems" title="Test Systems & Agents"}}
+          {{#RobaTab name="test-systems" title="Test Systems"}}
             {{> VersionTestSystems }}
           {{/RobaTab}}
         {{/RobaTabGroup}}
-
       {{/with}}
+    
     {{else}}
       {{> RobaSpinner }}
     {{/if}}
