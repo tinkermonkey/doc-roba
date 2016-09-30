@@ -156,6 +156,9 @@ ProjectVersions.helpers({
   userTypes () {
     return Nodes.find({projectVersionId: this._id, type: NodeTypes.userType}, {sort: {title: 1}});
   },
+  platforms () {
+    return Nodes.find({projectVersionId: this._id, type: NodeTypes.platform}, {sort: {title: 1}});
+  },
   dataTypes(){
     DatastoreDataTypes.find({projectVersionId: this._id}, {sort: {title: 1}});
   },
