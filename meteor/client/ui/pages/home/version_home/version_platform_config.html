@@ -1,0 +1,13 @@
+<template name="VersionPlatformConfig">
+  {{#RobaTabGroup name="platform-tabs" navClass="nav-tabs"}}
+    {{#each userTypes}}
+      {{#each platforms}}
+        {{#RobaTab name=platformTitleClean title=platformTitle}}
+          <h2>{{title}}
+            <small>({{userType.title}})</small>
+          </h2>
+        {{/RobaTab}}
+      {{/each}}
+    {{/each}}
+  {{/RobaTabGroup}}
+</template>
