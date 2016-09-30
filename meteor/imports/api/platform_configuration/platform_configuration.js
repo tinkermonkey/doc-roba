@@ -1,5 +1,7 @@
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { Auth } from '../auth.js';
+import { ChangeTracker } from '../change_tracker/change_tracker.js';
 import { SchemaHelpers } from '../schema_helpers.js';
 
 /**
@@ -46,6 +48,8 @@ export const PlatformConfiguration = new SimpleSchema({
 
 export const PlatformConfigurations = new Mongo.Collection("platform_configurations");
 PlatformConfigurations.attachSchema(PlatformConfiguration);
+// These should be created server-side only to prevent duplicates
+ChangeTracker.TrackChanges(PlatformConfigurations, "platform_configurations");
 
 /**
  * Helpers

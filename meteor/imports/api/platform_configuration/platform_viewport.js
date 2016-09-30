@@ -1,5 +1,7 @@
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { Auth } from '../auth.js';
+import { ChangeTracker } from '../change_tracker/change_tracker.js';
 import { SchemaHelpers } from '../schema_helpers.js';
 
 /**
@@ -39,7 +41,7 @@ export const PlatformViewport = new SimpleSchema({
     autoValue() {
       let width  = this.field('width'),
           height = this.field('height');
-      return width/height;
+      return width / height;
     }
   },
   // Standard tracking fields
@@ -65,6 +67,9 @@ export const PlatformViewport = new SimpleSchema({
 
 export const PlatformViewports = new Mongo.Collection("platform_viewports");
 PlatformViewports.attachSchema(PlatformViewport);
+PlatformViewports.deny(Auth.ruleSets.deny.ifNotTester);
+PlatformViewports.allow(Auth.ruleSets.allow.ifAuthenticated);
+ChangeTracker.TrackChanges(PlatformViewports, "platform_viewports");
 
 /**
  * Helpers

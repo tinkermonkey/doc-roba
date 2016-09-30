@@ -1,6 +1,7 @@
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import { Util } from '../util.js';
+import { Auth } from '../auth.js';
+import { ChangeTracker } from '../change_tracker/change_tracker.js';
 import { SchemaHelpers } from '../schema_helpers.js';
 
 /**
@@ -23,6 +24,14 @@ export const PlatformOperatingSystem = new SimpleSchema({
   platformId      : {
     type      : String,
     denyUpdate: true
+  },
+  // OS title
+  title           : {
+    type: String
+  },
+  // OS Versions
+  versions        : {
+    type: [ String ]
   },
   // Standard tracking fields
   dateCreated     : {
@@ -47,6 +56,9 @@ export const PlatformOperatingSystem = new SimpleSchema({
 
 export const PlatformOperatingSystems = new Mongo.Collection("platform_operating_systems");
 PlatformOperatingSystems.attachSchema(PlatformOperatingSystem);
+PlatformOperatingSystems.deny(Auth.ruleSets.deny.ifNotTester);
+PlatformOperatingSystems.allow(Auth.ruleSets.allow.ifAuthenticated);
+ChangeTracker.TrackChanges(PlatformOperatingSystems, "platform_operating_systems");
 
 /**
  * Helpers
