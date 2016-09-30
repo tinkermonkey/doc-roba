@@ -1,11 +1,8 @@
 import './version_credentials.html';
-
-import {Template} from 'meteor/templating';
-
-import {Nodes} from '../../../../../imports/api/node/node.js';
-import {NodeTypes} from '../../../../../imports/api/node/node_types.js';
-import {Datastores} from '../../../../../imports/api/datastore/datastore.js';
-
+import { Template } from 'meteor/templating';
+import { Nodes } from '../../../../../imports/api/node/node.js';
+import { NodeTypes } from '../../../../../imports/api/node/node_types.js';
+import { Util } from '../../../../../imports/api/util.js';
 import '../../../components/datastores/datastore_data_table.js';
 
 /**
@@ -13,7 +10,10 @@ import '../../../components/datastores/datastore_data_table.js';
  */
 Template.VersionCredentials.helpers({
   userTypes() {
-    return Nodes.find({projectVersionId: this._id, type: NodeTypes.userType}, {sort: {title: 1}});
+    return Nodes.find({ projectVersionId: this._id, type: NodeTypes.userType }, { sort: { title: 1 } });
+  },
+  userTitleClean(){
+    return Util.dataKey(this.title);
   }
 });
 
