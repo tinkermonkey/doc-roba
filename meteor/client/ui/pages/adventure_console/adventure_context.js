@@ -217,7 +217,7 @@ export class AdventureContext {
    * Get the node finder for the correct platform type
    */
   comparitor () {
-    return this.adventure.get().platformType().nodeComparitor();
+    return this.adventure.get().platformType().comparitor;
   }
   
   /**
@@ -263,7 +263,7 @@ export class AdventureContext {
     var context     = this,
         adventure   = context.adventure.get(),
         state       = context.state.get(),
-        comparitor  = adventure.platformType().nodeComparitor(),
+        comparitor  = adventure.platformType().comparitor,
         clearWinner = comparitor.searchByContext(state, adventure.projectVersionId).clearWinner();
     
     if (clearWinner) {

@@ -112,7 +112,7 @@ Adventures.helpers({
   assistant(){
     let platformType = this.platformType();
     if(platformType){
-      return platformType.adventureAssistant()
+      return platformType.assistant
     }
   }
 });

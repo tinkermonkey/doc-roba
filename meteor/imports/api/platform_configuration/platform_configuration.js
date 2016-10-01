@@ -3,6 +3,8 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { Auth } from '../auth.js';
 import { ChangeTracker } from '../change_tracker/change_tracker.js';
 import { SchemaHelpers } from '../schema_helpers.js';
+import { PlatformViewports } from './platform_viewport.js';
+import { PlatformOperatingSystems } from './platform_operating_system.js';
 
 /**
  * ============================================================================
@@ -54,4 +56,11 @@ ChangeTracker.TrackChanges(PlatformConfigurations, "platform_configurations");
 /**
  * Helpers
  */
-PlatformConfigurations.helpers({});
+PlatformConfigurations.helpers({
+  viewports(){
+    return PlatformViewports.find({platformId: this._id}, {sort: {title: 1}});
+  },
+  operatingSystems(){
+    return PlatformOperatingSystems.find({platformId: this._id}, {sort: {title: 1}});
+  }
+});

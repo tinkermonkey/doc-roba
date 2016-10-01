@@ -13,7 +13,7 @@ Template.PageViewEditPanel.helpers({
   editParamsPanel(){
     let platformType = this.platformType();
     if (platformType) {
-      return platformType.nodeEditParamsTemplate();
+      return platformType.templates.nodeEditDetails;
     }
   },
   checkTypes(){

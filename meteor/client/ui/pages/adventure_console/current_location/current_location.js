@@ -82,7 +82,7 @@ Template.CurrentLocation.helpers({
     let node         = Template.parentData(1),
         platformType = node.platformType();
     if (platformType) {
-      return platformType.nodeSearchComparisonTemplate();
+      return platformType.templates.nodeSearchComparison;
     }
   },
   
@@ -93,7 +93,7 @@ Template.CurrentLocation.helpers({
   editParamsPanel(){
     let platformType = this.platformType();
     if (platformType) {
-      return platformType.nodeEditParamsTemplate();
+      return platformType.templates.nodeEditDetails;
     }
   },
   
@@ -290,7 +290,7 @@ Template.CurrentLocation.onCreated(() => {
   
   instance.autorun(() => {
     let adventure       = instance.data.adventure.get();
-    instance.comparitor = adventure.platformType().nodeComparitor();
+    instance.comparitor = adventure.platformType().comparitor;
   });
 });
 

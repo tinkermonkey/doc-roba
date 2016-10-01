@@ -18,7 +18,7 @@ import { PlatformViewports } from '../platform_configuration/platform_viewport.j
 import { Projects } from '../project/project.js';
 import { ProjectVersions } from '../project/project_version.js';
 import { PlatformTypes } from '../platform_type/platform_types.js';
-import { WebPlatformType } from '../../platform_types/web/web.js';
+import { WebPlatformType } from '../../platform_types/web/web_platform_type.js';
 
 /**
  * Documentation tree nodes
@@ -198,13 +198,18 @@ if (Meteor.isServer) {
    */
   Nodes.createPlatformConfiguration = function (node) {
     console.log("Nodes.createPlatformConfiguration:", node);
-    return PlatformConfigurations.insert({
-      projectId       : node.projectId,
-      projectVersionId: node.projectVersionId,
-      parentId        : node.staticId,
-      modifiedBy      : node.createdBy,
-      createdBy       : node.createdBy
-    });
+    let platformConfigId = PlatformConfigurations.insert({
+          projectId       : node.projectId,
+          projectVersionId: node.projectVersionId,
+          parentId        : node.staticId,
+          modifiedBy      : node.createdBy,
+          createdBy       : node.createdBy
+        }),
+        platformConfig   = PlatformConfigurations.findOne(platformConfigId);
+    
+    // Configure the default data for this platformConfig
+    node.platformType().configurePlatformDefaults(platformConfig);
+    return platformConfigId;
   };
   
   /**

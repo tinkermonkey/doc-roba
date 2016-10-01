@@ -53,7 +53,7 @@ Template.CreateNodeForm.helpers({
     if(platform){
       let platformType = platform.platformType();
       if(platformType){
-        return platformType.adventureAddNodeTemplate();
+        return platformType.templates.addNode;
       }
     }
   }
