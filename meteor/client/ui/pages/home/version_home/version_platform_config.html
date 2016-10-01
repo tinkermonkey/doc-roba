@@ -1,13 +1,19 @@
 <template name="VersionPlatformConfig">
-  {{#RobaTabGroup name="platform-tabs" navClass="nav-tabs"}}
+  {{#RobaTabGroup name="platform-usertype-tabs" navClass="nav-tabs"}}
     {{#each userTypes}}
-      {{#each platforms}}
-        {{#RobaTab name=platformTitleClean title=platformTitle}}
-          <h2>{{title}}
-            <small>({{userType.title}})</small>
-          </h2>
-        {{/RobaTab}}
-      {{/each}}
+      
+      {{#RobaTab name=titleKey title=title}}
+        {{#RobaTabGroup name="platform-tabs"}}
+          {{#each platforms}}
+            
+            {{#RobaTab name=titleKey title=title}}
+              {{> PlatformConfigPanel }}
+            {{/RobaTab}}
+          
+          {{/each}}
+        {{/RobaTabGroup}}
+      {{/RobaTab}}
+    
     {{/each}}
   {{/RobaTabGroup}}
 </template>

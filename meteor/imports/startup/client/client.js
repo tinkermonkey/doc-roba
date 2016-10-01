@@ -402,12 +402,16 @@ Template.registerHelper("getElementId", function () {
 });
 
 /**
- * Return a safe data value for a user type
+ * Return a data-key based on a title or a value
  */
-Template.registerHelper("getDataName", function (value) {
+Template.registerHelper("titleKey", function (value) {
+  let context = this;
   if(value){
-    //return value.replace(/[\W]/g, "-").toLowerCase();
     return Util.dataKey(value);
+  } else if (context && context.title) {
+    return Util.dataKey(context.title);
+  } else if (context && context.name) {
+    return Util.dataKey(context.name);
   }
 });
 

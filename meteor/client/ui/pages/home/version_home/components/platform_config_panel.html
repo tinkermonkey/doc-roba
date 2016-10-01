@@ -1,0 +1,10 @@
+<template name="PlatformConfigPanel">
+  <h2>{{title}}
+    <small>({{userType.title}})</small>
+  </h2>
+  
+  {{#with platformConfig}}
+    {{> PlatformViewports }}
+    {{> PlatformOperatingSystems }}
+  {{/with}}
+</template>

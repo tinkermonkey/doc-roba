@@ -38,10 +38,14 @@ export const PlatformViewport = new SimpleSchema({
   },
   aspectRatio     : {
     type: Number,
+    decimal: true,
     autoValue() {
       let width  = this.field('width'),
           height = this.field('height');
-      return width / height;
+      console.log("aspectRatio.autoValue:", width, height, width.value / height.value);
+      if(width.isSet && height.isSet){
+        return width.value / height.value;
+      }
     }
   },
   // Standard tracking fields

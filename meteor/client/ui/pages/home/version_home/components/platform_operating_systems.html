@@ -1,0 +1,32 @@
+<template name="PlatformOperatingSystems">
+  <table class="sortable-table">
+    <tr class="sortable-table-header">
+      <td></td>
+      <td>Title</td>
+      <td>Versions</td>
+      <td></td>
+    </tr>
+    <tr class="sortable-table-divider">
+      <td colspan="4"><div class="divider"></div></td>
+    </tr>
+    {{#unless operatingSystems.count}}
+      <tr>
+        <td colspan="4"><i>Click Add OS to add an operating system</i></td>
+      </tr>
+    {{/unless}}
+    {{#each operatingSystems}}
+      <tr class="sortable-table-row" data-pk="{{_id}}">
+        <td class="drag-handle"></td>
+        <td>{{> EditableTextField value=title dataKey="title"}}</td>
+        <td>{{> EditableTextArray value=versions dataKey="versions"}}</td>
+        <td class="btn-delete"><span class="glyphicon glyphicon-remove"></span></td>
+      </tr>
+    {{/each}}
+    <tr class="sortable-table-divider">
+      <td colspan="4"><div class="divider"></div></td>
+    </tr>
+  </table>
+  <div>
+    <button class="btn btn-xs btn-warning btn-add-os" data-pk="{{_id}}">Add OS</button>
+  </div>
+</template>
