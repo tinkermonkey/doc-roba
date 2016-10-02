@@ -64,3 +64,8 @@
 .field-type-editable {
   color: #0A7BFF !important;
 }
+
+/* Platform Configuration */
+.os-container {
+  margin-top: 20px;
+}

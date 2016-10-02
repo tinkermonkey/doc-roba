@@ -4,7 +4,13 @@
   </h2>
   
   {{#with platformConfig}}
-    {{> PlatformViewports }}
-    {{> PlatformOperatingSystems }}
+    <div class="viewport-container">
+      <h3>Viewports</h3>
+      {{> PlatformViewports }}
+    </div>
+    <div class="os-container">
+      <h3>Operating Systems</h3>
+      {{> PlatformOperatingSystems }}
+    </div>
   {{/with}}
 </template>
