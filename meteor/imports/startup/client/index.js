@@ -21,3 +21,6 @@ import '../../../client/ui/lib/autoform/autoForm_dataStore.js';
 
 // Platform Types
 import '../../platform_types/web/client/client.js';
+
+// ico-moon font face
+import '../../../public/ico-moon/style.css';
