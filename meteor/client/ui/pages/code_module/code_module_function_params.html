@@ -21,7 +21,7 @@
         <td class="drag-handle"><span class="glyphicon glyphicon-record"></span></td>
         <td>{{> EditableTextField value=name dataKey="name" pattern=variablePattern}}</td>
         <td>{{> EditableEnumSelector value=type dataKey="type" enum=paramTypesEnum}}</td>
-        <td>{{> EditableFieldYesNo value=optional dataKey="optional"}}</td>
+        <td>{{> EditableCheckbox value=optional dataKey="optional"}}</td>
         <td>{{> EditableTextField value=docs dataKey="docs" emptyText="No Documentation"}}</td>
         <td class="btn-delete"><span class="glyphicon glyphicon-remove"></span></td>
       </tr>

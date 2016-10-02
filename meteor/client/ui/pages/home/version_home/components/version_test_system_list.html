@@ -12,7 +12,9 @@
       <td></td>
     </tr>
     <tr class="sortable-table-divider">
-      <td colspan="9"><div class="divider"></div></td>
+      <td colspan="9">
+        <div class="divider"></div>
+      </td>
     </tr>
     {{#unless sortedTestSystems.length}}
       <tr>
@@ -27,7 +29,7 @@
         <td>{{> EditableTextField     value=hostname   dataKey="hostname"}}</td>
         <td>{{> EditableTextField     value=port       dataKey="port" emptyText="default"}}</td>
         <td>{{> EditableTestAgentList value=testAgents dataKey="testAgents" type=type projectVersionId=projectVersionId}}</td>
-        <td>{{> EditableFieldYesNo    value=active     dataKey="active"}}</td>
+        <td>{{> EditableCheckbox      value=active     dataKey="active"}}</td>
         <td>
           <button class="btn btn-xs btn-primary">
             <span class="glyphicon glyphicon-check"></span>
@@ -37,7 +39,9 @@
       </tr>
     {{/each}}
     <tr class="sortable-table-divider">
-      <td colspan="9"><div class="divider"></div></td>
+      <td colspan="9">
+        <div class="divider"></div>
+      </td>
     </tr>
   </table>
   <div>
