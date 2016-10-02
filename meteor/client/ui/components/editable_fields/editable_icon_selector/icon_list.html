@@ -1,0 +1,9 @@
+<template name="IconList">
+  <div class="icon-list-container">
+    {{#with context}}
+      {{#each icons}}
+        <span class="icon {{this}} {{#if selected ../currentValue}}editable-icon-selection{{/if}}"></span>
+      {{/each}}
+    {{/with}}
+  </div>
+</template>

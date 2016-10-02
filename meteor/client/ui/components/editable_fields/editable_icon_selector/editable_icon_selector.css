@@ -1,0 +1,27 @@
+.editable.editable-icon-selector {
+  width: auto;
+}
+
+.icon-list-container {
+  width: 512px;
+}
+
+.icon-list-container .icon {
+  font-size: 16px;
+  margin: 1px;
+  padding: 2px;
+  border-radius: 3px;
+  border: 2px solid rgba(255, 255, 255, 0);
+  display: inline-block;
+  width: 26px;
+  height: 24px;
+}
+
+.icon-list-container .icon:hover {
+  background-color: #dedede;
+  cursor: pointer;
+}
+
+.icon-list-container .editable-icon-selection {
+  border: 2px solid #0A7BFF;
+}

@@ -1,0 +1,8 @@
+<template name="EditableIconSelector">
+  <div class="{{cssClass}} editable editable-icon-selector" data-key="{{dataKey}}">
+    <div class="{{#unless value}}hide{{/unless}}">
+      <span class="icon {{value}}"></span>
+    </div>
+    <span class="{{#if value}}hide{{/if}}"><i>{{emptyText}}</i></span>
+  </div>
+</template>
