@@ -6,14 +6,15 @@
       <td>Width</td>
       <td>Height</td>
       <td>Aspect Ratio</td>
+      <td>Default</td>
       <td></td>
     </tr>
     <tr class="sortable-table-divider">
-      <td colspan="6"><div class="divider"></div></td>
+      <td colspan="7"><div class="divider"></div></td>
     </tr>
     {{#unless viewports.count}}
       <tr>
-        <td colspan="6"><i>Click Add Viewport to add a viewport</i></td>
+        <td colspan="7"><i>Click Add Viewport to add a viewport</i></td>
       </tr>
     {{/unless}}
     {{#each viewports}}
@@ -23,11 +24,12 @@
         <td>{{> EditableTextField value=width dataKey="width" dataType="number"}}</td>
         <td>{{> EditableTextField value=height dataKey="height" dataType="number"}}</td>
         <td>{{ numberFormat aspectRatio "0.000"}}</td>
+        <td>{{> EditableRadioButton value=default dataKey="default"}}</td>
         <td class="btn-delete"><span class="glyphicon glyphicon-remove"></span></td>
       </tr>
     {{/each}}
     <tr class="sortable-table-divider">
-      <td colspan="6"><div class="divider"></div></td>
+      <td colspan="7"><div class="divider"></div></td>
     </tr>
   </table>
   <div>
