@@ -38,9 +38,9 @@ Template.NodeCheckEditList.helpers({
    * Get the list of args for this function
    */
   checkFnArgList () {
-    let fnList = this.type == NodeCheckTypes.ready ? NodeReadyCheckFns : NodeValidCheckFns,
-        checkFn = fnList[this.checkFn];
-    if(checkFn && checkFn.args && checkFn.args.length){
+    let fnList  = this.type == NodeCheckTypes.ready ? NodeReadyCheckFns : NodeValidCheckFns,
+        checkFn = fnList[ this.checkFn ];
+    if (checkFn && checkFn.args && checkFn.args.length) {
       return checkFn.args
     }
   },
@@ -49,11 +49,11 @@ Template.NodeCheckEditList.helpers({
    * Get the list of args for this function
    */
   checkFnArgEmptyText () {
-    let fnList = this.type == NodeCheckTypes.ready ? NodeReadyCheckFns : NodeValidCheckFns,
-        checkFn = fnList[this.checkFn];
-    if(checkFn && checkFn.args && checkFn.args.length){
+    let fnList  = this.type == NodeCheckTypes.ready ? NodeReadyCheckFns : NodeValidCheckFns,
+        checkFn = fnList[ this.checkFn ];
+    if (checkFn && checkFn.args && checkFn.args.length) {
       //console.log("checkFnArgEmptyText: ", checkFn.args[0].label);
-      return checkFn.args[0].label
+      return checkFn.args[ 0 ].label
     }
   }
 });
@@ -84,13 +84,13 @@ Template.NodeCheckEditList.events({
         checkId = target.closest(".sortable-table-row").attr("data-pk");
     
     RobaDialog.ask("Delete Server?", "Are you sure that you want to delete this check?", () => {
-        NodeChecks.remove(checkId, function (error, response) {
-          RobaDialog.hide();
-          if (error) {
-            RobaDialog.error("Delete failed" + error.message);
-          }
-        });
-      }
+          NodeChecks.remove(checkId, function (error, response) {
+            RobaDialog.hide();
+            if (error) {
+              RobaDialog.error("Delete failed: " + error.message);
+            }
+          });
+        }
     );
     
   }
