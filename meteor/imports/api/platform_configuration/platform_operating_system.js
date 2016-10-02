@@ -33,6 +33,11 @@ export const PlatformOperatingSystem = new SimpleSchema({
   versions        : {
     type: [ String ]
   },
+  // OS Icon css class
+  iconCss         : {
+    type    : String,
+    optional: true
+  },
   // Standard tracking fields
   dateCreated     : {
     type      : Date,
