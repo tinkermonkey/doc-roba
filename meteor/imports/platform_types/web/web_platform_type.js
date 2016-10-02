@@ -24,7 +24,8 @@ let defaultViewports        = [
       },{
         title: '1600 x 900',
         width: 1600,
-        height: 900
+        height: 900,
+        default: true
       },{
         title: '1920 x 1080',
         width: 1920,
@@ -43,7 +44,8 @@ let defaultViewports        = [
             '8.1',
             '8',
             '7'
-        ]
+        ],
+        iconCss: 'icon-windows8'
       },{
         title: 'MacOS',
         versions: [
@@ -51,7 +53,8 @@ let defaultViewports        = [
             '10.11',
             '10.10',
             '10.9'
-        ]
+        ],
+        iconCss: 'icon-finder'
       },{
         title: 'Linux',
         versions: [
@@ -60,7 +63,8 @@ let defaultViewports        = [
             'Ubuntu 14.10',
             'Ubuntu 14.04',
             'Mint 15'
-        ]
+        ],
+        iconCss: 'icon-tux'
       }
     ];
 
