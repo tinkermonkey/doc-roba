@@ -1,13 +1,9 @@
 import './datastore_data_table.html';
-
-import {Template} from 'meteor/templating';
-import {RobaDialog} from 'meteor/austinsand:roba-dialog';
-import {AutoForm} from 'meteor/aldeed:autoform';
-
-import {FieldTypes} from '../../../../imports/api/datastore/field_types.js';
-import {DatastoreRows} from '../../../../imports/api/datastore/datastore_row.js';
-import {DatastoreFields} from '../../../../imports/api/datastore/datastore_field.js';
-
+import { Template } from 'meteor/templating';
+import { RobaDialog } from 'meteor/austinsand:roba-dialog';
+import { AutoForm } from 'meteor/aldeed:autoform';
+import { FieldTypes } from '../../../../imports/api/datastore/field_types.js';
+import { DatastoreRows } from '../../../../imports/api/datastore/datastore_row.js';
 import './datastore_row_form.js';
 import './datastore_child_table.js';
 
@@ -28,7 +24,7 @@ Template.DatastoreDataTable.helpers({
   },
   getFieldValue(field, row) {
     if (field && row) {
-      return row[field.dataKey];
+      return row[ field.dataKey ];
     }
   },
   childHasValue(field, row) {
@@ -36,14 +32,14 @@ Template.DatastoreDataTable.helpers({
   },
   getChildColSpan(schema) {
     return _.filter(schema.fields, function (field) {
-          return field.type !== FieldTypes.custom
-        }).length;
+      return field.type !== FieldTypes.custom
+    }).length;
   },
   getChildContext(field, row) {
-    var value = row[field.dataKey];
+    var value = row[ field.dataKey ];
     return {
-      field: field,
-      values: _.isArray(value) ? value : [value]
+      field : field,
+      values: _.isArray(value) ? value : [ value ]
     };
   }
 });
@@ -55,10 +51,10 @@ Template.DatastoreDataTable.events({
   "click .btn-add-ds-row"(e, instance) {
     var dataStoreId = $(e.target).attr("data-store-id"),
         formContext = {
-          type: "insert",
+          type     : "insert",
           dataStore: instance.data,
           rowSchema: instance.cachedSimpleSchema.get(),
-          rowData: {}
+          rowData  : {}
         };
     
     console.log("Add Row: ", dataStoreId, formContext);
@@ -66,11 +62,11 @@ Template.DatastoreDataTable.events({
     // render the form
     RobaDialog.show({
       contentTemplate: 'DatastoreRowForm',
-      contentData: formContext,
-      title: "New " + instance.data.title + " row",
-      buttons: [
-        {text: "Cancel"},
-        {text: "Save"}
+      contentData    : formContext,
+      title          : "New " + instance.data.title + " row",
+      buttons        : [
+        { text: "Cancel" },
+        { text: "Save" }
       ],
       callback(btn) {
         //console.log("RobaDialog button pressed: ", btn);
@@ -78,10 +74,10 @@ Template.DatastoreDataTable.events({
           // grab the form data
           var formId = RobaDialog.currentInstance.$("form").attr("id");
           if (formId) {
-            var updateDoc = _.clone(AutoForm.getFormValues(formId).insertDoc),
+            var updateDoc   = _.clone(AutoForm.getFormValues(formId).insertDoc),
                 initialData = {
-                  dataStoreId: formContext.dataStore.staticId,
-                  projectId: formContext.dataStore.projectId,
+                  dataStoreId     : formContext.dataStore.staticId,
+                  projectId       : formContext.dataStore.projectId,
                   projectVersionId: formContext.dataStore.projectVersionId
                 };
             console.log("Saving form ", initialData, AutoForm.getFormValues(formId), updateDoc);
@@ -116,21 +112,21 @@ Template.DatastoreDataTable.events({
     
     // Build the form context
     var formContext = {
-      type: "update",
+      type     : "update",
       dataStore: instance.data,
       rowSchema: instance.cachedSimpleSchema.get(),
-      rowData: row
+      rowData  : row
     };
     
     // render the form
     RobaDialog.show({
       contentTemplate: 'DatastoreRowForm',
-      contentData: formContext,
-      title: "Edit " + instance.data.title + " row",
+      contentData    : formContext,
+      title          : "Edit " + instance.data.title + " row",
       //width: 600,
-      buttons: [
-        {text: "Cancel"},
-        {text: "Save"}
+      buttons        : [
+        { text: "Cancel" },
+        { text: "Save" }
       ],
       callback(btn) {
         //console.log("RobaDialog button pressed: ", btn);
@@ -140,7 +136,7 @@ Template.DatastoreDataTable.events({
           if (formId) {
             var updateDoc = _.clone(AutoForm.getFormValues(formId).updateDoc);
             
-            Meteor.call("updateDatastoreRow", row._id, updateDoc["$set"], function (error) {
+            Meteor.call("updateDatastoreRow", row._id, updateDoc[ "$set" ], function (error) {
               if (error) {
                 RobaDialog.error("DatastoreRow insert update failed: " + error.toString());
               }
@@ -157,16 +153,16 @@ Template.DatastoreDataTable.events({
   },
   "click .btn-delete-row"(e, instance) {
     console.log("Delete: ", this);
-    var row = this,
+    var row      = this,
         rowTitle = row.render(row._id);
     
     RobaDialog.show({
-      title: "Delete Field?",
-      text: "Are you sure that you want to delete the " + instance.data.title + " <span class='label label-primary'>" + rowTitle + "</span> from this version?",
-      width: 400,
+      title  : "Delete Field?",
+      text   : "Are you sure that you want to delete the " + instance.data.title + " <span class='label label-primary'>" + rowTitle + "</span> from this version?",
+      width  : 400,
       buttons: [
-        {text: "Cancel"},
-        {text: "Delete"}
+        { text: "Cancel" },
+        { text: "Delete" }
       ],
       callback(btn) {
         if (btn == "Delete") {
@@ -188,15 +184,15 @@ Template.DatastoreDataTable.events({
  * Template created
  */
 Template.DatastoreDataTable.onCreated(() => {
-  let instance = Template.instance();
+  let instance                = Template.instance();
   instance.cachedSimpleSchema = new ReactiveVar();
-  
+
   instance.autorun(() => {
     let datastore = Template.currentData();
     
     instance.subscribe("datastore_fields", datastore.projectId, datastore.projectVersionId, datastore.staticId);
     instance.subscribe("datastore_rows", datastore.projectId, datastore.projectVersionId, datastore.staticId);
-    
+
     if (instance.subscriptionsReady()) {
       instance.cachedSimpleSchema.set(datastore.simpleSchema());
     }
