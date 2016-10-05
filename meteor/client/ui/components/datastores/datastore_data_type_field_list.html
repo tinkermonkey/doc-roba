@@ -10,17 +10,24 @@
       <td></td>
     </tr>
     <tr class="sortable-table-divider">
-      <td colspan="7"><div class="divider"></div></td>
+      <td colspan="7">
+        <div class="divider"></div>
+      </td>
     </tr>
     {{#if fields.count}}
       {{#each fields}}
-        <tr class="sortable-table-row data-store-field" data-pk="{{_id}}" data-field-order="{{order}}" data-store-id="{{../_id}}">
+        <tr class="sortable-table-row data-store-field" data-pk="{{_id}}" data-field-order="{{order}}"
+            data-store-id="{{../_id}}">
           <td class="drag-handle"><span class="glyphicon glyphicon-record"></span></td>
           <td>{{> EditableTextField value=title dataKey="title"}}</td>
-          <td><small>{{dataKey}}</small></td>
           <td>
-            {{> EditableFieldType type=type dataKey="type" }}
-            {{> EditableDatastoreDataType type=type dataTypeId=dataTypeId projectVersionId=../projectVersionId dataKey="dataTypeId" }}
+            <small>{{dataKey}}</small>
+          </td>
+          <td>
+            {{> EditableEnumSelector value=type dataKey="type" enum=FieldTypes}}
+            {{#if isCustom}}
+              {{> EditableRecordSelector value=dataTypeId dataKey="dataTypeId" projectVersionId=../projectVersionId collection=DatastoreDataTypes emptyText="(Select Type)"}}
+            {{/if}}
           </td>
           <td>{{> EditableFieldShape fieldIsArray=fieldIsArray dataKey="fieldIsArray"}}</td>
           <td>{{> EditableTextField dataKey="defaultValue" value=defaultValue emptyText="none"}}</td>
@@ -35,7 +42,9 @@
       </tr>
     {{/if}}
     <tr class="sortable-table-divider">
-      <td colspan="7"><div class="divider"></div></td>
+      <td colspan="7">
+        <div class="divider"></div>
+      </td>
     </tr>
   </table>
   <div>

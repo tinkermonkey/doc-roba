@@ -1,16 +1,20 @@
 import './datastore_data_type_field_list.html';
-
-import {Template} from 'meteor/templating';
-import {RobaDialog} from 'meteor/austinsand:roba-dialog';
-
-import {Util} from '../../../../imports/api/util.js';
-import {DatastoreDataTypeFields} from '../../../../imports/api/datastore/datastore_data_type_field.js';
-import {FieldTypes} from '../../../../imports/api/datastore/field_types.js';
+import { Template } from 'meteor/templating';
+import { RobaDialog } from 'meteor/austinsand:roba-dialog';
+import { Util } from '../../../../imports/api/util.js';
+import { DatastoreDataTypes } from '../../../../imports/api/datastore/datastore_data_type.js';
+import { DatastoreDataTypeFields } from '../../../../imports/api/datastore/datastore_data_type_field.js';
+import { FieldTypes } from '../../../../imports/api/datastore/field_types.js';
+import '../editable_fields/editable_enum selector.js';
+import '../editable_fields/editable_record_selector.js';
 
 /**
  * Template Helpers
  */
 Template.DatastoreDataTypeFieldList.helpers({
+  DatastoreDataTypes(){
+    return DatastoreDataTypes;
+  }
 });
 
 /**
@@ -19,19 +23,19 @@ Template.DatastoreDataTypeFieldList.helpers({
 Template.DatastoreDataTypeFieldList.events({
   "click .btn-add-field"() {
     var instance = Template.instance(),
-        order = parseInt(instance.$(".sortable-table-row").length || 0) + 1;
-  
+        order    = parseInt(instance.$(".sortable-table-row").length || 0) + 1;
+    
     DatastoreDataTypeFields.insert({
-      title: "New Field",
-      dataKey: "new_field",
-      type: FieldTypes.string,
-      fieldIsArray: false,
-      order: order,
-      parentId: instance.data.staticId,
-      projectId: instance.data.projectId,
+      title           : "New Field",
+      dataKey         : "new_field",
+      type            : FieldTypes.string,
+      fieldIsArray    : false,
+      order           : order,
+      parentId        : instance.data.staticId,
+      projectId       : instance.data.projectId,
       projectVersionId: instance.data.projectVersionId
     }, function (error, response) {
-      if(error){
+      if (error) {
         RobaDialog.error("Insert Field failed: " + error.message);
       } else {
         setTimeout(function () {
@@ -45,18 +49,18 @@ Template.DatastoreDataTypeFieldList.events({
     console.log("Delete Field: ", field);
     
     RobaDialog.show({
-      title: "Delete Field?",
-      text: "Are you sure that you want to delete the field <span class='label label-primary'>" + field.title + "</span> from this data type?",
-      width: 400,
+      title  : "Delete Field?",
+      text   : "Are you sure that you want to delete the field <span class='label label-primary'>" + field.title + "</span> from this data type?",
+      width  : 400,
       buttons: [
-        {text: "Cancel"},
-        {text: "Delete"}
+        { text: "Cancel" },
+        { text: "Delete" }
       ],
       callback(btn) {
-        if(btn == "Delete"){
+        if (btn == "Delete") {
           DatastoreDataTypeFields.remove(field._id, function (error) {
             RobaDialog.hide();
-            if(error){
+            if (error) {
               RobaDialog.error("Delete Field failed: " + error.message);
             }
           });
@@ -71,24 +75,24 @@ Template.DatastoreDataTypeFieldList.events({
     
     e.stopImmediatePropagation();
     
-    var fieldId = $(e.target).closest(".sortable-table-row").attr("data-pk"),
-        dataKey = $(e.target).attr("data-key"),
-        update = {$set: {}};
-    update["$set"][dataKey] = newValue;
+    var fieldId                 = $(e.target).closest(".sortable-table-row").attr("data-pk"),
+        dataKey                 = $(e.target).attr("data-key"),
+        update                  = { $set: {} };
+    update[ "$set" ][ dataKey ] = newValue;
     
     // a few situations to check for
-    if(dataKey == "title"){
+    if (dataKey == "title") {
       // update the datakey with the title
-      update["$set"]["dataKey"] = Util.dataKey(newValue);
+      update[ "$set" ][ "dataKey" ] = Util.dataKey(newValue);
     } else if (dataKey == "type") {
       // null the custom type if the type is not custom
-      if(newValue != FieldTypes.custom) {
-        update["$unset"] = {dataTypeId: ""};
+      if (newValue != FieldTypes.custom) {
+        update[ "$unset" ] = { dataTypeId: "" };
       }
     }
-  
+    
     DatastoreDataTypeFields.update(fieldId, update, function (error) {
-      if(error){
+      if (error) {
         RobaDialog.error("Datastore Field update failed: " + error.message);
       }
     });
