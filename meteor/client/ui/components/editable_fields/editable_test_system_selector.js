@@ -1,8 +1,6 @@
 import './editable_test_system_selector.html';
-
-import {Template} from 'meteor/templating';
-
-import {TestSystems} from '../../../../imports/api/test_system/test_system.js';
+import { Template } from 'meteor/templating';
+import { TestSystems } from '../../../../imports/api/test_system/test_system.js';
 
 /**
  * Template Helpers
@@ -19,37 +17,38 @@ Template.EditableTestSystemSelector.events({});
  */
 Template.EditableTestSystemSelector.rendered = function () {
   var instance = Template.instance();
-
+  
   instance.autorun(function () {
-    var data = Template.currentData(),
-      query = {
-        projectVersionId: instance.data.projectVersionId,
-        active: true
-      };
+    var data  = Template.currentData(),
+        query = {
+          projectVersionId: instance.data.projectVersionId,
+          active          : true
+        };
     
-    if(data.platform){
+    if (data.platform) {
       query.platform = data.platform;
     }
     
-    if(data.testAgent){
+    if (data.testAgent) {
       query.testAgents = data.testAgent;
     }
-
+    
     //console.log("test system selector query: ", query);
-
-    var testSystems = TestSystems.find(query, {sort: {title: 1}}).map(function (testSystem) {
-        return { value: testSystem.staticId, text: testSystem.title };
-      });
-
+    
+    var testSystems = TestSystems.find(query, { sort: { title: 1 } }).map(function (testSystem) {
+      return { value: testSystem.staticId, text: testSystem.title };
+    });
+    
     instance.$('.editable-test-system-selector').editable({
-      mode: instance.data.mode || "inline",
-      type: "select",
-      source: testSystems,
+      mode     : instance.data.mode || "inline",
+      type     : "select",
+      source   : testSystems,
       highlight: false,
-      display() {},
+      display() {
+      },
       success(response, newValue) {
         var editedElement = this;
-        $(editedElement).trigger("edited", [newValue]);
+        $(editedElement).trigger("edited", [ newValue ]);
         setTimeout(function () {
           $(editedElement).removeClass('editable-unsaved');
         }, 10);
@@ -64,5 +63,5 @@ Template.EditableTestSystemSelector.rendered = function () {
  * Template Destroyed
  */
 Template.EditableTestSystemSelector.destroyed = function () {
-
+  
 };
