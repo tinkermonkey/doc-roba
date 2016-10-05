@@ -21,12 +21,12 @@
     {{#each sortedTestAgents}}
       <tr class="sortable-table-row" data-pk="{{_id}}" data-sort-order="{{order}}">
         <td class="drag-handle"><span class="glyphicon glyphicon-record"></span></td>
-        <td>{{> EditableTestAgentType value=type       dataKey="type" noGrid=true}}</td>
-        <td>{{> EditableTestAgentOS   value=os         dataKey="os"}}</td>
-        <td>{{> EditableTextField     value=osVersion  dataKey="osVersion" emptyText="Any"}}</td>
-        <td>{{> EditableTextField     value=title      dataKey="title"}}</td>
-        <td>{{> EditableTextField     value=version    dataKey="version" emptyText="Any"}}</td>
-        <td>{{> EditableTextField     value=identifier dataKey="identifier" emptyText="browserName"}}</td>
+        <td>{{> EditableEnumSelector    value=type       dataKey="type" enum=TestAgentTypes}}</td>
+        <td>{{> EditableEnumSelector    value=os         dataKey="os" enum=TestAgentOS}}</td>
+        <td>{{> EditableTextField       value=osVersion  dataKey="osVersion" emptyText="Any"}}</td>
+        <td>{{> EditableTextField       value=title      dataKey="title"}}</td>
+        <td>{{> EditableTextField       value=version    dataKey="version" emptyText="Any"}}</td>
+        <td>{{> EditableTextField       value=identifier dataKey="identifier" emptyText="browserName"}}</td>
         <td class="btn-delete"><span class="glyphicon glyphicon-remove"></span></td>
       </tr>
     {{/each}}
