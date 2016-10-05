@@ -1,0 +1,6 @@
+<template name="EditableRecordSelector">
+  <div class="{{cssClass}} editable-record-selector inline" data-key="{{dataKey}}">
+    <span class="{{#unless renderValue}}hide{{/unless}}">{{renderValue}}</span>
+    <span class="{{#if renderValue}}hide{{/if}}"><i>{{emptyText}}</i></span>
+  </div>
+</template>
