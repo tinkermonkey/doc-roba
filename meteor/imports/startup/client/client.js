@@ -61,6 +61,44 @@ Meteor.startup(function(){
 });
 
 /**
+ * Enums
+ */
+Template.registerHelper("AdventureStatus", () => { return AdventureStatus });
+Template.registerHelper("AdventureStatusLookup", () => { return AdventureStatusLookup });
+Template.registerHelper("AdventureStepStatus", () => { return AdventureStepStatus });
+Template.registerHelper("AdventureStepStatusLookup", () => { return AdventureStepStatusLookup });
+Template.registerHelper("ChangeTypes", () => { return ChangeTypes });
+Template.registerHelper("ChangeTypesLookup", () => { return ChangeTypesLookup });
+Template.registerHelper("DatastoreCategories", () => { return DatastoreCategories });
+Template.registerHelper("DatastoreCategoriesLookup", () => { return DatastoreCategoriesLookup });
+Template.registerHelper("FieldTypes", () => { return FieldTypes });
+Template.registerHelper("FieldTypesLookup", () => { return FieldTypesLookup });
+Template.registerHelper("FunctionParamTypes", () => { return FunctionParamTypes });
+Template.registerHelper("FunctionParamTypesLookup", () => { return FunctionParamTypesLookup });
+Template.registerHelper("NodeTypes", () => { return NodeTypes });
+Template.registerHelper("NodeTypesLookup", () => { return NodeTypesLookup });
+Template.registerHelper("NodeComparisonDatumResult", () => { return NodeComparisonDatumResult });
+Template.registerHelper("NodeComparisonDatumResultLookup", () => { return NodeComparisonDatumResultLookup });
+Template.registerHelper("ProjectRoles", () => { return ProjectRoles });
+Template.registerHelper("ProjectRolesLookup", () => { return ProjectRolesLookup });
+Template.registerHelper("ReferenceTypes", () => { return ReferenceTypes });
+Template.registerHelper("ReferenceTypesLookup", () => { return ReferenceTypesLookup });
+Template.registerHelper("TestAgentOS", () => { return TestAgentOS });
+Template.registerHelper("TestAgentOSLookup", () => { return TestAgentOSLookup });
+Template.registerHelper("TestAgentTypes", () => { return TestAgentTypes });
+Template.registerHelper("TestAgentTypesLookup", () => { return TestAgentTypesLookup });
+Template.registerHelper("TestCaseStepTypes", () => { return TestCaseStepTypes });
+Template.registerHelper("TestCaseStepTypesLookup", () => { return TestCaseStepTypesLookup });
+Template.registerHelper("TestResultCodes", () => { return TestResultCodes });
+Template.registerHelper("TestResultCodesLookup", () => { return TestResultCodesLookup });
+Template.registerHelper("TestResultStatus", () => { return TestResultStatus });
+Template.registerHelper("TestResultStatusLookup", () => { return TestResultStatusLookup });
+Template.registerHelper("TestRunItemTypes", () => { return TestRunItemTypes });
+Template.registerHelper("TestRunItemTypesLookup", () => { return TestRunItemTypesLookup });
+Template.registerHelper("TestSystemStatus", () => { return TestSystemStatus });
+Template.registerHelper("TestSystemStatusLookup", () => { return TestSystemStatusLookup });
+
+/**
  * Debug
  */
 Template.registerHelper("debug", function(){
