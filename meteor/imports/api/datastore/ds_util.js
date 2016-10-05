@@ -1,6 +1,5 @@
-import {SimpleSchema} from 'meteor/aldeed:simple-schema';
-
-import {FieldTypes} from './field_types.js';
+import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { FieldTypes } from './field_types.js';
 
 /**
  * Datastore utility functions
@@ -13,13 +12,13 @@ export const DSUtil = {
    */
   tableFieldDef(field) {
     return {
-      label: field.title,
-      type: field.type,
-      dataKey: field.dataKey,
-      dataTypeId: field.dataTypeId,
+      label       : field.title,
+      type        : field.type,
+      dataKey     : field.dataKey,
+      dataTypeId  : field.dataTypeId,
       fieldIsArray: field.fieldIsArray,
       defaultValue: field.defaultValue,
-      schema: field.tableSchema()
+      schema      : field.tableSchema()
     }
   },
   
@@ -29,9 +28,10 @@ export const DSUtil = {
    * @return Object
    */
   simpleFieldDef(field) {
+    //console.log("Util.simpleFieldDef:", field);
     return {
-      label: field.title,
-      type: DSUtil.dataTypeLiteral(field),
+      label   : field.title,
+      type    : DSUtil.dataTypeLiteral(field),
       optional: true
     }
   },
@@ -41,14 +41,18 @@ export const DSUtil = {
    * @param field
    */
   dataTypeLiteral(field) {
-    //console.log("dataTypeLiteral:", field);
+    //console.log("Util.dataTypeLiteral:", field);
     var dataTypeLiteral;
-    switch(field.type) {
+    switch (field.type) {
       case FieldTypes.boolean:
         dataTypeLiteral = Boolean;
         break;
       case FieldTypes.custom:
-        dataTypeLiteral = field.dataType().simpleSchema();
+        try {
+          dataTypeLiteral = field.dataType().simpleSchema();
+        } catch (e) {
+          console.error("Util.dataTypeLiteral failed to determine custom field schema:", field, e);
+        }
         break;
       case FieldTypes.date:
         dataTypeLiteral = Date;
@@ -60,9 +64,9 @@ export const DSUtil = {
         dataTypeLiteral = String;
         break;
     }
-  
-    if(field.fieldIsArray){
-      return [dataTypeLiteral]
+    
+    if (field.fieldIsArray) {
+      return [ dataTypeLiteral ]
     } else {
       return dataTypeLiteral
     }

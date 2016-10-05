@@ -108,6 +108,7 @@ DatastoreDataTypes.helpers({
     }
   },
   simpleSchema(){
+    //console.log("DatastoreDataType.simpleSchema:", this);
     let simpleSchemaDef = {};
     this.fields().forEach((field) => {
       simpleSchemaDef[field.dataKey] = DSUtil.simpleFieldDef(field);

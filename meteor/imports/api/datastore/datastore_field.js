@@ -113,7 +113,7 @@ DatastoreFields.helpers({
     return Datastores.findOne({staticId: this.dataStoreId, projectVersionId: this.projectVersionId});
   },
   dataType(){
-    //console.log("DatastoreField.dataType:", this);
+    //console.log("DatastoreFields.dataType:", this);
     let field = this;
     if(field.dataTypeId){
       return DatastoreDataTypes.findOne({staticId: field.dataTypeId, projectVersionId: field.projectVersionId});
@@ -126,7 +126,8 @@ DatastoreFields.helpers({
       return field.dataType().tableSchema();
     }
   },
-  simpleSchemaType(){
+  simpleSchema(){
+    //console.log("DatastoreFields.simpleSchema:", this);
     return DSUtil.dataTypeLiteral(this);
   }
 });

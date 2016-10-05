@@ -114,7 +114,11 @@ if(Meteor.isServer){
 DatastoreDataTypeFields.helpers({
   dataType(){
     //console.log("DatastoreDataTypeFields.dataType:", this);
-    return DatastoreDataTypes.findOne({staticId: this.parentId, projectVersionId: this.projectVersionId});
+    let field = this;
+    //return DatastoreDataTypes.findOne({staticId: this.parentId, projectVersionId: this.projectVersionId});
+    if(field.dataTypeId){
+      return DatastoreDataTypes.findOne({staticId: field.dataTypeId, projectVersionId: field.projectVersionId});
+    }
   },
   tableSchema(){
     let field = this;
@@ -123,8 +127,11 @@ DatastoreDataTypeFields.helpers({
       return field.dataType().tableSchema();
     }
   },
-  simpleSchemaType(){
+  simpleSchema(){
+    //console.log("DatastoreDataTypeFields.simpleSchema:", this);
     return DSUtil.dataTypeLiteral(this);
+  },
+  isCustom(){
+    return this.type == FieldTypes.custom;
   }
-  
 });
