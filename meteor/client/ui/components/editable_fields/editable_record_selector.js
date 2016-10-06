@@ -39,7 +39,6 @@ Template.EditableRecordSelector.onRendered(() => {
   let instance = Template.instance();
   
   instance.autorun(function () {
-    //console.log("EditableRecordSelector autorun");
     let data         = Template.currentData(),
         displayField = data.displayField || "title",
         valueField   = data.valueField || "staticId",
@@ -52,6 +51,8 @@ Template.EditableRecordSelector.onRendered(() => {
     } else {
       sort.sort[ displayField ] = 1
     }
+  
+    //console.log("EditableRecordSelector autorun:", data, query);
     
     // Get the records
     if(data.collection){

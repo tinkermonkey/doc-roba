@@ -1,17 +1,17 @@
 <template name="roba_launcher">
   <div class="roba-launcher-container">
     <div class="roba-launcher-content">
-      <h3>Launch drone to <span class="dark-blue">{{ getRoute.destination.title }}</span></h3>
-      {{#if getRoute.feasible }}
+      <h3>Launch adventure to <span class="dark-blue">{{ route.get.destination.title }}</span></h3>
+      {{#if route.get.feasible }}
         <div>
           <div class="simple-col simple-col-3 simple-divider">
             <div>
               <span class="field-label">User Account: </span>
-              {{> EditableUserAccount value=getAccount projectVersionId=projectVersionId userType=getRoute.userType dataKey="account" }}
+              {{> EditableUserAccount value=getAccount projectVersionId=projectVersionId userType=route.get.userType dataKey="account" }}
             </div>
             <div>
               <span class="field-label">Platform: </span>
-              {{ getRoute.platform.title }}
+              {{ route.get.platform.title }}
             </div>
             <div>
               <span class="field-label">Server: </span>
@@ -25,15 +25,19 @@
               <span class="field-label">Agent: </span>
               {{> EditableTestAgentSelector value=getTestAgent projectVersionId=projectVersionId dataKey="testAgent" }}
             </div>
+            <div>
+              <span class="field-label">Viewport: </span>
+              {{> EditableRecordSelector viewportSelectorContext }}
+            </div>
             <div class="text-center" style="margin-top:20px;">
-              <button class="btn btn-warning btn-launch-drone">
+              <button class="btn btn-warning btn-launch">
                 <span class="glyphicon glyphicon-send"></span>
                 Launch Adventure
               </button>
             </div>
           </div>
           <div class="simple-col simple-col-9">
-            {{> RobaLauncherRoute getRoute }}
+            {{> RobaLauncherRoute route.get }}
           </div>
         </div>
       {{else}}

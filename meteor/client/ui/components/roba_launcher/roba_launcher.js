@@ -1,15 +1,16 @@
-import "./roba_launcher.html";
-import "./roba_launcher.css";
-import { Template } from "meteor/templating";
-import { RobaDialog } from "meteor/austinsand:roba-dialog";
-import { Adventures } from "../../../../imports/api/adventure/adventure.js";
-import { AdventureStates } from "../../../../imports/api/adventure/adventure_state.js";
-import { AdventureStatus } from "../../../../imports/api/adventure/adventure_status.js";
-import { AdventureSteps } from "../../../../imports/api/adventure/adventure_step.js";
-import { DatastoreRows } from "../../../../imports/api/datastore/datastore_row.js";
-import { TestServers } from "../../../../imports/api/test_server/test_server.js";
-import { TestSystems } from "../../../../imports/api/test_system/test_system.js";
-
+import './roba_launcher.html';
+import './roba_launcher.css';
+import { Template } from 'meteor/templating';
+import { RobaDialog } from 'meteor/austinsand:roba-dialog';
+import { Adventures } from '../../../../imports/api/adventure/adventure.js';
+import { AdventureStates } from '../../../../imports/api/adventure/adventure_state.js';
+import { AdventureStatus } from '../../../../imports/api/adventure/adventure_status.js';
+import { AdventureSteps } from '../../../../imports/api/adventure/adventure_step.js';
+import { DatastoreRows } from '../../../../imports/api/datastore/datastore_row.js';
+import { PlatformViewports } from '../../../../imports/api/platform_configuration/platform_viewport.js';
+import { TestServers } from '../../../../imports/api/test_server/test_server.js';
+import { TestSystems } from '../../../../imports/api/test_system/test_system.js';
+import '../editable_fields/editable_record_selector.js';
 import '../editable_fields/editable_user_account.js';
 import '../editable_fields/editable_server_selector.js';
 import '../editable_fields/editable_test_system_selector.js';
@@ -20,62 +21,112 @@ import '../routes/roba_launcher_route.js';
  * Template Helpers
  */
 Template.roba_launcher.helpers({
-  getRoute () {
-    return this.route.get();
-  },
+  /**
+   * Get the selected account or select a default account
+   * @return {*} DatastoreRow
+   */
   getAccount () {
-    var dataContext = this.dataContext.get();
-    if (!dataContext.account && this.route) {
-      let account = this.route.get().userType.getAccount();
+    let robaContext = this,
+        dataContext = robaContext.dataContext.get();
+    if (!dataContext.account && robaContext.route) {
+      let account = robaContext.route.get().userType.getAccount();
       if (account) {
         dataContext.account = account._id;
-        this.dataContext.set(dataContext);
+        robaContext.dataContext.set(dataContext);
       }
     }
-    return this.dataContext.get().account;
+    return dataContext.account;
   },
+  
+  /**
+   * Get the selected test server
+   * @return String TestServer.staticId
+   */
   getServer () {
-    if (!this.server.get()) {
-      var server = TestServers.findOne({
-        projectVersionId: this.projectVersionId,
+    let robaContext = this,
+        serverId    = robaContext.server.get();
+    if (!serverId) {
+      let server = TestServers.findOne({
+        projectVersionId: robaContext.projectVersionId,
         active          : true
       });
       if (server) {
-        this.server.set(server.staticId);
+        serverId = server.staticId;
+        robaContext.server.set(serverId);
       }
     }
-    return this.server.get();
+    return serverId;
   },
+  
+  /**
+   * Get the selected test system
+   * @return String TestSystem.staticId
+   */
   getTestSystem () {
-    var testSystemId = this.testSystem.get();
+    let robaContext  = this,
+        testSystemId = robaContext.testSystem.get();
     if (!testSystemId) {
-      var testSystem = TestSystems.findOne({
-        projectVersionId: this.projectVersionId,
+      let testSystem = TestSystems.findOne({
+        projectVersionId: robaContext.projectVersionId,
         active          : true
       });
       if (testSystem) {
         //console.log("Test System selected: ", testSystem.staticId);
-        this.testSystem.set(testSystem.staticId);
+        testSystemId = testSystem.staticId;
+        robaContext.testSystem.set(testSystemId);
       }
     }
-    return this.testSystem.get();
+    return testSystemId;
   },
+  
+  /**
+   * Get the selected test agent
+   * @return String TestAgent.staticId
+   */
   getTestAgent () {
-    var testSystemId = this.testSystem.get(),
-        testAgentId  = this.testAgent.get(),
-        launchData   = this;
+    let robaContext  = this,
+        testSystemId = robaContext.testSystem.get(),
+        testAgentId  = robaContext.testAgent.get();
     if (!testAgentId && testSystemId) {
-      var testSystem = TestSystems.findOne({
-        projectVersionId: launchData.projectVersionId,
+      let testSystem = TestSystems.findOne({
+        projectVersionId: robaContext.projectVersionId,
         staticId        : testSystemId
       });
-      console.log("getTestAgent:", testSystem);
       if (testSystem && testSystem.testAgents && testSystem.testAgents.length) {
         console.log("Test Agent selected: ", testSystem.testAgents[ 0 ]);
-        this.testAgent.set(testSystem.testAgents[ 0 ]);
+        testAgentId = testSystem.testAgents[ 0 ];
+        robaContext.testAgent.set(testAgentId);
       }
     }
-    return this.testAgent.get();
+    return testAgentId;
+  },
+  
+  /**
+   * Get the context for the Viewport selector
+   *
+   */
+  viewportSelectorContext () {
+    let robaContext    = this,
+        dataContext    = robaContext.dataContext.get(),
+        robaRoute      = robaContext.route.get(),
+        platformConfig = robaRoute.destination.platformConfig();
+    if (!dataContext.viewport && robaContext.route) {
+      let viewport = platformConfig.defaultViewport();
+      if (viewport) {
+        console.log("Viewport selected:", viewport);
+        dataContext.viewport = viewport._id;
+        robaContext.dataContext.set(dataContext);
+      }
+    }
+    return {
+      valueField: "_id",
+      value     : dataContext.viewport,
+      dataKey   : "viewport",
+      collection: PlatformViewports,
+      query     : {
+        platformId: platformConfig._id
+      }
+    };
   }
 });
 
@@ -95,6 +146,7 @@ Template.roba_launcher.events({
       console.log("Set: ", "dataContext." + dataKey, newValue);
       var dataContext = instance.data.dataContext.get(),
           keys        = dataKey.split(".");
+      
       if (keys.length == 2 && dataContext[ keys[ 0 ] ]) {
         dataContext[ keys[ 0 ] ][ keys[ 1 ] ] = newValue;
       } else {
@@ -105,20 +157,23 @@ Template.roba_launcher.events({
       instance.data.dataContext.set(dataContext);
     }
   },
-  "click .btn-launch-drone" (e, instance) {
+  "click .btn-launch" (e, instance) {
     // get the server
     var adventureData = instance.data,
         server        = TestServers.findOne({
-          staticId: adventureData.server.get(),
+          staticId        : adventureData.server.get(),
           projectVersionId: adventureData.projectVersionId
         }),
         route         = adventureData.route.get();
     
     if (server) {
-      // assemble the data context
+      // assemble the data context by pulling in the full records in place of the ids
       var dataContext = adventureData.dataContext.get();
       if (dataContext.account) {
         dataContext.account = DatastoreRows.findOne(dataContext.account);
+      }
+      if (dataContext.viewport) {
+        dataContext.viewport = PlatformViewports.findOne(dataContext.viewport);
       }
       
       // Create the adventure
@@ -203,6 +258,7 @@ Template.roba_launcher.created = function () {
     instance.subscribe("version_datastore_rows", adventureData.projectId, adventureData.projectVersionId);
     instance.subscribe("test_systems", adventureData.projectId, adventureData.projectVersionId);
     instance.subscribe("test_agents", adventureData.projectId, adventureData.projectVersionId);
+    instance.subscribe("platform_viewports", adventureData.projectId, adventureData.projectVersionId);
   });
 };
 
