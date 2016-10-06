@@ -18,17 +18,23 @@
         {{/with}}
       </div>
       
-      <div class="edit-node-params">
-        <div>
-          <span class="field-label">Type:</span>
-          {{> EditableNodeType cssClass="inline-block" pageView=true value=type dataKey="type" emptyText="Select a node type" }}
-        </div>
-        <div>
-          <span class="field-label">Name:</span>
-          {{> EditableTextField cssClass="inline-block" value=title dataKey="title" emptyText="none"}}
-        </div>
-        {{> Template.dynamic template=editParamsPanel }}
-      </div>
+      <table class="node-details-table">
+        <tr>
+          <td class="node-details-label">Type:</td>
+          <td class="node-details-value break-word">
+            {{> EditableNodeType cssClass="inline-block" pageView=true value=type dataKey="type" emptyText="Select a node type" }}
+          </td>
+        </tr>
+        <tr>
+          <td class="node-details-label">Title:</td>
+          <td class="node-details-value break-word">
+            {{> EditableTextField cssClass="inline-block" value=title dataKey="title" emptyText="none"}}
+          </td>
+        </tr>
+        {{#if editParamsPanel}}
+          {{> Template.dynamic template=editParamsPanel }}
+        {{/if}}
+      </table>
       
       {{#RobaTabGroup name="ready-tabs" navClass="nav-tabs"}}
         {{#RobaTab name="quick-checks" title="Ready Checks"}}
@@ -38,7 +44,7 @@
           {{> EditableCode value=readyCode dataKey="readyCode" emptyText="Code to validate that the node is ready" color="grey" minLines=3 maxLines=20}}
         {{/RobaTab}}
       {{/RobaTabGroup}}
-
+      
       {{#RobaTabGroup name="valid-tabs" navClass="nav-tabs"}}
         {{#RobaTab name="quick-checks" title="Validation Checks"}}
           {{> NodeCheckEditList node=this type=nodeChecks.valid}}
@@ -50,20 +56,22 @@
     
     </div>
   {{else}}
-    <div class="{{#unless adventureIsStill adventure.get}}hide{{/unless}}">
-      <div class="full-width align-center">
-        {{> EditableNodeSelector cssClass="current-node-selector" dataKey="currentNodeId" emptyText="Select Node" projectVersionId=adventure.get.projectVersionId}}
+    {{#unless adventureIsComplete adventure.get}}
+      <div class="{{#unless adventureIsStill adventure.get}}hide{{/unless}}">
+        <div class="full-width align-center">
+          {{> EditableNodeSelector cssClass="current-node-selector" dataKey="currentNodeId" emptyText="Select Node" projectVersionId=adventure.get.projectVersionId}}
+        </div>
+        <div class="full-width align-center">
+          <button class="btn btn-primary btn-create-node" data-type="page">Create Node</button>
+        </div>
+        <div class="full-width create-node-form hide">
+          {{> CreateNodeForm }}
+        </div>
+        <div class="node-url-search">
+          <label>Best Matches:</label>
+          {{> NodeUrlSearchResults searchNodes}}
+        </div>
       </div>
-      <div class="full-width align-center">
-        <button class="btn btn-primary btn-create-node" data-type="page">Create Node</button>
-      </div>
-      <div class="full-width create-node-form hide">
-        {{> CreateNodeForm }}
-      </div>
-      <div class="node-url-search">
-        <label>Best Matches:</label>
-        {{> NodeUrlSearchResults searchNodes}}
-      </div>
-    </div>
+    {{/unless}}
   {{/with}}
 </template>
