@@ -168,7 +168,7 @@ function ExecuteAdventure () {
   // Setup the driver
   logger.debug("Adventure Test Agent: ", config.desiredCapabilities.browserName);
   logger.debug("Adventure Host: ", config.host);
-  logger.trace("Creating RobaDriver: ", config);
+  logger.info("Creating RobaDriver: ", config);
   driver = new RobaDriver(config);
   
   // set the implicit wait
@@ -182,7 +182,17 @@ function ExecuteAdventure () {
   // pull out the data context
   dataContext = adventure.dataContext;
   account     = dataContext.account;
-  logger.debug("Account:", account);
+  logger.debug("Using account:", account);
+  
+  // set the viewport if it's specified
+  if(dataContext.viewport){
+    logger.debug("Setting viewport:", dataContext.viewport);
+    try {
+      driver.windowHandleSize({width: dataContext.viewport.width, height: dataContext.viewport.height})
+    } catch (e) {
+      logger.error("Setting viewport failed:", e.toString(), e.stack);
+    }
+  }
   
   // update the step_types status' to queued
   logger.trace("Setting step_types to queued status");
@@ -199,7 +209,7 @@ function ExecuteAdventure () {
   while (i < adventure.route.steps.length && !adventure.abort && !driverEnded) {
     step = adventure.route.steps[ i ];
     context.restore(); // erase any context from a previous step
-    context.update({ adventureStepId: step._id }); // each step handler should further update the context
+    context.update({ adventureStepId: step.stepId }); // each step handler should further update the context
     logger.info("Executing Route Step " + (i + 1) + " of " + adventure.route.steps.length);
     context.milestone({ type: "step", data: step });
     
@@ -219,7 +229,7 @@ function ExecuteAdventure () {
     } catch (error) {
       logger.error("Step execution failed: ", error.toString(), error.stack);
       pass = false;
-      ddpLink.setAdventureStepStatus(step._id, AdventureStepStatus.error);
+      ddpLink.setAdventureStepStatus(step.stepId, AdventureStepStatus.error);
     }
     
     // done

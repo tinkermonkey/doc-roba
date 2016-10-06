@@ -174,7 +174,17 @@ function ExecuteTestRole () {
   // pull out the data context
   account = test.role.dataContext.account;
   server  = test.server;
-  logger.debug("Account:", account);
+  logger.debug("Using account:", account);
+  
+  // set the viewport if it's specified
+  if(test.role.dataContext.viewport){
+    logger.debug("Setting viewport:", test.role.dataContext.viewport);
+    try {
+      driver.windowHandleSize({width: test.role.dataContext.viewport.width, height: test.role.dataContext.viewport.height})
+    } catch (e) {
+      logger.error("Setting viewport failed:", e.toString(), e.stack);
+    }
+  }
   
   // update the step_types status' to queued
   logger.trace("Setting step_types to queued status");
