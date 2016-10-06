@@ -39,7 +39,7 @@ Template.EditableRecordSelector.onRendered(() => {
   let instance = Template.instance();
   
   instance.autorun(function () {
-    console.log("EditableRecordSelector autorun");
+    //console.log("EditableRecordSelector autorun");
     let data         = Template.currentData(),
         displayField = data.displayField || "title",
         valueField   = data.valueField || "staticId",
@@ -55,11 +55,13 @@ Template.EditableRecordSelector.onRendered(() => {
     
     // Get the records
     if(data.collection){
-      console.log("EditableRecordSelector fetching records");
+      //console.log("EditableRecordSelector fetching records:", query);
       let records = data.collection.find(query, sort).map(function (result) {
         return { value: result[ valueField ], text: result[ displayField ] };
       });
       instance.records.set(records);
+    } else {
+      throw new Meteor.Error("EditableRecordSelector passed a null collection");
     }
     
     // Setup the editable
