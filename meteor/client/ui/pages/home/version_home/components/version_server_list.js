@@ -125,12 +125,13 @@ Template.VersionServerList.rendered = function () {
       })
       .disableSelection();
   
-  // Make the field list sortable
+  // Make sure items added to the list are sortable
+  instance.autorun(function () {
+    let servers = TestServers.find({ projectVersionId: instance.data.version._id });
+    instance.$(".sortable-table").sortable("refresh");
+  });
+  
   /*
-   instance.autorun(function () {
-   //var servers = TestServers.find({projectVersionId: instance.data.version._id});
-   //instance.$(".sortable-table").sortable("refresh");
-   });
    
    // Setup the config schema initial value
    instance.autorun(() => {
