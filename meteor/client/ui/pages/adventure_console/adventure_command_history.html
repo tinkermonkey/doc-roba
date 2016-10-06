@@ -15,13 +15,12 @@
           {{> PrettyCode value=code }}
         </div>
         <div class="panel-footer">
-          {{#if complete}}
-            {{#if result}}
-              {{> Template.dynamic template=LogMessageData data=result }}
-            {{/if}}
-          {{else}}
-            {{> RobaSpinner scale=0.3 }}
+          {{#if result}}
+            {{> Template.dynamic template=LogMessageData data=result }}
           {{/if}}
+          {{#unless complete}}
+            {{> RobaSpinner scale=0.3 }}
+          {{/unless}}
         </div>
       </div>
 		{{/each}}

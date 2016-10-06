@@ -23,7 +23,7 @@ Template.AdventureCommandHistory.helpers({
     }
   },
   complete () {
-    return this.status == AdventureStepStatus.complete || Date.now() - this.dateCreated > 20000;
+    return _.contains([AdventureStepStatus.complete, AdventureStepStatus.error], this.status);
   }
 });
 
