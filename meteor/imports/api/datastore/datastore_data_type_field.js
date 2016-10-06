@@ -130,8 +130,5 @@ DatastoreDataTypeFields.helpers({
   simpleSchema(){
     //console.log("DatastoreDataTypeFields.simpleSchema:", this);
     return DSUtil.dataTypeLiteral(this);
-  },
-  isCustom(){
-    return this.type == FieldTypes.custom;
   }
 });

@@ -25,7 +25,7 @@
           </td>
           <td>
             {{> EditableEnumSelector value=type dataKey="type" enum=FieldTypes}}
-            {{#if isCustom}}
+            {{#if fieldIsCustom}}
               {{> EditableRecordSelector value=dataTypeId dataKey="dataTypeId" projectVersionId=../projectVersionId collection=DatastoreDataTypes emptyText="(Select Type)"}}
             {{/if}}
           </td>

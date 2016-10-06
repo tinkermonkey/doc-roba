@@ -171,6 +171,7 @@ Template.registerHelper("relativeHeight", function(proportion){
     }
   }
 });
+
 Template.registerHelper("relativeWidth", function(proportion){
   if(proportion){
     var screenSize = Session.get("resize");
@@ -178,6 +179,14 @@ Template.registerHelper("relativeWidth", function(proportion){
       return parseInt(parseFloat(proportion) * screenSize.width);
     }
   }
+});
+
+/**
+ * Determine if a field is custom
+ */
+Template.registerHelper("fieldIsCustom", function(field){
+  field = field || this;
+  return field && field.type == FieldTypes.custom;
 });
 
 /**
