@@ -41,15 +41,27 @@ Template.DocTree.created = function () {
     var projectId        = FlowRouter.getParam("projectId"),
         projectVersionId = FlowRouter.getParam("projectVersionId");
     
-    instance.subscribe("actions", projectId, projectVersionId);
+    // Core data
     instance.subscribe("nodes", projectId, projectVersionId);
     instance.subscribe("node_checks", projectId, projectVersionId);
-    instance.subscribe("datastores", projectId, projectVersionId);
-    instance.subscribe("version_datastore_fields", projectId, projectVersionId);
-    instance.subscribe("version_datastore_rows", projectId, projectVersionId);
-    instance.subscribe("test_servers", projectId, projectVersionId);
-    instance.subscribe("test_systems", projectId, projectVersionId);
-    instance.subscribe("test_agents", projectId, projectVersionId);
+    instance.subscribe("actions", projectId, projectVersionId);
+  
+    // Datastores
+    instance.subscribe("datastores", projectId, projectVersionId);// TODO: Move to lower level template
+    instance.subscribe("version_datastore_fields", projectId, projectVersionId);// TODO: Move to lower level template
+    instance.subscribe("datastore_data_types", projectId, projectVersionId);// TODO: Move to lower level template
+    instance.subscribe("version_datastore_data_type_fields", projectId, projectVersionId);// TODO: Move to lower level template
+    instance.subscribe("version_datastore_rows", projectId, projectVersionId);// TODO: Move to lower level template
+  
+    // Platform configuration
+    instance.subscribe("platform_configurations", projectId, projectVersionId);// TODO: Move to lower level template
+    instance.subscribe("platform_operating_systems", projectId, projectVersionId);// TODO: Move to lower level template
+    instance.subscribe("platform_viewports", projectId, projectVersionId);// TODO: Move to lower level template
+  
+    // Test infrastructure
+    instance.subscribe("test_servers", projectId, projectVersionId);// TODO: Move to lower level template
+    instance.subscribe("test_systems", projectId, projectVersionId);// TODO: Move to lower level template
+    instance.subscribe("test_agents", projectId, projectVersionId);// TODO: Move to lower level template
     
     // pull in the project and project version records
     instance.project.set(Projects.findOne(projectId));
