@@ -118,6 +118,7 @@
 }
 
 .log-data-value {
+  font: inherit;
   display: inline-block;
   word-break: break-all;
   overflow-wrap: break-word;
