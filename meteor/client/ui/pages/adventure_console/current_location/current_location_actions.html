@@ -1,41 +1,46 @@
 <template name="CurrentLocationActions">
   <div class="current-location-actions" style="display: none;">
     {{#with currentNode.get}}
-        <h3>Actions for this <span class="dark-blue">{{renderLookup "NodeTypesLookup" type}}</span></h3>
-    
-        {{#each nodeActions}}
-          {{> CurrentLocationActionRow }}
-        {{/each}}
-        <div>
-          <button class="btn btn-warning btn-xs btn-add-action">
-            <span class="glyphicon glyphicon-plus"></span>
-            Add an Action to {{title}}
-          </button>
-        </div>
-    
-        <h3>Nav Menus on this <span class="dark-blue">{{renderLookup "NodeTypesLookup" type}}</span></h3>
-        {{> EditableNavMenuList projectVersionId=projectVersionId value=navMenus dataKey="navMenus" }}
-        <div>
-          <button class="btn btn-warning btn-xs btn-add-action">
-            <span class="glyphicon glyphicon-plus"></span>
-            Create a new Nav Menu
-          </button>
-        </div>
-    
-    
-        {{#each nodeNavMenus}}
-          <h3>Actions from <span class="dark-blue">{{title}}</span></h3>
-      
-          {{#each actions}}
+      {{#RobaTabGroup name="current-location-actions" navClass="nav-tabs" }}
+        {{#RobaTab name="current-node" title="Current Node"}}
+          <h3>Actions for this <span class="dark-blue">{{renderLookup "NodeTypesLookup" type}}</span></h3>
+          {{#each nodeActions}}
             {{> CurrentLocationActionRow }}
           {{/each}}
+          
           <div>
             <button class="btn btn-warning btn-xs btn-add-action">
               <span class="glyphicon glyphicon-plus"></span>
               Add an Action to {{title}}
             </button>
           </div>
+          
+          <h3>Nav Menus on this <span class="dark-blue">{{renderLookup "NodeTypesLookup" type}}</span></h3>
+          {{> EditableNavMenuList projectVersionId=projectVersionId value=navMenus dataKey="navMenus" }}
+          <div>
+            <button class="btn btn-warning btn-xs btn-add-action">
+              <span class="glyphicon glyphicon-plus"></span>
+              Create a new Nav Menu
+            </button>
+          </div>
+        {{/RobaTab}}
+      
+        {{#each nodeNavMenus}}
+          {{#RobaTab name=staticId title=title}}
+            <h3>Actions from <span class="dark-blue">{{title}}</span></h3>
+            
+            {{#each actions}}
+              {{> CurrentLocationActionRow }}
+            {{/each}}
+            <div>
+              <button class="btn btn-warning btn-xs btn-add-action">
+                <span class="glyphicon glyphicon-plus"></span>
+                Add an Action to {{title}}
+              </button>
+            </div>
+          {{/RobaTab}}
         {{/each}}
+      {{/RobaTabGroup}}
     {{else}}
       <div class="alert alert-info">Use the current node section to identify the current context.</div>
     {{/with}}

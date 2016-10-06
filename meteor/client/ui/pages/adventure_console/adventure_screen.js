@@ -54,7 +54,7 @@ Template.AdventureScreen.helpers({
  */
 Template.AdventureScreen.events({
   /**
-   * Click event for the drone screen and screen mask
+   * Click event for the remote screen and screen mask
    * @param e
    * @param instance
    */
