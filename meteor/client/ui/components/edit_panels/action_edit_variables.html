@@ -21,8 +21,10 @@
         <td class="drag-handle"><span class="glyphicon glyphicon-record"></span></td>
         <td>{{> EditableTextField mode="popup" value=name dataKey="name" }}</td>
         <td>
-          {{> EditableFieldType mode="popup" type=type dataKey="type" }}
-          {{> EditableDatastoreDataType mode="popup" type=type dataTypeId=dataTypeId projectVersionId=../projectVersionId dataKey="dataTypeId" }}
+          {{> EditableEnumSelector mode="popup" value=type dataKey="type" enum=FieldTypes}}
+          {{#if fieldIsCustom}}
+            {{> EditableRecordSelector mode="popup" value=dataTypeId dataKey="dataTypeId" projectVersionId=../projectVersionId collection=DatastoreDataTypes emptyText="(Select Type)"}}
+          {{/if}}
         </td>
         <td>{{> EditableFieldShape mode="popup" fieldIsArray=varIsArray dataKey="varIsArray" }}</td>
         <td>{{> EditableTextField mode="popup" value=defaultValue dataKey="defaultValue" emptyText="\"\"" }}</td>

@@ -3,15 +3,18 @@ import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
 import { Actions } from '../../../../imports/api/action/action.js';
 import { FieldTypes } from '../../../../imports/api/datastore/field_types.js';
+import { DatastoreDataTypes } from '../../../../imports/api/datastore/datastore_data_type.js';
 import { Util } from '../../../../imports/api/util.js';
-import '../editable_fields/editable_field_type.js';
-import '../editable_fields/editable_datastore_data_type.js';
 import '../editable_fields/editable_field_shape.js';
+import '../editable_fields/editable_record_selector.js';
 
 /**
  * Template Helpers
  */
 Template.ActionEditVariables.helpers({
+  DatastoreDataTypes(){
+    return DatastoreDataTypes;
+  },
   indexedVariables() {
     var action           = this,
         indexedVariables = _.map(action.variables, function (v, i) {
