@@ -29,10 +29,15 @@ export class AdventureAssistant {
           updateState: updateState == undefined ? true : updateState,
           code       : commandCode
         }, (error, result) => {
-          // Cancel the watchdog timer
-          clearTimeout(commandTimeoutId);
-      
           if (error) {
+            console.error("AdventureAssistant.executeCommand error inserting command:", error);
+            
+            // Cancel the watchdog timer
+            clearTimeout(commandTimeoutId);
+  
+            // Stop observing
+            commandObserver && commandObserver.stop();
+
             callback && callback(error);
           }
         });
@@ -41,11 +46,13 @@ export class AdventureAssistant {
     console.log("AdventureAssistant.execute observing command", commandId, "for", commandTimeout, "ms");
     var commandObserver = AdventureCommands.find({ _id: commandId }).observeChanges({
       changed(id, fields){
+        console.log("AdventureAssistant changed:", fields);
         // When the command is complete, call the callback and stop observing
-        if (fields.status && _.contains([ AdventureStepStatus.complete, AdventureStepStatus.error ], fields.status)) {
+        if (fields.status && _.contains([ AdventureStepStatus.complete], fields.status)) {
           let endTime = Date.now();
           console.log("AdventureAssistant complete, stopping observation and calling callback after", endTime - startTime, "ms");
           commandObserver.stop();
+          clearTimeout(commandTimeoutId);
           callback && callback(null, AdventureCommands.findOne({ _id: commandId }));
         }
       }
@@ -53,11 +60,13 @@ export class AdventureAssistant {
     
     // Timeout if the command hasn't returned in time
     var commandTimeoutId = setTimeout(() => {
+      console.error("AdventureAssistant command timed out:", commandId);
       let command = AdventureCommands.findOne({ _id: commandId });
       if (command) {
         if (_.contains([ AdventureStepStatus.complete, AdventureStepStatus.error ], command.status)) {
           console.error("AdventureAssistant watchdog found complete command, watchdog should have been cancelled");
         } else {
+          commandObserver.stop();
           AdventureCommands.update({ _id: commandId }, {
             $set: {
               status: AdventureStepStatus.error,
@@ -66,6 +75,7 @@ export class AdventureAssistant {
               }
             }
           });
+          callback && callback(new Error("command-timeout", "Command timed out after " + commandTimeout + " ms"), AdventureCommands.findOne({ _id: commandId }));
         }
       } else {
         console.error("AdventureAssistant watchdog timeout didn't find the command:", commandId);
