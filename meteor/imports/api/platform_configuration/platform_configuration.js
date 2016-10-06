@@ -60,6 +60,9 @@ PlatformConfigurations.helpers({
   viewports(){
     return PlatformViewports.find({platformId: this._id}, {sort: {title: 1}});
   },
+  defaultViewport(){
+    return PlatformViewports.findOne({platformId: this._id, default: true});
+  },
   operatingSystems(){
     return PlatformOperatingSystems.find({platformId: this._id}, {sort: {title: 1}});
   }
