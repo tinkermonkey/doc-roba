@@ -2,9 +2,10 @@ import './node_check_edit_list.html';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
 import { NodeChecks } from '../../../../imports/api/node/node_check.js';
-import { NodeCheckTypes } from '../../../../imports/api/node/node_check_types.js';
+import { NodeCheckTypes, NodeCheckTypesLookup } from '../../../../imports/api/node/node_check_types.js';
 import { NodeReadyCheckFns } from '../../../../imports/api/node/node_ready_check_fns.js';
 import { NodeValidCheckFns } from '../../../../imports/api/node/node_valid_check_fns.js';
+import { Util } from '../../../../imports/api/util.js';
 import '../editable_fields/editable_enum selector.js';
 import '../editable_fields/editable_xpath.js';
 
@@ -21,6 +22,13 @@ Template.NodeCheckEditList.helpers({
       projectVersionId: this.node.projectVersionId,
       type            : this.type
     });
+  },
+  
+  /**
+   * Get the correct enum for this list
+   */
+  checkFnType () {
+    return Util.camelToTitle(NodeCheckTypesLookup[ this.type ])
   },
   
   /**
@@ -109,6 +117,7 @@ Template.NodeCheckEditList.onCreated(() => {
 Template.NodeCheckEditList.onRendered(() => {
   let instance = Template.instance();
   
+  // Setup the sortable table
   instance.$(".sortable-table")
       .sortable({
         items               : "> .sortable-table-row",
@@ -138,6 +147,18 @@ Template.NodeCheckEditList.onRendered(() => {
         }
       })
       .disableSelection();
+  
+  // Make sure items added to the list are sortable
+  instance.autorun(function () {
+    let data       = Template.currentData(),
+        nodeChecks = NodeChecks.find({
+          parentId        : data.node.staticId,
+          projectVersionId: data.node.projectVersionId,
+          type            : data.type
+        });
+    instance.$(".sortable-table").sortable("refresh");
+  });
+  
 });
 
 /**
