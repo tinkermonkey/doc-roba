@@ -118,8 +118,8 @@ Meteor.methods({
    */
   loadAdventureEnums() {
     return {
-      status    : AdventureStatus,
-      stepStatus: AdventureStepStatus
+      AdventureStatus    : AdventureStatus,
+      AdventureStepStatus: AdventureStepStatus
     };
   },
   

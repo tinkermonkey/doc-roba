@@ -16,7 +16,7 @@ Meteor.startup(() => {
  */
 export const ProcessLauncher = {
   testRoleScript : "roba_test_role.js",
-  adventureScript: "roba_adventure.js",
+  adventureScript: "execute_adventure.js",
   
   /**
    * Initialize the Process Launcher

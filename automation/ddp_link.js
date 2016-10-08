@@ -31,14 +31,14 @@ var Future  = require("fibers/future"),
     }
   };
 
-logger.setLevel("DEBUG");
+logger.setLevel("TRACE");
 ddpLogger.setLevel("INFO");
 
 /**
  * Constructor
  */
 var DDPLink = function (config, context) {
-  logger.debug("Creating new DDPLink");
+  logger.debug("Creating new ServerLink");
 
   // combine the config and defaults
   this.config = _.defaults(config || {}, defaultConfig);
@@ -499,7 +499,7 @@ DDPLink.prototype.ddpSocketErrorListener = function (error) {
 };
 
 /**
- * Export the DDPLink class
+ * Export the ServerLink class
  * @type {Function}
  */
 module.exports = DDPLink;
