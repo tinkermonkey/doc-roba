@@ -43,7 +43,7 @@ Template.DocTree.created = function () {
     
     // Core data
     instance.subscribe("nodes", projectId, projectVersionId);
-    instance.subscribe("node_checks", projectId, projectVersionId);
+    instance.subscribe("all_node_checks", projectId, projectVersionId);
     instance.subscribe("actions", projectId, projectVersionId);
   
     // Datastores
