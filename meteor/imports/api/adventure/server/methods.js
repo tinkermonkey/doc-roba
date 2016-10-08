@@ -8,6 +8,7 @@ import { AdventureCommands } from '../adventure_command.js';
 import { AdventureStates } from '../adventure_state.js';
 import { AdventureSteps } from '../adventure_step.js';
 import { Nodes } from '../../node/node.js';
+import { NodeCheckTypes } from '../../node/node_check_types.js';
 import { AdventureStatus } from '../adventure_status.js';
 import { AdventureStepStatus } from '../adventure_step_status.js';
 var childProcess = require("child_process");
@@ -119,7 +120,8 @@ Meteor.methods({
   loadAdventureEnums() {
     return {
       AdventureStatus    : AdventureStatus,
-      AdventureStepStatus: AdventureStepStatus
+      AdventureStepStatus: AdventureStepStatus,
+      NodeCheckTypes     : NodeCheckTypes
     };
   },
   

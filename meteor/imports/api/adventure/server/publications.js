@@ -9,13 +9,14 @@ import { TestAgents } from '../../test_agent/test_agent.js';
 import { TestServers } from '../../test_server/test_server.js';
 import { TestSystems } from '../../test_system/test_system.js';
 
-Meteor.publish('adventure', function (projectId, adventureId) {
-  console.debug("Publish: adventure", projectId, adventureId);
-  // check that there is a project role for the current user
-  if (Auth.hasProjectAccess(this.userId, projectId)) {
-    return Adventures.find({ projectId: projectId, _id: adventureId });
+Meteor.publish('adventure', function (adventureId) {
+  console.debug("Publish: adventure", adventureId);
+  // Automation only has the adventureId, so use that to look up the project and check permissions
+  let adventure = Adventures.findOne({ _id: adventureId });
+  if (adventure && Auth.hasProjectAccess(this.userId, adventure.projectId)) {
+    return Adventures.find({ _id: adventureId });
   }
-  console.warn("Publish: adventure returning nothing for [" + projectId + "], [" + adventureId + "], " + this.userId);
+  console.warn("Publish: adventure returning nothing for [" + adventureId + "], " + this.userId);
   return [];
 });
 
