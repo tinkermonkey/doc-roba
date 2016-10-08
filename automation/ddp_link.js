@@ -93,7 +93,7 @@ DDPLink.prototype.connect = function (singleUseToken) {
         console.log("Loggin in: ", singleUseToken);
         link.ddp.call("login", [{token: singleUseToken}], function (error, result) {
           if(error){
-            logger.error("Failed to authenticare: ", error.toString());
+            logger.error("Failed to authenticate: ", error.toString());
           } else {
             logger.info("Authentication success");
             link.rawToken = result.token;

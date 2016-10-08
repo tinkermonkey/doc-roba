@@ -97,7 +97,8 @@ class ServerLink {
           console.log("Loggin in: ", authToken);
           link.ddp.call("login", [ { token: authToken } ], function (error, result) {
             if (error) {
-              logger.error("Failed to authenticare: ", error.toString());
+              logger.error("Failed to authenticate: ", error.toString());
+              throw new Error("Failed to authenticate");
             } else {
               logger.info("Authentication success");
               link.rawToken  = result.token;
@@ -371,12 +372,17 @@ class ServerLink {
   /**
    * Subscribe to a collection which is expected to return a single record
    * @param subscription
-   * @param id
+   * @param params
    * @param collectionName
    */
   liveRecord (subscription, params, collectionName) {
     assert(subscription, "liveRecord: subscription must not be null");
-    assert(params, "liveRecord: id must not be null");
+    assert(params, "liveRecord: params must not be null");
+    
+    // Make sure params is an array
+    if(!_.isArray(params)){
+      throw new Error("liveRecord params must be an array");
+    }
     
     // default the collection name to the subscription name
     collectionName = collectionName || subscription;
@@ -421,8 +427,13 @@ class ServerLink {
    */
   liveList (subscription, params, collectionName) {
     assert(subscription, "liveList: subscription must not be null");
+  
+    // Params must be null or an array
+    if(params != null && !_.isArray(params)){
+      throw new Error("liveList params must be an array");
+    }
     
-    // default the collection name to the subscription name
+    // Default the collection name to the subscription name
     collectionName = collectionName || subscription;
     
     // Make note of the subscriptions

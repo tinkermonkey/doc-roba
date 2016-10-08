@@ -32,7 +32,7 @@ Future.task(function () {
           port: httpPort
         }
       }),
-      adventure = new Adventure(adventureId, ddpLink, context);
+      adventure = new Adventure(adventureId, ddpLink, context, assistant.path);
   
   // Create a ddp connection and connect to the server
   logger.info('Initiating DDP connection');

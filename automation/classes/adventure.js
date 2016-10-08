@@ -6,7 +6,7 @@ var _             = require('underscore'),
     logger        = log4js.getLogger('adventure'),
     RobaDriver    = require('./driver/roba_driver.js'),
     AdventureStep = require('./adventure_step/adventure_step.js'),
-    AdventureStatus;
+    AdventureStatus, AdventureStepStatus;
 
 logger.setLevel('DEBUG');
 
@@ -17,11 +17,12 @@ class Adventure {
    * @param serverLink ServerLink
    * @param context RobaContext
    */
-  constructor (adventureId, serverLink, context) {
+  constructor (adventureId, serverLink, context, logPath) {
     logger.debug('Creating adventure:', adventureId);
     this._id        = adventureId;
     this.serverLink = serverLink;
     this.context    = context;
+    this.logPath    = logPath;
   }
   
   /**
@@ -39,12 +40,11 @@ class Adventure {
     
     // Load the enums needed for an adventure
     adventure.serverLink.enums = adventure.serverLink.call('loadAdventureEnums');
-    AdventureStatus            = adventure.serverLink.enums.AdventureStatus;
-    AdventureStep.setStatusEnum(adventure.serverLink.enums.AdventureStepStatus);
+    Adventure.setEnums(adventure.serverLink.enums);
     
     // Load the adventure record
     logger.debug('Loading adventure record');
-    adventure.record = adventure.serverLink.liveRecord('adventure', adventure._id, 'adventures');
+    adventure.record = adventure.serverLink.liveRecord('adventure', [ adventure._id ], 'adventures');
     logger.trace('Adventure loaded:', adventure);
     
     // Update the context
@@ -63,31 +63,27 @@ class Adventure {
     
     // Load the test system record
     logger.debug('Loading test system record');
-    adventure.testSystem = adventure.serverLink.liveRecord('adventure_test_system', adventure.record.testSystemId, 'test_systems');
+    adventure.testSystem = adventure.serverLink.liveRecord('adventure_test_system', [ adventure.record.projectId, adventure.record.testSystemId ], 'test_systems');
     logger.trace('Test system: ', adventure.testSystem);
     
     // Load the test agent record
     logger.debug('Loading test agent record');
-    adventure.testAgent = adventure.serverLink.liveRecord('adventure_test_agent', adventure.record.testAgentId, 'test_agents');
+    adventure.testAgent = adventure.serverLink.liveRecord('adventure_test_agent', [ adventure.record.projectId, adventure.record.testAgentId ], 'test_agents');
     logger.trace('Test agent: ', adventure.testAgent);
     
     // Load the server record
     logger.debug('Loading test server record');
-    adventure.server = adventure.serverLink.liveRecord('adventure_server', adventure.record.serverId, 'test_servers');
-    logger.trace('Test server: ', adventure.server);
+    adventure.testServer = adventure.serverLink.liveRecord('adventure_server', [ adventure.record.projectId, adventure.record.serverId ], 'test_servers');
+    logger.trace('Test server: ', adventure.testServer);
     
     // Create the adventure step objects
     logger.debug('Creating adventure steps');
-    adventure.stepRecords = adventure.serverLink.liveList('adventure_steps', [
-      adventure.record.projectId,
-      adventure.record.projectVersionId,
-      adventure._id
-    ]);
+    adventure.stepRecords = adventure.serverLink.liveList('adventure_steps', [ adventure.record.projectId, adventure._id ]);
     logger.trace("Adventure steps:", adventure.stepRecords);
-    if(adventure.stepRecords && adventure.stepRecords.length){
-      adventure.steps = adventure.stepRecords.map(function (stepRecord, i) {
+    if (adventure.stepRecords && _.keys(adventure.stepRecords).length) {
+      adventure.steps = _.values(adventure.stepRecords).map((function (stepRecord, i) {
         return new AdventureStep(stepRecord, i, adventure).init();
-      });
+      }));
     } else {
       logger.fatal("Fatal error: no steps found for adventure");
       throw new Error("Adventure contains no steps");
@@ -108,6 +104,7 @@ class Adventure {
             loggingPrefs: { browser: 'ALL', driver: 'WARNING', client: 'WARNING', server: 'WARNING' }
           },
           logLevel           : 'silent',
+          logPath            : adventure.logPath,
           end                : function (event) {
             logger.info('End event received from driver');
             adventure.driverEnded = true;
@@ -162,8 +159,14 @@ class Adventure {
     // Execute each step
     adventure.steps.forEach(function (step) {
       // If the previous step passed, keep executing
-      if (stepPassed) {
-        stepPassed = step.execute();
+      if (stepPassed && !adventure.record.abort && !adventure.driverEnded) {
+        try {
+          stepPassed = step.execute();
+        } catch (e) {
+          logger.error("Step execution failed:", step.record, e.toString(), e.stack);
+          step.setStatus(AdventureStepStatus.error);
+          stepPassed = false;
+        }
       } else {
         // Otherwise, skip this step
         step.skip();
@@ -182,12 +185,26 @@ class Adventure {
     logger.debug('Loading adventure commands');
     adventure.commandList = adventure.serverLink.liveList('adventure_commands', [ adventure._id ]);
     logger.trace('Adventure commands loaded: ', _.keys(adventure.commandList).length);
-    
-    // Create the command objects
-    logger.debug('Creating command objects');
-    adventure.commands = adventure.commandList.map(function (command) {
-      return new AdventureStep(commands);
-    });
+  }
+  
+  /**
+   * Check to see if this adventure is paused
+   */
+  checkForPause () {
+    logger.trace("CheckForPause: ", this.record.status == AdventureStatus.paused);
+    while (this.record.status == AdventureStatus.paused) {
+      this.driver.wait(250);
+    }
+  }
+  
+  /**
+   * Capture the adventure state
+   */
+  updateState () {
+    var adventure     = this,
+        state         = adventure.driver.getState();
+    adventure.lastUrl = state.url;
+    adventure.serverLink.saveAdventureState(adventure._id, state);
   }
   
   /**
@@ -203,11 +220,22 @@ class Adventure {
   }
   
   /**
+   * Grab any enums needed, pass them around
+   * @param enums
+   */
+  static setEnums (enums) {
+    logger.trace('Adventure.setEnums:', enums);
+    AdventureStatus     = enums.AdventureStatus;
+    AdventureStepStatus = enums.AdventureStepStatus;
+    AdventureStep.setEnums(enums);
+  }
+  
+  /**
    * Exit the adventure
    * @param code
    */
   exit (code) {
-    logger.debug("Adventure.exit:", code);
+    logger.info("Adventure.exit:", code);
     var adventure = this;
     
     // Shut down the driver
@@ -228,6 +256,7 @@ class Adventure {
     // Shut down the logger
     log4js.shutdown(function () {
       setTimeout(function () {
+        console.log("Calling process.exit");
         process.exit(code);
       }, 2000);
     });
