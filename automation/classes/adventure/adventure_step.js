@@ -54,7 +54,10 @@ class AdventureStep {
         adventure = this.adventure,
         context   = adventure.context,
         driver    = adventure.driver,
-        passed    = true;
+        result    = {
+          ready: false,
+          valid: false
+        };
     
     // Set the status to running
     step.setStatus(AdventureStepStatus.running);
@@ -64,9 +67,6 @@ class AdventureStep {
     context.update({ adventureStepId: step.record._id });
     context.milestone({ type: "step", data: step.record });
     logger.info("Executing route step", step.index);
-    
-    // Check to see if the adventure is paused
-    adventure.checkForPause();
     
     // If this is the first step then we need to bootstrap the browser to the url
     if (step.index == 0) {
@@ -80,22 +80,26 @@ class AdventureStep {
     driver.injectHelpers();
     
     // Update the adventure state
-    adventure.updateState();
+    adventure.updateState(true);
     
     // Validate the node
-    logger.debug("Validating step node:", step.record.nodeId, step.node.record.title);
-    passed = step.node.validate();
+    step.node.addVariable('account', adventure.record.dataContext.account);
+    result.ready = step.node.checkReady(adventure.driver, adventure.record.dataContext[ 'step' + step.index ]);
+    result.valid = step.node.validate(adventure.driver, adventure.record.dataContext[ 'step' + step.index ]);
     
     // Take the action if there is one
-    if (step.action) {
-      logger.debug("Taking step action:", step.record.actionId, step.action.record.title);
-      step.action.execute();
+    if (result.ready.pass && result.valid.pass && step.action) {
+      // Add adventure context
+      step.action.addVariable('account', adventure.record.dataContext.account);
+      step.action.execute(adventure.driver, adventure.record.dataContext[ 'step' + step.index ]);
     }
     
-    // Set the status
-    step.setStatus(passed ? AdventureStepStatus.complete : AdventureStepStatus.error);
+    // Set the status and store the result
+    step.setStatus(result.ready.pass && result.valid.pass ? AdventureStepStatus.complete : AdventureStepStatus.error, result);
+    step.saveResult(result);
     
-    return passed
+    // Pass back the overall status
+    return result.ready.pass && result.valid.pass
   }
   
   /**
@@ -115,6 +119,14 @@ class AdventureStep {
    */
   setStatus (status) {
     this.adventure.serverLink.call('setAdventureStepStatus', [ this.record._id, status ])
+  }
+  
+  /**
+   * Save the step result
+   * @param result
+   */
+  saveResult (result) {
+    this.adventure.serverLink.call('saveAdventureStepResult', [ this.record._id, result ])
   }
   
   /**

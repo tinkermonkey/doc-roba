@@ -23,11 +23,12 @@ Meteor.methods({
    * @param adventureId
    */
   launchAdventure(adventureId) {
+    console.debug("launchAdventure:", adventureId);
     if (!adventureId) {
       throw new Meteor.Error("launchAdventure failed: no adventureId specified")
     }
     
-    console.debug("launchAdventure: " + adventureId);
+    // Load the adventure Record
     var adventure = Adventures.findOne(adventureId);
     if (!adventure) {
       throw new Meteor.Error("launchAdventure failed: adventure [" + adventureId + "] not found")
@@ -37,6 +38,7 @@ Meteor.methods({
     Adventures.update(adventureId, { $set: { status: AdventureStatus.staged } });
     AdventureSteps.update({ adventureId: adventureId }, { $set: { status: AdventureStepStatus.staged } });
     
+    // Generate the authentication token and launch the process
     var token   = Accounts.singleUseAuth.generate({ expires: { seconds: 5 } }, Meteor.user()),
         command = [ ProcessLauncher.adventureScript, "--adventureId", adventureId, "--token", token ].join(" "),
         logFile = [ "adventure_", adventureId, ".log" ].join(""),
@@ -53,6 +55,7 @@ Meteor.methods({
           }
         });
     
+    // Store the PID
     Adventures.update(adventureId, { $set: { pid: proc.pid } });
     console.info("launchAdventure launched: " + adventureId + " as " + proc.pid + " > " + logFile);
   },
@@ -62,9 +65,9 @@ Meteor.methods({
    * @param adventureId
    */
   abortAdventure(adventureId) {
+    console.debug("abortAdventure:", adventureId);
     check(adventureId, String);
     
-    console.debug("abortAdventure: " + adventureId);
     var adventure = Adventures.findOne(adventureId);
     if (adventure) {
       Adventures.update({ _id: adventure._id }, { $set: { status: AdventureStatus.complete, abort: true } });
@@ -107,9 +110,9 @@ Meteor.methods({
    * @param adventureId
    */
   pauseAdventure(adventureId) {
+    console.debug("pauseAdventure: ", adventureId);
     check(adventureId, String);
     
-    console.debug("pauseAdventure: " + adventureId);
     Adventures.update(adventureId, { $set: { status: AdventureStatus.paused } })
   },
   
@@ -131,7 +134,7 @@ Meteor.methods({
    * @param status
    */
   setAdventureStatus(adventureId, status) {
-    console.debug("setAdventureStatus: " + adventureId + ", " + status);
+    console.debug("setAdventureStatus:", adventureId, status);
     check(adventureId, String);
     check(status, Number);
     
@@ -157,7 +160,7 @@ Meteor.methods({
    * @param nodeId
    */
   setAdventureLocation(adventureId, nodeId) {
-    console.debug("setAdventureLocation: " + adventureId + ", " + nodeId);
+    console.debug("setAdventureLocation:", adventureId, nodeId);
     check(adventureId, String);
     check(nodeId, String);
     
@@ -171,7 +174,7 @@ Meteor.methods({
    * @param path
    */
   setAdventureLogFile(adventureId, path) {
-    console.debug("setAdventureLogFile: " + adventureId + ", " + path);
+    console.debug("setAdventureLogFile:", adventureId, path);
     check(adventureId, String);
     check(path, String);
     
@@ -184,7 +187,7 @@ Meteor.methods({
    * @param status
    */
   setAdventureStepStatus(stepId, status) {
-    console.debug("setAdventureStepStatus: " + stepId + ", " + status);
+    console.debug("setAdventureStepStatus:", stepId, status);
     check(stepId, String);
     check(status, Number);
     
@@ -195,24 +198,14 @@ Meteor.methods({
   /**
    * Save a result from an adventure step
    * @param stepId
-   * @param type
    * @param result
    */
-  saveAdventureStepResult(stepId, type, result) {
-    console.debug("saveAdventureStepResult: " + stepId + ", " + type);
+  saveAdventureStepResult(stepId, result) {
+    console.debug("saveAdventureStepResult:", stepId);
     check(stepId, String);
-    check(type, String);
+    check(result, Object);
     
-    var step       = AdventureSteps.findOne({ _id: stepId }),
-        stepResult = step.result || {};
-    
-    if (!stepResult[ type ]) {
-      stepResult[ type ] = [];
-    }
-    
-    stepResult[ type ].push(result);
-    
-    AdventureSteps.update({ _id: step._id }, { $set: { result: stepResult } });
+    AdventureSteps.update({ _id: stepId }, { $set: { result: result } });
   },
   
   /**
@@ -222,7 +215,7 @@ Meteor.methods({
    * @param result
    */
   setCommandStatus(commandId, status, result) {
-    console.debug("setCommandStatus: " + commandId + ", " + status);
+    console.debug("setCommandStatus:", commandId, status);
     check(commandId, String);
     check(status, Number);
     
@@ -251,7 +244,7 @@ Meteor.methods({
    * @param projectVersionId
    */
   loadNode(staticId, projectVersionId) {
-    console.debug("loadNode: " + staticId + ", " + projectVersionId);
+    console.debug("loadNode:", staticId, projectVersionId);
     return Nodes.findOne({ staticId: staticId, projectVersionId: projectVersionId });
   },
   

@@ -1,30 +1,30 @@
-var Future        = require("fibers/future"),
-    _               = require("underscore"),
-    log4js          = require("log4js"),
-    assert          = require("assert"),
-    webdriver       = require("webdriverio"),
-    fs              = require("fs"),
-    logger          = log4js.getLogger("roba-driver"),
-    browserLogger   = log4js.getLogger("browser"),
-    clientLogger    = log4js.getLogger("client"),
-    driverLogger    = log4js.getLogger("driver"),
-    serverLogger    = log4js.getLogger("server"),
-    commands        = {
-      "action": [
+var Future              = require("fibers/future"),
+    _                   = require("underscore"),
+    log4js              = require("log4js"),
+    assert              = require("assert"),
+    webdriver           = require("webdriverio"),
+    fs                  = require("fs"),
+    logger              = log4js.getLogger("roba-driver"),
+    browserLogger       = log4js.getLogger("browser"),
+    clientLogger        = log4js.getLogger("client"),
+    driverLogger        = log4js.getLogger("driver"),
+    serverLogger        = log4js.getLogger("server"),
+    commands            = {
+      "action"  : [
         "addValue", "clearElement", "click", "doubleClick", "dragAndDrop", "leftClick", "middleClick", "rightClick",
         "selectorExecute", "selectorExecuteAsync", "setValue", "submitForm"
       ],
-      "appium": [
+      "appium"  : [
         "backgroundApp", "closeApp", "context", "deviceKeyEvent", "getAppStrings", "getCurrentDeviceActivity",
         "getNetworkConnection", "hideDeviceKeyboard", "installAppOnDevice", "isAppInstalledOnDevice", "launchApp", "lock",
         "openNotifications", "performMultiAction", "performTouchAction", "pullFileFromDevice", "pushFileToDevice",
         "removeAppFromDevice", "resetApp", "rotate", "setImmediateValueInApp", "setNetworkConnection", "shake",
         "toggleAirplaneModeOnDevice", "toggleDataOnDevice", "toggleLocationServicesOnDevice", "toggleWiFiOnDevice"
       ],
-      "cookie": [
+      "cookie"  : [
         "deleteCookie", "getCookie", "setCookie"
       ],
-      "mobile": [
+      "mobile"  : [
         "flick", "flickDown", "flickLeft", "flickRight", "flickUp", "getGeoLocation", "getOrientation", "hold", "release",
         "setGeoLocation", "setOrientation", "touch"
       ],
@@ -45,19 +45,19 @@ var Future        = require("fibers/future"),
         "touchDoubleClick", "touchDown", "touchFlick", "touchLongClick", "touchMove", "touchScroll", "touchUp", "url",
         "window", "windowHandle", "windowHandleMaximize", "windowHandlePosition", "windowHandleSize", "windowHandles"
       ],
-      "state": [
+      "state"   : [
         "isEnabled", "isExisting", "isSelected", "isVisible"
       ],
-      "utility": [
+      "utility" : [
         "call", "chooseFile", "end", "endAll", "pause", "saveScreenshot", "scroll", "uploadFile", "waitFor",
         "waitForChecked", "waitForEnabled", "waitForExist", "waitForSelected", "waitForText", "waitForValue",
         "waitForVisible"
       ],
-      "window": [
+      "window"  : [
         "close", "getCurrentTabId", "getTabIds", "getViewportSize", "newWindow", "setViewportSize", "switchTab"
       ]
     },
-    skipLoggingCommands = ["screenshot", "saveScreenshot"];
+    skipLoggingCommands = [ "screenshot", "saveScreenshot" ];
 
 logger.setLevel("DEBUG");
 browserLogger.setLevel("TRACE");
@@ -69,7 +69,7 @@ serverLogger.setLevel("TRACE");
  * Constructor
  */
 var RobaDriver = function (config) {
-  logger.trace("Creating new RobaDriver: ", config);
+  logger.debug("Creating new RobaDriver:", config);
   
   // munge the config and defaults
   this.config = config || {};
@@ -81,9 +81,9 @@ var RobaDriver = function (config) {
   logger.debug("Driver Config: ", this.config);
   
   // fire up the driver
-  var future = new Future();
+  var future  = new Future();
   this.driver = webdriver.remote(this.config)
-      .init(this.config, function(){
+      .init(this.config, function () {
         logger.debug("Driver initialized");
         future.return();
       });
@@ -91,15 +91,17 @@ var RobaDriver = function (config) {
   
   // wrap the webdriver functions in a custom futurized container
   logger.debug("Wrapping driver commands");
-  var fDriver = this;
+  var fDriver         = this;
   fDriver.commandList = [];
-  _.each(_.keys(commands), function(family){
-    _.each(commands[family], function(command){
-      if(fDriver.driver[command]){
+  _.each(_.keys(commands), function (family) {
+    _.each(commands[ family ], function (command) {
+      if (fDriver.driver[ command ]) {
         fDriver.commandList.push(command);
-        fDriver[command] = function () {
+        fDriver[ command ] = function () {
           var commandArgs = arguments,
-              args = _.map(_.keys(commandArgs), function(i){ return commandArgs["" + i];});
+              args        = _.map(_.keys(commandArgs), function (i) {
+                return commandArgs[ "" + i ];
+              });
           logger.trace("Wrapper: ", command, ":", args);
           return this.command(command, args);
         }.bind(fDriver);
@@ -111,9 +113,9 @@ var RobaDriver = function (config) {
   });
   
   // setup an event listener for the end event
-  this.driver.on("end", function(e) {
+  this.driver.on("end", function (e) {
     logger.info("Driver has ended");
-    if(fDriver.config.end){
+    if (fDriver.config.end) {
       logger.debug("Calling configured end listener: ", e);
       fDriver.config.end();
     }
@@ -132,52 +134,55 @@ RobaDriver.prototype.command = function (command, args) {
   assert(command, "Command called with null command");
   
   args = args || [];
-  logger.debug("Command called: ", command, args);
+  logger.trace("Command called: ", command, args);
   
   // Create a future to make this synchronous
   var future = new Future();
   
   // add the callback to the arguments
-  args.push(function(error, result){
-    if(error) {
-      logger.error("Error executing command [", command, "]: ", error);
-      future.return([error]);
+  args.push(function (error, result) {
+    if (error) {
+      logger.error("Error executing command:", {
+        command: command,
+        args   : args,
+        error  : error
+      });
+      future.return([ error ]);
       //throw new Error(error);
     } else {
       // skip logging for some commands (screenshots, etc)
-      if(!_.contains(skipLoggingCommands, command)){
-        logger.debug("Command Result: ", result);
+      if (!_.contains(skipLoggingCommands, command)) {
+        logger.debug({ command: command, args: args, result: result });
       } else {
-        logger.debug("Command Returned Successfully");
+        logger.trace("Command returned");
       }
-      if(result && result.value){
-        future.return([null, result.value]);
-      } else if(result && typeof result.value !== "undefined" && result.value !== ""){
-        future.return([null, result.value]);
+      if (result && result.value) {
+        future.return([ null, result.value ]);
+      } else if (result && typeof result.value !== "undefined" && result.value !== "") {
+        future.return([ null, result.value ]);
       } else {
-        future.return([null, result]);
+        future.return([ null, result ]);
       }
     }
   });
   
   // try the command
-  this.driver[command].apply(this.driver, args);
+  this.driver[ command ].apply(this.driver, args);
   
   // done
   var result = future.wait();
   
   // check for errors
-  if(result[0]){
-    throw new Error(result[0]);
+  if (result[ 0 ]) {
+    throw new Error(result[ 0 ]);
   }
   logger.trace("Command complete");
   
   // wait a few ms between command to improve logging sequentiality
   this.wait(2);
   
-  return result[1];
+  return result[ 1 ];
 };
-
 
 /**
  * Wait for a specified time
@@ -187,7 +192,7 @@ RobaDriver.prototype.wait = function (ms) {
   ms = ms || 1000;
   logger.trace("Waiting for ", ms, " ms");
   var future = new Future();
-  setTimeout(function(){
+  setTimeout(function () {
     logger.trace("waiting timeout returned");
     future.return();
   }, ms);
@@ -201,7 +206,7 @@ RobaDriver.prototype.wait = function (ms) {
 RobaDriver.prototype.end = function () {
   logger.info("End called");
   var future = new Future();
-  this.driver.end(function(){
+  this.driver.end(function () {
     future.return();
   });
   future.wait();
@@ -213,7 +218,7 @@ RobaDriver.prototype.end = function () {
  */
 RobaDriver.prototype.getScreenshot = function () {
   var filename = Date.now() + ".png",
-      path = this.config.logPath + filename;
+      path     = this.config.logPath + filename;
   logger.debug("getScreenshot: ", path);
   
   this.saveScreenshot(path);
@@ -225,18 +230,18 @@ RobaDriver.prototype.getScreenshot = function () {
  */
 RobaDriver.prototype.getState = function () {
   logger.debug("getState");
-  var state = {},
+  var state   = {},
       tmpPath = this.config.logPath;
   
   // get a screenshot
-  if(tmpPath){
+  if (tmpPath) {
     var filename = Date.now() + ".png";
     logger.info("Screenshot: ", filename);
     logger.trace("Calling saveScreenshot");
     this.saveScreenshot(tmpPath + filename);
     
     // make sure the file exists
-    if(fs.existsSync(tmpPath + filename)){
+    if (fs.existsSync(tmpPath + filename)) {
       logger.trace("Reading file");
       var data = fs.readFileSync(tmpPath + filename);
       logger.trace("Base64 encoding file");
@@ -257,12 +262,18 @@ RobaDriver.prototype.getState = function () {
   
   // get the viewport scroll
   state.scroll = {
-    x: this.execute(function () { return window.pageXOffset;}),
-    y: this.execute(function () { return window.pageYOffset;})
+    x: this.execute(function () {
+      return window.pageXOffset;
+    }),
+    y: this.execute(function () {
+      return window.pageYOffset;
+    })
   };
   
   // get the mouse position
-  state.mouse = this.execute(function () { return roba_driver.mouse });
+  state.mouse = this.execute(function () {
+    return roba_driver.mouse
+  });
   
   // get the browser and selenium logs
   this.getClientLogs();
@@ -276,7 +287,7 @@ RobaDriver.prototype.getState = function () {
 RobaDriver.prototype.checkUrl = function () {
   var future = new Future();
   this.driver.url(function (error, result) {
-    if(error){
+    if (error) {
       logger.error("Error checking url: ", error);
     }
     future.return(result ? result.value : null);
@@ -307,11 +318,11 @@ RobaDriver.prototype.fetchLogs = function (type, fetchLogger) {
   try {
     this.driver.log(type, function (error, result) {
       //fetchLogger.info("Log Messages: ", result);
-      if(error){
+      if (error) {
         fetchLogger.error("Error fetching " + type + " log: ", error);
-      } else if(result && result.value) {
+      } else if (result && result.value) {
         result.value.forEach(function (message) {
-          if(message.message && message.level){
+          if (message.message && message.level) {
             //var logMsg = (message.timestamp ? "[" + message.timestamp + "] " : "" ) + message.message;
             var logMsg = message.message;
             switch (message.level.toLowerCase()) {
@@ -349,12 +360,12 @@ RobaDriver.prototype.fetchLogs = function (type, fetchLogger) {
 RobaDriver.prototype.injectHelpers = function () {
   logger.trace("injectHelpers");
   this.execute(function () {
-    if(typeof(roba_driver) == "undefined"){
+    if (typeof(roba_driver) == "undefined") {
       roba_driver = {};
       
       // observe the mouse position
-      roba_driver.mouse = {x: 0, y: 0};
-      document.addEventListener('mousemove', function(e){
+      roba_driver.mouse = { x: 0, y: 0 };
+      document.addEventListener('mousemove', function (e) {
         roba_driver.mouse.x = e.clientX || e.pageX;
         roba_driver.mouse.y = e.clientY || e.pageY
       }, false);
@@ -364,22 +375,26 @@ RobaDriver.prototype.injectHelpers = function () {
         try {
           // basics
           var info = {
-            tag: el.tagName,
+            tag       : el.tagName,
             attributes: [],
-            bounds: el.getBoundingClientRect(),
-            selectors: roba_driver.getSelectors(el)
+            bounds    : el.getBoundingClientRect(),
+            selectors : roba_driver.getSelectors(el)
           };
           
           // grab the attributes
-          for(var i = 0; i < el.attributes.length; i++){
-            info.attributes.push({name: el.attributes[i].name, value: el.attributes[i].value});
+          for (var i = 0; i < el.attributes.length; i++) {
+            info.attributes.push({ name: el.attributes[ i ].name, value: el.attributes[ i ].value });
           }
           
           info.bounds.scrollY = window.pageYOffset;
           info.bounds.scrollX = window.pageXOffset;
           
-          if(getText){ info.text = el.textContent; }
-          if(getHtml){ info.html = el.outerHTML; }
+          if (getText) {
+            info.text = el.textContent;
+          }
+          if (getHtml) {
+            info.html = el.outerHTML;
+          }
           
           // targeted
           switch (el.tagName.toLowerCase()) {
@@ -389,8 +404,8 @@ RobaDriver.prototype.injectHelpers = function () {
           }
           
           // get the parent information
-          if(el.parentNode){
-            info.parent = roba_driver.element_info(el.parentNode, false, false);
+          if (el.parentNode) {
+            info.parent     = roba_driver.element_info(el.parentNode, false, false);
             info.childIndex = Array.prototype.indexOf.call(el.parentNode.children, el);
           }
           
@@ -404,7 +419,7 @@ RobaDriver.prototype.injectHelpers = function () {
       
       // get a list of elements from an xpath
       roba_driver.getElementsByXPath = function (xpath, base) {
-        var iterator = document.evaluate(xpath, base || document, null, XPathResult.UNORDERED_NODE_ITERATOR_TYPE, null );
+        var iterator = document.evaluate(xpath, base || document, null, XPathResult.UNORDERED_NODE_ITERATOR_TYPE, null);
         try {
           var elements = [],
               thisNode = iterator.iterateNext();
@@ -424,14 +439,14 @@ RobaDriver.prototype.injectHelpers = function () {
       roba_driver.checkXpathSelector = function (selector, el) {
         var matchList = roba_driver.getElementsByXPath(selector, document);
         
-        if(matchList.length == 1){
+        if (matchList.length == 1) {
           return selector;
-        } else if(matchList.length > 1) {
+        } else if (matchList.length > 1) {
           var index = matchList.indexOf(el);
-          if(index >= 0){
-            selector = "(" + selector + ")[" + (index + 1) + "]";
+          if (index >= 0) {
+            selector  = "(" + selector + ")[" + (index + 1) + "]";
             matchList = roba_driver.getElementsByXPath(selector, document);
-            if(matchList.length == 1){
+            if (matchList.length == 1) {
               return selector;
             }
           }
@@ -440,50 +455,50 @@ RobaDriver.prototype.injectHelpers = function () {
       
       // get a list of validated selectors for an element
       roba_driver.getSelectors = function (el) {
-        if(el){
+        if (el) {
           var selectors = [], testSelector;
           
           // get the alternate selectors, starting with the id selector
           var id = el.getAttribute("id");
-          if(id){
+          if (id) {
             testSelector = "//" + el.tagName + "[@id=\"" + id + "\"]";
-            var result = roba_driver.checkXpathSelector(testSelector, el);
-            if(result){
+            var result   = roba_driver.checkXpathSelector(testSelector, el);
+            if (result) {
               selectors.push(result);
             }
           }
           
           // Check by class
           var cssClass = el.getAttribute("class");
-          if(cssClass){
-            var classList = cssClass.split(/\s/),
+          if (cssClass) {
+            var classList     = cssClass.split(/\s/),
                 classSelector = classList.map(function (className) {
                   return "contains(@class, \"" + className.trim() + "\")"
                 }).join(" and ");
             
             testSelector = "//" + el.tagName + "[" + classSelector + "]";
-            var result = roba_driver.checkXpathSelector(testSelector, el);
-            if(result){
+            var result   = roba_driver.checkXpathSelector(testSelector, el);
+            if (result) {
               selectors.push(result);
             }
           }
           
           // Check by href
           var href = el.getAttribute("href");
-          if(href){
+          if (href) {
             testSelector = "//" + el.tagName + "[@href=\"" + href + "\"]";
-            var result = roba_driver.checkXpathSelector(testSelector, el);
-            if(result){
+            var result   = roba_driver.checkXpathSelector(testSelector, el);
+            if (result) {
               selectors.push(result);
             }
           }
           
           // Check by text
           var wordCount = el.textContent.split(/\s/).length;
-          if(el.textContent.length && wordCount < 10){
+          if (el.textContent.length && wordCount < 10) {
             testSelector = "//" + el.tagName + "[text()=\"" + el.textContent + "\"]";
-            var result = roba_driver.checkXpathSelector(testSelector, el);
-            if(result){
+            var result   = roba_driver.checkXpathSelector(testSelector, el);
+            if (result) {
               selectors.push(result);
             }
           }
@@ -491,8 +506,8 @@ RobaDriver.prototype.injectHelpers = function () {
           // return a list of selector objects for formatting
           return selectors.map(function (selector) {
             return {
-              selector: selector,
-              match: true,
+              selector  : selector,
+              match     : true,
               matchCount: 1
             }
           });
@@ -516,11 +531,11 @@ RobaDriver.prototype.injectHelpers = function () {
  */
 RobaDriver.prototype.getElementAtLocation = function (x, y, highlight, exclusive) {
   logger.debug("getElementAtLocation: ", x, y, highlight, exclusive);
-  var result = this.execute(function (x, y, highlight, exclusive){
+  var result = this.execute(function (x, y, highlight, exclusive) {
     var el = document.elementFromPoint(x, y);
-    if(el){
+    if (el) {
       var info = { element: roba_driver.element_info(el, true, true) };
-      if(highlight){
+      if (highlight) {
         info.highlightElements = [ info.element ];
       }
       return info;
@@ -535,22 +550,22 @@ RobaDriver.prototype.getElementAtLocation = function (x, y, highlight, exclusive
  */
 RobaDriver.prototype.testSelector = function (selector, getText, getHtml) {
   logger.debug("testSelector: ", selector);
-  getText = _.isUndefined(getText) ? true : getText;
-  getHtml = _.isUndefined(getHtml) ? true : getHtml;
+  getText    = _.isUndefined(getText) ? true : getText;
+  getHtml    = _.isUndefined(getHtml) ? true : getHtml;
   var result = this.execute(function (selector, getText, getHtml) {
-    var elements = [],
+    var elements    = [],
         elementInfo = [];
     
     // route xPaths special
-    if(selector.match(/^\/\//)){
+    if (selector.match(/^\/\//)) {
       elements = roba_driver.getElementsByXPath(selector, document);
     } else {
       elements = document.querySelectorAll(selector);
     }
     
     // highlight each of the matches and gather basic info
-    for(var i in elements){
-      elementInfo.push(roba_driver.element_info(elements[i], getText, getHtml));
+    for (var i in elements) {
+      elementInfo.push(roba_driver.element_info(elements[ i ], getText, getHtml));
     }
     return { highlightElements: elementInfo };
   }, selector, getText, getHtml);
@@ -574,17 +589,17 @@ RobaDriver.prototype.clearHighlight = function () {
  */
 RobaDriver.prototype.refineSelector = function (x, y, selector) {
   logger.debug("refineSelector: ", x, y, selector);
-  var result = this.execute(function (x, y, selector){
+  var result = this.execute(function (x, y, selector) {
     var el = document.elementFromPoint(x, y);
-    if(el){
+    if (el) {
       // test the given selector
       var elements = [];
       
       // check the selector if one was provided
-      if(selector){
+      if (selector) {
         // route xPaths special
         console.log("Checking selector: ", selector);
-        if(selector.match(/^\/\//)){
+        if (selector.match(/^\/\//)) {
           elements = roba_driver.getElementsByXPath(selector, document);
         } else {
           elements = document.querySelectorAll(selector);
@@ -593,10 +608,10 @@ RobaDriver.prototype.refineSelector = function (x, y, selector) {
       }
       
       return {
-        match: elements.length == 1,
+        match     : elements.length == 1,
         matchCount: elements.length,
-        selector: selector,
-        selectors: roba_driver.getSelectors(el)
+        selector  : selector,
+        selectors : roba_driver.getSelectors(el)
       }
     }
   }, x, y, selector);
@@ -628,7 +643,7 @@ RobaDriver.prototype.previewCode = function (codeRaw, account, context) {
   
   var preview = new RobaPreviewer(this, account, context);
   return {
-    preview: true,
+    preview          : true,
     highlightElements: preview.run(code)
   };
 };
@@ -640,16 +655,16 @@ RobaDriver.prototype.previewCode = function (codeRaw, account, context) {
 RobaDriver.prototype.buildUrl = function () {
   var pieces = [], parts;
   _.each(arguments, function (argv) {
-    if(_.isArray(argv)){
+    if (_.isArray(argv)) {
       _.each(argv, function (subargv) {
-        if(subargv){
+        if (subargv) {
           parts = subargv.toString().replace(/^\//, "").replace(/\/$/, "").split(/\/(?!\/)/);
           _.each(parts, function (p) {
             pieces.push(p);
           });
         }
       });
-    } else if(argv) {
+    } else if (argv) {
       // process the string
       parts = argv.toString().replace(/^\//, "").replace(/\/$/, "").split(/\/(?!\/)/);
       _.each(parts, function (p) {

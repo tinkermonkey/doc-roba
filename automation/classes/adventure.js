@@ -1,11 +1,16 @@
 "use strict";
 
-var _             = require('underscore'),
-    assert        = require('assert'),
-    log4js        = require('log4js'),
-    logger        = log4js.getLogger('adventure'),
-    RobaDriver    = require('./driver/roba_driver.js'),
-    AdventureStep = require('./adventure_step/adventure_step.js'),
+var _                = require('underscore'),
+    assert           = require('assert'),
+    log4js           = require('log4js'),
+    logger           = log4js.getLogger('adventure'),
+    RobaDriver       = require('./driver/roba_driver.js'),
+    AdventureStep    = require('./adventure/adventure_step.js'),
+    AdventureCommand = require('./adventure/adventure_command.js'),
+    keepAliveWait    = 30,
+    updatePeriod     = 2000,
+    statePeriod      = 10000,
+    pausePeriod      = 250,
     AdventureStatus, AdventureStepStatus;
 
 logger.setLevel('DEBUG');
@@ -16,13 +21,19 @@ class Adventure {
    * @param adventureId String
    * @param serverLink ServerLink
    * @param context RobaContext
+   * @param logPath The path the folder to save images in
    */
   constructor (adventureId, serverLink, context, logPath) {
-    logger.debug('Creating adventure:', adventureId);
+    logger.debug('Creating adventure:', adventureId, logPath);
     this._id        = adventureId;
     this.serverLink = serverLink;
     this.context    = context;
     this.logPath    = logPath;
+    this.lastUrl    = '';
+    
+    // Two timers for controlling state updates
+    this.lastChecked = Date.now();
+    this.lastUpdated = Date.now();
   }
   
   /**
@@ -161,6 +172,7 @@ class Adventure {
       // If the previous step passed, keep executing
       if (stepPassed && !adventure.record.abort && !adventure.driverEnded) {
         try {
+          adventure.checkForPause();
           stepPassed = step.execute();
         } catch (e) {
           logger.error("Step execution failed:", step.record, e.toString(), e.stack);
@@ -179,12 +191,69 @@ class Adventure {
    */
   waitForCommands () {
     logger.debug('Adventure.waitForCommands:', this._id);
+    var adventure   = this,
+        index       = 0,
+        commandList = adventure.serverLink.liveList('adventure_commands', [ adventure.record.projectId, adventure._id ]),
+        command;
+    
+    logger.trace('Adventure commands loaded: ', _.keys(adventure.commandList).length);
+    adventure.setStatus(AdventureStatus.awaitingCommand);
+    
+    while (adventure.record.waitForCommands && !adventure.record.abort && !adventure.driverEnded) {
+      // We have to do this to pick up the dynamic collection if it originally had zero commands
+      if (!_.keys(commandList).length) {
+        commandList = adventure.serverLink.ddp.collections.adventure_commands;
+      }
+      
+      // Check for a new command
+      if (index < _.keys(commandList).length) {
+        logger.debug("Adventure command found at index", index);
+        adventure.checkForPause();
+        adventure.setStatus(AdventureStatus.executingCommand);
+        
+        // Create the command object
+        command = new AdventureCommand(commandList[ _.keys(commandList)[ index ] ], index, adventure);
+        
+        // Execute the command
+        try {
+          command.execute();
+        } catch (e) {
+          logger.error("Command execution failed:", e.toString(), e.stack);
+          command.setStatus(AdventureStepStatus.error);
+        }
+        
+        // Update the state
+        adventure.updateState(true);
+        
+        // Increment the counter
+        index++;
+        
+        // Check so see if there were stacked up commands
+        if (index >= _.keys(commandList).length) {
+          adventure.setStatus(AdventureStatus.awaitingCommand);
+        }
+      } else {
+        adventure.keepAlive();
+      }
+    }
+  }
+  
+  /**
+   * Wait for more commands
+   */
+  keepAlive () {
+    logger.trace('Adventure.keepAlive');
     var adventure = this;
     
-    // Load the adventure commands
-    logger.debug('Loading adventure commands');
-    adventure.commandList = adventure.serverLink.liveList('adventure_commands', [ adventure._id ]);
-    logger.trace('Adventure commands loaded: ', _.keys(adventure.commandList).length);
+    try {
+      // Wait politely
+      adventure.driver.wait(keepAliveWait);
+      
+      // Update the state
+      adventure.updateState();
+    } catch (e) {
+      logger.error("Exception encountered during keep-alive: ", e.toString(), e.stack);
+    }
   }
   
   /**
@@ -193,18 +262,42 @@ class Adventure {
   checkForPause () {
     logger.trace("CheckForPause: ", this.record.status == AdventureStatus.paused);
     while (this.record.status == AdventureStatus.paused) {
-      this.driver.wait(250);
+      this.driver.wait(pausePeriod);
     }
   }
   
   /**
    * Capture the adventure state
+   * @param force Force an update
    */
-  updateState () {
-    var adventure     = this,
-        state         = adventure.driver.getState();
-    adventure.lastUrl = state.url;
-    adventure.serverLink.saveAdventureState(adventure._id, state);
+  updateState (force) {
+    logger.trace('Adventure.updateState:', force);
+    var adventure = this,
+        now       = Date.now(),
+        state, currentUrl;
+    
+    // Check to see if we should send a keep-alive task to the driver
+    if (now - adventure.lastChecked > updatePeriod || force) {
+      logger.trace("Checking current url");
+      currentUrl = adventure.driver.checkUrl();
+      
+      if ((currentUrl && currentUrl !== adventure.lastUrl) || (now - adventure.lastUpdated) > statePeriod || force) {
+        logger.debug("Updating adventure state:", currentUrl, adventure.lastUrl);
+        state = adventure.driver.getState();
+        adventure.serverLink.saveAdventureState(adventure._id, state);
+        
+        // update the last url and the last update timestamp
+        adventure.lastUrl = state.url;
+        adventure.lastUpdated = Date.now();
+      }
+      
+      // check the client logs
+      adventure.driver.getClientLogs();
+      
+      // Note the time that url was checked
+      adventure.lastChecked = Date.now();
+    }
+    
   }
   
   /**
@@ -228,6 +321,7 @@ class Adventure {
     AdventureStatus     = enums.AdventureStatus;
     AdventureStepStatus = enums.AdventureStepStatus;
     AdventureStep.setEnums(enums);
+    AdventureCommand.setEnums(enums);
   }
   
   /**

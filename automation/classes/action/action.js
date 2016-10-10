@@ -1,7 +1,8 @@
 'use strict';
 
-var log4js = require('log4js'),
-    logger = log4js.getLogger('adventure');
+var log4js       = require('log4js'),
+    logger       = log4js.getLogger('adventure'),
+    CodeExecutor = require('../code_executor/code_executor.js');
 
 class Action {
   /**
@@ -32,15 +33,44 @@ class Action {
       throw new Error("Failed to load action " + action._id);
     }
     
+    // Create the code executor
+    action.executor = new CodeExecutor(action.record.code);
+    
     return this;
   }
   
   /**
    * Take this action
+   * @param driver The driver to use
+   * @param dataContext The top-level data context from the adventure or test role
    */
-  execute () {
+  execute (driver, dataContext) {
     logger.debug('Executing action:', this._id, this.record.title);
     var action = this;
+    
+    // Add the core variables
+    action.executor.addVariable('driver', driver);
+    action.executor.addVariable('dataContext', dataContext);
+    
+    // Add the action variables
+    action.record.variables.forEach(function (variable) {
+      action.executor.addVariable(variable.name, dataContext && dataContext[ variable.name ], variable.defaultValue);
+    });
+    
+    // Execute the code
+    action.executor.execute();
+    
+    logger.debug("Action complete");
+  }
+  
+  /**
+   * Add a context variable for the action code
+   * @param name
+   * @param value
+   * @param defaultValue
+   */
+  addVariable (name, value, defaultValue) {
+    this.executor.addVariable(name, value, defaultValue);
   }
   
   /**
