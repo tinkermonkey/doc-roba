@@ -16,7 +16,7 @@ var Future   = require("fibers/future"),
       "waitForVisible"
     ];
 
-logger.setLevel("DEBUG");
+logger.setLevel("TRACE");
 
 class ReadyChecker {
   /**
@@ -43,7 +43,7 @@ class ReadyChecker {
       logger.trace("Registering Ready Check: ", command);
       ready.commandList.push(command);
       ready[ command ] = function () {
-        logger.trace("Ready Command called: ", command);
+        logger.debug("Ready Command called: ", command);
         var commandArgs = arguments,
             args        = _.map(_.keys(commandArgs), function (i) {
               return commandArgs[ "" + i ];
@@ -63,8 +63,6 @@ class ReadyChecker {
    * Perform the ready checks
    */
   check () {
-    logger.debug("Ready Checker Running");
-    
     // make sure there are checks to run
     if (!this.checks.length) {
       logger.trace("Ready.check called with no checks");
@@ -76,10 +74,11 @@ class ReadyChecker {
         future         = new Future(),
         startTime      = Date.now(),
         allPass        = true,
-        checksReturned = 0;
+        checksReturned = 0,
+        result;
     
     // run the checks
-    logger.trace("Ready Checker running checks");
+    logger.debug("Running ready checks");
     _.each(ready.checks, function (check, i) {
       var args = check.args;
       args.push(ready.timeout);
@@ -93,7 +92,7 @@ class ReadyChecker {
         };
         
         if (error) {
-          logger.error("Check returned: ", i, checksReturned, check.result);
+          logger.error("Check returned error: ", i, checksReturned, check.result, error);
           check.result.error = error;
         } else {
           logger.trace("Check returned: ", i, checksReturned, check.result);
@@ -105,6 +104,7 @@ class ReadyChecker {
           future.return();
         }
       });
+      
       logger.debug("Ready Check Command setup: ", check.command, check.args[ 0 ]);
       driver[ check.command ].apply(driver, args);
     });
