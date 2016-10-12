@@ -70,8 +70,11 @@ class AdventureStep {
     
     // If this is the first step then we need to bootstrap the browser to the url
     if (step.index == 0) {
+      logger.debug("Step 0, navigating to starting point:", {
+        serverUrl: adventure.testServer && adventure.testServer.url,
+        nodeUrl  : step.node.record && step.node.record.url
+      });
       var startingPoint = driver.buildUrl(adventure.testServer.url, step.node.record.url);
-      logger.debug("Step 0, navigating to starting point:", startingPoint);
       driver.url(startingPoint);
       driver.wait(1000);
     }
@@ -83,15 +86,18 @@ class AdventureStep {
     adventure.updateState(true);
     
     // Validate the node
+    logger.debug("Validating step [", step.index, "] node");
     step.node.addVariable('account', adventure.record.dataContext.account);
     result.ready = step.node.checkReady(adventure.driver, adventure.record.dataContext[ 'step' + step.index ]);
+    adventure.updateState(true);
     result.valid = step.node.validate(adventure.driver, adventure.record.dataContext[ 'step' + step.index ]);
     
     // Take the action if there is one
     if (result.ready.pass && result.valid.pass && step.action) {
-      // Add adventure context
+      logger.debug("Taking step [", step.index, "] action");
       step.action.addVariable('account', adventure.record.dataContext.account);
       step.action.execute(adventure.driver, adventure.record.dataContext[ 'step' + step.index ]);
+      adventure.updateState(true);
     }
     
     // Set the status and store the result
@@ -99,6 +105,7 @@ class AdventureStep {
     step.saveResult(result);
     
     // Pass back the overall status
+    logger.debug("Taking step complete:", result.ready.pass && result.valid.pass ? "still healthy" : "step failed", result);
     return result.ready.pass && result.valid.pass
   }
   
