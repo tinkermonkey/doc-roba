@@ -36,10 +36,22 @@ class Node {
     if (!node.record) {
       throw new Error("Failed to load node " + node._id);
     }
+    logger.trace("Node record loaded:", node.record);
     
     // Load all of the checks for this node
-    node.readyChecks = node.serverLink.liveList('node_checks', [ node.projectId, node.projectVersionId, node.record.staticId, NodeCheckTypes.ready ]);
-    node.validChecks = node.serverLink.liveList('node_checks', [ node.projectId, node.projectVersionId, node.record.staticId, NodeCheckTypes.valid ]);
+    node.readyChecks = node.serverLink.recordList('node_checks', [
+      node.projectId,
+      node.projectVersionId,
+      node.record.staticId,
+      NodeCheckTypes.ready
+    ], 'node_checks', { type: NodeCheckTypes.ready });
+    
+    node.validChecks = node.serverLink.recordList('node_checks', [
+      node.projectId,
+      node.projectVersionId,
+      node.record.staticId,
+      NodeCheckTypes.valid
+    ], 'node_checks', { type: NodeCheckTypes.valid });
     
     // Create the code executors for ready and valid checks
     node.readyExecutor = new CodeExecutor(node.record.readyCode);

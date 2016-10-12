@@ -56,7 +56,7 @@ class Adventure {
     // Load the adventure record
     logger.debug('Loading adventure record');
     adventure.record = adventure.serverLink.liveRecord('adventure', [ adventure._id ], 'adventures');
-    logger.trace('Adventure loaded:', adventure);
+    logger.trace('Adventure loaded:', adventure.record);
     
     // Update the context
     adventure.context.update({
@@ -74,26 +74,37 @@ class Adventure {
     
     // Load the test system record
     logger.debug('Loading test system record');
-    adventure.testSystem = adventure.serverLink.liveRecord('adventure_test_system', [ adventure.record.projectId, adventure.record.testSystemId ], 'test_systems');
+    adventure.testSystem = adventure.serverLink.liveRecord('adventure_test_system', [
+      adventure.record.projectId,
+      adventure.record.testSystemId
+    ], 'test_systems', { staticId: adventure.record.testSystemId });
     logger.trace('Test system: ', adventure.testSystem);
     
     // Load the test agent record
     logger.debug('Loading test agent record');
-    adventure.testAgent = adventure.serverLink.liveRecord('adventure_test_agent', [ adventure.record.projectId, adventure.record.testAgentId ], 'test_agents');
+    adventure.testAgent = adventure.serverLink.liveRecord('adventure_test_agent', [
+      adventure.record.projectId,
+      adventure.record.testAgentId
+    ], 'test_agents', { staticId: adventure.record.testAgentId });
     logger.trace('Test agent: ', adventure.testAgent);
     
     // Load the server record
     logger.debug('Loading test server record');
-    adventure.testServer = adventure.serverLink.liveRecord('adventure_server', [ adventure.record.projectId, adventure.record.serverId ], 'test_servers');
+    adventure.testServer = adventure.serverLink.liveRecord('adventure_server', [
+      adventure.record.projectId,
+      adventure.record.serverId
+    ], 'test_servers', { staticId: adventure.record.serverId });
     logger.trace('Test server: ', adventure.testServer);
     
     // Create the adventure step objects
     logger.debug('Creating adventure steps');
-    adventure.stepRecords = adventure.serverLink.liveList('adventure_steps', [ adventure.record.projectId, adventure._id ]);
+    adventure.stepRecords = adventure.serverLink.liveCollection('adventure_steps', [ adventure.record.projectId, adventure._id ]);
     logger.trace("Adventure steps:", adventure.stepRecords);
     if (adventure.stepRecords && _.keys(adventure.stepRecords).length) {
       adventure.steps = _.values(adventure.stepRecords).map((function (stepRecord, i) {
-        return new AdventureStep(stepRecord, i, adventure).init();
+        var step = new AdventureStep(stepRecord, i, adventure);
+        step.init();
+        return step;
       }));
     } else {
       logger.fatal("Fatal error: no steps found for adventure");
@@ -164,8 +175,11 @@ class Adventure {
     // Prepare to execute
     adventure.context.backup();
     adventure.driver.getClientLogs();
-    logger.trace("Executing Route: ", adventure.route);
     adventure.setStatus(AdventureStatus.routing);
+    
+    adventure.steps.forEach(function (step) {
+      logger.info("Step pre-execution [", step.index, "]:", step.record, step.node.record, step.action && step.action.record);
+    });
     
     // Execute each step
     adventure.steps.forEach(function (step) {
@@ -193,7 +207,7 @@ class Adventure {
     logger.debug('Adventure.waitForCommands:', this._id);
     var adventure   = this,
         index       = 0,
-        commandList = adventure.serverLink.liveList('adventure_commands', [ adventure.record.projectId, adventure._id ]),
+        commandList = adventure.serverLink.liveCollection('adventure_commands', [ adventure.record.projectId, adventure._id ]),
         command;
     
     logger.trace('Adventure commands loaded: ', _.keys(adventure.commandList).length);
@@ -287,7 +301,7 @@ class Adventure {
         adventure.serverLink.saveAdventureState(adventure._id, state);
         
         // update the last url and the last update timestamp
-        adventure.lastUrl = state.url;
+        adventure.lastUrl     = state.url;
         adventure.lastUpdated = Date.now();
       }
       
