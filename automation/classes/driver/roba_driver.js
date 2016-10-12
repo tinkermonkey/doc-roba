@@ -4,6 +4,7 @@ var Future              = require("fibers/future"),
     assert              = require("assert"),
     webdriver           = require("webdriverio"),
     fs                  = require("fs"),
+    path                = require("path"),
     logger              = log4js.getLogger("roba-driver"),
     browserLogger       = log4js.getLogger("browser"),
     clientLogger        = log4js.getLogger("client"),
@@ -218,11 +219,11 @@ RobaDriver.prototype.end = function () {
  */
 RobaDriver.prototype.getScreenshot = function () {
   var filename = Date.now() + ".png",
-      path     = this.config.logPath + filename;
-  logger.debug("getScreenshot: ", path);
+      filePath = path.join(this.config.logPath, filename);
+  logger.debug("getScreenshot: ", filePath);
   
-  this.saveScreenshot(path);
-  return path;
+  this.saveScreenshot(filePath);
+  return filePath;
 };
 
 /**
@@ -230,24 +231,24 @@ RobaDriver.prototype.getScreenshot = function () {
  */
 RobaDriver.prototype.getState = function () {
   logger.debug("getState");
-  var state   = {},
-      tmpPath = this.config.logPath;
+  var state    = {},
+      logPath  = this.config.logPath,
+      filename = Date.now() + ".png",
+      filePath = path.join(logPath, filename);
   
   // get a screenshot
-  if (tmpPath) {
-    var filename = Date.now() + ".png";
-    logger.info("Screenshot: ", filename);
-    logger.trace("Calling saveScreenshot");
-    this.saveScreenshot(tmpPath + filename);
+  if (logPath) {
+    logger.debug("Screenshot: ", filePath);
+    this.saveScreenshot(filePath);
     
     // make sure the file exists
-    if (fs.existsSync(tmpPath + filename)) {
+    if (fs.existsSync(filePath)) {
       logger.trace("Reading file");
-      var data = fs.readFileSync(tmpPath + filename);
+      var data = fs.readFileSync(filePath);
       logger.trace("Base64 encoding file");
       state.screenshot = new Buffer(data, "binary").toString("base64");
     } else {
-      logger.error("Screenshot failed, file not found: ", filename);
+      logger.error("Screenshot failed, file not found: ", filePath);
     }
   }
   
