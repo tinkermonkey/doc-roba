@@ -36,9 +36,6 @@ var Future        = require("fibers/future"),
 logger.setLevel("DEBUG");
 ddpLogger.setLevel("INFO");
 
-/**
- * A stable link to the server
- */
 class ServerLink {
   /**
    * ServerLink
@@ -47,20 +44,20 @@ class ServerLink {
   constructor (config) {
     logger.debug("Creating new ServerLink");
     
-    // combine the config and defaults
+    // Combine the config and defaults
     this.config           = _.defaults(config || {}, defaultConfig);
     this.config.serverUrl = this.config.http.transport + this.config.ddp.host + ":" + this.config.ddp.port + "/";
     
-    // create the ddp link
+    // Create the ddp link
     this.ddp = new DDPClient(this.config.ddp);
     this.ddp.on("message", this.ddpMessageListener);
     this.ddp.on("socket-close", this.ddpSocketCloseListener);
     this.ddp.on("socket-error", this.ddpSocketErrorListener);
     
-    // create a data structure for observers
+    // Create a data structure for observers
     this.observers = {};
     
-    // log all subscriptions
+    // Log all subscriptions
     this.subscriptions = [];
   }
   
@@ -374,13 +371,21 @@ class ServerLink {
    * @param subscription
    * @param params
    * @param collectionName
+   * @param query A very simple "query" object whose key/value pairs will be used to find the intended record
    */
-  liveRecord (subscription, params, collectionName) {
+  liveRecord (subscription, params, collectionName, query) {
+    logger.debug("liveRecord:", {
+      subscription  : subscription,
+      params        : params,
+      collectionName: collectionName,
+      query         : query
+    });
+    
     assert(subscription, "liveRecord: subscription must not be null");
     assert(params, "liveRecord: params must not be null");
     
     // Make sure params is an array
-    if(!_.isArray(params)){
+    if (!_.isArray(params)) {
       throw new Error("liveRecord params must be an array");
     }
     
@@ -391,15 +396,15 @@ class ServerLink {
     this.subscriptions.push({ name: subscription, params: params });
     
     var future = new Future(), ddpClient = this.ddp;
-    logger.debug("liveRecord: ", subscription, params, collectionName);
+    logger.trace("liveRecord creating subscription: ", subscription, params, collectionName);
     this.ddp.subscribe(subscription, params, function () {
-      logger.trace("subscribe returned: ", subscription);
+      logger.trace("liveRecord subscribe returned: ", subscription, this);
       future.return();
     });
     future.wait();
     
     // hook up some observers
-    var id = _.last(params),
+    var id       = _.last(params),
         observer = this.observers[ subscription + "_" + id ] = ddpClient.observe(collectionName);
     observer.added   = function (id) {
       logger.trace("A record was added to a subscription where it was not expected:", observer.name, id, ddpClient.collections[ observer.name ][ id ]);
@@ -410,10 +415,29 @@ class ServerLink {
     observer.removed = function (id, oldValue) {
       logger.error("A record was removed from a subscription where it was not expected to be:", observer.name, oldValue);
     };
-    logger.trace("liveRecord observer", observer.name, ddpClient.collections);
     
     if (ddpClient.collections[ observer.name ]) {
-      return ddpClient.collections[ observer.name ][ _.keys(ddpClient.collections[ observer.name ])[ 0 ] ];
+      if (query) {
+        // Find the first record whose attribute match the simple query object's attributes
+        var record = _.find(_.values(ddpClient.collections[ observer.name ]), function (record) {
+          return _.reduce(_.keys(query).map(function (key) {
+            return record[ key ] == query[ key ]
+          }), function (memo, match) {
+            return memo && match
+          }, true)
+        });
+        if(record){
+          id = record._id;
+        }
+      }
+      
+      // Use the _id field to identify the record
+      logger.trace("LiveRecord returning record:", {
+        collection: observer.name,
+        id        : id,
+        record    : ddpClient.collections[ observer.name ][ id ]
+      });
+      return ddpClient.collections[ observer.name ][ id ];
     } else {
       console.error("ServerLink.liveRecord failed with unknown collection:", observer.name);
     }
@@ -425,22 +449,88 @@ class ServerLink {
    * @param params
    * @param collectionName
    */
-  liveList (subscription, params, collectionName) {
-    assert(subscription, "liveList: subscription must not be null");
-  
+  liveCollection (subscription, params, collectionName) {
+    logger.debug("liveCollection:", {
+      subscription  : subscription,
+      params        : params,
+      collectionName: collectionName
+    });
+    
+    assert(subscription, "liveCollection: subscription must not be null");
+    
     // Params must be null or an array
-    if(params != null && !_.isArray(params)){
-      throw new Error("liveList params must be an array");
+    if (params != null && !_.isArray(params)) {
+      throw new Error("liveCollection params must be an array");
     }
     
     // Default the collection name to the subscription name
     collectionName = collectionName || subscription;
     
-    // Make note of the subscriptions
+    // Store the subscription in case we need to reconnect to the server
     this.subscriptions.push({ name: subscription, params: params });
     
     var future = new Future();
-    logger.debug("liveList: ", subscription, params);
+    logger.trace("liveCollection creating subscription: ", subscription, params);
+    this.ddp.subscribe(subscription, params || [], function () {
+      logger.trace("liveCollection subscribe returned: ", subscription);
+      future.return();
+    });
+    future.wait();
+    
+    // hook up some observers
+    var ddpClient = this.ddp,
+        observer  = this.observers[ subscription ] = ddpClient.observe(collectionName);
+    observer.added   = function (id) {
+      logger.trace("liveCollection record Added:", observer.name, id, ddpClient.collections[ observer.name ][ id ]);
+    };
+    observer.changed = function (id, oldFields, clearedFields) {
+      logger.trace("liveCollection record Updated: ", observer.name, id, ddpClient.collections[ observer.name ][ id ]);
+    };
+    observer.removed = function (id, oldValue) {
+      logger.trace("liveCollection record Removed:", observer.name, oldValue);
+    };
+    
+    if (ddpClient.collections[ collectionName ]) {
+      logger.trace("liveCollection returning:", {
+        collection: observer.name,
+        records   : ddpClient.collections[ collectionName ]
+      });
+      return ddpClient.collections[ collectionName ];
+    } else {
+      console.error("ServerLink.liveCollection failed with unknown collection:", collectionName);
+    }
+  };
+  
+  /**
+   * Get a non-live list of records
+   * @param subscription
+   * @param params
+   * @param collectionName
+   * @param query
+   */
+  recordList (subscription, params, collectionName, query) {
+    logger.debug("recordList:", {
+      subscription  : subscription,
+      params        : params,
+      collectionName: collectionName,
+      query         : query
+    });
+    
+    assert(subscription, "recordList: subscription must not be null");
+    
+    // Params must be null or an array
+    if (params != null && !_.isArray(params)) {
+      throw new Error("recordList params must be an array");
+    }
+    
+    // Default the collection name to the subscription name
+    collectionName = collectionName || subscription;
+    
+    // Store the subscription in case we need to reconnect to the server
+    this.subscriptions.push({ name: subscription, params: params });
+    
+    var future = new Future();
+    logger.trace("recordList creating subscription: ", subscription, params);
     this.ddp.subscribe(subscription, params || [], function () {
       logger.trace("subscribe returned: ", subscription);
       future.return();
@@ -451,19 +541,40 @@ class ServerLink {
     var ddpClient = this.ddp,
         observer  = this.observers[ subscription ] = ddpClient.observe(collectionName);
     observer.added   = function (id) {
-      logger.trace("liveList record Added:", observer.name, id, ddpClient.collections[ observer.name ][ id ]);
+      logger.trace("recordList record Added:", observer.name, id, ddpClient.collections[ observer.name ][ id ]);
     };
     observer.changed = function (id, oldFields, clearedFields) {
-      logger.trace("liveList record Updated: ", observer.name, id, ddpClient.collections[ observer.name ][ id ]);
+      logger.trace("recordList record Updated: ", observer.name, id, ddpClient.collections[ observer.name ][ id ]);
     };
     observer.removed = function (id, oldValue) {
-      logger.trace("liveList record Removed:", observer.name, oldValue);
+      logger.trace("recordList record Removed:", observer.name, oldValue);
     };
     
     if (ddpClient.collections[ collectionName ]) {
-      return ddpClient.collections[ collectionName ];
+      if (query) {
+        // Find the first record whose attribute match the simple query object's attributes
+        var records = _.filter(_.values(ddpClient.collections[ observer.name ]), function (record) {
+          return _.reduce(_.keys(query).map(function (key) {
+            return record[ key ] == query[ key ]
+          }), function (memo, match) {
+            return memo && match
+          }, true)
+        });
+        logger.trace("recordList returning records by query:", {
+          collection: observer.name,
+          query     : query,
+          records   : records
+        });
+        return records;
+      } else {
+        logger.trace("recordList returning records without query:", {
+          collection: observer.name,
+          records   : _.values(ddpClient.collections[ observer.name ])
+        });
+        return _.values(ddpClient.collections[ observer.name ]);
+      }
     } else {
-      console.error("ServerLink.liveList failed with unknown collection:", collectionName);
+      console.error("ServerLink.recordList failed with unknown collection:", collectionName);
     }
   };
   
@@ -514,6 +625,7 @@ class ServerLink {
   ddpSocketErrorListener (error) {
     ddpLogger.error("DDP Socket Error: ", error.message);
   };
-};
+}
+;
 
 module.exports = ServerLink;

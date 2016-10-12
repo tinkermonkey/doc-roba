@@ -414,7 +414,7 @@ DDPLink.prototype.liveRecord = function (subscription, id, collectionName) {
  * @param collectionName
  */
 DDPLink.prototype.liveList = function (subscription, params, collectionName) {
-  assert(subscription, "liveList: subscription must not be null");
+  assert(subscription, "liveCollection: subscription must not be null");
 
   // default the collection name to the subscription name
   collectionName = collectionName || subscription;
@@ -423,7 +423,7 @@ DDPLink.prototype.liveList = function (subscription, params, collectionName) {
   this.subscriptions.push({name: subscription, params: params});
 
   var future = new Future();
-  logger.debug("liveList: ", subscription, params);
+  logger.debug("liveCollection: ", subscription, params);
   this.ddp.subscribe(subscription, params || [], function () {
     logger.trace("subscribe returned: ", subscription);
     future.return();
@@ -434,19 +434,19 @@ DDPLink.prototype.liveList = function (subscription, params, collectionName) {
   var ddpClient = this.ddp,
     observer = this.observers[subscription] = ddpClient.observe(collectionName);
   observer.added = function (id) {
-    logger.trace("liveList record Added:", observer.name, id, ddpClient.collections[observer.name][id]);
+    logger.trace("liveCollection record Added:", observer.name, id, ddpClient.collections[observer.name][id]);
   };
   observer.changed = function (id, oldFields, clearedFields) {
-    logger.trace("liveList record Updated: ", observer.name, id, ddpClient.collections[observer.name][id]);
+    logger.trace("liveCollection record Updated: ", observer.name, id, ddpClient.collections[observer.name][id]);
   };
   observer.removed = function (id, oldValue) {
-    logger.trace("liveList record Removed:", observer.name, oldValue);
+    logger.trace("liveCollection record Removed:", observer.name, oldValue);
   };
   
   if(ddpClient.collections[collectionName]){
     return ddpClient.collections[collectionName];
   } else {
-    console.error("DDPLink.liveList failed with unknown collection:", collectionName);
+    console.error("DDPLink.liveCollection failed with unknown collection:", collectionName);
   }
 };
 
