@@ -24,30 +24,26 @@ class CodeExecutor {
     advLogger.debug("CodeExecutor executing:", this.code);
     var executor  = this,
         setupCode = 'var ',
-        debugCode,
+        startTime = Date.now(),
         error, result;
     
     // Build up the variable context code
     setupCode += executor.variables.map(function (variable, index) {
           return variable.name + ' = executor.variables[' + index + '].value' + (variable.defaultValue ? ' || ' + variable.defaultValue : '')
-        }).join(",\r\n") + ";\r\n";
-    
-    // Insert some debug code
-    debugCode = executor.variables.map(function (variable, index) {
-          return 'try { advLogger.debug(\"Variable [' + index + '] [' + variable.name + ']:\",' + variable.name + "); } catch (e) {}\r\n"
-        }).join('');
+        }).join(",\r\n    ") + ";\r\n";
     
     // Evaluate the code
     try {
-      advLogger.debug("Executing code:", setupCode + debugCode + executor.code);
-      result = eval(setupCode + debugCode + executor.code);
+      advLogger.debug("Executing code:", setupCode + executor.code);
+      result = eval(setupCode + executor.code);
     } catch (e) {
       advLogger.error("Code execution failed:", e.toString(), e.stack);
       error = e;
     }
     
     // Return the result
-    advLogger.debug("Code execution result:", result);
+    executor.executionTime = Date.now() - startTime;
+    advLogger.debug("Code executed in [" + executor.executionTime + "] ms:", result);
     return {
       error : error,
       result: result
