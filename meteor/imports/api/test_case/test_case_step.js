@@ -84,12 +84,12 @@ ChangeTracker.TrackChanges(TestCaseSteps, "test_case_steps");
  */
 TestCaseSteps.helpers({
   firstNode() {
-    if(this.data.nodeId || this.data.sourceId){
+    if(this.data && (this.data.nodeId || this.data.sourceId)){
       return Nodes.findOne({staticId: this.data.nodeId || this.data.sourceId, projectVersionId: this.projectVersionId});
     }
   },
   action() {
-    if(this.data.actionId){
+    if(this.data && this.data.actionId){
       return Actions.findOne({staticId: this.data.actionId, projectVersionId: this.projectVersionId});
     }
   }
