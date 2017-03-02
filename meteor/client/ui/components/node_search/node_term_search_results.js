@@ -20,6 +20,8 @@ Template.NodeTermSearchResults.helpers({
     if(param && term){
       return param.replace(new RegExp('(' + term + ')', 'i'), '<span class="search-highlight">$1</span>');
     }
+    
+    return param
   }
 });
 

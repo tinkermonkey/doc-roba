@@ -7,6 +7,10 @@ import '../../node_search/node_term_search_results.js';
  * Template Helpers
  */
 Template.XEditableNodeSearch.helpers({
+  searchTerm() {
+    var instance = Template.instance();
+    return instance.searchTerm.get();
+  },
   searchResults() {
     var instance = Template.instance();
     return instance.searchResults.get();
@@ -28,7 +32,8 @@ Template.XEditableNodeSearch.events({
     e.stopImmediatePropagation();
     var term = instance.$(".input-search").val().trim();
     console.log("Node Selector:", term);
-    instance.searchResults.set(instance.comparitor.searchByTerm(term, instance.data.projectVersionId));
+    instance.searchTerm.set(term);
+    instance.searchResults.set(instance.comparitor.searchByTerm(term, instance.data.projectVersionId).sortedResults());
   },
   "click .list-group-item"(e, instance) {
     var selection = this;
@@ -42,6 +47,7 @@ Template.XEditableNodeSearch.events({
  */
 Template.XEditableNodeSearch.created = function () {
   var instance           = Template.instance();
+  instance.searchTerm    = new ReactiveVar("");
   instance.searchResults = new ReactiveVar([]);
   instance.value         = new ReactiveVar("");
   instance.comparitor    = new NodeComparitor();
