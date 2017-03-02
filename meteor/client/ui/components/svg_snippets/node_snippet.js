@@ -48,9 +48,11 @@ Template.NodeSnippet.onRendered(() => {
     let data = Template.currentData();
     
     setTimeout(() => {
+      /*
       d3.select("#" + instance.elementId)
           .selectAll("text.node-title")
           .call(Util.wrapSvgText, DocTreeConfig.nodes.width - 2 * DocTreeConfig.nodes.borderWidth);
+          */
     }, 100);
   });
 });
