@@ -224,19 +224,24 @@ export class AdventureContext {
    * Update the dimensions of the viewport and screen mask
    */
   updateViewport () {
+    debug && console.log("AdventureContext.updateViewport");
     let context               = this,
         remoteScreen          = $(".remote-screen");
     if (remoteScreen.length) {
       let parent      = remoteScreen.offsetParent(),
           borderWidth = parseInt(remoteScreen.css("border-width")),
           viewport    = {
-            width       : remoteScreen.width() - borderWidth,
-            height      : remoteScreen.height() - borderWidth,
+            width       : remoteScreen.width(),
+            height      : remoteScreen.height(),
             offset      : remoteScreen.offset(),
             parentOffset: parent.offset(),
             borderWidth : borderWidth
           };
-      
+  
+      debug && console.log("AdventureContext.updateViewport remote screen dimensions:", remoteScreen.width(), remoteScreen.height());
+      debug && console.log("AdventureContext.updateViewport borderWidth:", borderWidth);
+      debug && console.log("AdventureContext.updateViewport viewport:", viewport);
+          
       viewport.parentOffset.height = parent.height();
       viewport.parentOffset.width  = parent.width();
       
@@ -247,8 +252,8 @@ export class AdventureContext {
       context.screenMask.set({
         top   : viewport.offset.top - viewport.parentOffset.top + viewport.borderWidth,
         left  : viewport.offset.left - viewport.parentOffset.left + viewport.borderWidth,
-        height: viewport.height - 2 * viewport.borderWidth,
-        width : viewport.width - 2 * viewport.borderWidth
+        height: viewport.height,
+        width : viewport.width
       });
     }
     
