@@ -52,18 +52,26 @@ export class NodeComparitor {
   searchByTerm (searchTerm, projectVersionId) {
     debug && console.log("NodeComparitor.searchByTerm:", searchTerm, projectVersionId);
     var self         = this,
-        searchResult = new NodeSearch();
+        searchResult = new NodeSearch(),
+        searchQuery  = {
+          projectVersionId: projectVersionId,
+          type            : { $in: [ NodeTypes.page, NodeTypes.view ] },
+          title           : { $regex: searchTerm, $options: "i" }
+        };
     
     // go through each node and score it against the current url
-    Nodes.find({
-      projectVersionId: projectVersionId,
-      type            : { $in: [ NodeTypes.page, NodeTypes.view ] },
-      title           : { $regex: searchTerm, $options: "i" },
-    }).forEach(function (node) {
-      let nodeResult = new NodeSearchResult(node);
-      nodeResult.addComparison('title', new NodeComparison(searchTerm, node.title).textComparison());
-      searchResult.push(nodeResult);
-    });
+    if(searchTerm.length){
+      debug && console.log('NodeComparitor.searchByTerm query:', searchQuery);
+      Nodes.find(searchQuery).forEach(function (node) {
+        debug && console.log('NodeComparitor.searchByTerm match:', node);
+    
+        let nodeResult = new NodeSearchResult(node);
+        nodeResult.addComparison('title', new NodeComparison(searchTerm, node.title).textComparison());
+        searchResult.addResult(nodeResult);
+      });
+    } else {
+      debug && console.log("NodeComparitor.searchByTerm aborted due to empty searchTerm");
+    }
     
     return searchResult;
   }

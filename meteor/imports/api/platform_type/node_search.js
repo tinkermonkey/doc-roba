@@ -1,3 +1,5 @@
+var debug = false;
+
 /**
  * Standard format for node search results
  */
@@ -17,6 +19,8 @@ export class NodeSearch {
    * @param result NodeSearchResult
    */
   addResult (result) {
+    debug && console.log("NodeSearch.addComparison:", result);
+
     // maintain the max score
     this.maxScore = result.score > this.maxScore ? result.score : this.maxScore;
     
@@ -27,6 +31,8 @@ export class NodeSearch {
    * Get the processed results
    */
   processedResults () {
+    debug && console.log("NodeSearch.processedResults:", this.results.length);
+
     let self = this;
     
     // Put the Max Score for the result set on each result for quick reference
@@ -41,6 +47,8 @@ export class NodeSearch {
    * Get the total score for all of the pieces
    */
   sortedResults () {
+    debug && console.log("NodeSearch.sortedResults:", this.results.length);
+
     let self = this;
     
     // filter out zero point scores and sort by score descending
@@ -55,6 +63,8 @@ export class NodeSearch {
    * Is there a clear winner?
    */
   clearWinner () {
+    debug && console.log("NodeSearch.clearWinner:", this.results.length);
+
     let results = this.sortedResults();
     
     if(results.length == 1){
