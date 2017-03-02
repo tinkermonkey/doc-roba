@@ -114,12 +114,14 @@ Template.CurrentLocation.events({
    * @param e
    * @param instance
    */
-  "click .btn-create-node" (e, instance) {
+  "click .btn-add-node" (e, instance) {
+    console.log('CurrentLocation click btn-add-node');
+    
     // Show the form
     instance.$(".create-node-form").removeClass("hide");
     
     // Hide the buttons
-    instance.$(".btn-create-node").addClass("hide");
+    instance.$(".btn-add-node").addClass("hide");
     
     // Hide the search results
     //instance.$(".node-url-search").addClass("hide");
@@ -149,7 +151,7 @@ Template.CurrentLocation.events({
     instance.$(".create-node-form").addClass("hide");
     
     // Show the buttons
-    instance.$(".btn-create-node").removeClass("hide");
+    instance.$(".btn-add-node").removeClass("hide");
     
     // Show the search results
     //instance.$(".node-url-search").removeClass("hide");
