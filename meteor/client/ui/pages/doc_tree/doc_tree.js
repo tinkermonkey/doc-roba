@@ -242,7 +242,12 @@ Template.DocTree.rendered = function () {
         actions = Actions.find({ projectVersionId: version._id });
     
     // Maintain the tree
-    instance.maintainTree(project, version, nodes, actions);
+    if(instance.subscriptionsReady()){
+      console.log('DocTree autorun - subscriptions ready')
+      instance.maintainTree(project, version, nodes, actions);
+    } else {
+      console.log('DocTree autorun - subscriptions not ready')
+    }
   });
   
   // respond to resize events
