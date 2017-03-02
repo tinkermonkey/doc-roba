@@ -285,7 +285,7 @@ Nodes.helpers({
    * Get the parent node record for this node
    * @return Node
    */
-  parent() {
+  parentNode() {
     if (this.parentId) {
       return Nodes.findOne({ staticId: this.parentId, projectVersionId: this.projectVersionId });
     } else if (this.type == NodeTypes.root) {

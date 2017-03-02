@@ -741,11 +741,11 @@ export default class TreeNodeHandler {
           return "translate(" + d.x + "," + d.y + ")"
         })
         .attr("opacity", function (d) {
-          return d.parent ? d.parent.visExpanded ? 1 : 0 : 1
+          return d.parent ? (d.parent.visExpanded ? 1 : 0) : 1
         })
         .transition()
         .attr("visibility", function (d) {
-          return d.parent ? d.parent.visExpanded ? "visible" : "hidden" : "visible"
+          return d.parent ? (d.parent.visExpanded ? "visible" : "hidden") : "visible"
         });
   }
   
