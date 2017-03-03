@@ -31,14 +31,16 @@ Template.XEditableNodeSearch.events({
   "keyup .input-search, change .input-search"(e, instance) {
     e.stopImmediatePropagation();
     var term = instance.$(".input-search").val().trim();
-    console.log("Node Selector:", term);
     instance.searchTerm.set(term);
     instance.searchResults.set(instance.comparitor.searchByTerm(term, instance.data.projectVersionId).sortedResults());
   },
   "click .list-group-item"(e, instance) {
     var selection = this;
-    instance.data.xEditable.$input.val(selection.node.staticId);
-    instance.value.set(selection.node.staticId);
+    if(selection.node && selection.node.staticId){
+      console.log('XEditableNodeSearch item click:', selection.node.staticId);
+      instance.data.xEditable.$input.val(selection.node.staticId);
+      instance.value.set(selection.node.staticId);
+    }
   }
 });
 
