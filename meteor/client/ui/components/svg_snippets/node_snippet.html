@@ -1,10 +1,12 @@
 <template name="NodeSnippet">
   <g class="node-group" visibility="visible" opacity="1" id="{{getElementId}}">
-    <rect class="node {{getNodeClass}}" x="0" y="0" width="{{nodeConfig 'width'}}" height="{{nodeConfig 'height'}}" rx="{{nodeConfig 'cornerRadius'}}" ry="{{nodeConfig 'cornerRadius'}}"></rect>
+    <rect class="node {{getNodeClass}}" x="0" y="0" width="{{nodeConfig 'width'}}" height="{{nodeConfig 'height'}}"
+          rx="{{nodeConfig 'cornerRadius'}}" ry="{{nodeConfig 'cornerRadius'}}"></rect>
     <g class="node-content" clip-path="url(#node-clip-path)">
-      <rect class="title-backround" x="0" y="0" width="{{nodeConfig 'width'}}" height="{{nodeConfig 'headerHeight'}}"></rect>
+      <rect class="title-backround" x="0" y="0" width="{{nodeConfig 'width'}}"
+            height="{{nodeConfig 'headerHeight'}}"></rect>
       {{constant}}
-      <text class="node-title no-select-complete" x="{{titleX}}" y="{{titleY}}">{{title}}</text>
+      <text class="node-title pre-render no-select-complete" x="{{titleX}}" y="{{titleY}}">{{title}}</text>
       {{constant}}
     </g>
   </g>
