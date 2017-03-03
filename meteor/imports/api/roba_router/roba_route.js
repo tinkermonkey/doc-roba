@@ -20,7 +20,7 @@ export default class RobaRoute {
   
     //console.info("RobaRoute: Routing from " + source + " to " + destination);
     route.destination = {
-      node: _.isObject(destination) ? destination : Nodes.findOne(destination)
+      node: _.isObject(destination) ? destination : Nodes.findOne({$or: [{_id: destination}, {staticId: destination}]})
     };
     if (!route.destination.node) {
       console.error("RobaRoute Failure: destination node " + destination + " not found");
@@ -33,7 +33,7 @@ export default class RobaRoute {
   
     if (source) {
       route.source = {
-        node: _.isObject(source) ? source : Nodes.findOne(source)
+        node: _.isObject(source) ? source : Nodes.findOne({$or: [{_id: source}, {staticId: source}]})
       };
       if (!route.source.node) {
         console.error("RobaRoute Failure: source node " + source + " not found");
