@@ -3,7 +3,7 @@ import './test_result.css';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
-import { TestCases } from '../../../../imports/api/test_case/test_case.js';
+import { TestCases } from '../../../../imports/api/test_cases/test_cases.js';
 import { TestResults } from '../../../../imports/api/test_result/test_result.js';
 import { TestResultRoles } from '../../../../imports/api/test_result/test_result_role.js';
 import '../../components/nav_menus/test_result_nav/test_result_nav.html';

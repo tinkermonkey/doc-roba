@@ -1,8 +1,8 @@
 import './code_module_function_params.html';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
-import { CodeModuleFunctionParams } from '../../../../imports/api/code_module/code_module_function_param.js';
-import { FunctionParamTypes } from '../../../../imports/api/code_module/function_param_types';
+import { CodeModuleFunctionParams } from '../../../../imports/api/code_modules/code_module_function_params.js';
+import { FunctionParamTypes } from '../../../../imports/api/code_modules/function_param_types';
 import '../../components/editable_fields/editable_enum selector.js';
 import '../../components/editable_fields/editable_checkbox.js';
 import '../../components/editable_fields/editable_code/editable_code.js';

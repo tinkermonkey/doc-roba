@@ -2,7 +2,7 @@ import './platform_edit_panel.html';
 
 import {Template} from 'meteor/templating';
 
-import {PlatformTypes} from '../../../../imports/api/platform_type/platform_types.js';
+import {PlatformTypes} from '../../../../imports/api/platform_types/platform_types.js';
 
 /**
  * Template Helpers

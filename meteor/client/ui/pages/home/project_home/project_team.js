@@ -7,7 +7,7 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import {FlowRouter} from 'meteor/kadira:flow-router';
 import {RobaDialog} from 'meteor/austinsand:roba-dialog';
 
-import {ProjectRoles, ProjectRolesLookup} from '../../../../../imports/api/project/project_roles.js';
+import {ProjectRoles, ProjectRolesLookup} from '../../../../../imports/api/projects/project_roles.js';
 import {Users} from '../../../../../imports/api/users/users.js';
 
 import {Util} from '../../../../../imports/api/util.js';

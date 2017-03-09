@@ -1,8 +1,8 @@
 import './platform_operating_systems.html';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
-import { PlatformConfigurations } from '../../../../../../imports/api/platform_configuration/platform_configuration.js';
-import { PlatformOperatingSystems } from '../../../../../../imports/api/platform_configuration/platform_operating_system.js';
+import { PlatformConfigurations } from '../../../../../../imports/api/platform_configurations/platform_configurations.js';
+import { PlatformOperatingSystems } from '../../../../../../imports/api/platform_configurations/platform_operating_systems.js';
 import '../../../../components/editable_fields/editable_icon_selector/editable_icon_selector.js';
 
 /**

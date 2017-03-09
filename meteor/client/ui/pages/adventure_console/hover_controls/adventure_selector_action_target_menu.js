@@ -1,6 +1,6 @@
 import './adventure_selector_action_target_menu.html';
 import { Template } from 'meteor/templating';
-import { Actions } from '../../../../../imports/api/action/action.js';
+import { Actions } from '../../../../../imports/api/actions/actions.js';
 import { Nodes } from '../../../../../imports/api/nodes/nodes.js';
 import { NodeTypes } from '../../../../../imports/api/nodes/node_types.js';
 

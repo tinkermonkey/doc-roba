@@ -1,8 +1,8 @@
 import './test_case_step_navigate.html';
 import { Template } from 'meteor/templating';
 import { Nodes } from '../../../../../imports/api/nodes/nodes.js';
-import { TestCaseSteps } from '../../../../../imports/api/test_case/test_case_step.js';
-import { TestCaseStepTypes } from '../../../../../imports/api/test_case/test_case_step_types.js';
+import { TestCaseSteps } from '../../../../../imports/api/test_cases/test_case_step.js';
+import { TestCaseStepTypes } from '../../../../../imports/api/test_cases/test_case_step_types.js';
 import { RobaRouter } from '../../../../../imports/api/roba_router/roba_router.js';
 import '../../../components/routes/route_map.js';
 

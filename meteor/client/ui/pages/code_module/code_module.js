@@ -4,8 +4,8 @@ import {Template} from 'meteor/templating';
 import {FlowRouter} from 'meteor/kadira:flow-router';
 import {RobaDialog} from 'meteor/austinsand:roba-dialog';
 
-import {CodeModules} from '../../../../imports/api/code_module/code_module.js';
-import {CodeModuleFunctions} from '../../../../imports/api/code_module/code_module_function.js';
+import {CodeModules} from '../../../../imports/api/code_modules/code_modules.js';
+import {CodeModuleFunctions} from '../../../../imports/api/code_modules/code_module_functions.js';
 import {Util} from '../../../../imports/api/util.js';
 
 import './code_module_function.js';

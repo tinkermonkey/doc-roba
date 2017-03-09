@@ -4,7 +4,7 @@ import './edit_action.css';
 import {Template} from 'meteor/templating';
 import {RobaDialog} from 'meteor/austinsand:roba-dialog';
 
-import {Actions} from '../../../../imports/api/action/action.js';
+import {Actions} from '../../../../imports/api/actions/actions.js';
 
 /**
  * Template helpers

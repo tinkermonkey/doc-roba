@@ -1,7 +1,7 @@
 import { ReactiveVar } from 'meteor/reactive-var';
 import { FlowRouter } from 'meteor/kadira:flow-router';
-import { Adventures } from '../../../../imports/api/adventure/adventure.js';
-import { AdventureStates } from '../../../../imports/api/adventure/adventure_state.js';
+import { Adventures } from '../../../../imports/api/adventures/adventures.js';
+import { AdventureStates } from '../../../../imports/api/adventures/adventure_states.js';
 import { Nodes } from '../../../../imports/api/nodes/nodes.js';
 import { TestSystems } from '../../../../imports/api/test_system/test_system.js';
 import { Util } from '../../../../imports/api/util.js';

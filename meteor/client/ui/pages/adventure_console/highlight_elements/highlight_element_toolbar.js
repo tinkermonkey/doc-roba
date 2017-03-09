@@ -1,7 +1,7 @@
 import './highlight_element_toolbar.html';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
-import { AdventureStatus } from '../../../../../imports/api/adventure/adventure_status.js';
+import { AdventureStatus } from '../../../../../imports/api/adventures/adventure_status.js';
 import '../hover_controls/adventure_selector_action_menu.js';
 
 /**

@@ -1,7 +1,7 @@
 import './highlight_element.html';
 import './highlight_element.css';
 import { Template } from 'meteor/templating';
-import { AdventureStatus } from '../../../../../imports/api/adventure/adventure_status.js';
+import { AdventureStatus } from '../../../../../imports/api/adventures/adventure_status.js';
 
 /**
  * Template helpers

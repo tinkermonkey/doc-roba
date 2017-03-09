@@ -2,7 +2,7 @@ import './current_location_actions.html';
 import { Blaze } from 'meteor/blaze';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
-import { Actions } from '../../../../../imports/api/action/action.js';
+import { Actions } from '../../../../../imports/api/actions/actions.js';
 import { Nodes } from '../../../../../imports/api/nodes/nodes.js';
 import './current_location_action_row.js';
 import '../../../components/editable_fields/editable_nav_menu_list.js';

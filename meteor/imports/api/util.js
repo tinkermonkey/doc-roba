@@ -1,8 +1,8 @@
-import { FieldTypes } from './datastore/field_types.js';
-import { TestAgentOSLookup } from './test_agent/test_agent_os.js';
+import { FieldTypes } from './datastores/field_types.js';
+import { TestAgentOSLookup } from './test_agents/test_agent_os.js';
 import { Nodes } from './nodes/nodes.js';
 import { NodeTypes } from './nodes/node_types.js';
-import { TestCaseStepTypes } from './test_case/test_case_step_types.js';
+import { TestCaseStepTypes } from './test_cases/test_case_step_types.js';
 
 /**
  * Utility functions

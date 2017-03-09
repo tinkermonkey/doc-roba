@@ -2,7 +2,7 @@ import './project_home.html';
 
 import {Template} from 'meteor/templating';
 
-import {Projects} from '../../../../../imports/api/project/project.js';
+import {Projects} from '../../../../../imports/api/projects/projects.js';
 
 import '../../../components/page_headers/current_project_header.js';
 import '../home_nav.js';

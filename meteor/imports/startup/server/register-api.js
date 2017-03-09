@@ -1,41 +1,41 @@
 // Actions
-import '../../api/action/server/publications.js'
-import '../../api/action/server/methods.js'
+import '../../api/actions/server/publications.js'
+import '../../api/actions/server/methods.js'
 
 // Adventures
-import '../../api/adventure/server/publications.js'
-import '../../api/adventure/server/methods.js'
+import '../../api/adventures/server/publications.js'
+import '../../api/adventures/server/methods.js'
 
 // Change Tracker
 import '../../api/change_tracker/server/publications.js'
 import '../../api/change_tracker/server/methods.js'
 
 // Code Modules
-import '../../api/code_module/server/publications.js'
+import '../../api/code_modules/server/publications.js'
 //import '../../api/code_module/server/methods.js'
 
 // Data Stores
-import '../../api/datastore/server/publications.js'
-import '../../api/datastore/server/methods.js'
+import '../../api/datastores/server/publications.js'
+import '../../api/datastores/server/methods.js'
 
 // Driver Commands
-import '../../api/driver_command/server/publications.js'
-import '../../api/driver_command/server/methods.js'
+import '../../api/driver_commands/server/publications.js'
+import '../../api/driver_commands/server/methods.js'
 
 // Log Messages
-import '../../api/log_message/server/publications.js'
-import '../../api/log_message/server/methods.js'
+import '../../api/log_messages/server/publications.js'
+import '../../api/log_messages/server/methods.js'
 
 // Nodes
 import '../../api/nodes/server/publications.js'
 import '../../api/nodes/server/methods.js'
 
 // Platform Configuration
-import '../../api/platform_configuration/server/publications.js'
+import '../../api/platform_configurations/server/publications.js'
 
 // Project
-import '../../api/project/server/publications.js'
-import '../../api/project/server/methods.js'
+import '../../api/projects/server/publications.js'
+import '../../api/projects/server/methods.js'
 
 // Roba Router
 import '../../api/roba_router/server/methods.js'
@@ -45,16 +45,16 @@ import '../../api/roba_router/server/methods.js'
 //import '../../api/reference_doc/server/methods.js'
 
 // Screenshots
-import '../../api/screenshot/server/publications.js'
-import '../../api/screenshot/server/methods.js'
+import '../../api/screenshots/server/publications.js'
+import '../../api/screenshots/server/methods.js'
 
 // Test Agents
-import '../../api/test_agent/server/publications.js'
+import '../../api/test_agents/server/publications.js'
 //import '../../api/test_agent/server/methods.js'
 
 // Test Cases
-import '../../api/test_case/server/publications.js'
-import '../../api/test_case/server/methods.js'
+import '../../api/test_cases/server/publications.js'
+import '../../api/test_cases/server/methods.js'
 
 // Test Plans
 import '../../api/test_plan/server/publications.js'

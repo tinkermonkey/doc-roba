@@ -2,9 +2,9 @@ import './datastore_data_type_field_list.html';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
 import { Util } from '../../../../imports/api/util.js';
-import { DatastoreDataTypes } from '../../../../imports/api/datastore/datastore_data_type.js';
-import { DatastoreDataTypeFields } from '../../../../imports/api/datastore/datastore_data_type_field.js';
-import { FieldTypes } from '../../../../imports/api/datastore/field_types.js';
+import { DatastoreDataTypes } from '../../../../imports/api/datastores/datastore_data_types.js';
+import { DatastoreDataTypeFields } from '../../../../imports/api/datastores/datastore_data_type_fields.js';
+import { FieldTypes } from '../../../../imports/api/datastores/field_types.js';
 import '../editable_fields/editable_enum selector.js';
 import '../editable_fields/editable_record_selector.js';
 

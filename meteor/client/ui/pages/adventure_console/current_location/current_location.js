@@ -3,7 +3,7 @@ import './current_location.css';
 import { Blaze } from 'meteor/blaze';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
-import { AdventureStatus } from '../../../../../imports/api/adventure/adventure_status.js';
+import { AdventureStatus } from '../../../../../imports/api/adventures/adventure_status.js';
 import { Nodes } from '../../../../../imports/api/nodes/nodes.js';
 import { NodeCheckTypes } from '../../../../../imports/api/nodes/node_check_types.js';
 import '../../../components/editable_fields/editable_node_type.js';

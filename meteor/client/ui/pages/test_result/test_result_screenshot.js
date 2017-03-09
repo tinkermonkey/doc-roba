@@ -1,7 +1,7 @@
 import './test_result_screenshot.html';
 import { Template } from 'meteor/templating';
-import { Screenshots } from '../../../../imports/api/screenshot/screenshot.js';
-import { ScreenshotComparisons } from '../../../../imports/api/screenshot/screenshot_comparison.js';
+import { Screenshots } from '../../../../imports/api/screenshots/screenshots.js';
+import { ScreenshotComparisons } from '../../../../imports/api/screenshots/screenshot_comparisons.js';
 
 /**
  * Template Helpers

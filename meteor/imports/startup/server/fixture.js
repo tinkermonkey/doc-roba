@@ -5,27 +5,27 @@ var AdmZip = require('adm-zip'),
     path = require('path');
 
 // Full collections
-import {Actions}                  from '../../api/action/action.js';
-import {CodeModules}              from '../../api/code_module/code_module.js';
-import {CodeModuleFunctions}      from '../../api/code_module/code_module_function.js';
-import {CodeModuleFunctionParams} from '../../api/code_module/code_module_function_param.js';
-import {Datastores}               from '../../api/datastore/datastore.js';
-import {DatastoreDataTypes}       from '../../api/datastore/datastore_data_type.js';
-import {DatastoreDataTypeFields}  from '../../api/datastore/datastore_data_type_field.js';
-import {DatastoreFields}          from '../../api/datastore/datastore_field.js';
-import {DatastoreRows}            from '../../api/datastore/datastore_row.js';
-import {DriverCommands}           from '../../api/driver_command/driver_command.js';
+import {Actions}                  from '../../api/actions/actions.js';
+import {CodeModules}              from '../../api/code_modules/code_modules.js';
+import {CodeModuleFunctions}      from '../../api/code_modules/code_module_functions.js';
+import {CodeModuleFunctionParams} from '../../api/code_modules/code_module_function_params.js';
+import {Datastores}               from '../../api/datastores/datastores.js';
+import {DatastoreDataTypes}       from '../../api/datastores/datastore_data_types.js';
+import {DatastoreDataTypeFields}  from '../../api/datastores/datastore_data_type_fields.js';
+import {DatastoreFields}          from '../../api/datastores/datastore_fields.js';
+import {DatastoreRows}            from '../../api/datastores/datastore_rows.js';
+import {DriverCommands}           from '../../api/driver_commands/driver_commands.js';
 import {Nodes}                    from '../../api/nodes/nodes.js';
-import {Projects}                 from '../../api/project/project.js';
-import {ProjectVersions}          from '../../api/project/project_version.js';
-import {ReferenceDocs}            from '../../api/reference_doc/reference_doc.js';
-import {Screenshots}              from '../../api/screenshot/screenshot.js';
+import {Projects}                 from '../../api/projects/projects.js';
+import {ProjectVersions}          from '../../api/projects/project_versions.js';
+import {ReferenceDocs}            from '../../api/reference_docs/reference_docs.js';
+import {Screenshots}              from '../../api/screenshots/screenshots.js';
 import {TestServers}              from '../../api/test_server/test_server.js';
-import {TestAgents}               from '../../api/test_agent/test_agent.js';
-import {TestCases}                from '../../api/test_case/test_case.js';
-import {TestCaseRoles}            from '../../api/test_case/test_case_role.js';
-import {TestCaseSteps}            from '../../api/test_case/test_case_step.js';
-import {TestGroups}               from '../../api/test_case/test_group.js';
+import {TestAgents}               from '../../api/test_agents/test_agents.js';
+import {TestCases}                from '../../api/test_cases/test_cases.js';
+import {TestCaseRoles}            from '../../api/test_cases/test_case_roles.js';
+import {TestCaseSteps}            from '../../api/test_cases/test_case_step.js';
+import {TestGroups}               from '../../api/test_cases/test_group.js';
 import {TestResults}              from '../../api/test_result/test_result.js';
 import {TestResultRoles}          from '../../api/test_result/test_result_role.js';
 import {TestResultSteps}          from '../../api/test_result/test_result_step.js';
@@ -37,7 +37,7 @@ import {TestSystems}              from '../../api/test_system/test_system.js';
 import {Users}                    from '../../api/users/users.js';
 
 // Partial collection export
-import {LogMessages}            from '../../api/log_message/log_message.js';
+import {LogMessages}            from '../../api/log_messages/log_messages.js';
 
 /**
  * On startup, check to see if the fixture data should be loaded

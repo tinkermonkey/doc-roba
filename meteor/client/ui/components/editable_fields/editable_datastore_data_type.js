@@ -2,8 +2,8 @@ import './editable_datastore_data_type.html';
 
 import {Template} from 'meteor/templating';
 
-import {FieldTypes} from '../../../../imports/api/datastore/field_types.js';
-import {DatastoreDataTypes} from '../../../../imports/api/datastore/datastore_data_type.js';
+import {FieldTypes} from '../../../../imports/api/datastores/field_types.js';
+import {DatastoreDataTypes} from '../../../../imports/api/datastores/datastore_data_types.js';
 
 /**
  * Template Helpers

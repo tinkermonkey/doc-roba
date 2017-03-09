@@ -1,6 +1,6 @@
 import './x_editable_action_route_selector.html';
 import { Template } from 'meteor/templating';
-import { Actions } from '../../../../../imports/api/action/action.js';
+import { Actions } from '../../../../../imports/api/actions/actions.js';
 import '../../svg_snippets/action_route_snippet.js';
 import '../../svg_snippets/single_route_snippet.js';
 

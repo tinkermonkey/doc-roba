@@ -4,8 +4,8 @@ import {Blaze} from 'meteor/blaze';
 import {Template} from 'meteor/templating';
 import {RobaDialog} from 'meteor/austinsand:roba-dialog';
 
-import {TestCaseRoles} from '../../../../../imports/api/test_case/test_case_role.js';
-import {TestCaseSteps} from '../../../../../imports/api/test_case/test_case_step.js';
+import {TestCaseRoles} from '../../../../../imports/api/test_cases/test_case_roles.js';
+import {TestCaseSteps} from '../../../../../imports/api/test_cases/test_case_step.js';
 
 /**
  * Template Helpers

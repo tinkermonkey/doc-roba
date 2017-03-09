@@ -1,6 +1,6 @@
 import { DocTreeConfig } from '../../lib/doc_tree/doc_tree_config.js';
 import { PathBuilder } from '../../lib/doc_tree/path_builder.js';
-import { Actions } from '../../../../imports/api/action/action.js';
+import { Actions } from '../../../../imports/api/actions/actions.js';
 import '../edit_panels/edit_action.js';
 
 /**

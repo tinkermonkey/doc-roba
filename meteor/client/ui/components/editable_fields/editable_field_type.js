@@ -3,7 +3,7 @@ import './editable_field_type.html';
 import {Template} from 'meteor/templating';
 import {RobaDialog} from 'meteor/austinsand:roba-dialog';
 
-import {FieldTypesLookup} from '../../../../imports/api/datastore/field_types.js';
+import {FieldTypesLookup} from '../../../../imports/api/datastores/field_types.js';
 
 /**
  * Template Helpers

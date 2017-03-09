@@ -3,7 +3,7 @@ import './editable_test_agent_os.html';
 import {Template} from 'meteor/templating';
 
 import {Util} from '../../../../imports/api/util.js'
-import {TestAgentOSLookup} from '../../../../imports/api/test_agent/test_agent_os.js';
+import {TestAgentOSLookup} from '../../../../imports/api/test_agents/test_agent_os.js';
 
 /**
  * Template Helpers

@@ -4,8 +4,8 @@ import {Template} from 'meteor/templating';
 import {RobaDialog} from 'meteor/austinsand:roba-dialog';
 import {EditableTextField} from 'meteor/austinsand:editable-text-field';
 
-import {FieldTypes} from '../../../../imports/api/datastore/field_types.js';
-import {DatastoreFields} from '../../../../imports/api/datastore/datastore_field.js';
+import {FieldTypes} from '../../../../imports/api/datastores/field_types.js';
+import {DatastoreFields} from '../../../../imports/api/datastores/datastore_fields.js';
 
 import {Util} from '../../../../imports/api/util.js';
 import '../editable_fields/editable_field_type.js';

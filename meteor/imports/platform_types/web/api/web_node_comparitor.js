@@ -1,6 +1,6 @@
-import { NodeComparitor } from '../../../api/platform_type/node_comparitor.js';
-import { NodeComparison } from '../../../api/platform_type/node_comparison.js';
-import { NodeSearchResult } from '../../../api/platform_type/node_search_result.js';
+import { NodeComparitor } from '../../../api/platform_types/node_comparitor.js';
+import { NodeComparison } from '../../../api/platform_types/node_comparison.js';
+import { NodeSearchResult } from '../../../api/platform_types/node_search_result.js';
 import { Util } from '../../../api/util.js';
 
 var debug = false;

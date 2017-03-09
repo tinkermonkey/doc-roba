@@ -3,7 +3,7 @@ import './editable_user_account.html';
 import {Template} from 'meteor/templating';
 import {ReactiveVar} from 'meteor/reactive-var';
 
-import {DSUtil} from '../../../../imports/api/datastore/ds_util.js'
+import {DSUtil} from '../../../../imports/api/datastores/ds_util.js'
 
 /**
  * Template Helpers

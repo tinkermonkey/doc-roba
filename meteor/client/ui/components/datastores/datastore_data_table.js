@@ -2,8 +2,8 @@ import './datastore_data_table.html';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
 import { AutoForm } from 'meteor/aldeed:autoform';
-import { FieldTypes } from '../../../../imports/api/datastore/field_types.js';
-import { DatastoreRows } from '../../../../imports/api/datastore/datastore_row.js';
+import { FieldTypes } from '../../../../imports/api/datastores/field_types.js';
+import { DatastoreRows } from '../../../../imports/api/datastores/datastore_rows.js';
 import './datastore_row_form.js';
 import './datastore_child_table.js';
 

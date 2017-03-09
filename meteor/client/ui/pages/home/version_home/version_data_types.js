@@ -2,8 +2,8 @@ import './version_data_types.html';
 
 import {Template} from 'meteor/templating';
 
-import {DatastoreDataTypes} from '../../../../../imports/api/datastore/datastore_data_type.js';
-import {DatastoreCategories} from '../../../../../imports/api/datastore/datastore_catagories.js';
+import {DatastoreDataTypes} from '../../../../../imports/api/datastores/datastore_data_types.js';
+import {DatastoreCategories} from '../../../../../imports/api/datastores/datastore_catagories.js';
 
 import {Util} from '../../../../../imports/api/util.js';
 import '../../../components/datastores/datastore_data_type_field_list.js';

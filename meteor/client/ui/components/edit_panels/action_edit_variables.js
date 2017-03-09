@@ -1,9 +1,9 @@
 import './action_edit_variables.html';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
-import { Actions } from '../../../../imports/api/action/action.js';
-import { FieldTypes } from '../../../../imports/api/datastore/field_types.js';
-import { DatastoreDataTypes } from '../../../../imports/api/datastore/datastore_data_type.js';
+import { Actions } from '../../../../imports/api/actions/actions.js';
+import { FieldTypes } from '../../../../imports/api/datastores/field_types.js';
+import { DatastoreDataTypes } from '../../../../imports/api/datastores/datastore_data_types.js';
 import { Util } from '../../../../imports/api/util.js';
 import '../editable_fields/editable_field_shape.js';
 import '../editable_fields/editable_record_selector.js';

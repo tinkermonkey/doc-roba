@@ -5,8 +5,8 @@ import {AutoForm} from 'meteor/aldeed:autoform';
 import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import {RobaDialog} from 'meteor/austinsand:roba-dialog';
 
-import {Projects} from '../../../../../imports/api/project/project.js';
-import {ProjectVersions} from '../../../../../imports/api/project/project_version.js';
+import {Projects} from '../../../../../imports/api/projects/projects.js';
+import {ProjectVersions} from '../../../../../imports/api/projects/project_versions.js';
 
 import '../../../components/datastores/datastore_row_form_vert.js';
 

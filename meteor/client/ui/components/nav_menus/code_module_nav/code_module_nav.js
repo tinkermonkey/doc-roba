@@ -1,7 +1,7 @@
 import './code_module_nav.html';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
-import { CodeModules } from '../../../../../imports/api/code_module/code_module.js';
+import { CodeModules } from '../../../../../imports/api/code_modules/code_modules.js';
 import './code_module_list.js';
 
 /**

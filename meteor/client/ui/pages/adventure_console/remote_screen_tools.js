@@ -1,6 +1,6 @@
 import './remote_screen_tools.html';
 import { Template } from 'meteor/templating';
-import { AdventureStatus } from '../../../../imports/api/adventure/adventure_status.js';
+import { AdventureStatus } from '../../../../imports/api/adventures/adventure_status.js';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
 
 /**

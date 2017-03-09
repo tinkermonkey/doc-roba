@@ -4,8 +4,8 @@ import {Blaze} from 'meteor/blaze';
 import {Template} from 'meteor/templating';
 import {FlowRouter} from 'meteor/kadira:flow-router';
 
-import {TestCases} from '../../../../../imports/api/test_case/test_case.js';
-import {TestGroups} from '../../../../../imports/api/test_case/test_group.js'
+import {TestCases} from '../../../../../imports/api/test_cases/test_cases.js';
+import {TestGroups} from '../../../../../imports/api/test_cases/test_group.js'
 
 import './test_case_list_group.js';
 import './test_case_list_item.js';

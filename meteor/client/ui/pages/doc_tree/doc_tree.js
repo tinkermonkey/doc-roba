@@ -1,9 +1,9 @@
 import "./doc_tree.html";
 import { Template } from "meteor/templating";
-import { Actions } from "../../../../imports/api/action/action.js";
+import { Actions } from "../../../../imports/api/actions/actions.js";
 import { Nodes } from "../../../../imports/api/nodes/nodes.js";
-import { Projects } from "../../../../imports/api/project/project.js";
-import { ProjectVersions } from "../../../../imports/api/project/project_version.js";
+import { Projects } from "../../../../imports/api/projects/projects.js";
+import { ProjectVersions } from "../../../../imports/api/projects/project_versions.js";
 import { NodeTypes } from "../../../../imports/api/nodes/node_types.js";
 import TreeLayout from "../../components/tree_layout/tree_layout.js";
 

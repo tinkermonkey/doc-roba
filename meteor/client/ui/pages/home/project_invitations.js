@@ -4,7 +4,7 @@ import {Meteor} from 'meteor/meteor';
 import {Template} from 'meteor/templating';
 import {RobaDialog} from 'meteor/austinsand:roba-dialog';
 
-import {ProjectInvitations} from '../../../../imports/api/project/project_invitations.js';
+import {ProjectInvitations} from '../../../../imports/api/projects/project_invitations.js';
 
 /**
  * Template Helpers

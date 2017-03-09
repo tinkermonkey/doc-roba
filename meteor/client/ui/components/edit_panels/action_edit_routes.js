@@ -1,7 +1,7 @@
 import './action_edit_routes.html';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
-import { Actions } from '../../../../imports/api/action/action.js';
+import { Actions } from '../../../../imports/api/actions/actions.js';
 import { Nodes } from '../../../../imports/api/nodes/nodes.js';
 import '../editable_fields/node_selector/editable_node_selector.js';
 import '../editable_fields/editable_code/editable_code.js';

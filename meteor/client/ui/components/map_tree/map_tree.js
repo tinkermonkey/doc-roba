@@ -1,6 +1,6 @@
 import './map_tree.html';
 import { Template } from 'meteor/templating';
-import { Actions } from '../../../../imports/api/action/action.js';
+import { Actions } from '../../../../imports/api/actions/actions.js';
 import { Nodes } from '../../../../imports/api/nodes/nodes.js';
 import { MapLayout } from './map_layout.js';
 

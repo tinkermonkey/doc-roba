@@ -1,5 +1,5 @@
-import { PlatformType } from '../../api/platform_type/platform_type.js';
-import { PlatformTypes } from '../../api/platform_type/platform_types.js';
+import { PlatformType } from '../../api/platform_types/platform_type.js';
+import { PlatformTypes } from '../../api/platform_types/platform_types.js';
 import { WebNodeComparitor } from '../web/api/web_node_comparitor.js';
 import { WebAdventureAssistant } from '../web/api/web_adventure_assistant.js';
 

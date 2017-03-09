@@ -1,7 +1,7 @@
 import './adventure_log_embedded.html';
 import './adventure_log.css';
 import { Template } from 'meteor/templating';
-import { LogMessages } from '../../../../../imports/api/log_message/log_message.js';
+import { LogMessages } from '../../../../../imports/api/log_messages/log_messages.js';
 import '../../../components/log_messages/log_message_data.js';
 
 /**

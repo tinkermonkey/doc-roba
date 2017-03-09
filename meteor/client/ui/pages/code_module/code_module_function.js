@@ -3,8 +3,8 @@ import './code_module_function.html';
 import {Template} from 'meteor/templating';
 import {RobaDialog} from 'meteor/austinsand:roba-dialog';
 
-import {CodeModuleFunctions} from '../../../../imports/api/code_module/code_module_function.js';
-import {CodeModuleFunctionParams} from '../../../../imports/api/code_module/code_module_function_param.js';
+import {CodeModuleFunctions} from '../../../../imports/api/code_modules/code_module_functions.js';
+import {CodeModuleFunctionParams} from '../../../../imports/api/code_modules/code_module_function_params.js';
 
 import './code_module_function_params.js';
 var Prism = require('prismjs');

@@ -1,5 +1,5 @@
-import {Projects} from '../project/project.js';
-import {ProjectInvitations} from '../project/project_invitations.js';
+import {Projects} from '../projects/projects.js';
+import {ProjectInvitations} from '../projects/project_invitations.js';
 
 export const EmailTemplates = {
   ProjectInvitation: {

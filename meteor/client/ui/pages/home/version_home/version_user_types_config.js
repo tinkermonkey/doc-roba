@@ -2,7 +2,7 @@ import './version_user_types_config.html';
 
 import {Template} from 'meteor/templating';
 
-import {Datastores} from '../../../../../imports/api/datastore/datastore.js';
+import {Datastores} from '../../../../../imports/api/datastores/datastores.js';
 
 import {Util} from '../../../../../imports/api/util.js';
 import '../../../components/datastores/datastore_field_list.js';

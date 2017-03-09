@@ -3,8 +3,8 @@ import './current_project_header.html';
 import {Template} from 'meteor/templating';
 import {FlowRouter} from 'meteor/kadira:flow-router';
 
-import {Projects} from '../../../../imports/api/project/project.js';
-import {ProjectVersions} from '../../../../imports/api/project/project_version.js';
+import {Projects} from '../../../../imports/api/projects/projects.js';
+import {ProjectVersions} from '../../../../imports/api/projects/project_versions.js';
 
 /**
  * Template Helpers

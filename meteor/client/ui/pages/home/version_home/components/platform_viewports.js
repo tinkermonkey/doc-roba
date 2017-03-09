@@ -1,8 +1,8 @@
 import './platform_viewports.html';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
-import { PlatformConfigurations } from '../../../../../../imports/api/platform_configuration/platform_configuration.js';
-import { PlatformViewports } from '../../../../../../imports/api/platform_configuration/platform_viewport.js';
+import { PlatformConfigurations } from '../../../../../../imports/api/platform_configurations/platform_configurations.js';
+import { PlatformViewports } from '../../../../../../imports/api/platform_configurations/platform_viewports.js';
 import '../../../../components/editable_fields/editable_radio_button.js';
 
 /**

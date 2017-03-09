@@ -3,7 +3,7 @@ import { Blaze } from 'meteor/blaze';
 import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
-import { AdventureStatus } from '../../../../imports/api/adventure/adventure_status.js';
+import { AdventureStatus } from '../../../../imports/api/adventures/adventure_status.js';
 import '../../components/roba_ace/roba_ace.js';
 
 /**

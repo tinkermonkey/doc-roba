@@ -1,7 +1,7 @@
 import './code_module_list_module.html';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
-import { CodeModuleFunctions } from '../../../../../imports/api/code_module/code_module_function.js';
+import { CodeModuleFunctions } from '../../../../../imports/api/code_modules/code_module_functions.js';
 import './code_module_list_function.js';
 
 /**

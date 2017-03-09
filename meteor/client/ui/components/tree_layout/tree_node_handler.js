@@ -3,7 +3,7 @@ import { TreeUtils } from "./tree_utils.js";
 import { Util } from "../../../../imports/api/util.js";
 import { Nodes } from "../../../../imports/api/nodes/nodes.js";
 import { NodeTypes, NodeTypesLookup } from "../../../../imports/api/nodes/node_types.js";
-import { PlatformTypes } from "../../../../imports/api/platform_type/platform_types.js";
+import { PlatformTypes } from "../../../../imports/api/platform_types/platform_types.js";
 
 import '../edit_panels/edit_node.js';
 

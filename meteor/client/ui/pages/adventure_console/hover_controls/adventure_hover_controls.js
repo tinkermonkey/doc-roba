@@ -2,7 +2,7 @@ import './adventure_hover_controls.html';
 import './adventure_hover_controls.css';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
-import { AdventureStatus } from '../../../../../imports/api/adventure/adventure_status.js';
+import { AdventureStatus } from '../../../../../imports/api/adventures/adventure_status.js';
 import { Util } from '../../../../../imports/api/util.js';
 
 /**

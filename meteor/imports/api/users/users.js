@@ -1,8 +1,8 @@
 import {Meteor} from 'meteor/meteor';
 import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import {Auth} from '../auth.js';
-import {ProjectRoles} from '../project/project_roles.js';
-import {ProjectVersions} from '../project/project_version.js';
+import {ProjectRoles} from '../projects/project_roles.js';
+import {ProjectVersions} from '../projects/project_versions.js';
 
 // Quick alias for normalizing the users collection
 export const Users = Meteor.users;

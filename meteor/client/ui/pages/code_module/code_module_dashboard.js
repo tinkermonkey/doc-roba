@@ -4,11 +4,11 @@ import './code_modules.css';
 import {Template} from 'meteor/templating';
 import {FlowRouter} from 'meteor/kadira:flow-router';
 
-import {CodeModules} from '../../../../imports/api/code_module/code_module.js';
-import {CodeModuleFunctions} from '../../../../imports/api/code_module/code_module_function.js';
-import {CodeModuleFunctionParams} from '../../../../imports/api/code_module/code_module_function_param.js';
-import {Projects} from '../../../../imports/api/project/project.js';
-import {ProjectVersions} from '../../../../imports/api/project/project_version.js';
+import {CodeModules} from '../../../../imports/api/code_modules/code_modules.js';
+import {CodeModuleFunctions} from '../../../../imports/api/code_modules/code_module_functions.js';
+import {CodeModuleFunctionParams} from '../../../../imports/api/code_modules/code_module_function_params.js';
+import {Projects} from '../../../../imports/api/projects/projects.js';
+import {ProjectVersions} from '../../../../imports/api/projects/project_versions.js';
 
 import '../../components/page_headers/current_project_header.js';
 import '../../components/nav_menus/code_module_nav/code_module_nav.js';

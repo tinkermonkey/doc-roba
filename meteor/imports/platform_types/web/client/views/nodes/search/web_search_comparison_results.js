@@ -1,6 +1,6 @@
 import './web_search_comparison_results.html';
 import { Template } from 'meteor/templating';
-import { NodeComparisonDatumResultLookup } from '../../../../../../api/platform_type/node_comparison_datum_result.js';
+import { NodeComparisonDatumResultLookup } from '../../../../../../api/platform_types/node_comparison_datum_result.js';
 
 /**
  * Template Helpers

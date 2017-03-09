@@ -1,4 +1,4 @@
-import { AdventureAssistant } from '../../../api/platform_type/adventure_assistant.js';
+import { AdventureAssistant } from '../../../api/platform_types/adventure_assistant.js';
 
 export class WebAdventureAssistant extends AdventureAssistant {
   

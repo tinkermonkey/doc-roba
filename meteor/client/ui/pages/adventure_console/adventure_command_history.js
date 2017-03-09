@@ -1,8 +1,8 @@
 import './adventure_command_history.html';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
-import { AdventureCommands } from '../../../../imports/api/adventure/adventure_command.js';
-import { AdventureStepStatus } from '../../../../imports/api/adventure/adventure_step_status.js';
+import { AdventureCommands } from '../../../../imports/api/adventures/adventure_commands.js';
+import { AdventureStepStatus } from '../../../../imports/api/adventures/adventure_step_status.js';
 import '../../lib/pretty_code/pretty_code.js';
 import '../../components/log_messages/log_message_data.js';
 

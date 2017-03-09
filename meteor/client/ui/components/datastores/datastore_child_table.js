@@ -2,7 +2,7 @@ import './datastore_child_table.html';
 
 import {Template} from 'meteor/templating';
 
-import {FieldTypes} from '../../../../imports/api/datastore/field_types.js';
+import {FieldTypes} from '../../../../imports/api/datastores/field_types.js';
 
 /**
  * Template Helpers

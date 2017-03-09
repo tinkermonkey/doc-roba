@@ -4,9 +4,9 @@ import {Meteor} from 'meteor/meteor';
 import {Template} from 'meteor/templating';
 import {RobaDialog} from 'meteor/austinsand:roba-dialog';
 
-import {TestCaseRoles} from '../../../../imports/api/test_case/test_case_role.js';
-import {TestCaseSteps} from '../../../../imports/api/test_case/test_case_step.js';
-import {TestCaseStepTypes} from '../../../../imports/api/test_case/test_case_step_types.js';
+import {TestCaseRoles} from '../../../../imports/api/test_cases/test_case_roles.js';
+import {TestCaseSteps} from '../../../../imports/api/test_cases/test_case_step.js';
+import {TestCaseStepTypes} from '../../../../imports/api/test_cases/test_case_step_types.js';
 
 import './test_case_step.js';
 
