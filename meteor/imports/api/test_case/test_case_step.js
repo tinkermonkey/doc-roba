@@ -4,7 +4,7 @@ import {SchemaHelpers} from '../schema_helpers.js';
 import {Auth} from '../auth.js';
 import {ChangeTracker} from '../change_tracker/change_tracker.js';
 import {TestCaseStepTypes} from './test_case_step_types.js';
-import {Nodes} from '../node/node.js';
+import {Nodes} from '../nodes/nodes.js';
 import {Actions} from '../action/action.js';
 
 /**
