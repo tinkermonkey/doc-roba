@@ -2,11 +2,15 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Adventures } from '../../../../imports/api/adventure/adventure.js';
 import { AdventureStates } from '../../../../imports/api/adventure/adventure_state.js';
-import { Nodes } from '../../../../imports/api/node/node.js';
+import { Nodes } from '../../../../imports/api/nodes/nodes.js';
 import { TestSystems } from '../../../../imports/api/test_system/test_system.js';
 import { Util } from '../../../../imports/api/util.js';
 
-var debug = false;
+var debug          = true,
+    detailsOverlay = {
+      minWidth: 600,
+      maxWidth: 1200
+    };
 
 export class AdventureContext {
   /**
@@ -69,6 +73,7 @@ export class AdventureContext {
       let adventureId = FlowRouter.getParam("adventureId");
       
       if (instance.subscriptionsReady()) {
+        debug && console.log("AdventureContext subscriptions ready");
         let adventure = Adventures.findOne(adventureId);
         context.adventure.set(adventure);
       }
@@ -151,7 +156,7 @@ export class AdventureContext {
     
     // Monitor screen resizing
     instance.autorun(() => {
-      debug &&console.log("AdventureContext.resize autorun");
+      debug && console.log("AdventureContext.resize autorun");
       var resize = Session.get("resize");
       context.updateViewport();
     });
@@ -172,19 +177,29 @@ export class AdventureContext {
             windowSize        = Session.get("resize");
         
         highlightElements.forEach((element, i) => {
-          element.index        = i;
-          element.context      = context;
-          element.localBounds  = {
+          element.index       = i;
+          element.context     = context;
+          element.localBounds = {
             top   : parseInt((element.bounds.top - remoteScroll.y + element.bounds.scrollY) * aspectRatio),
             left  : parseInt((element.bounds.left - remoteScroll.x + element.bounds.scrollX) * aspectRatio),
             height: parseInt(element.bounds.height * aspectRatio),
             width : parseInt(element.bounds.width * aspectRatio)
           };
-          element.detailBounds = {
-            top     : localViewport.top + element.localBounds.top + element.localBounds.height + 5,
-            left    : localViewport.left + element.localBounds.left,
-            maxWidth: Math.min(localViewport.width, windowSize.width - localViewport.left)
-          };
+          
+          // Place the details overlay based on the position and width
+          if ((localViewport.left + element.localBounds.left + detailsOverlay.maxWidth) > localViewport.width) {
+            element.detailBounds = {
+              top     : localViewport.top + element.localBounds.top + element.localBounds.height + 5,
+              right   : windowSize.width - (localViewport.left + localViewport.width),
+              maxWidth: Math.min(localViewport.width, detailsOverlay.maxWidth)
+            };
+          } else {
+            element.detailBounds = {
+              top     : localViewport.top + element.localBounds.top + element.localBounds.height + 5,
+              left    : localViewport.left + element.localBounds.left,
+              maxWidth: Math.min(localViewport.width, windowSize.width - localViewport.left, detailsOverlay.maxWidth)
+            };
+          }
           
           // get the hierarchy
           if (element.parent) {
@@ -225,8 +240,8 @@ export class AdventureContext {
    */
   updateViewport () {
     debug && console.log("AdventureContext.updateViewport");
-    let context               = this,
-        remoteScreen          = $(".remote-screen");
+    let context      = this,
+        remoteScreen = $(".remote-screen");
     if (remoteScreen.length) {
       let parent      = remoteScreen.offsetParent(),
           borderWidth = parseInt(remoteScreen.css("border-width")),
@@ -237,11 +252,11 @@ export class AdventureContext {
             parentOffset: parent.offset(),
             borderWidth : borderWidth
           };
-  
+      
       debug && console.log("AdventureContext.updateViewport remote screen dimensions:", remoteScreen.width(), remoteScreen.height());
       debug && console.log("AdventureContext.updateViewport borderWidth:", borderWidth);
       debug && console.log("AdventureContext.updateViewport viewport:", viewport);
-          
+      
       viewport.parentOffset.height = parent.height();
       viewport.parentOffset.width  = parent.width();
       
@@ -369,7 +384,7 @@ export class AdventureContext {
       locationContainer.slideDown(250, callback);
     } else if (toggle) {
       locationContainer.slideUp(250, callback);
-    } else if(callback) {
+    } else if (callback) {
       callback()
     }
   }
@@ -392,7 +407,7 @@ export class AdventureContext {
       actionsContainer.slideDown(250, callback);
     } else if (toggle) {
       actionsContainer.slideUp(250, callback);
-    } else if(callback) {
+    } else if (callback) {
       callback()
     }
   }
@@ -410,7 +425,7 @@ export class AdventureContext {
       locationContainer.slideUp(250, callback);
     } else if (actionsIsVisible) {
       actionsContainer.slideDown(250, callback);
-    } else if(callback) {
+    } else if (callback) {
       callback()
     }
   }

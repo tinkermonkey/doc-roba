@@ -2,7 +2,7 @@
   {{#unless placeholder}}
     <div id="adventure-highlight-detail-{{index}}"
          class="adventure-highlight-detail"
-         style="{{#with detailBounds}}top: {{top}}px; left: {{left}}px; max-width: {{maxWidth}}px;{{/with}}">
+         style="{{#with detailBounds}}top: {{top}}px; {{#if left}}left: {{left}}px;{{else}} right: {{right}}px;{{/if}} max-width: {{maxWidth}}px;{{/with}}">
       {{> HighlightElementToolbar detailContext}}
       {{#each hierarchyElements}}
         {{> HighlightElementDetailRow highlightElement=this detailContext=detailContext}}
