@@ -38,7 +38,8 @@ export const PlatformViewport = new SimpleSchema({
   },
   aspectRatio     : {
     type   : Number,
-    decimal: true
+    decimal: true,
+    optional: true
   },
   // Mark the default viewport for a platform
   default: {
