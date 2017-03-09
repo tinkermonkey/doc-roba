@@ -1,6 +1,7 @@
 import './platform_operating_systems.html';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
+import { PlatformConfigurations } from '../../../../../../imports/api/platform_configuration/platform_configuration.js';
 import { PlatformOperatingSystems } from '../../../../../../imports/api/platform_configuration/platform_operating_system.js';
 import '../../../../components/editable_fields/editable_icon_selector/editable_icon_selector.js';
 
@@ -36,6 +37,23 @@ Template.PlatformOperatingSystems.events({
           });
         }
     );
+  },
+  "click .btn-add-os"(e, instance){
+    let platformId = $(e.target).closest(".btn-add-os").attr("data-pk");
+    if(platformId){
+      let platformConfig = PlatformConfigurations.findOne(platformId);
+      PlatformOperatingSystems.insert({
+        projectId: platformConfig.projectId,
+        projectVersionId: platformConfig.projectVersionId,
+        platformId: platformId,
+        title: 'New OS',
+        versions: ['OS Version']
+      }, function (error, response) {
+        if (error) {
+          RobaDialog.error("Adding os failed: " + error.message);
+        }
+      });
+    }
   }
 });
 
