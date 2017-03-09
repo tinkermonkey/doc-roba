@@ -1,7 +1,7 @@
 import './adventure_selector_action_menu.html';
 import { Template } from 'meteor/templating';
-import { NodeReadyCheckFns } from '../../../../../imports/api/node/node_ready_check_fns.js';
-import { NodeValidCheckFns } from '../../../../../imports/api/node/node_valid_check_fns.js';
+import { NodeReadyCheckFns } from '../../../../../imports/api/nodes/node_ready_check_fns.js';
+import { NodeValidCheckFns } from '../../../../../imports/api/nodes/node_valid_check_fns.js';
 import './adventure_selector_action_target_menu.js';
 
 /**
@@ -16,7 +16,9 @@ Template.AdventureSelectorActionMenu.helpers({
   },
   getSelector () {
     let selector = this.selector;
-    return selector.selector || selector;
+    if(selector){
+      return selector.selector || selector;
+    }
   }
 });
 
