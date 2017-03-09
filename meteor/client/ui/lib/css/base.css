@@ -176,3 +176,6 @@ h4.section {
 /**
  *
  */
+.roba-popover {
+  overflow: visible;
+}
