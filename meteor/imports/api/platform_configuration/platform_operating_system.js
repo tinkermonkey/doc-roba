@@ -31,7 +31,8 @@ export const PlatformOperatingSystem = new SimpleSchema({
   },
   // OS Versions
   versions        : {
-    type: [ String ]
+    type: [ String ],
+    optional: true
   },
   // OS Icon css class
   iconCss         : {
