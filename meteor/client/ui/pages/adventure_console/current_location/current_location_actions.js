@@ -73,7 +73,7 @@ Template.CurrentLocationActions.events({
   },
   
   /**
-   * Capture edited events for the current actions
+   * Capture edited events for the Nav Menus editor
    * @param e
    * @param instance
    * @param newValue
@@ -88,14 +88,18 @@ Template.CurrentLocationActions.events({
     
     if (dataKey && nodeId) {
       var node = Nodes.findOne({staticId: nodeId});
-      console.log("CurrentLocationActions update: ", dataKey, newValue, nodeId, node._id);
-      update[ "$set" ][ dataKey ] = newValue;
-      Nodes.update(node._id, update, function (error, response) {
-        if (error) {
-          console.error("Failed to update node value: " + error.message);
-          RobaDialog.error("Failed to update node value: " + error.message);
-        }
-      });
+      if(node){
+        console.log("CurrentLocationActions node update: ", dataKey, newValue, nodeId, node._id);
+        update[ "$set" ][ dataKey ] = newValue;
+        Nodes.update(node._id, update, function (error, response) {
+          if (error) {
+            console.error("Failed to update node value: " + error.message);
+            RobaDialog.error("Failed to update node value: " + error.message);
+          }
+        });
+      } else {
+        RobaDialog.error("Failed to update node value: node not found with staticId " + nodeId);
+      }
     } else {
       RobaDialog.error("Failed to update node value: data-key not found");
     }
