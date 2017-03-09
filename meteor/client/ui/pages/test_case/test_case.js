@@ -5,7 +5,7 @@ import { RobaDialog } from 'meteor/austinsand:roba-dialog';
 import { TestCaseStepTypes } from '../../../../imports/api/test_cases/test_case_step_types.js';
 import { TestCases } from '../../../../imports/api/test_cases/test_cases.js';
 import { TestCaseRoles } from '../../../../imports/api/test_cases/test_case_roles.js';
-import { TestCaseSteps } from '../../../../imports/api/test_cases/test_case_step.js';
+import { TestCaseSteps } from '../../../../imports/api/test_cases/test_case_steps.js';
 import './test_case_recent_result_list.js';
 import './test_case_launcher.js';
 import './test_case_role.js';

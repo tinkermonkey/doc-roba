@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
-import {TestSystems} from '../test_system.js';
+import {TestSystems} from '../test_systems.js';
 
 Meteor.methods({
   // Update the status of a helper

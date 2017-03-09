@@ -6,8 +6,8 @@ import { AdventureStates } from '../adventure_states.js';
 import { AdventureSteps } from '../adventure_steps.js';
 import { LogMessages } from '../../log_messages/log_messages.js';
 import { TestAgents } from '../../test_agents/test_agents.js';
-import { TestServers } from '../../test_server/test_server.js';
-import { TestSystems } from '../../test_system/test_system.js';
+import { TestServers } from '../../test_servers/test_servers.js';
+import { TestSystems } from '../../test_systems/test_systems.js';
 
 Meteor.publish('adventure', function (adventureId) {
   console.debug("Publish: adventure", adventureId);

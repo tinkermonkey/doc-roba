@@ -2,7 +2,7 @@ import './version_server_list.html';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
 import { EditableTextField } from 'meteor/austinsand:editable-text-field';
-import { TestServers } from '../../../../../../imports/api/test_server/test_server.js';
+import { TestServers } from '../../../../../../imports/api/test_servers/test_servers.js';
 import '../../../../components/editable_fields/editable_autoform/editable_autoform.js';
 import '../../../../components/editable_fields/editable_checkbox.js';
 

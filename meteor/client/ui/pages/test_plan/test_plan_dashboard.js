@@ -3,7 +3,7 @@ import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Projects } from '../../../../imports/api/projects/projects.js';
 import { ProjectVersions } from '../../../../imports/api/projects/project_versions.js';
-import { TestPlans } from '../../../../imports/api/test_plan/test_plan.js';
+import { TestPlans } from '../../../../imports/api/test_plans/test_plans.js';
 import '../../components/nav_menus/test_plan_nav/test_plan_nav.js';
 import './test_plan.js';
 

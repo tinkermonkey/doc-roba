@@ -8,8 +8,8 @@ import { AdventureStatus } from '../../../../imports/api/adventures/adventure_st
 import { AdventureSteps } from '../../../../imports/api/adventures/adventure_steps.js';
 import { DatastoreRows } from '../../../../imports/api/datastores/datastore_rows.js';
 import { PlatformViewports } from '../../../../imports/api/platform_configurations/platform_viewports.js';
-import { TestServers } from '../../../../imports/api/test_server/test_server.js';
-import { TestSystems } from '../../../../imports/api/test_system/test_system.js';
+import { TestServers } from '../../../../imports/api/test_servers/test_servers.js';
+import { TestSystems } from '../../../../imports/api/test_systems/test_systems.js';
 import '../editable_fields/editable_record_selector.js';
 import '../editable_fields/editable_user_account.js';
 import '../editable_fields/editable_server_selector.js';

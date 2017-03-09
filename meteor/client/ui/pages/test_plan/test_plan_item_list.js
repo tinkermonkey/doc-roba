@@ -2,8 +2,8 @@ import './test_plan_item_list.html';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
-import { TestPlanItems } from '../../../../imports/api/test_plan/test_plan_item.js';
-import { TestRunItemTypes, TestRunItemTypesLookup } from '../../../../imports/api/test_run/test_run_item_types.js';
+import { TestPlanItems } from '../../../../imports/api/test_plans/test_plan_items.js';
+import { TestRunItemTypes, TestRunItemTypesLookup } from '../../../../imports/api/test_runs/test_run_item_types.js';
 import './test_plan_item.js';
 
 /**

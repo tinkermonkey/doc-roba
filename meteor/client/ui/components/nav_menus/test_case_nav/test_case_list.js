@@ -5,7 +5,7 @@ import {Template} from 'meteor/templating';
 import {FlowRouter} from 'meteor/kadira:flow-router';
 
 import {TestCases} from '../../../../../imports/api/test_cases/test_cases.js';
-import {TestGroups} from '../../../../../imports/api/test_cases/test_group.js'
+import {TestGroups} from '../../../../../imports/api/test_cases/test_groups.js'
 
 import './test_case_list_group.js';
 import './test_case_list_item.js';

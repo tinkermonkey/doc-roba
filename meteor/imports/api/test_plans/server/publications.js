@@ -1,7 +1,7 @@
 import {Meteor} from 'meteor/meteor';
 import {Auth} from '../../auth.js';
-import {TestPlans} from '../test_plan.js';
-import {TestPlanItems} from '../test_plan_item.js';
+import {TestPlans} from '../test_plans.js';
+import {TestPlanItems} from '../test_plan_items.js';
 
 Meteor.publish("test_plans", function (projectId, projectVersionId) {
   console.debug("Publish: test_plans");

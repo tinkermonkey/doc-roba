@@ -57,24 +57,24 @@ import '../../api/test_cases/server/publications.js'
 import '../../api/test_cases/server/methods.js'
 
 // Test Plans
-import '../../api/test_plan/server/publications.js'
+import '../../api/test_plans/server/publications.js'
 //import '../../api/test_plan/server/methods.js'
 
 // Test Result
-import '../../api/test_result/server/publications.js'
-import '../../api/test_result/server/methods.js'
+import '../../api/test_results/server/publications.js'
+import '../../api/test_results/server/methods.js'
 
 // Test Run
 //import '../../api/test_run/server/publications.js'
 //import '../../api/test_run/server/methods.js'
 
 // Test Server
-import '../../api/test_server/server/publications.js'
-//import '../../api/test_server/server/methods.js'
+import '../../api/test_servers/server/publications.js'
+//import '../../api/test_servers/server/methods.js'
 
 // Test System
-import '../../api/test_system/server/publications.js'
-import '../../api/test_system/server/methods.js'
+import '../../api/test_systems/server/publications.js'
+import '../../api/test_systems/server/methods.js'
 
 // Users
 import '../../api/users/server/publications.js'

@@ -1,7 +1,7 @@
 import './test_plan_item_test_group.html';
 import { Template } from 'meteor/templating';
 import { TestCases } from '../../../../../imports/api/test_cases/test_cases.js';
-import { TestGroups } from '../../../../../imports/api/test_cases/test_group.js';
+import { TestGroups } from '../../../../../imports/api/test_cases/test_groups.js';
 
 /**
  * Template Helpers

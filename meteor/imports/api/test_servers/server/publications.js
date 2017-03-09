@@ -1,6 +1,6 @@
 import {Meteor} from 'meteor/meteor';
 import {Auth} from '../../auth.js';
-import {TestServers} from '../test_server.js';
+import {TestServers} from '../test_servers.js';
 
 Meteor.publish("test_servers", function (projectId, projectVersionId) {
   console.debug("Publish: test_servers");

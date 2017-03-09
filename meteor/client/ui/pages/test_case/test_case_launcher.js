@@ -5,8 +5,8 @@ import {Template} from 'meteor/templating';
 import {FlowRouter} from 'meteor/kadira:flow-router';
 import {RobaDialog} from 'meteor/austinsand:roba-dialog';
 
-import {TestSystems} from '../../../../imports/api/test_system/test_system.js';
-import {TestServers} from '../../../../imports/api/test_server/test_server.js';
+import {TestSystems} from '../../../../imports/api/test_systems/test_systems.js';
+import {TestServers} from '../../../../imports/api/test_servers/test_servers.js';
 
 import '../../components/editable_fields/editable_server_selector.js';
 import '../../components/editable_fields/editable_user_account.js';

@@ -3,7 +3,7 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Adventures } from '../../../../imports/api/adventures/adventures.js';
 import { AdventureStates } from '../../../../imports/api/adventures/adventure_states.js';
 import { Nodes } from '../../../../imports/api/nodes/nodes.js';
-import { TestSystems } from '../../../../imports/api/test_system/test_system.js';
+import { TestSystems } from '../../../../imports/api/test_systems/test_systems.js';
 import { Util } from '../../../../imports/api/util.js';
 
 var debug          = true,

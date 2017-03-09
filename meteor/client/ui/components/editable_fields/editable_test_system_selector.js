@@ -1,6 +1,6 @@
 import './editable_test_system_selector.html';
 import { Template } from 'meteor/templating';
-import { TestSystems } from '../../../../imports/api/test_system/test_system.js';
+import { TestSystems } from '../../../../imports/api/test_systems/test_systems.js';
 
 /**
  * Template Helpers

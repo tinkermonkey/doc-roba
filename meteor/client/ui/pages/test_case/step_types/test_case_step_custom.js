@@ -3,7 +3,7 @@ import './test_case_step_custom.html';
 import {Blaze} from 'meteor/blaze';
 import {Template} from 'meteor/templating';
 
-import {TestCaseSteps} from '../../../../../imports/api/test_cases/test_case_step.js';
+import {TestCaseSteps} from '../../../../../imports/api/test_cases/test_case_steps.js';
 import {TestCaseStepTypes} from '../../../../../imports/api/test_cases/test_case_step_types.js';
 
 /**

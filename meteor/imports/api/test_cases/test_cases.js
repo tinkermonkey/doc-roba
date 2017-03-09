@@ -8,11 +8,11 @@ import {TestCaseRun} from './test_case_run.js';
 import {TestCaseRunRole} from './test_case_run_role.js';
 import {TestAgents} from '../test_agents/test_agents.js';
 import {DatastoreRows} from '../datastores/datastore_rows.js';
-import {TestServers} from '../test_server/test_server.js';
-import {TestSystems} from '../test_system/test_system.js';
-import {TestResults} from '../test_result/test_result.js';
-import {TestResultRoles} from '../test_result/test_result_role.js';
-import {TestResultSteps} from '../test_result/test_result_step.js';
+import {TestServers} from '../test_servers/test_servers.js';
+import {TestSystems} from '../test_systems/test_systems.js';
+import {TestResults} from '../test_results/test_results.js';
+import {TestResultRoles} from '../test_results/test_result_roles.js';
+import {TestResultSteps} from '../test_results/test_result_steps.js';
 
 /**
  * Test case

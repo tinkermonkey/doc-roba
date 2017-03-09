@@ -2,8 +2,8 @@ import {Meteor} from 'meteor/meteor';
 import {Auth} from '../../auth.js';
 import {TestCases} from '../test_cases.js';
 import {TestCaseRoles} from '../test_case_roles.js';
-import {TestCaseSteps} from '../test_case_step.js';
-import {TestGroups} from '../test_group.js';
+import {TestCaseSteps} from '../test_case_steps.js';
+import {TestGroups} from '../test_groups.js';
 
 Meteor.publish("test_groups", function (projectId, projectVersionId) {
   console.debug("Publish: test_groups");

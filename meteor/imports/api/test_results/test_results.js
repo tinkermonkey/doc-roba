@@ -4,13 +4,13 @@ import { SchemaHelpers } from '../schema_helpers.js';
 import { Auth } from '../auth.js';
 import { TestResultCodes } from './test_result_codes.js';
 import { TestResultStatus } from './test_result_status.js';
-import { TestResultRoles } from './test_result_role.js';
-import { TestResultSteps } from './test_result_step.js';
+import { TestResultRoles } from './test_result_roles.js';
+import { TestResultSteps } from './test_result_steps.js';
 import { Projects } from '../projects/projects.js';
 import { ProjectVersions } from '../projects/project_versions';
 import { TestCases } from '../test_cases/test_cases.js';
-import { TestServers } from '../test_server/test_server.js';
-import { TestRuns } from '../test_run/test_run.js';
+import { TestServers } from '../test_servers/test_servers.js';
+import { TestRuns } from '../test_runs/test_runs.js';
 import { LogMessages } from '../log_messages/log_messages.js';
 import { Screenshots } from '../screenshots/screenshots.js';
 

@@ -2,7 +2,7 @@ import './version_test_system_list.html';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
 import { EditableTextField } from 'meteor/austinsand:editable-text-field';
-import { TestSystems } from '../../../../../../imports/api/test_system/test_system.js';
+import { TestSystems } from '../../../../../../imports/api/test_systems/test_systems.js';
 import { TestAgentTypes } from '../../../../../../imports/api/test_agents/test_agent_types.js';
 import '../../../../components/editable_fields/editable_checkbox.js';
 import '../../../../components/editable_fields/editable_test_agent_type.js';

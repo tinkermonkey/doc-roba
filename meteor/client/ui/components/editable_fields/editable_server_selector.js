@@ -2,7 +2,7 @@ import './editable_server_selector.html';
 
 import {Template} from 'meteor/templating';
 
-import {TestServers} from '../../../../imports/api/test_server/test_server.js';
+import {TestServers} from '../../../../imports/api/test_servers/test_servers.js';
 
 /**
  * Template Helpers

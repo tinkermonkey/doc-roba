@@ -1,7 +1,7 @@
 import './test_result_step.html';
 import { Template } from 'meteor/templating';
-import { TestResultCodes } from '../../../../imports/api/test_result/test_result_codes.js';
-import { TestResultStatus, TestResultStatusLookup } from '../../../../imports/api/test_result/test_result_status.js';
+import { TestResultCodes } from '../../../../imports/api/test_results/test_result_codes.js';
+import { TestResultStatus, TestResultStatusLookup } from '../../../../imports/api/test_results/test_result_status.js';
 import { TestCaseStepTypes } from '../../../../imports/api/test_cases/test_case_step_types.js';
 import { Util } from '../../../../imports/api/util.js';
 import '../../components/fullscreen_viewer/fullscreen_viewer.js';

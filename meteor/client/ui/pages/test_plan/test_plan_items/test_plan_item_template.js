@@ -1,8 +1,8 @@
 import './test_plan_item_template.html';
 import { Template } from 'meteor/templating';
-import { TestPlans } from '../../../../../imports/api/test_plan/test_plan.js';
-import { TestPlanItems } from '../../../../../imports/api/test_plan/test_plan_item.js';
-import { TestRunItemTypes } from '../../../../../imports/api/test_run/test_run_item_types.js';
+import { TestPlans } from '../../../../../imports/api/test_plans/test_plans.js';
+import { TestPlanItems } from '../../../../../imports/api/test_plans/test_plan_items.js';
+import { TestRunItemTypes } from '../../../../../imports/api/test_runs/test_run_item_types.js';
 
 /**
  * Template Helpers

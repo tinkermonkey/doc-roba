@@ -3,7 +3,7 @@ import './test_case_recent_result_list.html';
 import {Template} from 'meteor/templating';
 import {FlowRouter} from 'meteor/kadira:flow-router';
 
-import {TestResults} from '../../../../imports/api/test_result/test_result.js';
+import {TestResults} from '../../../../imports/api/test_results/test_results.js';
 
 /**
  * Template Helpers

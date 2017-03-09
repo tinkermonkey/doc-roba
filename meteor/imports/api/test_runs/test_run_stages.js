@@ -2,8 +2,8 @@ import {Mongo} from 'meteor/mongo';
 import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import {SchemaHelpers} from '../schema_helpers.js';
 import {Auth} from '../auth.js';
-import {TestResultStatus} from '../test_result/test_result_status.js';
-import {TestResultCodes} from '../test_result/test_result_codes.js';
+import {TestResultStatus} from '../test_results/test_result_status.js';
+import {TestResultCodes} from '../test_results/test_result_codes.js';
 
 /**
  * Test run stage

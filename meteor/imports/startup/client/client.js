@@ -16,9 +16,9 @@ import {DatastoreDataTypes} from '../../api/datastores/datastore_data_types.js';
 import {Nodes} from '../../api/nodes/nodes.js';
 import {Projects} from '../../api/projects/projects.js';
 import {ProjectVersions} from '../../api/projects/project_versions.js';
-import {TestServers} from '../../api/test_server/test_server.js';
+import {TestServers} from '../../api/test_servers/test_servers.js';
 import {TestAgents} from '../../api/test_agents/test_agents.js';
-import {TestSystems} from '../../api/test_system/test_system.js';
+import {TestSystems} from '../../api/test_systems/test_systems.js';
 
 // Enums
 import {AdventureStatus, AdventureStatusLookup} from '../../api/adventures/adventure_status.js';
@@ -35,10 +35,10 @@ import {ReferenceTypes, ReferenceTypesLookup} from '../../api/reference_docs/ref
 import {TestAgentOS, TestAgentOSLookup} from '../../api/test_agents/test_agent_os.js';
 import {TestAgentTypes, TestAgentTypesLookup} from '../../api/test_agents/test_agent_types.js';
 import {TestCaseStepTypes, TestCaseStepTypesLookup} from '../../api/test_cases/test_case_step_types.js';
-import {TestResultCodes, TestResultCodesLookup} from '../../api/test_result/test_result_codes.js';
-import {TestResultStatus, TestResultStatusLookup} from '../../api/test_result/test_result_status.js';
-import {TestRunItemTypes, TestRunItemTypesLookup} from '../../api/test_run/test_run_item_types.js';
-import {TestSystemStatus, TestSystemStatusLookup} from '../../api/test_system/test_system_status.js';
+import {TestResultCodes, TestResultCodesLookup} from '../../api/test_results/test_result_codes.js';
+import {TestResultStatus, TestResultStatusLookup} from '../../api/test_results/test_result_status.js';
+import {TestRunItemTypes, TestRunItemTypesLookup} from '../../api/test_runs/test_run_item_types.js';
+import {TestSystemStatus, TestSystemStatusLookup} from '../../api/test_systems/test_system_status.js';
 
 /**
  * Listen for page resize events

@@ -1,6 +1,6 @@
 import {Meteor} from 'meteor/meteor';
 import {Auth} from '../../auth.js';
-import {TestSystems} from '../test_system.js';
+import {TestSystems} from '../test_systems.js';
 
 Meteor.publish("test_systems", function (projectId, projectVersionId) {
   console.debug("Publish: test_systems");

@@ -3,7 +3,7 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import {SchemaHelpers} from '../schema_helpers.js';
 import {Auth} from '../auth.js';
 import {ChangeTracker} from '../change_tracker/change_tracker.js';
-import {TestCaseSteps} from './/test_case_step.js';
+import {TestCaseSteps} from './test_case_steps.js';
 
 /**
  * Test case role - the actions of one user for a test

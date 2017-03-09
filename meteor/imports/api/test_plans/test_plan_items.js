@@ -2,7 +2,7 @@ import {Mongo} from 'meteor/mongo';
 import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import {SchemaHelpers} from '../schema_helpers.js';
 import {Auth} from '../auth.js';
-import {TestRunItemTypes} from '../test_run/test_run_item_types.js';
+import {TestRunItemTypes} from '../test_runs/test_run_item_types.js';
 
 /**
  * Test Run Template Test - a test setup in a named run config

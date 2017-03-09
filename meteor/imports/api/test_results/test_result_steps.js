@@ -5,7 +5,7 @@ import {TestCaseStepTypes} from '../test_cases/test_case_step_types.js';
 import {TestResultCodes} from './test_result_codes.js';
 import {TestResultStatus} from './test_result_status.js';
 
-import {TestCaseSteps} from '../test_cases/test_case_step.js';
+import {TestCaseSteps} from '../test_cases/test_case_steps.js';
 import {LogMessages} from '../log_messages/log_messages.js';
 import {Screenshots} from '../screenshots/screenshots.js';
 

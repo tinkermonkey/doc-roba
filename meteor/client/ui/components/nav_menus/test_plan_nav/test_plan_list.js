@@ -2,7 +2,7 @@ import './test_plan_list.html';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
-import { TestPlans } from '../../../../../imports/api/test_plan/test_plan.js';
+import { TestPlans } from '../../../../../imports/api/test_plans/test_plans.js';
 import './test_plan_list_item.js';
 
 /**

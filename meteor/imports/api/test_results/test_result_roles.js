@@ -5,9 +5,9 @@ import {TestResultCodes} from './test_result_codes.js';
 import {TestResultStatus} from './test_result_status.js';
 
 import {TestCaseRoles} from '../test_cases/test_case_roles.js';
-import {TestResults} from './test_result.js';
-import {TestResultSteps} from './test_result_step.js';
-import {TestSystems} from '../test_system/test_system.js';
+import {TestResults} from './test_results.js';
+import {TestResultSteps} from './test_result_steps.js';
+import {TestSystems} from '../test_systems/test_systems.js';
 import {TestAgents} from '../test_agents/test_agents.js';
 
 /**
