@@ -11,7 +11,8 @@ Meteor.methods({
    * @param context
    */
   saveScreenshotContext(screenshotId, context) {
-    check(Meteor.user(), Object);
+    console.log("saveScreenshotContext:", screenshotId);
+    //check(Meteor.userId(), String);
     check(screenshotId, String);
     check(context, Object);
     
@@ -26,7 +27,7 @@ Meteor.methods({
    */
   templateCompareScreenshots(baseScreenshotId, compareScreenshotId, forceUpdate) {
     console.log("templateCompareScreenshots:", baseScreenshotId, compareScreenshotId);
-    check(Meteor.user(), Object);
+    check(Meteor.userId(), String);
     check(baseScreenshotId, String);
     check(compareScreenshotId, String);
     
