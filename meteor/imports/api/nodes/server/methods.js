@@ -2,7 +2,7 @@ import {Meteor} from 'meteor/meteor';
 import {check} from 'meteor/check';
 import {Auth} from '../../auth.js';
 import {Actions} from '../../action/action.js';
-import {Nodes} from '../node.js';
+import {Nodes} from '../nodes.js';
 import {RecordChanges} from '../../change_tracker/record_change.js';
 
 Meteor.methods({

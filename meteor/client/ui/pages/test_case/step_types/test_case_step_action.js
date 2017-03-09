@@ -3,7 +3,7 @@ import './test_case_step_action.html';
 import {Template} from 'meteor/templating';
 
 import {Actions} from '../../../../../imports/api/action/action.js';
-import {Nodes} from '../../../../../imports/api/node/node.js';
+import {Nodes} from '../../../../../imports/api/nodes/nodes.js';
 import {TestCaseSteps} from '../../../../../imports/api/test_case/test_case_step.js';
 import {TestCaseStepTypes} from '../../../../../imports/api/test_case/test_case_step_types.js';
 

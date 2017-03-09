@@ -1,7 +1,7 @@
 import './version_credentials.html';
 import { Template } from 'meteor/templating';
-import { Nodes } from '../../../../../imports/api/node/node.js';
-import { NodeTypes } from '../../../../../imports/api/node/node_types.js';
+import { Nodes } from '../../../../../imports/api/nodes/nodes.js';
+import { NodeTypes } from '../../../../../imports/api/nodes/node_types.js';
 import { Util } from '../../../../../imports/api/util.js';
 import '../../../components/datastores/datastore_data_table.js';
 

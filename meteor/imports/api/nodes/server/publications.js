@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Auth } from '../../auth.js';
-import { Nodes } from '../node.js';
+import { Nodes } from '../nodes.js';
 import { NodeChecks } from '../node_check.js';
 import { NodeTypes } from '../node_types.js';
 

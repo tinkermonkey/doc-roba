@@ -1,7 +1,7 @@
 import { DocTreeConfig } from '../../lib/doc_tree/doc_tree_config.js';
 import { TreeUtils } from './tree_utils.js';
 import { RobaRouter } from '../../../../imports/api/roba_router/roba_router.js';
-import { NodeTypes } from '../../../../imports/api/node/node_types.js';
+import { NodeTypes } from '../../../../imports/api/nodes/node_types.js';
 import RobaContext from '../roba_launcher/roba_context.js';
 
 import '../roba_launcher/roba_launcher.js';

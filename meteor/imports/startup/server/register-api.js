@@ -27,8 +27,8 @@ import '../../api/log_message/server/publications.js'
 import '../../api/log_message/server/methods.js'
 
 // Nodes
-import '../../api/node/server/publications.js'
-import '../../api/node/server/methods.js'
+import '../../api/nodes/server/publications.js'
+import '../../api/nodes/server/methods.js'
 
 // Platform Configuration
 import '../../api/platform_configuration/server/publications.js'
@@ -36,6 +36,9 @@ import '../../api/platform_configuration/server/publications.js'
 // Project
 import '../../api/project/server/publications.js'
 import '../../api/project/server/methods.js'
+
+// Roba Router
+import '../../api/roba_router/server/methods.js'
 
 // Reference Docs
 //import '../../api/reference_doc/server/publications.js'

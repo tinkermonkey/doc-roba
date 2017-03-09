@@ -2,8 +2,8 @@ import { NodeComparisonDatumResult } from './node_comparison_datum_result.js';
 import { NodeSearchResult } from './node_search_result.js';
 import { NodeComparison } from './node_comparison.js';
 import { NodeSearch } from './node_search.js';
-import { Nodes } from '../../api/node/node.js';
-import { NodeTypes } from '../../api/node/node_types.js';
+import { Nodes } from '../nodes/nodes.js';
+import { NodeTypes } from '../nodes/node_types.js';
 
 var debug = false;
 

@@ -18,6 +18,9 @@ import { PlatformViewports } from '../platform_configuration/platform_viewport.j
 import { Projects } from '../project/project.js';
 import { ProjectVersions } from '../project/project_version.js';
 import { PlatformTypes } from '../platform_type/platform_types.js';
+import { EmailPlatformType } from '../../platform_types/email/email_platform_type.js';
+import { MobileAppPlatformType } from '../../platform_types/mobile_app/mobile_app_platform_type.js';
+import { MobileWebPlatformType } from '../../platform_types/mobile_web/mobile_web_platform_type.js';
 import { WebPlatformType } from '../../platform_types/web/web_platform_type.js';
 
 /**
@@ -159,13 +162,15 @@ if (Meteor.isServer) {
    */
   Nodes.createCodeModule = function (node) {
     console.log("Nodes.createCodeModule:", node);
+    // Looks like the help is not available at this point, so pick up the project manually
+    var project = Projects.findOne(node.projectId);
     return CodeModules.insert({
       name                : Util.wordsToCamel(node.title),
       projectId           : node.projectId,
       projectVersionId    : node.projectVersionId,
       parentId            : node.staticId,
       parentCollectionName: 'Nodes',
-      language            : node.project().automationLanguage,
+      language            : project.automationLanguage,
       docs                : 'Code Module for the user type ' + node.title,
       modifiedBy          : node.createdBy,
       createdBy           : node.createdBy
@@ -206,9 +211,10 @@ if (Meteor.isServer) {
           createdBy       : node.createdBy
         }),
         platformConfig   = PlatformConfigurations.findOne(platformConfigId);
+        //nodeObject = Nodes.findOne(node._id);
     
     // Configure the default data for this platformConfig
-    node.platformType().configurePlatformDefaults(platformConfig);
+    //nodeObject.platformType().configurePlatformDefaults(platformConfig);
     return platformConfigId;
   };
   
@@ -230,6 +236,7 @@ if (Meteor.isServer) {
   });
   Nodes.after.update(function (userId, node, changedFields) {
     if (node.type === NodeTypes.userType) {
+      // For user types, keep the data stores and code modules in sync
       if (_.contains(changedFields, "title")) {
         // update the data store title
         Datastores.update({
@@ -240,6 +247,11 @@ if (Meteor.isServer) {
           projectVersionId: node.projectVersionId,
           parentId        : node.staticId
         }, { $set: { name: Util.wordsToCamel(node.title) } });
+      }
+    } else if(node.type === NodeTypes.platform) {
+      // For platforms, check to see if the platform type has changed
+      if(_.contains(changedFields, "config")){
+        // Check to see if it would be appropriate to copy over the default config
       }
     }
   });
@@ -341,6 +353,12 @@ Nodes.helpers({
       switch (parseInt(platform.config.type)) {
         case PlatformTypes.web:
           return WebPlatformType;
+        case PlatformTypes.mobileApp:
+          return MobileAppPlatformType;
+        case PlatformTypes.mobileWeb:
+          return MobileWebPlatformType;
+        case PlatformTypes.email:
+          return EmailPlatformType;
         default:
           console.error("Nodes.platformType unknown platform type:", platform);
       }
@@ -517,6 +535,28 @@ Nodes.helpers({
       selector        : selector,
       order           : checkCount
     }, callback);
+  },
+  
+  /**
+   * Get a node record with a list of checks
+   */
+  withChecks(){
+    var node = this;
+    node.checks = {};
+    _.each(_.keys(NodeCheckTypes), (checkType) => {
+      console.log('Nodes.withChecks of type', checkType, ':', {
+        parentId        : node.staticId,
+        projectVersionId: node.projectVersionId,
+        type            : NodeCheckTypes[checkType]
+      });
+      node.checks[checkType] = NodeChecks.find({
+        parentId        : node.staticId,
+        projectVersionId: node.projectVersionId,
+        type            : NodeCheckTypes[checkType]
+      }, { sort: { order: 1 } }).fetch();
+    });
+    console.log('Nodes.withChecks:', node.staticId, node.title, node.checks);
+    return node;
   }
 });
 

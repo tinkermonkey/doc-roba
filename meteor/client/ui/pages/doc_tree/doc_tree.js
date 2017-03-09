@@ -1,10 +1,10 @@
 import "./doc_tree.html";
 import { Template } from "meteor/templating";
 import { Actions } from "../../../../imports/api/action/action.js";
-import { Nodes } from "../../../../imports/api/node/node.js";
+import { Nodes } from "../../../../imports/api/nodes/nodes.js";
 import { Projects } from "../../../../imports/api/project/project.js";
 import { ProjectVersions } from "../../../../imports/api/project/project_version.js";
-import { NodeTypes } from "../../../../imports/api/node/node_types.js";
+import { NodeTypes } from "../../../../imports/api/nodes/node_types.js";
 import TreeLayout from "../../components/tree_layout/tree_layout.js";
 
 // Collections

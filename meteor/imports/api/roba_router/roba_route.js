@@ -1,7 +1,7 @@
 import { Meteor } from "meteor/meteor";
-import { Nodes } from "../node/node.js";
+import { Nodes } from "../nodes/nodes.js";
 import { Actions } from "../action/action.js";
-import { NodeTypes } from "../node/node_types.js";
+import { NodeTypes } from "../nodes/node_types.js";
 import { DijkstraGraph } from "./dijkstra/graph.js";
 
 /**

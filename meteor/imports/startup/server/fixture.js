@@ -15,12 +15,12 @@ import {DatastoreDataTypeFields}  from '../../api/datastore/datastore_data_type_
 import {DatastoreFields}          from '../../api/datastore/datastore_field.js';
 import {DatastoreRows}            from '../../api/datastore/datastore_row.js';
 import {DriverCommands}           from '../../api/driver_command/driver_command.js';
-import {Nodes}                    from '../../api/node/node.js';
+import {Nodes}                    from '../../api/nodes/nodes.js';
 import {Projects}                 from '../../api/project/project.js';
 import {ProjectVersions}          from '../../api/project/project_version.js';
 import {ReferenceDocs}            from '../../api/reference_doc/reference_doc.js';
 import {Screenshots}              from '../../api/screenshot/screenshot.js';
-import {TestServers}                  from '../../api/test_server/test_server.js';
+import {TestServers}              from '../../api/test_server/test_server.js';
 import {TestAgents}               from '../../api/test_agent/test_agent.js';
 import {TestCases}                from '../../api/test_case/test_case.js';
 import {TestCaseRoles}            from '../../api/test_case/test_case_role.js';

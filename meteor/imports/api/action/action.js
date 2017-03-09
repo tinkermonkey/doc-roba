@@ -5,7 +5,7 @@ import { Auth } from '../auth.js';
 import { ChangeTracker } from '../change_tracker/change_tracker.js';
 import { ActionVariable } from './action_variable.js';
 import { ActionRoute } from './action_route.js';
-import { Nodes } from '../node/node.js';
+import { Nodes } from '../nodes/nodes.js';
 
 /**
  * Automation actions

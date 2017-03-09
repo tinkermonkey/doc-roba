@@ -1,7 +1,7 @@
 import { FieldTypes } from './datastore/field_types.js';
 import { TestAgentOSLookup } from './test_agent/test_agent_os.js';
-import { Nodes } from './node/node.js';
-import { NodeTypes } from './node/node_types.js';
+import { Nodes } from './nodes/nodes.js';
+import { NodeTypes } from './nodes/node_types.js';
 import { TestCaseStepTypes } from './test_case/test_case_step_types.js';
 
 /**

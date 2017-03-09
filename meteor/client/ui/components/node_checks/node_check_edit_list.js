@@ -1,10 +1,10 @@
 import './node_check_edit_list.html';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
-import { NodeChecks } from '../../../../imports/api/node/node_check.js';
-import { NodeCheckTypes, NodeCheckTypesLookup } from '../../../../imports/api/node/node_check_types.js';
-import { NodeReadyCheckFns } from '../../../../imports/api/node/node_ready_check_fns.js';
-import { NodeValidCheckFns } from '../../../../imports/api/node/node_valid_check_fns.js';
+import { NodeChecks } from '../../../../imports/api/nodes/node_check.js';
+import { NodeCheckTypes, NodeCheckTypesLookup } from '../../../../imports/api/nodes/node_check_types.js';
+import { NodeReadyCheckFns } from '../../../../imports/api/nodes/node_ready_check_fns.js';
+import { NodeValidCheckFns } from '../../../../imports/api/nodes/node_valid_check_fns.js';
 import { Util } from '../../../../imports/api/util.js';
 import '../editable_fields/editable_enum selector.js';
 import '../editable_fields/editable_xpath.js';

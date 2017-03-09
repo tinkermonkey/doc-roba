@@ -1,4 +1,4 @@
-import {NodeTypes} from '../../../../imports/api/node/node_types.js';
+import {NodeTypes} from '../../../../imports/api/nodes/node_types.js';
 
 /**
  * Handle all of the accounting for the node-link data structures

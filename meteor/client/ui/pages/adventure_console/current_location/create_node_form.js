@@ -1,8 +1,8 @@
 import './create_node_form.html';
 import { Blaze } from 'meteor/blaze';
 import { Template } from 'meteor/templating';
-import { Nodes } from '../../../../../imports/api/node/node.js';
-import { NodeTypes } from '../../../../../imports/api/node/node_types.js';
+import { Nodes } from '../../../../../imports/api/nodes/nodes.js';
+import { NodeTypes } from '../../../../../imports/api/nodes/node_types.js';
 import { Util } from '../../../../../imports/api/util.js';
 import '../../../components/editable_fields/node_selector/editable_node_selector.js';
 import '../../../components/editable_fields/editable_node_type.js';
