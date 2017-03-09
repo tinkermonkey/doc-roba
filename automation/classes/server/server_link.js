@@ -302,6 +302,7 @@ class ServerLink {
   saveImage (imageFilePath, imageKey) {
     assert(imageFilePath, "saveImage: imageFilePath must not be null");
     assert(imageKey, "saveImage: imageKey must not be null");
+    
     // TODO: I BROKE CONTEXT AND HAVE TO GET IT ELSEWHERE!!!!
     var ddp     = this,
         context = this.context.get();
