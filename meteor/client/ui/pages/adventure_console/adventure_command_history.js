@@ -55,7 +55,7 @@ Template.AdventureCommandHistory.events({
  */
 Template.AdventureCommandHistory.onCreated(() => {
   let instance           = Template.instance();
-  instance.historyLength = new ReactiveVar(10);
+  instance.historyLength = new ReactiveVar(5);
   
   try {
     let editorInstance = Blaze.getView($(".command-editor").get(0)).templateInstance();
