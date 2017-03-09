@@ -2,7 +2,7 @@ import './action_edit_routes.html';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
 import { Actions } from '../../../../imports/api/action/action.js';
-import { Nodes } from '../../../../imports/api/node/node.js';
+import { Nodes } from '../../../../imports/api/nodes/nodes.js';
 import '../editable_fields/node_selector/editable_node_selector.js';
 import '../editable_fields/editable_code/editable_code.js';
 
@@ -49,7 +49,7 @@ Template.ActionEditRoutes.events({
   "click .btn-delete"(e, instance) {
     var route       = this,
         source      = Nodes.findOne({
-          staticId: instance.data.nodeId,
+          staticId        : instance.data.nodeId,
           projectVersionId: instance.data.projectVersionId
         }),
         destination = Nodes.findOne({ staticId: route.nodeId, projectVersionId: instance.data.projectVersionId });
@@ -69,8 +69,7 @@ Template.ActionEditRoutes.events({
           Actions.update(instance.data._id, { $pull: { routes: { order: route.order } } }, function (error, response) {
             RobaDialog.hide();
             if (error) {
-              console.error("Delete failed: ", error);
-              RobaDialog.error(error.message);
+              RobaDialog.error("Delete failed: " + error.message);
             }
           });
         } else {
@@ -95,7 +94,6 @@ Template.ActionEditRoutes.events({
         }
       }, function (error, response) {
         if (error) {
-          console.error("Route insert failed: " + error.message);
           RobaDialog.error("Route insert failed: " + error.message);
         } else {
           // trigger editing on the destination node
@@ -108,6 +106,25 @@ Template.ActionEditRoutes.events({
       console.error("Add Action Route failed: no action found");
       console.log(this);
       RobaDialog.error("Add Action Route failed: no action found");
+    }
+  },
+  "edited .editable"(e, instance, newValue){
+    e.stopImmediatePropagation();
+    var actionRow  = $(e.target).closest(".action-route-row"),
+        dataKey    = $(e.target).attr("data-key"),
+        actionId   = actionRow.attr("data-pk"),
+        routeIndex = actionRow.attr("data-route-index"),
+        update     = { $set: {} };
+    console.log('Edited route:', actionId, routeIndex, dataKey, newValue);
+    
+    if (actionId && routeIndex != undefined) {
+      //update['routes[0].code']
+      update.$set[dataKey] = newValue;
+      Actions.update(actionId, update, function (error) {
+        if (error) {
+          RobaDialog.error("Route update failed: " + error.message);
+        }
+      });
     }
   }
 });
