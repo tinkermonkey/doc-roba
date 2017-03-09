@@ -272,9 +272,14 @@ RobaDriver.prototype.getState = function () {
   };
   
   // get the mouse position
-  state.mouse = this.execute(function () {
-    return roba_driver.mouse
-  });
+  this.injectHelpers();
+  try {
+    state.mouse = this.execute(function () {
+      return roba_driver.mouse
+    });
+  } catch (e) {
+    logger.error('Failed to get mouse position:', e);
+  }
   
   // get the browser and selenium logs
   this.getClientLogs();

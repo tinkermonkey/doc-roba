@@ -28,11 +28,14 @@ class AdventureCommand {
         adventure = command.adventure,
         executor  = new CodeExecutor(command.record.code),
         result;
+  
+    // Inject the helpers
+    adventure.driver.injectHelpers();
     
     // Update the logging context
     adventure.context.update({ adventureCommandId: command.record._id }); // each step handler should further update the context
     adventure.context.milestone({ type: "command", data: command.record });
-    
+  
     // Setup the execution context
     executor.addVariable("driver", adventure.driver);
     
