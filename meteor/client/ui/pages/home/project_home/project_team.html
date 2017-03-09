@@ -20,10 +20,8 @@
             {{/each}}
           </td>
           <td>
-            {{debug "ProjectRoles:" this}}
             {{#each projectRoles}}
               <div>
-                {{debug "ProjectRole:" this}}
                 {{renderLookup "ProjectRolesLookup" this}}
                 {{#if userIsAdmin}}
                   <button class="btn btn-xs btn-primary btn-remove-role">
