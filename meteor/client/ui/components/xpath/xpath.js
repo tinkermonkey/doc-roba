@@ -34,7 +34,7 @@ Template.Xpath.helpers({
       try {
         let xpath = parser.parse(path),
             steps = xpath.expr ? xpath.expr.steps : xpath.steps;
-        console.log("Xpath parsed: ", path, xpath);
+        //console.log("Xpath parsed: ", path, xpath);
         if(steps){
           steps.forEach((step, i) => {
             if(i > 0 && steps[i-1].axis != "descendant-or-self"){
