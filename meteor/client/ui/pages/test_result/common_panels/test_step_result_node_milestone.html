@@ -1,11 +1,11 @@
 <template name="TestResultStepNodeMilestone">
   {{#each checks}}
     <h3>{{node.title}}</h3>
-    
-    {{#if ready.checks.length}}
+  
+    {{#if this.ready.checks.length}}
       <h4>Ready</h4>
       <table class="test-result-check-table">
-        {{#each ready.checks}}
+        {{#each this.ready.checks}}
           <tr>
             <td>
               <div class="test-result-check-command">{{command}}( {{join args}} )</div>
@@ -27,10 +27,10 @@
       </table>
     {{/if}}
     
-    {{#if validation.checks.length}}
+    {{#if this.validation.checks.length}}
       <h4>Valid</h4>
       <table class="test-result-check-table">
-        {{#each validation.checks}}
+        {{#each this.validation.checks}}
           <tr>
             <td>
               <div class="test-result-check-command">{{command}}( {{join args}} )</div>
@@ -44,7 +44,7 @@
             </td>
             <td>
               {{#if result.time}}
-                {{time}} ms
+                {{result.time}} ms
               {{/if}}
             </td>
           </tr>
