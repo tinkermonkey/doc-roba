@@ -64,7 +64,7 @@ export const ProcessLauncher = {
           stdio: [ 'ignore', out, err ]
         });
     
-    console.debug("ProcessLauncher.launchAutomation Launched: " + proc.pid, this.automationPath + command);
+    console.debug("ProcessLauncher.launchAutomation Launched: " + proc.pid, this.automationPath, command);
     
     // Catch the exit
     proc.on("exit", Meteor.bindEnvironment(exitListener || function (code) {
