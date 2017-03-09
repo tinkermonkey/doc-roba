@@ -13,8 +13,23 @@
   color: #ffc100;
 }
 
-.test-result-2 { /** abort **/
+.test-result-3 { /** abort **/
   color: #b8b8b8;
+}
+
+/**
+ * Container styling
+ */
+.round-container-error { /** fail **/
+  background-color: #FF0000;
+}
+
+.round-container-yellow { /** warn **/
+  background-color: #ffc100;
+}
+
+.round-container-grey { /** abort **/
+  background-color: #b8b8b8;
 }
 
 /**
@@ -31,6 +46,10 @@
 /**
  * Test result step "columns"
  */
+.test-result-step-container {
+  min-height: 150px;
+}
+
 .test-result-step-map-col {
   flex: 0 0 125px;
 }
@@ -46,6 +65,7 @@
 .test-result-step-log-col {
   flex: 1 0 auto;
   display: flex;
+  justify-content: flex-end;
 }
 
 /**
@@ -87,7 +107,8 @@
 }
 
 .test-result-log-reveal {
-  color: #ddd;
+  color: #ffffff;
+  background-color: #dddddd;
   padding: 4px;
   border-radius: 5px;
   margin: 0 5px;
@@ -98,20 +119,27 @@
 }
 
 .test-result-log-reveal:hover {
-  color: #fff;
-  background-color: #ddd;
+  background-color: #0A7BFF;
 }
 
+.test-result-step-log {
+  margin-top: 20px;
+  border-top: 2px solid #9b9b9b;
+  padding-top: 5px;
+}
 /**
  * Test result check styling
  */
+.test-result-check-table {
+  width: 100%;
+}
 .test-result-check-table td {
   padding-right: 2px;
 }
 
 .test-result-check-command  {
-  max-width: 300px;
-  display: inline-block;
+  /*max-width: 300px;
+  display: inline-block;*/
   word-break: break-all;
   overflow-wrap: break-word;
   overflow: hidden;
