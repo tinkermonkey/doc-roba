@@ -33,9 +33,11 @@ Template.TestResultStepLog.onRendered(() => {
   console.log("TestResultStepLog.rendered: ", Date.now() - this.startTime);
   let instance = Template.instance();
   instance.autorun(function () {
-    var resize = Session.get("resize");
+    var resize = Session.get("resize"),
+        pageWidth = instance.$(".center-pole-content").width(),
+        contentWidth = instance.$(".roba-round-container-body").width();
     if (resize.width) {
-      instance.maxLogWidth.set(parseInt(resize.width / 3));
+      instance.maxLogWidth.set(parseInt(contentWidth));
     }
   });
 });

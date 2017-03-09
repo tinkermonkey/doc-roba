@@ -7,7 +7,7 @@
         <td class="adventure-log-level log-level-{{level}}">{{level}}</td>
         <td class="adventure-log-sender  no-wrap">{{sender}}</td>
         <td>
-          <div style="width: {{maxLogWidth}}px;">
+          <div style="max-width: {{maxLogWidth}}px;">
             {{#with data}}
               {{> Template.dynamic template=LogMessageData}}
             {{/with}}
