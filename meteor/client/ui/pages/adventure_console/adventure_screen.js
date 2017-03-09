@@ -4,7 +4,8 @@ import { RobaDialog } from 'meteor/austinsand:roba-dialog';
 import { RobaAccordion } from 'meteor/austinsand:roba-accordion';
 import { AdventureStatus } from '../../../../imports/api/adventure/adventure_status.js';
 import { Actions } from '../../../../imports/api/action/action.js';
-import { NodeCheckTypes } from '../../../../imports/api/node/node_check_types.js';
+import { Nodes } from '../../../../imports/api/nodes/nodes.js';
+import { NodeCheckTypes } from '../../../../imports/api/nodes/node_check_types.js';
 import './highlight_elements/highlight_element_toolbar.js';
 import './highlight_elements/click_spot.js';
 import './highlight_elements/highlight_element.js';
@@ -135,31 +136,49 @@ Template.AdventureScreen.events({
         case "action":
           if (targetId) {
             $(".action-control-buttons[data-action-id='" + targetId + "'] .btn-edit-action").trigger("click");
-            setTimeout(function () {
-              let adventureSidebar = $(".adventure-sidebar"),
-                  targetTop        = $(".edit-action-form[data-action-id='" + targetId + "']").offset().top,
-                  currentScroll    = adventureSidebar.scrollTop(),
-                  sidebarTop       = adventureSidebar.offset().top;
-              
-              adventureSidebar
-                  .animate({ scrollTop: targetTop + currentScroll - 10 - sidebarTop }, 200, function () {
-                    var action = Actions.findOne(targetId),
-                        update = { $set: {} };
-                    if (action.code && action.code.length) {
-                      update.$set.code = action.code + "\n" + "driver." + command + "('" + selector + "');";
-                    } else {
-                      update.$set.code = "driver." + command + "('" + selector + "');";
-                    }
-                    Actions.update(targetId, update, function (error, result) {
-                      if (error) {
-                        RobaDialog.error("Failed to update action value: " + error.message);
-                        console.log("Attempted update:", update);
-                      }
-                    });
-                  });
-            }, 250);
+            var action = Actions.findOne(targetId),
+                node   = Nodes.findOne({ $or: [ { _id: nodeId }, { staticId: nodeId } ] }),
+                update = { $set: {} };
+            
+            if (action) {
+              if (action.code && action.code.length) {
+                update.$set.code = action.code + "\n" + "driver." + command + "('" + selector + "');";
+              } else {
+                update.$set.code = "driver." + command + "('" + selector + "');";
+              }
+              Actions.update(targetId, update, function (error, result) {
+                if (error) {
+                  RobaDialog.error("Failed to update action value: " + error.message);
+                  console.log("Attempted update:", update);
+                }
+              });
+            } else {
+              if (node) {
+                update = {
+                  projectId       : node.projectId,
+                  projectVersionId: node.projectVersionId,
+                  nodeId          : node.staticId,
+                  title           : 'New Action',
+                  routes          : [ {
+                    order : 0,
+                    nodeId: node.staticId
+                  } ],
+                  code            : "driver." + command + "('" + selector + "');"
+                };
+                
+                console.log('Inserting new action:', node, update);
+                Actions.insert(update, function (error, result) {
+                  if (error) {
+                    RobaDialog.error("Failed to insert action value: " + error.message);
+                    console.log("Attempted insert:", update);
+                  }
+                });
+              } else {
+                console.error('Could not add action: no node found for', nodeId);
+              }
+            }
+            break;
           }
-          break;
       }
     } else {
       console.error("Menu Select failed: ", commandType, command, nodeId, targetId, selector);
