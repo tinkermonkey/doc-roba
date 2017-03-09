@@ -3,7 +3,7 @@ import { Blaze } from 'meteor/blaze';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
 import { Actions } from '../../../../../imports/api/action/action.js';
-import { Nodes } from '../../../../../imports/api/node/node.js';
+import { Nodes } from '../../../../../imports/api/nodes/nodes.js';
 import './current_location_action_row.js';
 import '../../../components/editable_fields/editable_nav_menu_list.js';
 
@@ -69,6 +69,39 @@ Template.CurrentLocationActions.events({
       });
     } else {
       RobaDialog.error("Adding Action failed, no node found");
+    }
+  },
+  
+  /**
+   * Capture edited events for the Nav Menus editor
+   * @param e
+   * @param instance
+   * @param newValue
+   */
+  "edited .editable" (e, instance, newValue) {
+    e.stopImmediatePropagation();
+    var context = Template.currentData(),
+        nodeId  = context.currentNodeId.get(),
+        target  = $(e.target),
+        dataKey = target.attr("data-key"),
+        update  = { $set: {} };
+    
+    if (dataKey && nodeId) {
+      var node = Nodes.findOne({staticId: nodeId});
+      if(node){
+        console.log("CurrentLocationActions node update: ", dataKey, newValue, nodeId, node._id);
+        update[ "$set" ][ dataKey ] = newValue;
+        Nodes.update(node._id, update, function (error, response) {
+          if (error) {
+            console.error("Failed to update node value: " + error.message);
+            RobaDialog.error("Failed to update node value: " + error.message);
+          }
+        });
+      } else {
+        RobaDialog.error("Failed to update node value: node not found with staticId " + nodeId);
+      }
+    } else {
+      RobaDialog.error("Failed to update node value: data-key not found");
     }
   }
 });

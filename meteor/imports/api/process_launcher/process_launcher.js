@@ -16,7 +16,7 @@ Meteor.startup(() => {
  */
 export const ProcessLauncher = {
   testRoleScript : "roba_test_role.js",
-  adventureScript: "roba_adventure.js",
+  adventureScript: "execute_adventure.js",
   
   /**
    * Initialize the Process Launcher
@@ -64,7 +64,7 @@ export const ProcessLauncher = {
           stdio: [ 'ignore', out, err ]
         });
     
-    console.debug("ProcessLauncher.launchAutomation Launched: " + proc.pid, this.automationPath + command);
+    console.debug("ProcessLauncher.launchAutomation Launched: " + proc.pid, this.automationPath, command);
     
     // Catch the exit
     proc.on("exit", Meteor.bindEnvironment(exitListener || function (code) {

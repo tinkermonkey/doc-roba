@@ -179,7 +179,7 @@ TestCases.helpers({
 
           // snapshot the important data for the test step
           data.action = step.action();
-          data.node = step.firstNode();
+          data.node = step.firstNode().withChecks();
 
           TestResultSteps.insert({
             projectId: testCase.projectId,

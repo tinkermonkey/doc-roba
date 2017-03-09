@@ -29,14 +29,19 @@ Template.registerHelper("xPathTemplate", function () {
  */
 Template.Xpath.helpers({
   steps(){
-    if(this && this.length){
+    var path = this && this.toString();
+    if(path && path.length){
       try {
-        let steps = parser.parse(this).steps;
-        steps.forEach((step, i) => {
-          if(i > 0 && steps[i-1].axis != "descendant-or-self"){
-            step.showDivider = true;
-          }
-        });
+        let xpath = parser.parse(path),
+            steps = xpath.expr ? xpath.expr.steps : xpath.steps;
+        console.log("Xpath parsed: ", path, xpath);
+        if(steps){
+          steps.forEach((step, i) => {
+            if(i > 0 && steps[i-1].axis != "descendant-or-self"){
+              step.showDivider = true;
+            }
+          });
+        }
         return steps
       } catch (e) {
         console.error("Failed to parse Xpath: ", this, e);

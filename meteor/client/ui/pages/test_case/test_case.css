@@ -168,5 +168,14 @@
 .test-case-recent-result-container {
 }
 
+.test-result-row {
+  cursor: pointer;
+  border-radius: 3px;
+}
+
 .test-case-launcher-container {
+}
+
+.test-case-launcher-role {
+  padding-right: 10px;
 }

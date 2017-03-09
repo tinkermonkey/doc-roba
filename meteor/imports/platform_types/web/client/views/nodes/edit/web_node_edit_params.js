@@ -10,7 +10,9 @@ Template.WebNodeEditParams.helpers({});
 /**
  * Template Event Handlers
  */
-Template.WebNodeEditParams.events({});
+Template.WebNodeEditParams.events({
+  
+});
 
 /**
  * Template Created

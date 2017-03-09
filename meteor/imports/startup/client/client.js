@@ -13,7 +13,7 @@ import {DocTreeConfig} from '../../../client/ui/lib/doc_tree/doc_tree_config.js'
 import {Actions} from '../../api/action/action.js';
 import {Datastores} from '../../api/datastore/datastore.js';
 import {DatastoreDataTypes} from '../../api/datastore/datastore_data_type.js';
-import {Nodes} from '../../api/node/node.js';
+import {Nodes} from '../../api/nodes/nodes.js';
 import {Projects} from '../../api/project/project.js';
 import {ProjectVersions} from '../../api/project/project_version.js';
 import {TestServers} from '../../api/test_server/test_server.js';
@@ -27,8 +27,9 @@ import {ChangeTypes, ChangeTypesLookup} from '../../api/change_tracker/change_ty
 import {DatastoreCategories, DatastoreCategoriesLookup} from '../../api/datastore/datastore_catagories.js';
 import {FieldTypes, FieldTypesLookup} from '../../api/datastore/field_types.js';
 import {FunctionParamTypes, FunctionParamTypesLookup} from '../../api/code_module/function_param_types.js';
-import {NodeTypes, NodeTypesLookup} from '../../api/node/node_types.js';
+import {NodeTypes, NodeTypesLookup} from '../../api/nodes/node_types.js';
 import {NodeComparisonDatumResult, NodeComparisonDatumResultLookup} from '../../api/platform_type/node_comparison_datum_result.js';
+import {PlatformTypes, PlatformTypesLookup} from '../../api/platform_type/platform_types.js';
 import {ProjectRoles, ProjectRolesLookup} from '../../api/project/project_roles.js';
 import {ReferenceTypes, ReferenceTypesLookup} from '../../api/reference_doc/reference_types.js';
 import {TestAgentOS, TestAgentOSLookup} from '../../api/test_agent/test_agent_os.js';
@@ -79,6 +80,8 @@ Template.registerHelper("NodeTypes", () => { return NodeTypes });
 Template.registerHelper("NodeTypesLookup", () => { return NodeTypesLookup });
 Template.registerHelper("NodeComparisonDatumResult", () => { return NodeComparisonDatumResult });
 Template.registerHelper("NodeComparisonDatumResultLookup", () => { return NodeComparisonDatumResultLookup });
+Template.registerHelper("PlatformTypes", () => { return PlatformTypes });
+Template.registerHelper("PlatformTypesLookup", () => { return PlatformTypesLookup });
 Template.registerHelper("ProjectRoles", () => { return ProjectRoles });
 Template.registerHelper("ProjectRolesLookup", () => { return ProjectRolesLookup });
 Template.registerHelper("ReferenceTypes", () => { return ReferenceTypes });
@@ -550,7 +553,7 @@ Template.registerHelper("testStepTypeIcon", function (type) {
 });
 
 Template.registerHelper("join", function (list, joint) {
-  joint = joint ? joint : ", ";
+  joint = joint && _.isString(joint) ? joint : ", ";
   if(list){
     return _.filter(list, function (d) {return d != null;}).join(joint);
   }

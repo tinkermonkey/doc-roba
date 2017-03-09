@@ -1,8 +1,8 @@
 import { DocTreeConfig } from "../../lib/doc_tree/doc_tree_config.js";
 import { TreeUtils } from "./tree_utils.js";
 import { Util } from "../../../../imports/api/util.js";
-import { Nodes } from "../../../../imports/api/node/node.js";
-import { NodeTypes, NodeTypesLookup } from "../../../../imports/api/node/node_types.js";
+import { Nodes } from "../../../../imports/api/nodes/nodes.js";
+import { NodeTypes, NodeTypesLookup } from "../../../../imports/api/nodes/node_types.js";
 import { PlatformTypes } from "../../../../imports/api/platform_type/platform_types.js";
 
 import '../edit_panels/edit_node.js';
@@ -741,11 +741,11 @@ export default class TreeNodeHandler {
           return "translate(" + d.x + "," + d.y + ")"
         })
         .attr("opacity", function (d) {
-          return d.parent ? d.parent.visExpanded ? 1 : 0 : 1
+          return d.parent ? (d.parent.visExpanded ? 1 : 0) : 1
         })
         .transition()
         .attr("visibility", function (d) {
-          return d.parent ? d.parent.visExpanded ? "visible" : "hidden" : "visible"
+          return d.parent ? (d.parent.visExpanded ? "visible" : "hidden") : "visible"
         });
   }
   

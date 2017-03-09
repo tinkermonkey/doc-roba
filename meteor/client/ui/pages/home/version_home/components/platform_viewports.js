@@ -1,6 +1,7 @@
 import './platform_viewports.html';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
+import { PlatformConfigurations } from '../../../../../../imports/api/platform_configuration/platform_configuration.js';
 import { PlatformViewports } from '../../../../../../imports/api/platform_configuration/platform_viewport.js';
 import '../../../../components/editable_fields/editable_radio_button.js';
 
@@ -26,9 +27,9 @@ Template.PlatformViewports.events({
     });
   },
   "click .btn-delete"(e, instance){
-    let osId = $(e.target).closest(".sortable-table-row").attr("data-pk");
+    let viewportId = $(e.target).closest(".sortable-table-row").attr("data-pk");
     RobaDialog.ask("Delete Viewport?", "Are you sure that you want to delete this viewport record from this platform?", () => {
-          PlatformViewports.remove(osId, function (error, response) {
+          PlatformViewports.remove(viewportId, function (error, response) {
             RobaDialog.hide();
             if (error) {
               RobaDialog.error("Delete failed: " + error.message);
@@ -36,6 +37,22 @@ Template.PlatformViewports.events({
           });
         }
     );
+  },
+  "click .btn-add-viewport"(e, instance){
+    let platformId = $(e.target).closest(".btn-add-viewport").attr("data-pk");
+    if(platformId){
+      let platformConfig = PlatformConfigurations.findOne(platformId);
+      PlatformViewports.insert({
+        projectId: platformConfig.projectId,
+        projectVersionId: platformConfig.projectVersionId,
+        platformId: platformId,
+        title: 'New Viewport'
+      }, function (error, response) {
+        if (error) {
+          RobaDialog.error("Adding viewport failed: " + error.message);
+        }
+      });
+    }
   }
 });
 

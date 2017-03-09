@@ -8,6 +8,14 @@
     {{/if}}
   </div>
   <div class="search-results">
-    {{> NodeTermSearchResults searchResults}}
+    {{#if searchTerm.length}}
+      {{#if searchResults.length}}
+        {{> NodeTermSearchResults searchResults}}
+      {{else}}
+        <div class="alert alert-warning">No matching nodes</div>
+      {{/if}}
+    {{else}}
+      <div class="alert alert-info">Enter a search term</div>
+    {{/if}}
   </div>
 </template>

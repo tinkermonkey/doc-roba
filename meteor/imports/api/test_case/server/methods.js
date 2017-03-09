@@ -11,7 +11,7 @@ Meteor.methods({
    */
   deleteTestCase(testCase) {
     console.debug("deleteTestCase: " + testCase._id);
-    check(Meteor.user(), Object);
+    check(Meteor.userId(), String);
     check(testCase, Object);
     check(testCase.projectId, String);
     check(testCase.projectVersionId, String);
@@ -40,7 +40,7 @@ Meteor.methods({
    */
   deleteTestCaseRole(role) {
     console.debug("deleteTestCaseRole: " + role._id);
-    check(Meteor.user(), Object);
+    check(Meteor.userId(), String);
     check(role, Object);
     check(role._id, String);
     
@@ -58,7 +58,7 @@ Meteor.methods({
    */
   validateTestCaseRunConfig(testCaseId, config) {
     console.info("validateTestCaseRunConfig: " + testCaseId);
-    check(Meteor.user(), Object);
+    check(Meteor.userId(), String);
     check(testCaseId, String);
     check(config, Object);
     
@@ -79,7 +79,7 @@ Meteor.methods({
    */
   prepareTestCaseRun(testCaseId, config) {
     console.info("prepareTestCaseRun: " + testCaseId);
-    check(Meteor.user(), Object);
+    check(Meteor.userId(), String);
     check(testCaseId, String);
     check(config, Object);
     

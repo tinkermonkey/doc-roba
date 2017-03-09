@@ -4,7 +4,7 @@
 var Future  = require("fibers/future"),
   _         = require("underscore"),
   RobaReady = require("./roba_ready"),
-  RobaValid = require("./roba_valid"),
+  RobaValid = require("./classes/node/valid_checker"),
   assert    = require("assert"),
   log4js    = require("log4js"),
   logger    = log4js.getLogger("previewer"),

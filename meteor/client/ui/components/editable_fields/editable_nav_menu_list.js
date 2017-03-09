@@ -2,8 +2,8 @@ import './editable_nav_menu_list.html';
 
 import {Template} from 'meteor/templating';
 
-import {Nodes} from '../../../../imports/api/node/node.js';
-import {NodeTypes} from '../../../../imports/api/node/node_types.js';
+import {Nodes} from '../../../../imports/api/nodes/nodes.js';
+import {NodeTypes} from '../../../../imports/api/nodes/node_types.js';
 
 /**
  * Template Helpers

@@ -1,8 +1,10 @@
 import './test_result_step.html';
-import {Template} from 'meteor/templating';
-import {TestResultCodes} from '../../../../imports/api/test_result/test_result_codes.js';
-import {TestCaseStepTypes} from '../../../../imports/api/test_case/test_case_step_types.js';
-import {Util} from '../../../../imports/api/util.js';
+import { Template } from 'meteor/templating';
+import { TestResultCodes } from '../../../../imports/api/test_result/test_result_codes.js';
+import { TestResultStatus, TestResultStatusLookup } from '../../../../imports/api/test_result/test_result_status.js';
+import { TestCaseStepTypes } from '../../../../imports/api/test_case/test_case_step_types.js';
+import { Util } from '../../../../imports/api/util.js';
+import '../../components/fullscreen_viewer/fullscreen_viewer.js';
 import './test_result_step_map.js';
 import './test_result_step_log.js';
 import './test_step_results/test_step_result_node.js';
@@ -25,18 +27,37 @@ Template.TestResultStep.helpers({
     return (list.length - screenshot.index - 1) * screenshotPitch;
   },
   getStepClass() {
+    var cssClass    = 'test-result-step-container ',
+        detailClass = '';
     if (this.resultCode != null && this.resultCode == TestResultCodes.pass) {
-      return Util.testStepContainerClass(this.type)
+      detailClass = Util.testStepContainerClass(this.type)
+    } else if(this.status == TestResultStatus.executing){
+      detailClass = "";
     } else {
       switch (this.resultCode) {
         case TestResultCodes.fail:
-          return "round-container-error";
+          detailClass = "round-container-error";
+          break;
         case TestResultCodes.warn:
-          return "round-container-yellow";
+          detailClass = "round-container-yellow";
+          break;
+        case TestResultCodes.pass:
+          detailClass = "";
+          break;
         default:
-          return "round-container-grey"
+          detailClass = "round-container-grey";
       }
     }
+    return cssClass + detailClass;
+  },
+  hasRun(){
+    return this.resultCode != undefined;
+  },
+  isRunning(){
+    return this.status == TestResultStatus.executing;
+  },
+  getStatusKey(){
+    return TestResultStatusLookup[this.status]
   },
   getStepTemplate() {
     switch (this.type) {
@@ -122,7 +143,6 @@ Template.TestResultStep.events({
         testResultStep = instance.data;
     
     console.log("Screenshot click: ", screenshot, testResultStep);
-    /*
     FullscreenViewer.show({
       contentTemplate: "TestResultScreenshot",
       contentData    : {
@@ -130,7 +150,6 @@ Template.TestResultStep.events({
         testResultStep: testResultStep
       }
     });
-    */
   }
 });
 

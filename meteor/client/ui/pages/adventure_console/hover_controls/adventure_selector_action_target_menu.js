@@ -1,8 +1,8 @@
 import './adventure_selector_action_target_menu.html';
 import { Template } from 'meteor/templating';
 import { Actions } from '../../../../../imports/api/action/action.js';
-import { Nodes } from '../../../../../imports/api/node/node.js';
-import { NodeTypes } from '../../../../../imports/api/node/node_types.js';
+import { Nodes } from '../../../../../imports/api/nodes/nodes.js';
+import { NodeTypes } from '../../../../../imports/api/nodes/node_types.js';
 
 /**
  * Template Helpers

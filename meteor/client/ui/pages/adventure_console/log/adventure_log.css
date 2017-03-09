@@ -122,6 +122,9 @@
   display: inline-block;
   word-break: break-all;
   overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break-wrap: all;
+  white-space: pre-wrap;
   vertical-align: top;
 }
 

@@ -1,13 +1,10 @@
 import './test_case_dashboard.html';
 import './test_case.css';
-
-import {Template} from 'meteor/templating';
-import {FlowRouter} from 'meteor/kadira:flow-router';
-
-import {Projects} from '../../../../imports/api/project/project.js';
-import {ProjectVersions} from '../../../../imports/api/project/project_version.js';
-import {TestCases} from '../../../../imports/api/test_case/test_case.js';
-
+import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/kadira:flow-router';
+import { Projects } from '../../../../imports/api/project/project.js';
+import { ProjectVersions } from '../../../../imports/api/project/project_version.js';
+import { TestCases } from '../../../../imports/api/test_case/test_case.js';
 import '../../components/page_headers/current_project_header.js';
 import '../../components/nav_menus/test_case_nav/test_case_nav.js';
 import './test_case.js';
@@ -26,9 +23,9 @@ Template.TestCaseDashboard.helpers({
     return FlowRouter.getQueryParam("testCaseId")
   },
   testCase() {
-    var testCaseId = FlowRouter.getQueryParam("testCaseId"),
+    var testCaseId       = FlowRouter.getQueryParam("testCaseId"),
         projectVersionId = FlowRouter.getParam("projectVersionId");
-    if(testCaseId && projectVersionId){
+    if (testCaseId && projectVersionId) {
       return TestCases.findOne(testCaseId);
     }
   }
@@ -43,19 +40,19 @@ Template.TestCaseDashboard.events({});
  * Template Created
  */
 Template.TestCaseDashboard.created = function () {
-  let instance = Template.instance();
+  let instance     = Template.instance();
   instance.project = new ReactiveVar();
   instance.version = new ReactiveVar();
-
+  
   instance.autorun(function () {
-    var projectId = FlowRouter.getParam("projectId"),
+    var projectId        = FlowRouter.getParam("projectId"),
         projectVersionId = FlowRouter.getParam("projectVersionId");
     
     instance.subscribe("test_groups", projectId, projectVersionId);
     instance.subscribe("test_cases", projectId, projectVersionId);
     instance.subscribe("actions", projectId, projectVersionId);
     instance.subscribe("nodes", projectId, projectVersionId);
-
+    
     // pull in the project and project version records
     instance.project.set(Projects.findOne(projectId));
     instance.version.set(ProjectVersions.findOne(projectVersionId));
@@ -66,7 +63,7 @@ Template.TestCaseDashboard.created = function () {
  * Template Rendered
  */
 Template.TestCaseDashboard.rendered = function () {
-
+  
 };
 
 /**

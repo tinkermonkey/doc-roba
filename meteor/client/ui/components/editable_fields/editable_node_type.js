@@ -3,7 +3,7 @@ import './editable_node_type.html';
 import {Template} from 'meteor/templating';
 
 import {Util} from '../../../../imports/api/util.js'
-import {NodeTypes, NodeTypesLookup} from '../../../../imports/api/node/node_types.js';
+import {NodeTypes, NodeTypesLookup} from '../../../../imports/api/nodes/node_types.js';
 
 /**
  * Template Helpers

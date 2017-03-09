@@ -6,15 +6,53 @@
     {{#with screenshot}}
       <div class="test-result-screenshot-wrapper hide" style="opacity: 0;">
         <div class="flex">
+          <div>
+            <div style="display: {{#if isMultiLayer}}inherit{{else}}none{{/if}};">
+              <h3>Layers</h3>
+              
+              <table class="test-result-screenshot-comparitor-layers sortable-table">
+                {{#each layers.reverse}}
+                  <tr class="sortable-table-row" data-pk="{{screenshot._id}}">
+                    <td class="drag-handle"><span class="glyphicon glyphicon-record"></span></td>
+                    <td>
+                      <div class="full-width">
+                        <input class="test-result-screenshot-layer-show" type="checkbox" checked="checked">
+                        {{#if isBaseImage}}
+                          Screenshot
+                        {{else}}
+                          {{dateFormat screenshot.uploadedAt}}
+                          <button class="btn btn-xs btn-primary btn-reload-comparison">
+                            <span class="glyphicon glyphicon-refresh"></span>
+                          </button>
+                        {{/if}}
+                      </div>
+                      <div class="full-width form">
+                        <input class="test-result-screenshot-layer-opacity" type="range" value="1.0" min="0" max="1.0"
+                               step="0.01" data-pk="{{screenshot._id}}">
+                      </div>
+                    </td>
+                    <td class="btn-delete">
+                      {{#unless isBaseImage}}
+                        <span class="glyphicon glyphicon-remove"></span>
+                      {{/unless}}
+                    </td>
+                  </tr>
+                {{/each}}
+              </table>
+            </div>
+          </div>
           <div class="test-result-screenshot-buffer-layer">
             <div class="test-result-screenshot-position-layer">
               {{#each layers}}
                 {{#if isBaseImage}}
-                  <img class="test-result-screenshot" src="{{screenshot.url store='screenshots'}}" data-pk="{{screenshot._id}}" style="opacity: 0;">
+                  <img class="test-result-screenshot" src="{{screenshot.url store='screenshots'}}"
+                       data-pk="{{screenshot._id}}" style="opacity: 0;">
                 {{else}}
                   {{#if transform}}
-                    <img class="test-result-screenshot" src="{{screenshot.url store='screenshots'}}" data-pk="{{screenshot._id}}"
-                         style="opacity: 0; left: {{scale transform.x getScale}}px; top: {{scale transform.y getScale}}px;">
+                    <img class="test-result-screenshot" src="{{screenshot.url store='screenshots'}}"
+                         data-pk="{{screenshot._id}}"
+                         style="opacity: 0; left: {{scale transform.x getScale}}px; top: {{scale transform.y
+                                                                                                 getScale}}px;">
                   {{else}}
                     {{> RobaSpinner }}
                   {{/if}}
@@ -34,7 +72,8 @@
                 <div><label>Action:</label> {{data.action.title}}</div>
               {{/if}}
             {{/with}}
-
+          </div>
+          <div style="padding-left: 10px;">
             <h3>Platform</h3>
             <div><label>Browser:</label></div>
             <div><label>Viewport:</label></div>
@@ -48,41 +87,6 @@
                 {{{getScaledDimensions}}}
               </div>
             {{/if}}
-
-
-              <div style="display: {{#if isMultiLayer}}inherit{{else}}none{{/if}};">
-                <h3>Layers</h3>
-
-                <table class="test-result-screenshot-comparitor-layers sortable-table">
-                  {{#each layers.reverse}}
-                    <tr class="sortable-table-row" data-pk="{{screenshot._id}}">
-                      <td class="drag-handle"><span class="glyphicon glyphicon-record"></span></td>
-                      <td>
-                        <div class="full-width">
-                          <input class="test-result-screenshot-layer-show" type="checkbox" checked="checked">
-                          {{#if isBaseImage}}
-                            Screenshot
-                          {{else}}
-                            {{dateFormat screenshot.uploadedAt}}
-                            <button class="btn btn-xs btn-primary btn-reload-comparison">
-                              <span class="glyphicon glyphicon-refresh"></span>
-                            </button>
-                          {{/if}}
-                        </div>
-                        <div class="full-width form">
-                          <input class="test-result-screenshot-layer-opacity" type="range" value="1.0" min="0" max="1.0" step="0.01" data-pk="{{screenshot._id}}">
-                        </div>
-                      </td>
-                      <td class="btn-delete">
-                        {{#unless isBaseImage}}
-                          <span class="glyphicon glyphicon-remove"></span>
-                        {{/unless}}
-                      </td>
-                    </tr>
-                  {{/each}}
-                </table>
-              </div>
-            <div><label></label></div>
           </div>
         </div>
         <div class="flex">

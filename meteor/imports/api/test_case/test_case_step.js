@@ -4,7 +4,7 @@ import {SchemaHelpers} from '../schema_helpers.js';
 import {Auth} from '../auth.js';
 import {ChangeTracker} from '../change_tracker/change_tracker.js';
 import {TestCaseStepTypes} from './test_case_step_types.js';
-import {Nodes} from '../node/node.js';
+import {Nodes} from '../nodes/nodes.js';
 import {Actions} from '../action/action.js';
 
 /**
@@ -84,12 +84,12 @@ ChangeTracker.TrackChanges(TestCaseSteps, "test_case_steps");
  */
 TestCaseSteps.helpers({
   firstNode() {
-    if(this.data.nodeId || this.data.sourceId){
+    if(this.data && (this.data.nodeId || this.data.sourceId)){
       return Nodes.findOne({staticId: this.data.nodeId || this.data.sourceId, projectVersionId: this.projectVersionId});
     }
   },
   action() {
-    if(this.data.actionId){
+    if(this.data && this.data.actionId){
       return Actions.findOne({staticId: this.data.actionId, projectVersionId: this.projectVersionId});
     }
   }

@@ -8,7 +8,7 @@ import {CodeModuleFunctions} from './code_module_function.js';
 import {CodeLanguages} from './code_languages.js';
 
 // List the collections that can be parents to code modules for retrieving parent records
-import {Nodes} from '../node/node.js';
+import {Nodes} from '../nodes/nodes.js';
 import {ProjectVersion} from '../project/project_version.js';
 
 /**

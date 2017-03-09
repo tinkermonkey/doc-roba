@@ -1,10 +1,10 @@
 import "./doc_tree.html";
 import { Template } from "meteor/templating";
 import { Actions } from "../../../../imports/api/action/action.js";
-import { Nodes } from "../../../../imports/api/node/node.js";
+import { Nodes } from "../../../../imports/api/nodes/nodes.js";
 import { Projects } from "../../../../imports/api/project/project.js";
 import { ProjectVersions } from "../../../../imports/api/project/project_version.js";
-import { NodeTypes } from "../../../../imports/api/node/node_types.js";
+import { NodeTypes } from "../../../../imports/api/nodes/node_types.js";
 import TreeLayout from "../../components/tree_layout/tree_layout.js";
 
 // Collections
@@ -43,7 +43,7 @@ Template.DocTree.created = function () {
     
     // Core data
     instance.subscribe("nodes", projectId, projectVersionId);
-    instance.subscribe("node_checks", projectId, projectVersionId);
+    instance.subscribe("all_node_checks", projectId, projectVersionId);
     instance.subscribe("actions", projectId, projectVersionId);
   
     // Datastores
@@ -242,7 +242,12 @@ Template.DocTree.rendered = function () {
         actions = Actions.find({ projectVersionId: version._id });
     
     // Maintain the tree
-    instance.maintainTree(project, version, nodes, actions);
+    if(instance.subscriptionsReady()){
+      console.log('DocTree autorun - subscriptions ready')
+      instance.maintainTree(project, version, nodes, actions);
+    } else {
+      console.log('DocTree autorun - subscriptions not ready')
+    }
   });
   
   // respond to resize events

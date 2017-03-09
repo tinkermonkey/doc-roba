@@ -49,6 +49,7 @@ Template.EditableNodeSelector.rendered = function () {
   
   // this event listener needs to be registered directly
   instance.$(".editable").on("hidden", function () {
+    console.log("EditableNodeSelector .editable hidden: ", instance.searchView);
     if (instance.searchView) {
       setTimeout(function () {
         Blaze.remove(instance.searchView);
@@ -58,6 +59,7 @@ Template.EditableNodeSelector.rendered = function () {
   
   instance.autorun(function () {
     var data = Template.currentData();
+    console.log("EditableNodeSelector autorun setting value: ", data.value);
     instance.$(".editable").editable("setValue", data.value);
   });
 };

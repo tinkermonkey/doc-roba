@@ -3,7 +3,7 @@
     <ul class="dropdown-menu">
       <li class="dropdown-submenu">
         <a>Node</a>
-        <ul class="dropdown-menu">
+        <ul class="dropdown-menu" data-node-id="{{node._id}}">
           {{#each getActions}}
             <li><a data-target-id="{{_id}}">{{title}}</a></li>
           {{/each}}
@@ -15,7 +15,7 @@
       {{#each getNavMenus}}
         <li class="dropdown-submenu">
           <a>{{title}}</a>
-          <ul class="dropdown-menu" data-node-id="{{node._id}}">
+          <ul class="dropdown-menu" data-node-id="{{_id}}">
             {{#each getActions}}
               <li><a data-target-id="{{_id}}">{{title}}</a></li>
             {{/each}}
@@ -26,7 +26,7 @@
       {{/each}}
     </ul>
   {{else}}
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" data-node-id="{{node._id}}">
       {{#each getActions}}
         <li><a data-target-id="{{_id}}">{{title}}</a></li>
       {{/each}}

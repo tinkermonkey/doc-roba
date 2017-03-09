@@ -99,11 +99,12 @@ Template.AdventureLogTable.onCreated(() => {
   instance.autorun(function () {
     // grab the limit
     var limit       = instance.limit.get(),
+        projectId = FlowRouter.getParam("projectId"),
         adventureId = FlowRouter.getParam("adventureId");
     //console.log("Loading [", limit, "] messages");
     
     // Update the subscription
-    var subscription = instance.subscribe("adventure_log", adventureId, limit);
+    var subscription = instance.subscribe("adventure_log", projectId, adventureId, limit);
     
     if (subscription.ready()) {
       if (limit > 0) {

@@ -1,7 +1,7 @@
 import './node_snippet.html';
 import { Template } from 'meteor/templating';
 import { DocTreeConfig } from '../../lib/doc_tree/doc_tree_config.js';
-import { NodeTypes } from '../../../../imports/api/node/node_types.js';
+import { NodeTypes } from '../../../../imports/api/nodes/node_types.js';
 import { Util } from '../../../../imports/api/util.js';
 
 /**
@@ -50,8 +50,9 @@ Template.NodeSnippet.onRendered(() => {
     setTimeout(() => {
       d3.select("#" + instance.elementId)
           .selectAll("text.node-title")
-          .call(Util.wrapSvgText, DocTreeConfig.nodes.width - 2 * DocTreeConfig.nodes.borderWidth);
-    }, 100);
+          .call(Util.wrapSvgText, DocTreeConfig.nodes.width - 2 * DocTreeConfig.nodes.borderWidth)
+          .classed('pre-render', false);
+    }, 30);
   });
 });
 

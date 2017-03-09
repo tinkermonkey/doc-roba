@@ -32,8 +32,9 @@ Template.AdventureLogEmbedded.onCreated(() => {
   let instance = Template.instance();
   
   instance.autorun(function () {
-    let data = Template.currentData();
-    instance.subscribe("adventure_log", data.adventure.get()._id);
+    let data = Template.currentData(),
+        adventure = data.adventure.get();
+    instance.subscribe("adventure_log", adventure.projectId, adventure._id);
   });
 });
 

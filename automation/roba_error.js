@@ -3,14 +3,14 @@
  */
 var RobaError = function (error) {
   var robaError = this;
-
+  
   try {
     robaError.message = error.message;
     robaError.arguments = error.arguments;
     robaError.type = error.type;
     robaError.name = error.name;
     robaError.stack = error.stack;
-
+    
     // clean things up a bit
     if(robaError.message){
       robaError.message = robaError.message.replace(/[\r\n]/g, '<br>');
@@ -24,7 +24,7 @@ var RobaError = function (error) {
   } catch(e) {
     console.error("RobaError constructor failed: " + e.toString());
   }
-
+  
   return robaError;
 };
 

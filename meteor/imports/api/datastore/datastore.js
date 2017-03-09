@@ -9,7 +9,7 @@ import {DatastoreCategories} from './datastore_catagories.js';
 import {DSUtil} from './ds_util.js';
 
 // List the collections that can be parents to datastores for retrieving parent records
-import {Nodes} from '../node/node.js';
+import {Nodes} from '../nodes/nodes.js';
 import {ProjectVersion} from '../project/project_version.js';
 
 /**

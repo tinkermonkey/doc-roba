@@ -2,8 +2,8 @@ import { NodeComparisonDatumResult } from './node_comparison_datum_result.js';
 import { NodeSearchResult } from './node_search_result.js';
 import { NodeComparison } from './node_comparison.js';
 import { NodeSearch } from './node_search.js';
-import { Nodes } from '../../api/node/node.js';
-import { NodeTypes } from '../../api/node/node_types.js';
+import { Nodes } from '../nodes/nodes.js';
+import { NodeTypes } from '../nodes/node_types.js';
 
 var debug = false;
 
@@ -52,18 +52,26 @@ export class NodeComparitor {
   searchByTerm (searchTerm, projectVersionId) {
     debug && console.log("NodeComparitor.searchByTerm:", searchTerm, projectVersionId);
     var self         = this,
-        searchResult = new NodeSearch();
+        searchResult = new NodeSearch(),
+        searchQuery  = {
+          projectVersionId: projectVersionId,
+          type            : { $in: [ NodeTypes.page, NodeTypes.view ] },
+          title           : { $regex: searchTerm, $options: "i" }
+        };
     
     // go through each node and score it against the current url
-    Nodes.find({
-      projectVersionId: projectVersionId,
-      type            : { $in: [ NodeTypes.page, NodeTypes.view ] },
-      title           : { $regex: searchTerm, $options: "i" },
-    }).forEach(function (node) {
-      let nodeResult = new NodeSearchResult(node);
-      nodeResult.addComparison('title', new NodeComparison(searchTerm, node.title).textComparison());
-      searchResult.push(nodeResult);
-    });
+    if(searchTerm.length){
+      debug && console.log('NodeComparitor.searchByTerm query:', searchQuery);
+      Nodes.find(searchQuery).forEach(function (node) {
+        debug && console.log('NodeComparitor.searchByTerm match:', node);
+    
+        let nodeResult = new NodeSearchResult(node);
+        nodeResult.addComparison('title', new NodeComparison(searchTerm, node.title).textComparison());
+        searchResult.addResult(nodeResult);
+      });
+    } else {
+      debug && console.log("NodeComparitor.searchByTerm aborted due to empty searchTerm");
+    }
     
     return searchResult;
   }

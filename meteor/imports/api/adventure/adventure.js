@@ -3,7 +3,7 @@ import {SimpleSchema} from 'meteor/aldeed:simple-schema';
 import {SchemaHelpers} from '../schema_helpers.js';
 import {Auth} from '../auth.js';
 import {AdventureStatus} from './adventure_status.js';
-import {Nodes} from '../node/node.js';
+import {Nodes} from '../nodes/nodes.js';
 
 /**
  * A single excursion into the AUT

@@ -8,7 +8,7 @@ Meteor.publish("projects", function (projectList) {
   console.debug("Publish: projects", projectList, this.userId);
   if(this.userId ){
     let user = Meteor.users.findOne(this.userId );
-    console.log("Getting projects for ", this.userId , Projects.find({_id: {$in: user.projectList || [] }, active: true}).fetch());
+    //console.log("Getting projects for ", this.userId , Projects.find({_id: {$in: user.projectList || [] }, active: true}).fetch());
     return Projects.find({_id: {$in: user.projectList || [] }, active: true});
   }
   console.warn("Publish: projects returning nothing");

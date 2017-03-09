@@ -4,8 +4,8 @@ import './edit_node.css';
 import {Template} from 'meteor/templating';
 import {RobaDialog} from 'meteor/austinsand:roba-dialog';
 
-import {Nodes} from '../../../../imports/api/node/node.js';
-import {NodeTypes} from '../../../../imports/api/node/node_types.js';
+import {Nodes} from '../../../../imports/api/nodes/nodes.js';
+import {NodeTypes} from '../../../../imports/api/nodes/node_types.js';
 
 import './root_edit_panel.js';
 import './user_type_edit_panel.js';

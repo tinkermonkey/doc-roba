@@ -4,8 +4,8 @@ import { Blaze } from 'meteor/blaze';
 import { Template } from 'meteor/templating';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
 import { AdventureStatus } from '../../../../../imports/api/adventure/adventure_status.js';
-import { Nodes } from '../../../../../imports/api/node/node.js';
-import { NodeCheckTypes } from '../../../../../imports/api/node/node_check_types.js';
+import { Nodes } from '../../../../../imports/api/nodes/nodes.js';
+import { NodeCheckTypes } from '../../../../../imports/api/nodes/node_check_types.js';
 import '../../../components/editable_fields/editable_node_type.js';
 import '../../../components/editable_fields/editable_code/editable_code.js';
 import '../../../components/editable_fields/node_selector/editable_node_selector.js';
@@ -114,12 +114,14 @@ Template.CurrentLocation.events({
    * @param e
    * @param instance
    */
-  "click .btn-create-node" (e, instance) {
+  "click .btn-add-node" (e, instance) {
+    console.log('CurrentLocation click btn-add-node');
+    
     // Show the form
     instance.$(".create-node-form").removeClass("hide");
     
     // Hide the buttons
-    instance.$(".btn-create-node").addClass("hide");
+    instance.$(".btn-add-node").addClass("hide");
     
     // Hide the search results
     //instance.$(".node-url-search").addClass("hide");
@@ -149,7 +151,7 @@ Template.CurrentLocation.events({
     instance.$(".create-node-form").addClass("hide");
     
     // Show the buttons
-    instance.$(".btn-create-node").removeClass("hide");
+    instance.$(".btn-add-node").removeClass("hide");
     
     // Show the search results
     //instance.$(".node-url-search").removeClass("hide");
@@ -217,34 +219,6 @@ Template.CurrentLocation.events({
   },
   
   /**
-   * Capture edited events for the current node
-   * @param e
-   * @param instance
-   * @param newValue
-   */
-  "edited .current-location .editable" (e, instance, newValue) {
-    e.stopImmediatePropagation();
-    var nodeId  = $(e.target).closest(".current-location").attr("data-node-id"),
-        target  = $(e.target),
-        dataKey = target.attr("data-key"),
-        update  = { $set: {} };
-    
-    console.log("NodeEditForm update: ", dataKey, nodeId);
-    if (dataKey) {
-      update[ "$set" ][ dataKey ] = newValue;
-      //console.log("Edited: ", dataKey, newValue, node);
-      Nodes.update(nodeId, update, function (error) {
-        if (error) {
-          console.error("Failed to update node value: " + error.message);
-          RobaDialog.error("Failed to update node value: " + error.message);
-        }
-      });
-    } else {
-      RobaDialog.error("Failed to update node value: data-key not found");
-    }
-  },
-  
-  /**
    * Capture a forced change of node context
    * @param e
    * @param instance
@@ -259,7 +233,39 @@ Template.CurrentLocation.events({
   },
   
   /**
-   * TBD
+   * Capture edited events for the current actions
+   * @param e
+   * @param instance
+   * @param newValue
+   */
+  "edited .editable" (e, instance, newValue) {
+    e.stopImmediatePropagation();
+    var context = Template.currentData(),
+        nodeId  = context.currentNodeId.get(),
+        target  = $(e.target),
+        dataKey = target.attr("data-key"),
+        update  = { $set: {} };
+    
+    if (dataKey && nodeId) {
+      var node = Nodes.findOne({staticId: nodeId});
+      if(node){
+        console.log("CurrentLocation node update: ", dataKey, newValue, nodeId, node._id);
+        update[ "$set" ][ dataKey ] = newValue;
+        Nodes.update(node._id, update, function (error, response) {
+          if (error) {
+            RobaDialog.error("Failed to update node value: " + error.message);
+          }
+        });
+      } else {
+        RobaDialog.error("Failed to update node value: node not found with staticId " + nodeId);
+      }
+    } else {
+      RobaDialog.error("Failed to update node value: data-key not found");
+    }
+  },
+  
+  /**
+   * Preview the node checks (highlight the elements and show an icon explaining what they do)
    * @param e
    * @param instance
    */

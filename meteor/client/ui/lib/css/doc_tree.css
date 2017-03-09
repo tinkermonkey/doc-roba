@@ -53,7 +53,7 @@
 }
 
 .node-selected {
-  stroke: #efff29;
+  stroke: #7eff00;
   filter: url(#node-hover);
 }
 
@@ -77,6 +77,10 @@
 .node-title {
   text-anchor: middle;
   font-weight: 100;
+}
+
+.node-title.pre-render {
+  opacity: 0;
 }
 
 /**

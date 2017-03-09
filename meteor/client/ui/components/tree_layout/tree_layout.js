@@ -1104,6 +1104,8 @@ export default class TreeLayout {
    * Recalculate the content bounds based on the root node
    */
   updateContentBounds () {
+    console.debug('TreeLayout.updateContentBounds');
+    
     // TODO: Make this work with multiple root nodes
     var rootNode = this.nodeHandler.getRootNodes()[ 0 ];
     

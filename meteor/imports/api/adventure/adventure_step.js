@@ -44,6 +44,7 @@ export const AdventureStep = new SimpleSchema({
     optional: true
   }
 });
+
 export const AdventureSteps = new Mongo.Collection("adventure_steps");
 AdventureSteps.attachSchema(AdventureStep);
 AdventureSteps.deny(Auth.ruleSets.deny.ifNoProjectAccess);

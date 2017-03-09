@@ -11,11 +11,11 @@ var Future           = require("fibers/future"),
     moment           = require("moment"),
     ddpAppender      = require("./ddp_appender"),
     DDPLink          = require("./ddp_link"),
-    RobaDriver       = require("./roba_driver"),
+    RobaDriver       = require("./classes/driver/roba_driver"),
     RobaError        = require("./roba_error"),
-    RobaReady        = require("./roba_ready"),
-    RobaValid        = require("./roba_valid"),
-    RobaContext      = require("./roba_context"),
+    RobaReady        = require("./classes/node/ready_checker"),
+    RobaValid        = require("./classes/node/valid_checker"),
+    RobaContext      = require("./classes/roba_context"),
     argv             = require("minimist")(process.argv.slice(2)),
     testResultRoleId = argv.roleId,
     singleUseToken   = argv.token,
@@ -171,6 +171,17 @@ function ExecuteTestRole () {
   driver.timeoutsImplicitWait(100);
   driver.timeoutsAsyncScript(20000); // don't rely on this, and we don't want it getting in the way
   
+  // Set the viewport if it's specified
+  if (test.viewport) {
+    logger.debug('Setting viewport:', test.viewport);
+    try {
+      var viewport = test.viewport;
+      driver.windowHandleSize({ width: viewport.width, height: viewport.height })
+    } catch (e) {
+      logger.error('Setting viewport failed:', e.toString(), e.stack);
+    }
+  }
+  
   // pull out the data context
   account = test.role.dataContext.account;
   server  = test.server;
@@ -184,6 +195,8 @@ function ExecuteTestRole () {
     } catch (e) {
       logger.error("Setting viewport failed:", e.toString(), e.stack);
     }
+  } else {
+    driver.windowHandleSize({width: 1600, height: 900})
   }
   
   // update the step_types status' to queued
@@ -523,11 +536,23 @@ function ValidateNode (node) {
   driver.injectHelpers();
   
   // wait for the node to load
-  if (node.readyCode) {
-    var ready = new RobaReady(driver);
-    logger.debug("Waiting for node to be ready: ", node.readyCode);
+  if (node.readyCode || (node.checks && node.checks.ready && node.checks.ready.length)) {
+    var ready = new RobaReady(driver),
+        readyCode = node.readyCode || '';
     try {
-      eval(node.readyCode);
+      readyCode += readyCode.length ? "\n" : '';
+      
+      // Compile the quick checks
+      if(node.checks && node.checks.ready && node.checks.ready.length){
+        node.checks.ready.forEach((check) => {
+          readyCode += 'ready.' + check.checkFn + '("' + check.selector.replace(/"/g, '\\"') + '")' + ";\n";
+        });
+      }
+      
+      // Execute custom code
+      logger.debug("Waiting for node to be ready: ", node.readyCode, readyCode);
+      eval(readyCode);
+      
       result.isReady = ready.check();
       logger.debug("Ready Code result: ", result.isReady);
     } catch (e) {
@@ -548,11 +573,24 @@ function ValidateNode (node) {
   }
   
   // validate the starting point
-  if (node.validationCode && result.isReady) {
-    var valid = new RobaValid(driver);
-    logger.debug("Validating node: ", node.isValid);
+  if ((node.validationCode || (node.checks && node.checks.valid && node.checks.valid.length)) && result.isReady) {
+    var valid = new RobaValid(driver),
+        validCode = node.validationCode || '';
+
     try {
-      eval(node.validationCode);
+      validCode += validCode.length ? "\n" : '';
+  
+      // Compile the quick checks
+      if(node.checks && node.checks.valid && node.checks.valid.length){
+        node.checks.valid.forEach((check) => {
+          validCode += 'valid.' + check.checkFn + '("' + check.selector.replace(/"/g, '\\"') + '")' + ";\n";
+        });
+      }
+  
+      // Execute custom code
+      logger.debug("Waiting for node to be ready: ", node.validationCode, validCode);
+      eval(validCode);
+
       result.isValid = valid.check();
       logger.debug("Validation Code result: ", result.isValid);
     } catch (e) {
