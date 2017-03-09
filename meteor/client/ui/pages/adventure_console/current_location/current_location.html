@@ -1,5 +1,7 @@
 <template name="CurrentLocation">
   {{#with currentNode}}
+    <h3>{{title}}</h3>
+  
     <div class="current-location" data-node-id="{{_id}}" style="display: none;">
       <div class="btn btn-warning pull-right btn-wrong-node"
            data-toggle="popover"

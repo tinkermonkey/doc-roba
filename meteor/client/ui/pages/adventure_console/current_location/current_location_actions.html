@@ -1,7 +1,6 @@
 <template name="CurrentLocationActions">
   <div class="current-location-actions" style="display: none;">
     {{#with currentNode.get}}
-      <h1>{{title}}</h1>
       {{#RobaTabGroup name="current-location-actions" navClass="nav-tabs" }}
         {{#RobaTab name="current-node" title="Current Node"}}
           <h3>Actions for this <span class="dark-blue">{{renderLookup "NodeTypesLookup" type}}</span></h3>
