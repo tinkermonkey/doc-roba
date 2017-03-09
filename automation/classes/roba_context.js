@@ -5,7 +5,7 @@
  */
 var _    = require("underscore"),
     log4js = require("log4js"),
-    logger = log4js.getLogger("milestone");
+    logger = log4js.getLogger("context");
 
 class RobaContext {
   /**
