@@ -1,33 +1,29 @@
 <template name="CreateNodeForm">
   <div class="create-node-form full-width">
     <h4>Define a new node:</h4>
-
+    
     <table>
       <tr>
         <td class="field-label">Parent Node</td>
         <td>
-          {{> EditableNodeSelector value=parentId projectVersionId=adventure.projectVersionId dataKey="parentId" emptyText="Select Parent Node"}}
+          {{> EditableNodeSelector value=record.parentId projectVersionId=record.projectVersionId dataKey="parentId" emptyText="Select Parent Node"}}
         </td>
       </tr>
       <tr>
         <td class="field-label">Type</td>
         <td>
-          {{#with record}}
-            {{> EditableNodeType pageView=true emptyText="Select a node type" dataKey="type" value=type }}
-          {{/with}}
+          {{> EditableNodeType pageView=true emptyText="Select a node type" dataKey="type" value=record.type }}
         </td>
       </tr>
       <tr>
         <td class="field-label">Name</td>
         <td>
-          {{#with record}}
-            {{> EditableTextField emptyText="Enter a name for this node" dataKey="title" value=title }}
-          {{/with}}
+          {{> EditableTextField emptyText="Enter a name for this node" dataKey="title" value=record.title }}
         </td>
       </tr>
       {{> Template.dynamic template=createNodePanel }}
     </table>
-
+    
     <div class="create-node-btn-bar">
       <button class="btn btn-warning btn-cancel-node">Cancel</button>
       <button class="btn btn-success btn-create-node">Create Node</button>

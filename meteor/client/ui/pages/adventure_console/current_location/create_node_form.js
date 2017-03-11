@@ -49,10 +49,10 @@ Template.CreateNodeForm.helpers({
   },
   createNodePanel(){
     let adventure = this.adventure.get(),
-        platform = adventure.platform();
-    if(platform){
+        platform  = adventure.platform();
+    if (platform) {
       let platformType = platform.platformType();
-      if(platformType){
+      if (platformType) {
         return platformType.templates.addNode;
       }
     }
@@ -119,39 +119,108 @@ Template.CreateNodeForm.events({
   },
   "edited .editable" (e, instance, newValue) {
     e.stopImmediatePropagation();
-    var field = $(e.target).attr("data-key");
-    console.log("Edited: ", field, newValue);
+    var field  = $(e.target).attr("data-key"),
+        record = instance.nodeRecord.get();
+    console.log("CreateNodeForm edited: ", field, newValue);
     
-    var record      = instance.nodeRecord.get();
-    record[ field ] = newValue;
-    instance.nodeRecord.set(record);
-    
-    if (field == "url") {
-      instance.$(".url-part").removeClass("selected");
-    } else if (field == "pageTitle") {
-      instance.$(".title-part").removeClass("selected");
+    if (field && record) {
+      record[ field ] = newValue;
+      instance.nodeRecord.set(record);
+      
+      if (field == "url") {
+        instance.$(".url-part").removeClass("selected");
+      } else if (field == "pageTitle") {
+        instance.$(".title-part").removeClass("selected");
+      }
     }
-  }
+  },
+  
+  /**
+   * Cancel the create node form and discard the data
+   * @param e
+   * @param instance
+   */
+  "click .btn-cancel-node" (e, instance) {
+    // Hide the form
+    instance.$(".create-node-form").addClass("hide");
+    
+    // Show the buttons
+    instance.$(".btn-add-node").removeClass("hide");
+    
+    // Show the search results
+    //instance.$(".node-url-search").removeClass("hide");
+    try {
+      var mapInstance = Blaze.getView($(".map-tree-base").get(0)).templateInstance(),
+          finalWidth  = mapInstance.$(".map-tree-base").closest(".row").width() / 3,
+          finalHeight = mapInstance.$(".map-tree-base").height();
+      //mapInstance.mapLayout.transitionZoomAll(finalWidth, finalHeight, 250);
+      mapInstance.mapLayout.clearHighlight();
+      setTimeout(function () {
+        mapInstance.mapLayout.zoomAll(250);
+      }, 250);
+    } catch (e) {
+      console.error("Failed to locate map container: " + e.message);
+    }
+  },
+  
+  /**
+   * Create a new node
+   * @param e
+   * @param instance
+   */
+  "click .btn-create-node" (e, instance) {
+    var record = instance.nodeRecord.get();
+    console.log('CreateNodeForm click btn-create-node:', record);
+    
+    if (record && record.parentId && record.title && record.title.length) {
+      // Get the parent node to figure out the platform and user type
+      var parent = Nodes.findOne({ staticId: record.parentId, projectVersionId: record.projectVersionId });
+      if (parent) {
+        record.userTypeId = parent.userTypeId;
+        record.platformId = parent.platformId;
+  
+        console.log("CreateNodeForm inserting node:", record);
+        
+        // create the record
+        Nodes.insert(record, (error, response) => {
+          if(error){
+            RobaDialog.error("Create node failed: " + error.message);
+          } else {
+            console.log("Record Created:", response);
+          }
+        });
+      } else {
+        RobaDialog.error("Create node failed: could not find parent node " + record.parentId + " for project " + record.projectVersionId);
+      }
+    } else if (!record.parentId) {
+      RobaDialog.error("Please select a parent node for this node");
+    } else if (!record.title) {
+      RobaDialog.error("Please enter a name for this node");
+    }
+  },
 });
 
 /**
  * Template Created
  */
 Template.CreateNodeForm.onCreated(() => {
-  let instance = Template.instance(),
+  let instance  = Template.instance(),
       adventure = instance.data.adventure.get();
   
-  // Use this construct to build up the new node record
-  instance.nodeRecord = new ReactiveVar({
-    parentId        : adventure.lastKnownNode,
-    projectId       : adventure.projectId,
-    projectVersionId: adventure.projectVersionId,
-    type            : NodeTypes.page,
-    title           : "",
-    pageTitle       : "",
-    url             : "",
-    urlParams       : []
-  });
+  if (adventure) {
+    instance.nodeRecord = new ReactiveVar({
+      parentId        : adventure.lastKnownNode,
+      projectId       : adventure.projectId,
+      projectVersionId: adventure.projectVersionId,
+      type            : NodeTypes.page,
+      title           : "",
+      pageTitle       : "",
+      url             : "",
+      urlParams       : []
+    });
+  } else {
+    console.error('CreateNodeForm has no adventure in context:', instance.data)
+  }
 });
 
 /**
@@ -169,7 +238,7 @@ Template.CreateNodeForm.onRendered(() => {
         var mapInstance = Blaze.getView($(".map-tree-base").get(0)).templateInstance();
         mapInstance.mapLayout.highlightNodes([ record.parentId ]);
       } catch (e) {
-        console.error("Failed to locate map container: " + e.message);
+        console.error("Failed to locate map container:", e.message);
       }
     }
   });

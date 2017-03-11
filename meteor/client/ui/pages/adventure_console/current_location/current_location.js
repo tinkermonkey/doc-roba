@@ -142,34 +142,6 @@ Template.CurrentLocation.events({
   },
   
   /**
-   * Cancel the create node form and discard the data
-   * @param e
-   * @param instance
-   */
-  "click .btn-cancel-node" (e, instance) {
-    // Hide the form
-    instance.$(".create-node-form").addClass("hide");
-    
-    // Show the buttons
-    instance.$(".btn-add-node").removeClass("hide");
-    
-    // Show the search results
-    //instance.$(".node-url-search").removeClass("hide");
-    try {
-      var mapInstance = Blaze.getView($(".map-tree-base").get(0)).templateInstance(),
-          finalWidth  = mapInstance.$(".map-tree-base").closest(".row").width() / 3,
-          finalHeight = mapInstance.$(".map-tree-base").height();
-      //mapInstance.mapLayout.transitionZoomAll(finalWidth, finalHeight, 250);
-      mapInstance.mapLayout.clearHighlight();
-      setTimeout(function () {
-        mapInstance.mapLayout.zoomAll(250);
-      }, 250);
-    } catch (e) {
-      console.error("Failed to locate map container: " + e.message);
-    }
-  },
-  
-  /**
    * Clear the current nodeId and block this one from matching again
    * @param e
    * @param instance
@@ -183,38 +155,6 @@ Template.CurrentLocation.events({
       instance.data.currentNodeId.set();
     } catch (e) {
       RobaDialog.error("Failed to clear node context: " + e.message);
-    }
-  },
-  
-  /**
-   * Create a new node
-   * @param e
-   * @param instance
-   */
-  "click .btn-create-node" (e, instance) {
-    try {
-      var record = Blaze.getView($(".btn-create-node").get(0)).templateInstance().nodeRecord.get();
-      if (!record.parentId) {
-        RobaDialog.error("Please select a parent node for this node");
-        return;
-      } else if (!record.title) {
-        RobaDialog.error("Please enter a name for this node");
-        return;
-      }
-      
-      // Get the parent node to figure out the platform and user type
-      var parent = Nodes.findOne({ staticId: record.parentId, projectVersionId: record.projectVersionId });
-      if (!parent) {
-        RobaDialog.error("Create node failed: could not find parent node " + record.parentId + " for project " + record.projectVersionId);
-        return;
-      }
-      record.userTypeId = parent.userTypeId;
-      record.platformId = parent.platformId;
-      
-      // create the record
-      Nodes.insert(record);
-    } catch (e) {
-      console.error("Failed to load new record: " + e.message);
     }
   },
   
