@@ -1,7 +1,7 @@
 import './remote_screen_tools.html';
 import { Template } from 'meteor/templating';
-import { AdventureStatus } from '../../../../imports/api/adventures/adventure_status.js';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
+import { AdventureStatus } from '../../../../imports/api/adventures/adventure_status.js';
 
 /**
  * Template Helpers
@@ -43,7 +43,7 @@ Template.RemoteScreenTools.events({
     instance.data.lastClickLocation.set();
     
     // Hide any orphaned highlights
-    instance.$(".adventure-hover-element-highlight").css("visibility", "hidden");
+    $(".adventure-hover-element-highlight").css("visibility", "hidden");
   },
   
 });

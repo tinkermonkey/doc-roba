@@ -55,7 +55,7 @@ Template.HighlightElementDetailRow.events({
    */
   "mouseenter .adventure-highlight-hierarchy" (e, instance) {
     var localBounds   = this.localBounds,
-        activeElement = instance.$(".adventure-highlight-detail.active .adventure-highlight-hierarchy:last")[ 0 ];
+        activeElement = $(".adventure-highlight-detail.active .adventure-highlight-hierarchy:last")[ 0 ];
     
     if (activeElement && activeElement == e.target) {
       return;
@@ -64,7 +64,7 @@ Template.HighlightElementDetailRow.events({
     // this needs to be delayed slightly to ensure any mouseleave triggers first
     if (localBounds) {
       setTimeout(function () {
-        instance.$(".adventure-hover-element-highlight")
+        $(".adventure-hover-element-highlight")
             .css("visibility", "visible")
             .css("top", localBounds.top + "px")
             .css("left", localBounds.left + "px")
@@ -82,7 +82,7 @@ Template.HighlightElementDetailRow.events({
    * @param instance
    */
   "mouseleave .adventure-highlight-hierarchy" (e, instance) {
-    instance.$(".adventure-hover-element-highlight")
+    $(".adventure-hover-element-highlight")
         .css("top", "50%")
         .css("left", "50%")
         .css("width", "1px")

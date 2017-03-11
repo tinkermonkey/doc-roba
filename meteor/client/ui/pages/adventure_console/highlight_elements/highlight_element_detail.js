@@ -80,6 +80,20 @@ Template.HighlightElementDetail.events({
     // done
     console.log("updating elements: ", sortedElements);
     instance.detailContext.selectedElements.set(sortedElements);
+  },
+  
+  /**
+   * Make sure any highlight elements are hidden as sometimes the row events are missed
+   * @param e
+   * @param instance
+   */
+  "mouseleave .adventure-highlight-detail" (e, instance) {
+    $(".adventure-hover-element-highlight")
+        .css("top", "50%")
+        .css("left", "50%")
+        .css("width", "1px")
+        .css("height", "1px")
+        .css("visibility", "hidden");
   }
 });
 
