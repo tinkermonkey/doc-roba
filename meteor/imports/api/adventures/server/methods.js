@@ -39,7 +39,7 @@ Meteor.methods({
     AdventureSteps.update({ adventureId: adventureId }, { $set: { status: AdventureStepStatus.staged } });
     
     // Generate the authentication token and launch the process
-    var token   = Accounts.singleUseAuth.generate({ expires: { seconds: 5 } }, Meteor.user()),
+    var token   = Accounts.singleUseAuth.generate({ expires: { seconds: 30 } }, Meteor.user()),
         command = [ ProcessLauncher.adventureScript, "--adventureId", adventureId, "--token", token ].join(" "),
         logFile = [ "adventure_", adventureId, ".log" ].join(""),
         proc    = ProcessLauncher.launchAutomation(command, logFile, (code) => {
