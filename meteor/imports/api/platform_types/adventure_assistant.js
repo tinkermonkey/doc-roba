@@ -167,4 +167,18 @@ export class AdventureAssistant {
       callback && callback(error, command);
     }, true );
   }
+  
+  /**
+   * Scroll the screen
+   * @param adventure
+   * @param scrollY
+   * @param scrollX
+   * @param callback
+   */
+  scrollScreen(adventure, scrollY, scrollX, callback){
+    let commandCode = "driver.scroll(" + (scrollY || 0) + ", " + (scrollX || 0) + ");";
+    this.executeCommand(adventure, commandCode, (error, command) => {
+      callback && callback(error, command);
+    }, true );
+  }
 }

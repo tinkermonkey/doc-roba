@@ -14,6 +14,7 @@ import './hover_controls/adventure_hover_controls.js';
 import './hover_controls/adventure_selector_result.js';
 import './log/adventure_log_embedded.js';
 import './remote_screen_pointer.js';
+import './remote_screen_scroller.js';
 import './remote_screen_tools.js';
 
 /**
@@ -85,7 +86,7 @@ Template.AdventureScreen.events({
     
     // clear the last click location
     context.lastClickLocation.set(coords);
-    context.setClickSpot(coords.x, coords.y, e);
+    context.setClickSpot(coords.x + parseInt(state.scroll.x || 0), coords.y + parseInt(state.scroll.y || 0), e);
     
     // clear the current highlights
     //context.selectorElements.set({});
@@ -100,6 +101,9 @@ Template.AdventureScreen.events({
             RobaDialog.error("Error adding adventure command: " + error.message);
           } else if (command && command.result && command.result.highlightElements) {
             context.highlightElements.set(command.result.highlightElements);
+          } else {
+            context.highlightElements.set([]);
+            RobaDialog.error("No elements found at location [" + coords.x + "," + coords.y + "]");
           }
         });
   },
