@@ -271,6 +271,16 @@ RobaDriver.prototype.getState = function () {
     })
   };
   
+  // get the page size
+  state.size = {
+    width: this.execute(function () {
+      return document.getElementsByTagName('body')[0].scrollWidth;
+    }),
+    height: this.execute(function () {
+      return document.getElementsByTagName('body')[0].scrollHeight;
+    })
+  };
+  
   // get the mouse position
   this.injectHelpers();
   try {
