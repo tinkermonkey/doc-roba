@@ -218,14 +218,18 @@ export default class TreeNodeControls {
         .attr("class", "roba-button control-button")
         .attr("transform", "translate(0, 0)")
         .on('click', function (d) {
-          tree.popover([ self.node ], {
-                contentTemplate: 'roba_launcher',
-                contentData    : new RobaContext({
-                  route: RobaRouter.routeFromStart(self.node._id)
-                })
-              },
-              tree.nodeControls
-          );
+          try {
+            tree.popover([ self.node ], {
+                  contentTemplate: 'roba_launcher',
+                  contentData    : new RobaContext({
+                    route: RobaRouter.routeFromStart(self.node._id)
+                  })
+                },
+                tree.nodeControls
+            );
+          } catch (e) {
+            RobaDialog.error(e.message);
+          }
         });
     
     self.robaButton.append("circle")
