@@ -27,7 +27,7 @@ Template.EditableNodeSelector.created = function () {
 Template.EditableNodeSelector.rendered = function () {
   var instance = Template.instance();
   
-  console.log("EditableNodeSelector context:", instance.data);
+  //console.log("EditableNodeSelector context:", instance.data);
   
   // Make sure there's a project version id
   if(!instance.data.projectVersionId){
