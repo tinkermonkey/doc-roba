@@ -167,8 +167,15 @@ Template.CurrentLocation.events({
   "edited .current-node-selector" (e, instance, newValue) {
     e.stopImmediatePropagation();
     if (newValue) {
-      console.log("Node Selected: ", newValue);
-      instance.data.currentNodeId.set(newValue)
+      console.log("CurrentLocation node Selected: ", newValue);
+      
+      // Update the current node value
+      instance.data.currentNodeId.set(newValue);
+      
+      // Show the current node form
+      setTimeout(() => {
+        instance.data.showCurrentLocation();
+      }, 250);
     }
   },
   

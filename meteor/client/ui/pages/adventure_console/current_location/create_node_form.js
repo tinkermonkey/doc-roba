@@ -190,6 +190,11 @@ Template.CreateNodeForm.events({
             
             // Set the current node on the adventure context to reset the view
             instance.data.currentNodeId.set(nodeId);
+            
+            // Show the node edit form
+            setTimeout(() => {
+              instance.data.showCurrentLocation();
+            }, 250);
           }
         });
       } else {
