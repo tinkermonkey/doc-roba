@@ -180,14 +180,14 @@ Template.CurrentLocation.events({
    */
   "edited .editable" (e, instance, newValue) {
     e.stopImmediatePropagation();
-    var context = Template.currentData(),
-        nodeId  = context.currentNodeId.get(),
-        target  = $(e.target),
+    var target  = $(e.target),
+        nodeId  = target.closest(".current-location").attr("data-node-id"),
         dataKey = target.attr("data-key"),
-        update  = { $set: {} };
+        update  = { $set: {} },
+        node;
     
     if (dataKey && nodeId) {
-      var node = Nodes.findOne({staticId: nodeId});
+      node = Nodes.findOne(nodeId);
       if(node){
         console.log("CurrentLocation node update: ", dataKey, newValue, nodeId, node._id);
         update[ "$set" ][ dataKey ] = newValue;
@@ -197,7 +197,7 @@ Template.CurrentLocation.events({
           }
         });
       } else {
-        RobaDialog.error("Failed to update node value: node not found with staticId " + nodeId);
+        RobaDialog.error("Failed to update node value: node not found with _id " + nodeId);
       }
     } else {
       RobaDialog.error("Failed to update node value: data-key not found");

@@ -1,6 +1,7 @@
 <template name="CurrentLocationActions">
-  <div class="current-location-actions" style="display: none;">
-    {{#with currentNode.get}}
+  {{#with currentNode.get}}
+    <div class="current-location-actions" data-node-id="{{_id}}" style="display: none;">
+      
       {{#RobaTabGroup name="current-location-actions" navClass="nav-tabs" }}
         {{#RobaTab name="current-node" title="Current Node"}}
           <h3>Actions for this <span class="dark-blue">{{renderLookup "NodeTypesLookup" type}}</span></h3>
@@ -24,7 +25,7 @@
             </button>
           </div>
         {{/RobaTab}}
-      
+        
         {{#each nodeNavMenus}}
           {{#RobaTab name=staticId title=title}}
             <h3>Actions from <span class="dark-blue">{{title}}</span></h3>
@@ -41,8 +42,8 @@
           {{/RobaTab}}
         {{/each}}
       {{/RobaTabGroup}}
-    {{else}}
-      <div class="alert alert-info">Use the current node section to identify the current context.</div>
-    {{/with}}
-  </div>
+    </div>
+  {{else}}
+    <div class="alert alert-info">Use the current node section to identify the current context.</div>
+  {{/with}}
 </template>

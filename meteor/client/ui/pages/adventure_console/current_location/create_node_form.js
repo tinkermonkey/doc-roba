@@ -182,11 +182,14 @@ Template.CreateNodeForm.events({
         console.log("CreateNodeForm inserting node:", record);
         
         // create the record
-        Nodes.insert(record, (error, response) => {
+        Nodes.insert(record, (error, nodeId) => {
           if(error){
             RobaDialog.error("Create node failed: " + error.message);
           } else {
-            console.log("Record Created:", response);
+            console.log("Record Created:", nodeId);
+            
+            // Set the current node on the adventure context to reset the view
+            instance.data.currentNodeId.set(nodeId);
           }
         });
       } else {

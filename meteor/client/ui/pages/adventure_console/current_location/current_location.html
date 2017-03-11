@@ -59,6 +59,8 @@
     </div>
   {{else}}
     {{#unless adventureIsComplete adventure.get}}
+      <h3>Unknown Location</h3>
+    
       <div class="{{#unless adventureIsStill adventure.get}}hide{{/unless}}">
         <div class="full-width align-center">
           {{> EditableNodeSelector cssClass="current-node-selector" dataKey="currentNodeId" emptyText="Select Node" projectVersionId=adventure.get.projectVersionId}}

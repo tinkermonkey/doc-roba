@@ -137,7 +137,7 @@ export class AdventureContext {
     instance.autorun(() => {
       debug && console.log("AdventureContext.currentNodeId autorun");
       let currentNodeId = context.currentNodeId.get();
-      debug && console.log("currentLocation:", currentNodeId);
+      debug && console.log("AdventureContext.currentNodeId autorun currentNodeId:", currentNodeId);
       if (context.previousLocation && currentNodeId && context.previousLocation !== currentNodeId) {
         debug && console.log("Current node changed, clearing highlights:", currentNodeId, instance.previousLocation);
         instance.$(".btn-clear-highlight").trigger("click");
@@ -150,7 +150,17 @@ export class AdventureContext {
       debug && console.log("AdventureContext.currentNode autorun");
       let currentNodeId    = context.currentNodeId.get(),
           projectVersionId = FlowRouter.getParam("projectVersionId"),
-          node             = Nodes.findOne({ staticId: currentNodeId, projectVersionId: projectVersionId });
+          node             = Nodes.findOne({
+            $or             : [ { staticId: currentNodeId }, { _id: currentNodeId } ],
+            projectVersionId: projectVersionId
+          });
+      if(node){
+        debug && console.log("AdventureContext.currentNode autorun setting node:", node);
+      } else if(currentNodeId && currentNodeId.length) {
+        console.error('AdventureContext.currentNode autorun failed to find node by id:', currentNodeId);
+      } else {
+        debug && console.log("AdventureContext.currentNode autorun had no node id");
+      }
       context.currentNode.set(node);
     });
     
