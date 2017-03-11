@@ -48,9 +48,10 @@ Template.NodeSnippet.onRendered(() => {
     let data = Template.currentData();
     
     setTimeout(() => {
+      // TODO: This is breaking the Blaze DOM management, it's throwing errors creating/tearing down the elements
       d3.select("#" + instance.elementId)
           .selectAll("text.node-title")
-          .call(Util.wrapSvgText, DocTreeConfig.nodes.width - 2 * DocTreeConfig.nodes.borderWidth)
+          //.call(Util.wrapSvgText, DocTreeConfig.nodes.width - 2 * DocTreeConfig.nodes.borderWidth)
           .classed('pre-render', false);
     }, 30);
   });
