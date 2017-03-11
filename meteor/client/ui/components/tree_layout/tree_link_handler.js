@@ -1,4 +1,4 @@
-import {NodeTypes} from '../../../../imports/api/nodes/node_types.js';
+import { NodeTypes } from '../../../../imports/api/nodes/node_types.js';
 
 /**
  * Handle all of the accounting for the node-link data structures
@@ -10,7 +10,7 @@ export default class TreeLinkHandler {
    * @param config
    * @constructor
    */
-  constructor(treeLayout, config) {
+  constructor (treeLayout, config) {
     var self = this;
     
     // Make sure there's a tree layout
@@ -33,39 +33,39 @@ export default class TreeLinkHandler {
    * @param source The source node
    * @param target The target node
    */
-  addLink(id, source, target) {
+  addLink (id, source, target) {
     var found = false;
-    var i = this.linkList.length;
+    var i     = this.linkList.length;
     while (i > 0 && !found) {
       i--;
-      var link = this.linkList[i];
+      var link = this.linkList[ i ];
       if (link.id === id && link.source === source && link.target === target) {
         link.valid = true;
-        found = true;
+        found      = true;
       }
     }
     if (!found) {
-      this.linkList.push({id: id, source: source, target: target, valid: true});
+      this.linkList.push({ id: id, source: source, target: target, valid: true });
     }
   }
   
   /**
    * Prepare links for a validation scan
    */
-  prepLinks() {
+  prepLinks () {
     for (var i in this.linkList) {
-      this.linkList[i].valid = false;
+      this.linkList[ i ].valid = false;
     }
   }
   
   /**
    * Clear the link list of links no longer valid
    */
-  cleanLinks() {
+  cleanLinks () {
     var i = this.linkList.length;
     while (i > 0) {
       i--;
-      if (!this.linkList[i].valid) {
+      if (!this.linkList[ i ].valid) {
         this.linkList.splice(i, 1);
       }
     }
@@ -75,7 +75,7 @@ export default class TreeLinkHandler {
    * Update the links paths
    * @param duration
    */
-  update(duration) {
+  update (duration) {
     // Get the master link selection and update all of the links
     var self = this,
         links;
@@ -95,36 +95,38 @@ export default class TreeLinkHandler {
    * @param d The source node
    * @returns {string} The SVG path for the link
    */
-  generateLinkPath(d) {
+  generateLinkPath (d) {
     var source, target, control, path;
     if (d.source.visExpanded) {
       if (d.target.type === NodeTypes.view || d.target.type === NodeTypes.navMenu) {
-        source = {
+        source  = {
           x: d.source.x + d.source.icon.right,
           y: d.source.y
         };
         control = {
-          x1: (d.source.x + d.source.icon.right + d.target.x + d.target.family.left) / 2,
+          //x1: (d.source.x + d.source.icon.right + d.target.x + d.target.family.left) / 2,
+          x1: d.target.x + d.target.family.left,
           y1: d.source.y,
-          x2: (d.source.x + d.source.icon.right + d.target.x + d.target.family.left) / 2,
+          //x2: (d.source.x + d.source.icon.right + d.target.x + d.target.family.left) / 2,
+          x2: d.target.x + d.target.family.left + d.source.icon.left,
           y2: d.target.y
         };
-        target = {
+        target  = {
           x: d.target.x + d.target.icon.left,
           y: d.target.y
         }
       } else {
-        source = {
+        source  = {
           x: d.source.x,
           y: d.source.y + (d.source.type === NodeTypes.root ? 0 : d.source.icon.bottom)
         };
         control = {
           x1: d.source.x,
-          y1: (d.source.y + d.source.icon.bottom + d.target.y + d.target.family.top) / 2,
+          y1: d.target.y + d.target.family.top,
           x2: d.target.x,
-          y2: (d.source.y + d.source.icon.bottom + d.target.y + d.target.family.top) / 2
+          y2: d.target.y + d.target.family.top + d.source.icon.top
         };
-        target = {
+        target  = {
           x: d.target.x,
           y: d.target.y + d.target.icon.top
         }
@@ -148,7 +150,7 @@ export default class TreeLinkHandler {
   /**
    * Update the links for a selection
    */
-  createAndUpdateLinks(selection, duration) {
+  createAndUpdateLinks (selection, duration) {
     var self = this;
     
     // Enter any new links at the parent's previous position

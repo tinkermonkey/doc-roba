@@ -1,10 +1,9 @@
-import { DocTreeConfig } from "../../lib/doc_tree/doc_tree_config.js";
-import { TreeUtils } from "./tree_utils.js";
-import { Util } from "../../../../imports/api/util.js";
-import { Nodes } from "../../../../imports/api/nodes/nodes.js";
-import { NodeTypes, NodeTypesLookup } from "../../../../imports/api/nodes/node_types.js";
-import { PlatformTypes } from "../../../../imports/api/platform_types/platform_types.js";
-
+import { DocTreeConfig } from '../../lib/doc_tree/doc_tree_config.js';
+import { TreeUtils } from './tree_utils.js';
+import { Util } from '../../../../imports/api/util.js';
+import { Nodes } from '../../../../imports/api/nodes/nodes.js';
+import { NodeTypes, NodeTypesLookup } from '../../../../imports/api/nodes/node_types.js';
+import { PlatformTypes } from '../../../../imports/api/platform_types/platform_types.js';
 import '../edit_panels/edit_node.js';
 
 /**
@@ -352,7 +351,8 @@ export default class TreeNodeHandler {
     // Position the views loosely
     _.each(d.childViews, function (view, index) {
       // set the basic y value for the child
-      view.family.y = y + Math.abs(view.family.top);
+      //view.family.y = y + Math.abs(view.family.top);
+      view.family.y = y;
       
       // track the relative y
       y += Math.abs(view.family.top) + view.family.bottom + self.config.yViewMargin;
@@ -370,35 +370,43 @@ export default class TreeNodeHandler {
     }
     
     // Adjust the x position of the pages to center them
-    adjustment = d.family.pages.width / 2;
-    _.each(d.childPages, function (page) {
-      page.family.x -= adjustment;
-    });
+    //if(d.childPages.length > 1){
+      adjustment = d.family.pages.width / 2;
+      _.each(d.childPages, function (page) {
+        page.family.x -= adjustment;
+      });
+    //}
     
-    // Adjust the x position of the pages to center them
-    adjustment = d.family.views.height / 2;
+    // Adjust the y position of the views to center them
+    //adjustment = d.family.views.height / 2;
+    //adjustment = self.config.height / 2;
     _.each(d.childViews, function (view) {
-      view.family.y -= adjustment;
+      //view.family.y -= adjustment;
     });
     
     // Set the y value for the pages
-    adjustment = Math.max(d.family.views.height / 2, d.bounds.bottom) + this.config.yMargin;
+    //adjustment = Math.max(d.family.views.height / 2, d.bounds.bottom) + self.config.yMargin;
+    adjustment = Math.max(d.family.views.height, d.bounds.bottom) + self.config.yMargin;
     _.each(d.childPages, function (page) {
       if (page.family.views.height) {
         page.family.y = adjustment + page.family.views.height / 2;
+        page.family.y = adjustment + Math.abs(page.bounds.top);
       } else {
         page.family.y = adjustment + Math.abs(page.bounds.top);
       }
     });
     
     // Set the x value for all of the views
-    adjustment = Math.max(d.family.pages.width / 2 + this.config.xMargin, d.bounds.right + this.config.xViewMargin);
+    adjustment = Math.max(d.family.pages.width / 2 + self.config.xMargin, d.bounds.right + self.config.xViewMargin);
     _.each(d.childViews, function (view) {
+      view.family.x = d.bounds.right + self.config.xViewMargin + Math.abs(view.bounds.left);
+      /*
       if (view.family.pages.width) {
         view.family.x = adjustment + view.family.pages.width / 2;
       } else {
         view.family.x = adjustment + Math.abs(view.bounds.left);
       }
+      */
     });
     
     // Find the edges of the family
@@ -609,8 +617,8 @@ export default class TreeNodeHandler {
         .on("dblclick", tree.nodeClickFilter.bind(tree));
     
     selection.filter(function (d) {
-      return d.type === NodeTypes.root
-    })
+          return d.type === NodeTypes.root
+        })
         .select("g")
         .append("g")
         .attr("class", "node-content")

@@ -44,7 +44,7 @@ export const DocTreeConfig = {
     headerHeight: 20,
     xMargin: 50,
     yMargin: 50,
-    xViewMargin: 60,
+    xViewMargin: 120,
     yViewMargin: 50,
     cornerRadius: 6
   },
