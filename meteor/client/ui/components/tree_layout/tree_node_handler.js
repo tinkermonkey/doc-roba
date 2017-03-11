@@ -499,7 +499,7 @@ export default class TreeNodeHandler {
    */
   getNode (id) {
     return _.find(this.nodeList, function (node) {
-      return node._id === id
+      return node._id === id || node.staticId === id
     });
   }
   
@@ -508,9 +508,7 @@ export default class TreeNodeHandler {
    * @param staticId
    */
   getByStaticId (staticId) {
-    return _.find(this.nodeList, function (node) {
-      return node.staticId === staticId
-    });
+    return this.getNode(staticId)
   }
   
   /**
