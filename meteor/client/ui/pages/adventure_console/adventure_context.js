@@ -336,6 +336,7 @@ export class AdventureContext {
    * @param element
    */
   showHoverControls (element) {
+    debug && console.log("AdventureContext.showHoverControls");
     let context        = this,
         hoverContainer = $(".hover-controls-container");
     
@@ -356,6 +357,7 @@ export class AdventureContext {
    * Set a timeout to hide the hover controls
    */
   considerHidingHoverControls () {
+    debug && console.log("AdventureContext.considerHidingHoverControls");
     let context = this;
     
     clearTimeout(context.hideHoverControlsTimeout);
@@ -369,6 +371,7 @@ export class AdventureContext {
    * Hide the hover controls
    */
   hideHoverControls () {
+    debug && console.log("AdventureContext.hideHoverControls");
     let context = this;
     
     delete context.hideHoverControlsTimeout;
@@ -381,6 +384,7 @@ export class AdventureContext {
    * @param toggle Toggle the section?
    */
   showCurrentLocation (toggle, callback) {
+    debug && console.log("AdventureContext.showCurrentLocation:", toggle);
     let locationContainer = $('.current-location'),
         actionsContainer  = $('.current-location-actions'),
         actionsIsVisible  = actionsContainer.css("display") != "none",
@@ -404,6 +408,7 @@ export class AdventureContext {
    * @param toggle Toggle the section?
    */
   showCurrentLocationActions (toggle, callback) {
+    debug && console.log("AdventureContext.showCurrentLocationActions:", toggle);
     let locationContainer = $('.current-location'),
         actionsContainer  = $('.current-location-actions'),
         locationIsVisible = locationContainer.css("display") != "none",
@@ -426,6 +431,7 @@ export class AdventureContext {
    * Hide either current location or current location actions if either are visible
    */
   hideLocationPanel (callback) {
+    debug && console.log("AdventureContext.hideLocationPanel");
     let locationContainer = $('.current-location'),
         actionsContainer  = $('.current-location-actions'),
         actionsIsVisible  = actionsContainer.css("display") != "none",
