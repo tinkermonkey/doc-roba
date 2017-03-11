@@ -53,9 +53,11 @@ class Action {
     action.executor.addVariable('dataContext', dataContext);
     
     // Add the action variables
-    action.record.variables.forEach(function (variable) {
-      action.executor.addVariable(variable.name, dataContext && dataContext[ variable.name ], variable.defaultValue);
-    });
+    if(action.record.variables){
+      action.record.variables.forEach(function (variable) {
+        action.executor.addVariable(variable.name, dataContext && dataContext[ variable.name ], variable.defaultValue);
+      });
+    }
     
     // Execute the code
     action.executor.execute();
