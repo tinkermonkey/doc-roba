@@ -138,6 +138,7 @@
   /*box-shadow: 0 0 15px #888;*/
   border-radius: 10px;
   border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
   border: 3px solid #0a7bff;
 }
 
@@ -156,6 +157,7 @@
   z-index: 99;
   border-radius: 7px;
   border-top-right-radius: 0;
+  cursor: crosshair;
 /*
   background-color: rgba(255, 0, 0, 0.5);
 */
@@ -171,6 +173,9 @@
   pointer-events: none;
 }
 
+/**
+ * Remote screen tools
+ */
 .remote-screen-tools {
   position: absolute;
   height: 20px;
@@ -188,6 +193,28 @@
 
 .remote-screen-tools .btn-group button:last-child {
   border-bottom-right-radius: 0;
+}
+
+/**
+ * Remote screen scroller
+ */
+.remote-screen-scroller {
+  position: absolute;
+  height: 20px;
+  bottom: -20px;
+  right: -3px; /* adjust for being flush with the border of the remote screen, not the mask */
+}
+
+.remote-screen-scroller .btn-group {
+  vertical-align: top;
+}
+
+.remote-screen-scroller .btn-group button:first-child {
+  border-top-left-radius: 0;
+}
+
+.remote-screen-scroller .btn-group button:last-child {
+  border-top-right-radius: 0;
 }
 
 /**
