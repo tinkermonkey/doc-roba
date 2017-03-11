@@ -27,6 +27,13 @@ Template.EditableNodeSelector.created = function () {
 Template.EditableNodeSelector.rendered = function () {
   var instance = Template.instance();
   
+  console.log("EditableNodeSelector context:", instance.data);
+  
+  // Make sure there's a project version id
+  if(!instance.data.projectVersionId){
+    throw new Meteor.Error('Null project version id:', instance.data);
+  }
+  
   instance.$(".editable").editable({
     type            : "nodeSelector",
     mode            : instance.data.mode || "popup",
