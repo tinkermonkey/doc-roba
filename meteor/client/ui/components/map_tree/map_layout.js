@@ -765,7 +765,11 @@ export class MapLayout {
     
     // If there is a node that is centered, re-center
     if(self.centeredNode){
-      self.centerNode(self.centeredNode, self.scale);
+      setTimeout(() => {
+        // Get updated information
+        self.centeredNode = self.nodeHandler.getNode(self.centeredNode._id);
+        self.centerNode(self.centeredNode, self.scale);
+      }, duration * 2);
     }
   }
   

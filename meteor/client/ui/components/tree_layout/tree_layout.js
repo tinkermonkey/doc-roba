@@ -1150,7 +1150,7 @@ export default class TreeLayout {
     // update the controls
     setTimeout(function () {
       self.nodeControls.update();
-    }, duration);
+    }, duration * 2);
     
     setTimeout(() => {
       //self.actionHandler.update(duration);

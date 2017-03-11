@@ -289,6 +289,10 @@ export default class TreeNodeControls {
         x, y;
     
     if (self.node) {
+      // Get updated information
+      self.node = tree.nodeHandler.getNode(self.node._id);
+      
+      // grab the information
       var radius    = self.getRadius(self.node),
           visible   = self.background.attr("r") > radius / 2,
           placement = TreeUtils.parseTranslate(self.controlsBack.attr("transform"));
