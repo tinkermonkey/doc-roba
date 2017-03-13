@@ -6,7 +6,7 @@ import { Nodes } from '../../../../imports/api/nodes/nodes.js';
 import { TestSystems } from '../../../../imports/api/test_systems/test_systems.js';
 import { Util } from '../../../../imports/api/util.js';
 
-var debug          = true,
+var debug          = false,
     detailsOverlay = {
       minWidth: 600,
       maxWidth: 1200
