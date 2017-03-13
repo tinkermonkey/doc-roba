@@ -1,14 +1,14 @@
-import { RobaPopover } from "meteor/austinsand:roba-popover";
-import { RobaDialog } from "meteor/austinsand:roba-dialog";
-import { DocTreeConfig } from "../../lib/doc_tree/doc_tree_config.js";
-import { TreeUtils } from "./tree_utils.js";
-import TreeActionControls from "./tree_action_controls.js";
-import TreeActionHandler from "./tree_action_handler.js";
-import TreeDropNodeHandler from "./tree_drop_node_handler.js";
-import TreeInsetLayout from "./tree_inset_layout.js";
-import TreeLinkHandler from "./tree_link_handler.js";
-import TreeNodeControls from "./tree_node_controls.js";
-import TreeNodeHandler from "./tree_node_handler.js";
+import { RobaPopover } from 'meteor/austinsand:roba-popover';
+import { RobaDialog } from 'meteor/austinsand:roba-dialog';
+import { DocTreeConfig } from '../../lib/doc_tree/doc_tree_config.js';
+import { TreeUtils } from './tree_utils.js';
+import TreeActionControls from './tree_action_controls.js';
+import TreeActionHandler from './tree_action_handler.js';
+import TreeDropNodeHandler from './tree_drop_node_handler.js';
+import TreeInsetLayout from './tree_inset_layout.js';
+import TreeLinkHandler from './tree_link_handler.js';
+import TreeNodeControls from './tree_node_controls.js';
+import TreeNodeHandler from './tree_node_handler.js';
 
 /**
  * Base class for all of the tree layouts
@@ -165,12 +165,8 @@ export default class TreeLayout {
    */
   init () {
     console.debug("TreeLayout.init");
-    var self = this;
-    
-    //self.scaleAndTranslate(self.scale, self.translation);
-    
-    // figure out the max depth that we need to expand to
-    var maxDepth = TreeUtils.getMaxDepth(self.nodeHandler.getNodes(), function (d) {
+    var self     = this,
+        maxDepth = TreeUtils.getMaxDepth(self.nodeHandler.getNodes(), function (d) {
               return d.logExpanded && !d.visExpanded;
             }) + 1,
         duration = maxDepth * self.config.initialDuration;
@@ -293,8 +289,9 @@ export default class TreeLayout {
    */
   getSelectedNodes () {
     console.debug("TreeLayout.getSelectedNodes");
-    var selectedNodes = [];
-    this.nodeHandler.layer.selectAll(".node-selected").each(function (d, i) {
+    var self          = this,
+        selectedNodes = [];
+    self.nodeHandler.layer.selectAll(".node-selected").each(function (d, i) {
       if (d) {
         selectedNodes.push(d);
       } else {
@@ -314,41 +311,54 @@ export default class TreeLayout {
     var self     = this,
         rootList = [].concat(nodeList);
     
-    // expand the list of selected nodes to include all decendents
+    // Expand the list of selected nodes to include all descendants
     _.each(rootList, function (node) {
       nodeList = nodeList.concat(self.nodeHandler.getDescendants(node));
     });
     nodeList = _.uniq(nodeList);
     console.debug("TreeLayout full delete list: " + nodeList.length + " nodes");
     
-    // clone the node state prior to disrupting it
+    // Clone the node state prior to disrupting it
+    self.cacheNodeState();
     self.savedNodeState = _.clone(self.nodeStateCache);
     
-    // set every node to logExpanded = true
-    _.each(nodeList, function (node) {
+    // Cache the current view so we can restore it
+    self.cacheView();
+    
+    // Set every node to logExpanded = true
+    _.each(nodeList, function (d) {
+      let node = self.nodeHandler.getNode(d._id);
       if (!node.visExpanded && (node.childPages.length || node.childViews.length)) {
         node.logExpanded = true;
         node.visExpanded = true;
       }
     });
     
-    // update the graph
+    // Update the graph
     self.update();
     
-    // make sure the update is complete and highlight the nodes
+    // Make sure the update is complete and highlight the nodes
     setTimeout(function () {
+      console.log('nodeList:', nodeList);
+
+      // Update the node list to make sure we have the latest data after the update
+      nodeList = nodeList.map((d) => {
+        return d._id
+      }).map((id) => {
+        return self.nodeHandler.getNode(id)
+      });
+      console.log('nodeList:', nodeList);
+      
+      // Get the updated bounds
       var bounds = self.highlightNodes(nodeList, true);
       
-      // cache the current view so we can restore it
-      self.cacheView();
-      
-      // the dialog portion doesn't get scaled and this affects the fitAndCenter
+      // The dialog portion doesn't get scaled and this affects the fitAndCenter
       bounds.unscaled = {
         width : self.config.dialogWidth + self.config.highlightSurroundMargin,
         height: self.config.dialogHeight + self.config.highlightSurroundMargin
       };
       
-      // center the content and fit it on screen
+      // Center the content and fit it on screen
       self.fitAndCenter(bounds, function () {
         var scaledBounds = TreeUtils.nodeListBounds(nodeList, self.config.highlightSurroundMargin),
             screenBounds = self.localToScreenCoordinates(scaledBounds);
@@ -414,10 +424,10 @@ export default class TreeLayout {
     var self = this;
     
     // clean up
-    $(this.highlightLayer).empty();
+    $(self.highlightLayer).empty();
     
     // create the background
-    this.highlightLayer.append("rect")
+    self.highlightLayer.append("rect")
         .attr("class", "background")
         .attr("x", -10000)
         .attr("y", -10000)
@@ -426,16 +436,16 @@ export default class TreeLayout {
     
     // get the bounding box for the selected nodes
     console.debug("TreeLayout.highlightNodes: getting bounding box");
-    var bounds = TreeUtils.nodeListBounds(nodeList, this.config.highlightSurroundMargin);
+    var bounds = TreeUtils.nodeListBounds(nodeList, self.config.highlightSurroundMargin);
     //console.debug("Bounds: " + JSON.stringify(bounds));
     
     // add an extra background
-    this.highlightLayer.append("rect")
+    self.highlightLayer.append("rect")
         .attr("class", "background")
         .attr("x", bounds.x)
         .attr("y", bounds.y)
-        .attr("rx", this.config.highlightSurroundMargin / 2)
-        .attr("ry", this.config.highlightSurroundMargin / 2)
+        .attr("rx", self.config.highlightSurroundMargin / 2)
+        .attr("ry", self.config.highlightSurroundMargin / 2)
         .attr("width", bounds.width)
         .attr("height", bounds.height);
     
@@ -444,7 +454,7 @@ export default class TreeLayout {
       let node = self.layoutRoot.select("#node_" + nodeListNode._id).node();
       try {
         // Clone the main group
-        this.highlightLayer.node().appendChild(node.cloneNode(true));
+        self.highlightLayer.node().appendChild(node.cloneNode(true));
       } catch (e) {
         console.error("TreeLayout.highlightNodes: error Cloning node: " + e.toString());
         console.log(e);
@@ -452,20 +462,20 @@ export default class TreeLayout {
     });
     
     // Make sure everything is "selected"
-    this.highlightLayer.selectAll(".node").classed("node-selected", true);
+    self.highlightLayer.selectAll(".node").classed("node-selected", true);
     
     // add the surround last so that is has maximum z status
-    this.highlightLayer.append("rect")
+    self.highlightLayer.append("rect")
         .attr("class", "surround")
         .attr("x", bounds.x)
         .attr("y", bounds.y)
-        .attr("rx", this.config.highlightSurroundMargin / 2)
-        .attr("ry", this.config.highlightSurroundMargin / 2)
+        .attr("rx", self.config.highlightSurroundMargin / 2)
+        .attr("ry", self.config.highlightSurroundMargin / 2)
         .attr("width", bounds.width)
         .attr("height", bounds.height);
     
     // show the layer
-    this.highlightLayer.attr("style", "display: inline;");
+    self.highlightLayer.attr("style", "display: inline;");
     
     // return the bounds of the highlight
     return bounds;
@@ -684,29 +694,30 @@ export default class TreeLayout {
    * @param callback
    */
   fitAndCenter (rect, callback) {
-    console.debug("TreeLayout.fitAndCenter");
-    var self = this;
-    
-    var r             = this.localToScreenCoordinates(rect),
+    console.debug("TreeLayout.fitAndCenter", rect);
+    var self          = this,
+        r             = self.localToScreenCoordinates(rect),
+        mainNavMenu   = $(".main-nav-menu"),
         contentWindow = {
           x     : self.insetLayout.config.radius * 2 + self.insetLayout.config.margin * 2,
-          y     : self.insetLayout.config.margin,
-          width : this.width - self.insetLayout.config.radius * 2 - self.insetLayout.config.margin * 3,
-          height: this.height - self.insetLayout.config.margin * 2
+          y     : mainNavMenu.height() + mainNavMenu.position().top + self.insetLayout.config.margin,
+          width : self.width - self.insetLayout.config.radius * 2 - self.insetLayout.config.margin * 3,
+          height: self.height - self.insetLayout.config.margin * 2
         },
         proposedScale = 1,
         proposedTranslation,
-        proposedWidth = r.width + (typeof r.unscaled !== "undefined" ? r.unscaled.width / this.scale : 0);
+        proposedWidth = r.width + (typeof r.unscaled !== "undefined" ? r.unscaled.width / self.scale : 0),
+        debugFit      = false;
     
-    /*
-     self.layoutRoot.select("#doc-tree-base").append("rect")
-     .attr("fill", "none")
-     .attr("stroke", "#0f0")
-     .attr("x", contentWindow.x)
-     .attr("y", contentWindow.y)
-     .attr("width", contentWindow.width)
-     .attr("height", contentWindow.height);
-     */
+    if (debugFit) {
+      self.layoutRoot.select("#doc-tree-base").append("rect")
+          .attr("fill", "none")
+          .attr("stroke", "#0f0")
+          .attr("x", contentWindow.x)
+          .attr("y", contentWindow.y)
+          .attr("width", contentWindow.width)
+          .attr("height", contentWindow.height);
+    }
     
     // Make a first pass to get the scale
     for (var i = 0; i < 10; i++) {
@@ -720,37 +731,37 @@ export default class TreeLayout {
     }
     
     // combine the relative proposed scale and the current scale for an absolute scale
-    proposedScale *= this.scale;
+    proposedScale *= self.scale;
     
     // calculate the width in graph coordinates for the centering
     proposedWidth = rect.width + (typeof r.unscaled !== "undefined" ? r.unscaled.width / proposedScale : 0);
     
-    /*
-     this.highlightLayer.append("rect")
-     .attr("fill", "none")
-     .attr("stroke", "#f00")
-     .attr("x", rect.x)
-     .attr("y", rect.y)
-     .attr("width", rect.width)
-     .attr("height", rect.height);
-     
-     this.highlightLayer.append("rect")
-     .attr("fill", "none")
-     .attr("stroke", "#f00")
-     .attr("x", rect.x)
-     .attr("y", rect.y)
-     .attr("width", proposedWidth)
-     .attr("height", rect.height);
-     */
+    if (debugFit) {
+      self.highlightLayer.append("rect")
+          .attr("fill", "none")
+          .attr("stroke", "#f00")
+          .attr("x", rect.x)
+          .attr("y", rect.y)
+          .attr("width", rect.width)
+          .attr("height", rect.height);
+      
+      self.highlightLayer.append("rect")
+          .attr("fill", "none")
+          .attr("stroke", "#f00")
+          .attr("x", rect.x)
+          .attr("y", rect.y)
+          .attr("width", proposedWidth)
+          .attr("height", rect.height);
+    }
     
     // calculate the horizontal centering
     proposedTranslation = [
       contentWindow.x - rect.x * proposedScale + (contentWindow.width - proposedWidth * proposedScale) / 2,
       contentWindow.y - rect.y * proposedScale
     ];
-    
+
     // apply the scale and translation
-    this.scaleAndTranslate(proposedScale, proposedTranslation, callback, this.config.viewTransitionTime);
+    self.scaleAndTranslate(proposedScale, proposedTranslation, callback, self.config.viewTransitionTime);
   };
   
   /**
@@ -760,9 +771,8 @@ export default class TreeLayout {
    * @param callback
    */
   fitAndCenterWithMargin (rect, margin, callback) {
-    var self = this;
-    
-    var r             = this.localToScreenCoordinates(rect),
+    var self          = this,
+        r             = this.localToScreenCoordinates(rect),
         contentWindow = {
           x     : self.insetLayout.config.radius * 2 + self.insetLayout.config.margin * 2 + (margin.left || 0),
           y     : self.insetLayout.config.margin + (margin.top || 0),
@@ -823,10 +833,10 @@ export default class TreeLayout {
     translation[ 1 ] = translation[ 1 ] > 0 ? 0 : translation[ 1 ];
     
     // update the internal accounting
-    this.scale       = scale;
-    this.translation = translation;
-    this.zoomer.scale(scale);
-    this.zoomer.translate(translation);
+    self.scale       = scale;
+    self.translation = translation;
+    self.zoomer.scale(scale);
+    self.zoomer.translate(translation);
     
     // translate and scale the inset viewport
     self.insetLayout.updateViewport();
@@ -834,8 +844,8 @@ export default class TreeLayout {
     //console.debug("TreeLayout scaleAndTranslate scale: ", scale);
     //console.debug("TreeLayout scaleAndTranslate translation: ", translation);
     Session.set("viewState", {
-      scale      : this.scale,
-      translation: this.translation.slice()
+      scale      : self.scale,
+      translation: self.translation.slice()
     });
     
     if (duration !== undefined) {
@@ -843,7 +853,7 @@ export default class TreeLayout {
           .transition()
           .ease("sin")
           .duration(duration)
-          .attr("transform", "translate(" + this.translation + ") scale(" + this.scale + ")")
+          .attr("transform", "translate(" + self.translation + ") scale(" + self.scale + ")")
           .each("end", _.once(function () {
             if (typeof callback === "function") {
               callback();
@@ -852,7 +862,7 @@ export default class TreeLayout {
       
     } else {
       self.layoutRoot.selectAll(".global-layer, #highlight-layer")
-          .attr("transform", "translate(" + this.translation + ") scale(" + this.scale + ")");
+          .attr("transform", "translate(" + self.translation + ") scale(" + self.scale + ")");
       
       if (typeof callback === "function") {
         callback();
@@ -867,20 +877,20 @@ export default class TreeLayout {
    * @param callback
    */
   zoomAndCenterNodes (nodeList, margin, callback) {
-    // get the bounds of the nodes
-    var bounds = TreeUtils.nodeListBounds(nodeList, this.config.highlightSurroundMargin);
+    var self   = this,
+        bounds = TreeUtils.nodeListBounds(nodeList, self.config.highlightSurroundMargin);
     
     // cache the current view so we can restore it
-    if (!this.viewCache) {
-      this.cacheView();
+    if (!self.viewCache) {
+      self.cacheView();
     }
     
     // center the content and fit it on screen
-    this.fitAndCenterWithMargin(bounds, margin, function () {
+    self.fitAndCenterWithMargin(bounds, margin, function () {
       if (callback) {
-        callback.call(this);
+        callback.call(self);
       }
-    }.bind(this));
+    }.bind(self));
   };
   
   /**
@@ -944,12 +954,9 @@ export default class TreeLayout {
    * @param d Node that was clicked
    */
   nodeClickHandler (e, d) {
-    var self = this;
-    
     console.debug("TreeLayout nodeClickHandler: " + d._id + " (" + d.title + ")", d);
-    
-    // fetch the node fresh, sometimes the click events get stale data
-    var node       = self.nodeHandler.getNode(d._id),
+    var self       = this,
+        node       = self.nodeHandler.getNode(d._id),
         nodeSelect = self.layoutRoot.select("#node_" + d._id + " .node");
     
     //console.log(node);
@@ -1107,11 +1114,12 @@ export default class TreeLayout {
     console.debug('TreeLayout.updateContentBounds');
     
     // TODO: Make this work with multiple root nodes
-    var rootNode = this.nodeHandler.getRootNodes()[ 0 ];
+    var self     = this,
+        rootNode = self.nodeHandler.getRootNodes()[ 0 ];
     
     if (rootNode !== undefined) {
       // initialize the bounds
-      this.contentBounds = {
+      self.contentBounds = {
         top   : rootNode.family.top + rootNode.y,
         bottom: rootNode.family.bottom + rootNode.y,
         left  : rootNode.family.left + rootNode.x,
@@ -1200,77 +1208,87 @@ export default class TreeLayout {
    * @param popoverCallback
    */
   popover (nodeList, popoverConfig, controls, popoverCallback) {
-    var self = this;
-    //console.log("Popover nodes:", nodeList);
+    var self   = this,
+        bounds = TreeUtils.nodeListBounds(nodeList, self.config.highlightSurroundMargin);
     
-    var bounds      = TreeUtils.nodeListBounds(nodeList, self.config.highlightSurroundMargin * 2),
-        mainNavMenu = $(".main-nav-menu"),
-        insetX      = self.insetLayout.config.radius * 2 + self.insetLayout.config.margin * 2,
-        insetY      = mainNavMenu.height() + mainNavMenu.position().top + self.insetLayout.config.margin,
-        scale       = self.scale;
-    
-    // Auto-scale based on the bounds of the nodes being operated on
-    //console.log("Popover bounds:", bounds, insetX, insetY, scale);
-    //console.log("Popover Scale: ", (self.width - insetX - self.config.popover.targetWidth) / bounds.width, (self.height - insetY) / bounds.height, scale);
-    scale = Math.min(
-        (self.width - insetX - self.config.popover.targetWidth - self.insetLayout.config.margin) / bounds.width,
-        (self.height - insetY - self.insetLayout.config.margin) / bounds.height,
-        scale
-    );
-    //console.log("Popover Transition:", insetX - bounds.x * scale, insetY - bounds.y * scale);
-    
+    // Cache the current view so we can restore it
     self.cacheView();
-    self.scaleAndTranslate(scale, [
-      insetX - bounds.x * scale,
-      insetY - bounds.y * scale
-    ], function () {
-      // attempt to lock the controls
+    
+    // The popover portion doesn't get scaled and this affects the fitAndCenter
+    bounds.unscaled = {
+      width : self.config.popover.targetWidth + self.config.highlightSurroundMargin,
+      height: self.config.popover.targetHeight + self.config.highlightSurroundMargin
+    };
+    
+    // Attempt to lock the controls
+    try {
+      controls.lock();
+    } catch (e) {
+      console.error("Popover failed to lock controls");
+    }
+    
+    // Lock the layout to prevent unwanted closing
+    self.lock();
+    
+    // Setup the popover callback
+    popoverConfig.callback = function () {
       try {
-        controls.lock();
+        controls.unlock();
       } catch (e) {
-        console.error("Popover failed to lock controls");
+        console.error("Popover failed to unlock controls");
       }
-      
-      // lock the layout to prevent unwanted closing
-      self.lock();
-      
-      // setup the popover config
-      popoverConfig.callback = function () {
-        try {
-          controls.unlock();
-        } catch (e) {
-          console.error("Popover failed to unlock controls");
-        }
-        self.unlock();
-        self.restoreCachedView(self.config.popover.transitionTime);
-        if (popoverCallback) {
-          popoverCallback();
-        }
-      };
-      
-      // calculate the minimum widths
-      popoverConfig.minHeight = Math.min(self.config.popover.minHeight, self.height * 0.4);
-      popoverConfig.minWidth  = Math.min(self.config.popover.minWidth, self.width * 0.6);
-      
-      // set the target size
-      //popoverConfig.height = self.config.popover.targetHeight;
-      popoverConfig.width  = self.config.popover.targetWidth;
-      
-      // Wait until the scaleAndTranslate is complete so that the placement is correct
-      setTimeout(() => {
-        // get the final popover position
-        var corner         = self.localToScreenCoordinates({
-          x: bounds.x + bounds.width,
-          y: bounds.y
-        });
-        //console.log("Popover final bounds: ", bounds, corner);
-        popoverConfig.top  = corner.y;
-        popoverConfig.left = corner.x;
+      self.unlock();
+      self.restoreCachedView(self.config.popover.transitionTime);
+      if (popoverCallback) {
+        popoverCallback();
+      }
+    };
+    
+    // Calculate the minimum widths
+    popoverConfig.minHeight = Math.min(self.config.popover.minHeight, self.height * 0.4);
+    popoverConfig.minWidth  = Math.min(self.config.popover.minWidth, self.width * 0.6);
+    
+    // Set the target size
+    //popoverConfig.height = self.config.popover.targetHeight;
+    popoverConfig.width = self.config.popover.targetWidth;
+    
+    // See if we need to center the content or if the popover will just fit
+    // Popover is placed on the upper right corner of the bounds
+    let screenBounds = self.localToScreenCoordinates({ x: bounds.x + bounds.width, y: bounds.y });
+    
+    // If the popover will likely overflow the screen, fit and center before showing it
+    if (screenBounds.x + popoverConfig.width > self.width || screenBounds.y + self.config.popover.targetHeight > self.height) {
+      self.fitAndCenter(bounds, function () {
         
-        // Show the popover
-        RobaPopover.show(popoverConfig);
-      }, self.config.popover.transitionTime);
-    }, self.config.popover.transitionTime);
+        // Wait until the scaleAndTranslate is complete so that the placement is correct
+        setTimeout(() => {
+          // Popover is placed on the upper right corner of the bounds
+          var corner         = self.localToScreenCoordinates({
+            x: bounds.x + bounds.width,
+            y: bounds.y
+          });
+          //console.log("Popover final bounds: ", bounds, corner);
+          popoverConfig.top  = corner.y;
+          popoverConfig.left = corner.x;
+          
+          // Show the popover
+          RobaPopover.show(popoverConfig);
+        }, self.config.popover.transitionTime);
+      });
+    } else {
+      // Otherwise just show the popover
+      var corner = self.localToScreenCoordinates({
+        x: bounds.x + bounds.width,
+        y: bounds.y
+      });
+      
+      //console.log("Popover final bounds: ", bounds, corner);
+      popoverConfig.top  = corner.y;
+      popoverConfig.left = corner.x;
+      
+      // Show the popover
+      RobaPopover.show(popoverConfig);
+    }
   };
   
 };

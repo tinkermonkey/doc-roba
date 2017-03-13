@@ -229,10 +229,7 @@ Template.DocTree.created = function () {
  * Setup the tree display once the template is rendered
  */
 Template.DocTree.rendered = function () {
-  var instance  = this,
-      // We don't actually want these to be reactive in the auto-run because it could create a loop
-      viewState = Session.get("viewState"),
-      nodeState = Session.get("nodeState");
+  var instance  = this;
   
   // for the data binding we just need to setup an update call
   instance.autorun(function () {
@@ -243,7 +240,7 @@ Template.DocTree.rendered = function () {
     
     // Maintain the tree
     if(instance.subscriptionsReady()){
-      console.log('DocTree autorun - subscriptions ready')
+      console.log('DocTree autorun - subscriptions ready');
       instance.maintainTree(project, version, nodes, actions);
     } else {
       console.log('DocTree autorun - subscriptions not ready')
