@@ -45,7 +45,7 @@ Template.MapTree.rendered = function () {
           mapActions       = Actions.find({ projectVersionId: projectVersionId }).fetch();
       
       if (instance.lastUpdate && Date.now() - instance.lastUpdate > 1000) {
-        console.log("MapLayout: direct update");
+        console.log("MapTree autorun: direct update");
         // update the nodes & actions
         instance.mapLayout.nodeHandler.setNodes(mapNodes);
         instance.mapLayout.actionHandler.setActions(mapActions);
@@ -60,7 +60,7 @@ Template.MapTree.rendered = function () {
         }
         
         instance.updateTimeout = setTimeout(function () {
-          console.log("MapLayout: buffered update, ", mapNodes.length, mapActions.length);
+          console.log("MapTree autorun: buffered update, ", mapNodes.length, mapActions.length);
           delete instance.updateTimeout;
           
           // get fresh node data
@@ -86,7 +86,7 @@ Template.MapTree.rendered = function () {
     
     // respond to asking for a node to be centered
     instance.autorun(function () {
-      console.log("responding to current node change");
+      console.log("MapTree autorun: responding to current node change");
       var nodeId = instance.data.currentNodeId.get();
       if (nodeId) {
         instance.mapLayout.centerNode(nodeId, 0.66);
