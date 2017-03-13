@@ -3,7 +3,7 @@ import { NodeComparison } from '../../../api/platform_types/node_comparison.js';
 import { NodeSearchResult } from '../../../api/platform_types/node_search_result.js';
 import { Util } from '../../../api/util.js';
 
-var debug = false;
+var debug = true;
 
 export class WebNodeComparitor extends NodeComparitor {
   constructor () {
@@ -22,7 +22,7 @@ export class WebNodeComparitor extends NodeComparitor {
       let self   = this,
           result = new NodeSearchResult(node);
       result.addComparison('url', self.compareUrl(context, node));
-      result.addComparison('params', self.compareParams(context, node));
+      result.addComparison('urlParameters', self.compareParams(context, node));
       result.addComparison('pageTitle', self.comparePageTitle(context, node));
       return result;
     } else {
@@ -68,7 +68,7 @@ export class WebNodeComparitor extends NodeComparitor {
    */
   comparePageTitle (context, node) {
     debug && console.log("WebNodeComparitor.comparePageTitle:", context, node);
-    return new NodeComparison(context.title, node.pageTitle || node.title).textComparison();
+    return new NodeComparison(context.title, node.pageTitle).textComparison();
   }
   
   /**

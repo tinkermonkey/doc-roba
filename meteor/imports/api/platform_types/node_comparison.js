@@ -7,7 +7,7 @@ var pointValues = {
       missing: -1,
       extra  : -1,
     },
-    debug        = false;
+    debug       = true;
 
 /**
  * Standard format for node comparison results
@@ -18,6 +18,7 @@ export class NodeComparison {
    * @return {NodeComparison}
    */
   constructor (search, comparison) {
+    debug && console.log("NodeComparison created:", search, comparison);
     this.pieces     = [];
     this.search     = search;
     this.comparison = comparison;
@@ -32,9 +33,9 @@ export class NodeComparison {
    * @param value
    */
   addPiece (index, status, search, value) {
-    //debug && console.log("NodeComparison.addPiece:", index, status, search, value, score);
+    debug && console.log("NodeComparison.addPiece:", index, status, search, value);
     // determine the points
-    let points = pointValues[NodeComparisonDatumResultLookup[status]];
+    let points = pointValues[ NodeComparisonDatumResultLookup[ status ] ];
     this.pieces.push(new NodeComparisonDatum(index, status, search, value, points));
   }
   
@@ -54,7 +55,7 @@ export class NodeComparison {
    * Is this comparison a complete match?
    */
   isMatch () {
-    if(this.pieces.length){
+    if (this.pieces.length) {
       debug && console.log("NodeComparison.isMatch:", this.search, this.comparison, this.pieces.map(el => el.status).reduce((pre, cur) => {
         return pre && cur == NodeComparisonDatumResult.match
       }, true));
@@ -69,19 +70,21 @@ export class NodeComparison {
   
   /**
    * Compare two pieces of text for similarity
-   * @param search
-   * @param comparison
    */
-  textComparison (search, comparison) {
-    //debug && console.log("NodeComparison.textComparison:", search, comparison);
+  textComparison () {
+    debug && console.log("NodeComparison.textComparison:", this.search, this.comparison);
     let self             = this,
-        searchPieces     = (self.search || '').toLowerCase().split(" ").filter((piece) => {
+        searchPieces     = (self.search || '').split(" ").filter((piece) => {
           return piece.length > 0
         }),
-        comparisonPieces = (self.comparison || '').toLowerCase().split(" ").filter((piece) => {
+        comparisonPieces = (self.comparison || '').split(" ").filter((piece) => {
           return piece.length > 0
         });
-    return self.unOrderedComparison(searchPieces, comparisonPieces);
+    return self.unOrderedComparison(searchPieces, comparisonPieces, (list, piece) => {
+      return _.contains(list.map((i) => {
+        return i.toLowerCase()
+      }), piece.toLowerCase())
+    });
   }
   
   /**
@@ -109,8 +112,8 @@ export class NodeComparison {
         if (compareFn) {
           isMatch = compareFn(piece, comparisonPiece);
         } else if (comparisonPiece) {
-          let test = new RegExp(piece);
-          isMatch  = comparisonPiece.match(test) != null;
+          let test = new RegExp('^' + comparisonPiece + '$', 'i');
+          isMatch  = piece.match(test) != null;
           debug && console.log("NodeComparison.orderedComparison result:", test, isMatch);
         }
         
@@ -147,13 +150,13 @@ export class NodeComparison {
    * @return {NodeComparison}
    */
   unOrderedComparison (searchPieces, comparisonPieces, containsFn, uniqFn) {
-    //debug && console.log("NodeComparison.unOrderedComparison:", searchPieces, comparisonPieces, containsFn);
+    debug && console.log("NodeComparison.unOrderedComparison:", searchPieces, comparisonPieces, containsFn);
     let self   = this,
         pieces = _.uniq(searchPieces.concat(comparisonPieces), false, uniqFn);
     
     // do the search pieces occur in the comparison pieces in order
     pieces.forEach((piece, i) => {
-      //debug && console.log("NodeComparison.unOrderedComparison searching for piece [", piece, "]");
+      debug && console.log("NodeComparison.unOrderedComparison searching for piece [", piece, "]");
       let inSearch     = containsFn ? containsFn(searchPieces, piece) : _.contains(searchPieces, piece),
           inComparison = containsFn ? containsFn(comparisonPieces, piece) : _.contains(comparisonPieces, piece),
           status, searchPiece, comparisonPiece;

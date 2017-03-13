@@ -2,41 +2,48 @@
   {{debug "WebSearchComparisonResults:" this}}
   {{#unless comparisons.pageTitle.isMatch}}
     <div>
-      <span class="dark-blue">title: </span>
+      <span class="dark-blue">Title: </span>
       {{#each comparisons.pageTitle.pieces}}
+        {{debug "pageTitle piece" this}}
         <span
           class="inline-block node-search-result node-search-{{renderLookup "NodeComparisonDatumResultLookup" status "dash"}}"
+          data-key="pageTitle"
+          data-index="{{@index}}"
           data-toggle="popover"
           data-trigger="focus"
-          data-content="{{renderLookup "NodeComparisonDatumResultLookup" status "dash"}}: {{search}}"
-        >{{search}}</span>
+          data-content="{{renderLookup "NodeComparisonDatumResultLookup" status "dash"}}: {{searchOrValue}}"
+        >{{searchOrValue}}</span>
       {{/each}}
     </div>
   {{/unless}}
   {{#unless comparisons.url.isMatch}}
     <div>
-      <span class="dark-blue">url: </span>
+      <span class="dark-blue">URL: </span>
       <span>
         {{#each comparisons.url.pieces}}
           <div class="inline-block">
             /<span
-              class="node-search-result node-search-{{renderLookup "NodeComparisonDatumResultLookup" status "dash"}}"
-              data-toggle="popover"
-              data-trigger="focus"
-              data-content="{{renderLookup "NodeComparisonDatumResultLookup" status "dash"}}: {{search}}"
-            >{{search}}</span>
+            class="node-search-result node-search-{{renderLookup "NodeComparisonDatumResultLookup" status "dash"}}"
+            data-key="url"
+            data-index="{{@index}}"
+            data-toggle="popover"
+            data-trigger="focus"
+            data-content="{{renderLookup "NodeComparisonDatumResultLookup" status "dash"}}: {{searchOrValue}}"
+          >{{searchOrValue}}</span>
           </div>
         {{/each}}
       </span>
     </div>
   {{/unless}}
-  {{#unless comparisons.params.isMatch}}
+  {{#unless comparisons.urlParameters.isMatch}}
     <div>
-      <span class="dark-blue align-top">parameters: </span>
+      <span class="dark-blue align-top">Parameters: </span>
       <div class="inline-block">
-        {{#each comparisons.params.pieces}}
+        {{#each comparisons.urlParameters.pieces}}
           <div
             class="node-search-result node-search-{{renderLookup "NodeComparisonDatumResultLookup" status "dash"}}"
+            data-key="urlParameters"
+            data-index="{{@index}}"
             data-toggle="popover"
             data-trigger="focus"
             data-content="{{renderLookup "NodeComparisonDatumResultLookup" status "dash"}}: {{value.param}}{{#if value.value}}={{value.value}}{{/if}}"

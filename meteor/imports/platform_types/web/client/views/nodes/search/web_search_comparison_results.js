@@ -12,13 +12,28 @@ Template.WebSearchComparisonResults.helpers({
         text       = '';
     
     return text;
+  },
+  searchOrValue(){
+    return this.search || this.value
   }
 });
 
 /**
  * Template Event Handlers
  */
-Template.WebSearchComparisonResults.events({});
+Template.WebSearchComparisonResults.events({
+  "click .node-search-result"(e, instance){
+    var data       = Template.currentData(),
+        target     = $(e.target).closest('.node-search-result'),
+        dataKey    = target.attr('data-key'),
+        dataIndex  = target.attr('data-index'),
+        item       = data.comparisons[dataKey].pieces[dataIndex],
+        node       = data.node,
+        dataStatus = NodeComparisonDatumResultLookup[ item.status ];
+    
+    console.log('click:', dataKey, dataStatus, dataIndex, item, data);
+  }
+});
 
 /**
  * Template Created
@@ -34,11 +49,14 @@ Template.WebSearchComparisonResults.onRendered(() => {
   let instance = Template.instance();
   
   // node search result explanations
-  instance.$(".node-search-result").popover({
-    placement: 'top',
-    trigger  : 'hover',
-    html     : true,
-    delay    : 100
+  instance.autorun(() => {
+    var data = Template.currentData();
+    instance.$(".node-search-result").popover({
+      placement: 'top',
+      trigger  : 'hover',
+      html     : true,
+      delay    : 100
+    });
   });
   
 });
