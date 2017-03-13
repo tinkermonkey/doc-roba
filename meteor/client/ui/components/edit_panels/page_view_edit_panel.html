@@ -16,11 +16,13 @@
               {{#if editParamsPanel}}
                 {{> Template.dynamic template=editParamsPanel }}
               {{/if}}
+              <tr>
+                <td class="node-details-label">Nav Menus:</td>
+                <td class="node-details-value">
+                  {{> EditableNavMenuList projectVersionId=projectVersionId value=navMenus dataKey="navMenus" }}
+                </td>
+              </tr>
             </table>
-          </div>
-          <div style="flex-basis: 35%; margin:5px;">
-            <h4>Navigation Menus on this page:</h4>
-            {{> EditableNavMenuList projectVersionId=projectVersionId value=navMenus dataKey="navMenus" }}
           </div>
         </div>
       {{/RobaTab}}

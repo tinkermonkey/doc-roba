@@ -1,9 +1,8 @@
 import './editable_nav_menu_list.html';
-
-import {Template} from 'meteor/templating';
-
-import {Nodes} from '../../../../imports/api/nodes/nodes.js';
-import {NodeTypes} from '../../../../imports/api/nodes/node_types.js';
+import './editable_nav_menu_list.css';
+import { Template } from 'meteor/templating';
+import { Nodes } from '../../../../imports/api/nodes/nodes.js';
+import { NodeTypes } from '../../../../imports/api/nodes/node_types.js';
 
 /**
  * Template Helpers
@@ -24,25 +23,26 @@ Template.EditableNavMenuList.events({});
  */
 Template.EditableNavMenuList.rendered = function () {
   var instance = Template.instance();
-
+  
   instance.autorun(function () {
-    var data = Template.currentData(),
-      query = { type: NodeTypes.navMenu, projectVersionId: instance.data.projectVersionId };
-
+    var data  = Template.currentData(),
+        query = { type: NodeTypes.navMenu, projectVersionId: instance.data.projectVersionId };
+    
     // TODO: this needs to be restricted to a platform/user domain
-    var navMenus = Nodes.find(query, {sort: {title: 1}}).map(function (nav) {
-        return { value: nav.staticId, text: nav.title };
-      });
-
+    var navMenus = Nodes.find(query, { sort: { title: 1 } }).map(function (nav) {
+      return { value: nav.staticId, text: nav.title };
+    });
+    
     instance.$('.editable-nav-menu-list').editable({
-      mode: data.mode || "inline",
-      type: "checklist",
-      source: navMenus,
+      mode     : data.mode || "inline",
+      type     : "checklist",
+      source   : navMenus,
       highlight: false,
-      display() {},
+      display() {
+      },
       success(response, newValue) {
         var editedElement = this;
-        $(editedElement).trigger("edited", [newValue]);
+        $(editedElement).trigger("edited", [ newValue ]);
         setTimeout(function () {
           $(editedElement).removeClass('editable-unsaved');
         }, 10);
@@ -57,5 +57,5 @@ Template.EditableNavMenuList.rendered = function () {
  * Template Destroyed
  */
 Template.EditableNavMenuList.destroyed = function () {
-
+  
 };
