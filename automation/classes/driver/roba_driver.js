@@ -60,7 +60,7 @@ var Future              = require("fibers/future"),
     },
     skipLoggingCommands = [ "screenshot", "saveScreenshot" ];
 
-logger.setLevel("DEBUG");
+logger.setLevel("INFO");
 browserLogger.setLevel("TRACE");
 clientLogger.setLevel("TRACE");
 driverLogger.setLevel("TRACE");
@@ -103,7 +103,7 @@ var RobaDriver = function (config) {
               args        = _.map(_.keys(commandArgs), function (i) {
                 return commandArgs[ "" + i ];
               });
-          logger.trace("Wrapper: ", command, ":", args);
+          logger.trace("Wrapper: ", command, ":", args && args.map((a) => { return a && a.toString()}));
           return this.command(command, args);
         }.bind(fDriver);
       } else {
@@ -145,7 +145,7 @@ RobaDriver.prototype.command = function (command, args) {
     if (error) {
       logger.error("Error executing command:", {
         command: command,
-        args   : args,
+        args   : args && args.map((a) => { return a && a.toString()}),
         error  : error
       });
       future.return([ error ]);
@@ -153,7 +153,7 @@ RobaDriver.prototype.command = function (command, args) {
     } else {
       // skip logging for some commands (screenshots, etc)
       if (!_.contains(skipLoggingCommands, command)) {
-        logger.debug({ command: command, args: args, result: result });
+        logger.debug({ command: command, args: args && args.map((a) => { return a && a.toString()}), result: result });
       } else {
         logger.trace("Command returned");
       }
