@@ -27,14 +27,25 @@
         </div>
       {{/RobaTab}}
       {{#RobaTab name="ready" title="Ready Checks"}}
-        <h4>{{renderLookup "NodeTypesLookup" type}} Ready Checks:</h4>
+        <div>
+          <h4 class="inline-block">{{renderLookup "NodeTypesLookup" type}} Ready Checks:</h4>
+          <button class="btn btn-primary btn-small btn-small-round btn-add-check" data-check-type="ready">
+            <span class="glyphicon glyphicon-plus"></span>
+          </button>
+        </div>
         {{> NodeCheckEditList node=this type=checkTypes.ready}}
       
         <h4>{{renderLookup "NodeTypesLookup" type}} Ready Code:</h4>
+
         {{> EditableCode dataKey="readyCode" value=readyCode emptyText="Click to define ready code for this node."}}
       {{/RobaTab}}
       {{#RobaTab name="validations" title="Validations"}}
-        <h4>{{renderLookup "NodeTypesLookup" type}} Valid Checks:</h4>
+        <div>
+          <h4 class="inline-block">{{renderLookup "NodeTypesLookup" type}} Valid Checks:</h4>
+          <button class="btn btn-primary btn-small btn-small-round btn-add-check" data-check-type="value">
+            <span class="glyphicon glyphicon-plus"></span>
+          </button>
+        </div>
         {{> NodeCheckEditList node=this type=checkTypes.valid}}
       
         <h4>{{renderLookup "NodeTypesLookup" type}} Valid Code:</h4>
