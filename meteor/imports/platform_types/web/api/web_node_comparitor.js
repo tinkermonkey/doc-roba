@@ -3,7 +3,7 @@ import { NodeComparison } from '../../../api/platform_types/node_comparison.js';
 import { NodeSearchResult } from '../../../api/platform_types/node_search_result.js';
 import { Util } from '../../../api/util.js';
 
-var debug = true;
+var debug = false;
 
 export class WebNodeComparitor extends NodeComparitor {
   constructor () {

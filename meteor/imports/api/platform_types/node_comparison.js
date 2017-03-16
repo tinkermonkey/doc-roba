@@ -7,7 +7,7 @@ var pointValues = {
       missing: -1,
       extra  : -1,
     },
-    debug       = true;
+    debug       = false;
 
 /**
  * Standard format for node comparison results

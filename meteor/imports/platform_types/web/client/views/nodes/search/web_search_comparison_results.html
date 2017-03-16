@@ -1,10 +1,8 @@
 <template name="WebSearchComparisonResults">
-  {{debug "WebSearchComparisonResults:" this}}
   {{#unless comparisons.pageTitle.isMatch}}
     <div>
       <span class="dark-blue">Title: </span>
       {{#each comparisons.pageTitle.pieces}}
-        {{debug "pageTitle piece" this}}
         <span
           class="inline-block node-search-result node-search-{{renderLookup "NodeComparisonDatumResultLookup" status "dash"}}"
           data-key="pageTitle"
