@@ -41,14 +41,14 @@ Template.HighlightElementToolbar.events({
         lastLocation  = detailContext.adventureContext.lastClickLocation.get(),
         adventure     = detailContext.adventureContext.adventure.get();
     
-    console.log("Last click location: ", lastLocation);
+    console.log("HighlightElementToolbar btn-refine last click location: ", lastLocation);
     
     if (selector && lastLocation) {
       // send the command to clear all of the highlighted elements
       adventure.assistant()
           .refineSelector(adventure, lastLocation.x, lastLocation.y, selector, (error, command) => {
             if (error) {
-              console.error("Error refining selector: " + error.message);
+              console.error("HighlightElementToolbar error refining selector: " + error.message);
             } else {
               detailContext.checkResult.set(command.result)
             }
@@ -74,7 +74,7 @@ Template.HighlightElementToolbar.events({
     // send the command to clear all of the highlighted elements
     adventure.assistant().testSelector(adventure, selector, (error, command) => {
       if (error) {
-        console.error("Error testing selector: " + error.message);
+        console.error("HighlightElementToolbar error testing selector: " + error.message);
       } else if (command.result.highlightElements) {
         detailContext.adventureContext.highlightElements.set(command.result.highlightElements);
       }
@@ -89,6 +89,7 @@ Template.HighlightElementToolbar.events({
    */
   "edited .editable"(e, instance, newValue){
     let detailContext = instance.data;
+    //console.log('HighlightElementToolbar edited .editable selector:', detailContext.selector.get(), "newValue:", newValue);
     detailContext.selector.set(newValue);
     $(e.target).closest(".adventure-highlight-detail").find(".selected").removeClass("selected");
   }
@@ -113,7 +114,7 @@ Template.HighlightElementToolbar.onRendered(() => {
         element, previousElement;
     
     _.each(_.keys(elements), function (key) {
-      console.log("getXPath processing element:", key, elements[ key ]);
+      console.log("HighlightElementToolbar getXPath processing element:", key, elements[ key ]);
       element = elements[ key ];
       
       // start the xPath
@@ -163,6 +164,8 @@ Template.HighlightElementToolbar.onRendered(() => {
     let detailContext = Template.currentData(),
         selector      = detailContext.selector.get(),
         lastLocation  = detailContext.adventureContext.lastClickLocation.get();
+    
+    //console.log("HighlightElementToolbar autorun:", selector);
     
     if (selector && selector.length && lastLocation) {
       instance.$(".btn-clear").removeAttr("disabled");

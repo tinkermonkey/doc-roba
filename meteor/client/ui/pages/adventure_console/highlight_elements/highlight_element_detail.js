@@ -39,7 +39,7 @@ Template.HighlightElementDetail.events({
       attributes: []
     };
     clickedElement.closest(".adventure-highlight-level").find(".selected").each((i, detailEl) => {
-      //console.log("Element", element.index, "selected item:", detailEl);
+      //console.log("HighlightElementDetail element", element.index, "selected item:", detailEl);
       let detail = $(detailEl);
       
       if (detail.hasClass("tag")) {
@@ -78,7 +78,7 @@ Template.HighlightElementDetail.events({
     });
     
     // done
-    console.log("updating elements: ", sortedElements);
+    console.log("HighlightElementDetail updating elements: ", sortedElements);
     instance.detailContext.selectedElements.set(sortedElements);
   },
   
