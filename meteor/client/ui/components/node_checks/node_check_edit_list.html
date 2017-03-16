@@ -4,7 +4,7 @@
       {{#each nodeChecks}}
         <tr class="sortable-table-row" data-pk="{{_id}}" data-sort-order="{{order}}">
           <td class="drag-handle"><span class="glyphicon glyphicon-record"></span></td>
-          <td>{{> EditableXpath value=selector dataKey="selector"}}</td>
+          <td>{{> EditableXpath value=selector dataKey="selector" emptyText="Enter xPath value"}}</td>
           <td>{{> EditableEnumSelector value=checkFn dataKey="checkFn" enum=checkFnEnum displayKey="label"}}</td>
           <td>
             {{#if checkFnArgList}}
