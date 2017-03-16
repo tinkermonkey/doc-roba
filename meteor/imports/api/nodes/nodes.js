@@ -5,7 +5,7 @@ import { Auth } from '../auth.js';
 import { Util } from '../util.js';
 import { ChangeTracker } from '../change_tracker/change_tracker.js';
 import { NodeTypes } from './node_types.js';
-import { NodeChecks } from './node_check.js';
+import { NodeChecks } from './node_checks.js';
 import { NodeCheckTypes } from './node_check_types.js';
 import { UrlParameter } from './url_parameter.js';
 import { DatastoreCategories } from '../datastores/datastore_catagories.js';

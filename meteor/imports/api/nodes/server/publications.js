@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Auth } from '../../auth.js';
 import { Nodes } from '../nodes.js';
-import { NodeChecks } from '../node_check.js';
+import { NodeChecks } from '../node_checks.js';
 import { NodeTypes } from '../node_types.js';
 
 Meteor.publish("nodes", function (projectId, projectVersionId) {
