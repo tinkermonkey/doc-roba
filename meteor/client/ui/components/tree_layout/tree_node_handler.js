@@ -292,7 +292,6 @@ export default class TreeNodeHandler {
   positionLocal (d) {
     let self     = this,
         children = [].concat(d.childPages, d.childViews),
-        x        = 0,
         y        = 0,
         adjustment,
         lastChild;
@@ -329,6 +328,7 @@ export default class TreeNodeHandler {
     }
     
     // Position the pages loosely
+    let x = 0;
     _.each(d.childPages, function (page, index) {
       // set the basic x value for the child
       page.family.x = x + Math.abs(page.family.left);
@@ -336,7 +336,7 @@ export default class TreeNodeHandler {
       // keep track of the relative x
       x += Math.abs(page.family.left) + page.family.right + self.config.xMargin;
       
-      // keep track of the largest page height
+      // Keep track of the largest page height
       if (page.family.height > d.family.pages.height) {
         d.family.pages.height = page.family.height;
       }
@@ -370,19 +370,17 @@ export default class TreeNodeHandler {
     }
     
     // Adjust the x position of the pages to center them
-    //if(d.childPages.length > 1){
-      adjustment = d.family.pages.width / 2;
-      _.each(d.childPages, function (page) {
-        page.family.x -= adjustment;
-      });
-    //}
+    adjustment = d.family.pages.width / 2;
+    _.each(d.childPages, function (page) {
+      page.family.x -= adjustment;
+    });
     
     // Adjust the y position of the views to center them
     //adjustment = d.family.views.height / 2;
     //adjustment = self.config.height / 2;
-    _.each(d.childViews, function (view) {
-      //view.family.y -= adjustment;
-    });
+    //_.each(d.childViews, function (view) {
+    //view.family.y -= adjustment;
+    //});
     
     // Set the y value for the pages
     //adjustment = Math.max(d.family.views.height / 2, d.bounds.bottom) + self.config.yMargin;
@@ -401,12 +399,12 @@ export default class TreeNodeHandler {
     _.each(d.childViews, function (view) {
       view.family.x = d.bounds.right + self.config.xViewMargin + Math.abs(view.bounds.left);
       /*
-      if (view.family.pages.width) {
-        view.family.x = adjustment + view.family.pages.width / 2;
-      } else {
-        view.family.x = adjustment + Math.abs(view.bounds.left);
-      }
-      */
+       if (view.family.pages.width) {
+       view.family.x = adjustment + view.family.pages.width / 2;
+       } else {
+       view.family.x = adjustment + Math.abs(view.bounds.left);
+       }
+       */
     });
     
     // Find the edges of the family
