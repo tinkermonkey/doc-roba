@@ -1,14 +1,18 @@
 <template name="Xpath">
-  {{#each steps}}
-    {{> Template.dynamic template=xPathTemplate}}
-    {{#if predicates.length}}
-      <span class="xpath-plain">[</span>
-      {{#each predicates}}
-        {{> Template.dynamic template=xPathTemplate}}
-      {{/each}}
-      <span class="xpath-plain">]</span>
-    {{/if}}
-  {{/each}}
+  {{#with steps}}
+    {{#each this}}
+      {{> Template.dynamic template=xPathTemplate}}
+      {{#if predicates.length}}
+        <span class="xpath-plain">[</span>
+        {{#each predicates}}
+          {{> Template.dynamic template=xPathTemplate}}
+        {{/each}}
+        <span class="xpath-plain">]</span>
+      {{/if}}
+    {{/each}}
+  {{else}}
+    <span class="xpath-error"><i>Parse Error: </i>{{this}}</span>
+  {{/with}}
 </template>
 
 <template name="XPathPathExpr">

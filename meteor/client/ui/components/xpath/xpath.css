@@ -17,3 +17,7 @@
 .xpath-value {
   color: #ffb800;
 }
+
+.xpath-error {
+  color: #ff0000;
+}
