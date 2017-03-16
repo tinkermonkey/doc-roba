@@ -17,27 +17,28 @@ Template.EditableXpath.events({});
  * Template Created
  */
 Template.EditableXpath.onCreated(() => {
-  
 });
 
 /**
  * Template Rendered
  */
 Template.EditableXpath.onRendered(() => {
-  var instance = Template.instance();
+  let instance = Template.instance();
   
   instance.$(".editable").editable({
-    type          : "text",
-    mode          : instance.data.mode || "inline",
+    type          : "editableAce",
+    mode          : instance.data.mode || "popup",
     placement     : instance.data.placement || "auto",
-    data          : instance.data.value,
+    value         : instance.data.value,
+    language      : "xquery",
     parentInstance: instance,
     highlight     : false,
     onblur        : "ignore",
     display() {
     },
     success(response, newValue) {
-      var editedElement = this;
+      let editedElement = this;
+      //console.log("EditableXpath callback:", response, newValue);
       $(editedElement).trigger("edited", [ newValue ]);
       setTimeout(function () {
         $(editedElement).removeClass('editable-unsaved');
@@ -47,19 +48,20 @@ Template.EditableXpath.onRendered(() => {
   
   // This is needed to prevent re-use of an outdated context
   /*
-  instance.$(".editable").on("hidden", function () {
-    if (instance.formView) {
-      setTimeout(function () {
-        Blaze.remove(instance.formView);
-      }, 100);
-    }
-  });
-  */
+   instance.$(".editable").on("hidden", function () {
+   if (instance.formView) {
+   setTimeout(function () {
+   Blaze.remove(instance.formView);
+   }, 100);
+   }
+   });
+   */
   
   // Watch for data changes and re-render
   instance.autorun(function () {
-    var data = Template.currentData();
-    instance.$(".editable").editable("setValue", data.value);
+    let data = Template.currentData();
+    //console.log('EditableXpath setting editor value:', data.value);
+    instance.$(".editable").editable("setValue", data);
   });
 });
 
