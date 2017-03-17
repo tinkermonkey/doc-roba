@@ -15,7 +15,7 @@ Template.TestCaseListGroup.helpers({
  * Template Event Handlers
  */
 Template.TestCaseListGroup.events({
-  "dblclick .test-case-list-group"(e, instance) {
+  "dblclick .center-pole-list-group"(e, instance) {
     e.stopImmediatePropagation();
     instance.expanded.set(!instance.expanded.get());
   }

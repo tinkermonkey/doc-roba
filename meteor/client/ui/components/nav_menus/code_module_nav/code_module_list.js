@@ -36,16 +36,16 @@ Template.CodeModuleList.onRendered(() => {
   
     setTimeout(() => {
       if(functionId && elementId) {
-        let item = instance.$(".test-case-list-item[data-pk='" + functionId + "']"),
-            module = instance.$(".test-case-list-group[data-pk='" + codeModuleId + "']");
+        let item = instance.$(".center-pole-list-item[data-pk='" + functionId + "']"),
+            module = instance.$(".center-pole-list-group[data-pk='" + codeModuleId + "']");
   
-        instance.$(".test-case-list-item").removeClass("selected");
+        instance.$(".center-pole-list-item").removeClass("selected");
         item.addClass("selected");
         module.each(function (i, el) {
           Blaze.getView(el).templateInstance().expanded.set(true);
         });
       } else if(codeModuleId && elementId){
-        instance.$(".test-case-list-group[data-pk='" + codeModuleId + "']").each(function (i, el) {
+        instance.$(".center-pole-list-group[data-pk='" + codeModuleId + "']").each(function (i, el) {
           Blaze.getView(el).templateInstance().expanded.set(true);
         });
       }

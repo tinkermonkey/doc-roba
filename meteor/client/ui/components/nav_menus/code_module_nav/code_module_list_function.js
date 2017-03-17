@@ -11,13 +11,13 @@ Template.CodeModuleListFunction.helpers({});
  * Template Event Handlers
  */
 Template.CodeModuleListFunction.events({
-  "click .test-case-list-item"(e, instance){
-    let functionItem = $(e.target).closest(".test-case-list-item"),
-        moduleItem   = $(e.target).closest(".test-case-list-group-items"),
+  "click .center-pole-list-item"(e, instance){
+    let functionItem = $(e.target).closest(".center-pole-list-item"),
+        moduleItem   = $(e.target).closest(".center-pole-list-group-items"),
         list         = $(e.target).closest(".code-module-list");
     
     // Remove select from everything else in the list
-    list.find(".test-case-list-item.selected").removeClass("selected");
+    list.find(".center-pole-list-item.selected").removeClass("selected");
     
     // Select this item and set the url params
     functionItem.addClass("selected");

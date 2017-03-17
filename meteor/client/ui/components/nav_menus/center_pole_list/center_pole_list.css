@@ -1,0 +1,95 @@
+/**
+ * Nav section for center-pole-layout
+ */
+.center-pole-list-container {
+  
+}
+
+.center-pole-list-header {
+}
+
+.center-pole-list {
+  text-align: left;
+  padding-left: 5px;
+  padding-bottom: 10px;
+  border-top: 1px solid #0A7BFF;
+  border-bottom: 1px solid #0A7BFF;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.center-pole-list-search {
+  padding-top: 10px;
+  margin-bottom: 10px;
+}
+
+/**
+ * Selectable test case list
+ */
+.center-pole-list-selectable {
+  width: 100%;
+  cursor: pointer;
+  padding: 5px;
+  margin: 0;
+  margin-top: 1px;
+  border-radius: 6px;
+  transition: background-color 0.1s;
+  -webkit-transition: background-color 0.1s;
+}
+
+.center-pole-list-selectable:hover, .center-pole-list-selectable.center-pole-list-group.selected {
+  background-color: #dddddd;
+}
+
+.center-pole-list-drop-hover {
+  background-color: #a7ff00;
+}
+
+.center-pole-list-selectable.center-pole-list-item.selected {
+  color: #fff;
+  background-color: #0A7BFF;
+  background-image: url('/roba_stripe.svg');
+  background-repeat: no-repeat;
+  background-position: 105% 0%;
+  background-size: contain;
+}
+
+.center-pole-list-selectable.highlight {
+  background-color: #ffff00;
+}
+
+.center-pole-list-selectable.in-drag {
+  color: #000 !important;
+  opacity: 0.75;
+  background-color: #ffffff !important;
+  background-image: none !important;
+}
+
+.center-pole-list-title {
+  padding-left: 5px;
+}
+
+
+/**
+ * Group styling
+ */
+.center-pole-list-group .btn {
+  display: none;
+}
+
+.center-pole-list-group:hover .btn {
+  display: inherit;
+}
+
+.center-pole-list-group .add-item-form {
+  margin-top: 3px;
+}
+
+.center-pole-list-group .add-item-form .btn {
+  display: inherit;
+}
+
+.center-pole-list-group-items {
+  margin-left: 10px;
+}
+

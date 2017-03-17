@@ -1,8 +1,7 @@
 import './test_case_nav.html';
-
-import {Template} from 'meteor/templating';
-
+import { Template } from 'meteor/templating';
 import './test_case_list.js';
+import '../center_pole_list/center_pole_list.css';
 
 /**
  * Template Helpers

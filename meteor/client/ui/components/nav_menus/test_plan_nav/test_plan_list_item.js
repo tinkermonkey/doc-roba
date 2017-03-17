@@ -24,7 +24,7 @@ Template.TestPlanListItem.onRendered(()=> {
   var instance = Template.instance();
   
   // make this draggable
-  instance.$(".test-case-list-selectable").draggable({
+  instance.$(".center-pole-list-selectable").draggable({
     revert  : true,
     distance: 5,
     start(event, ui) {

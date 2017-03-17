@@ -61,16 +61,16 @@ Template.TestCaseList.events({
     instance.$(".field-clear-btn").show();
 
     // hide everything from the list
-    instance.$(".test-case-list-selectable").hide();
+    instance.$(".center-pole-list-selectable").hide();
 
     // show everything that matches the search
     var highlight = function (item) {
-      var item = instance.$(".test-case-list-selectable[data-pk='" + item._id + "']");
+      var item = instance.$(".center-pole-list-selectable[data-pk='" + item._id + "']");
       item.show().addClass("highlight");
-      item.parents(".test-case-list-group-items").each(function (i, el) {
+      item.parents(".center-pole-list-group-items").each(function (i, el) {
         var parentInstance = Blaze.getView(el).templateInstance();
         if(parentInstance.expanded){
-          parentInstance.$(".test-case-list-selectable").first().show();
+          parentInstance.$(".center-pole-list-selectable").first().show();
           parentInstance.expanded.set(true);
         }
       });
@@ -79,7 +79,7 @@ Template.TestCaseList.events({
     TestGroups.find({ title: {$regex: search, $options: "i"}, projectVersionId: projectVersionId }).forEach(highlight);
 
     // show no results if nothing matched
-    if(!instance.$(".test-case-list-selectable.highlight").length){
+    if(!instance.$(".center-pole-list-selectable.highlight").length){
       instance.$(".search-no-results").show();
     }
   },
@@ -87,15 +87,15 @@ Template.TestCaseList.events({
     instance.$(".add-item-form input").val("");
     instance.$(".field-clear-btn").hide();
     instance.$(".search-no-results").hide();
-    instance.$(".test-case-list-selectable.highlight").removeClass("highlight");
-    instance.$(".test-case-list-selectable").show();
+    instance.$(".center-pole-list-selectable.highlight").removeClass("highlight");
+    instance.$(".center-pole-list-selectable").show();
   },
   "click .add-item-form a"(e, instance) {
     var itemType = $(e.target).closest("a").attr("data-name"),
         itemName = instance.$(".add-item-form input").val().trim(),
         projectId = FlowRouter.getParam("projectId"),
         versionId = FlowRouter.getParam("projectVersionId"),
-        groupId = instance.$(".test-case-list-group.selected").attr("data-group-id");
+        groupId = instance.$(".center-pole-list-group.selected").attr("data-group-id");
 
     if(itemType && itemName && itemName.length){
       if(itemType == "testcase"){
@@ -129,21 +129,21 @@ Template.TestCaseList.events({
       }
     }
   },
-  "click .test-case-list-item"(e, instance) {
+  "click .center-pole-list-item"(e, instance) {
     if(instance.data.editable){
-      var selectable = $(e.target).closest(".test-case-list-item");
-      instance.$(".test-case-list-item.selected").removeClass("selected");
+      var selectable = $(e.target).closest(".center-pole-list-item");
+      instance.$(".center-pole-list-item.selected").removeClass("selected");
       selectable.addClass("selected");
       FlowRouter.setQueryParams({testCaseId: selectable.attr("data-pk")});
     }
   },
   // make sure the draggable and droppable items stay up to date
-  "mouseover .test-case-list-selectable:not(.ui-draggable)"(e, instance) {
+  "mouseover .center-pole-list-selectable:not(.ui-draggable)"(e, instance) {
     $(e.target).closest(instance.draggableSelector).draggable(instance.draggableOptions);
   },
-  "mouseover .test-case-list-group:not(.ui-droppable)"(e, instance) {
+  "mouseover .center-pole-list-group:not(.ui-droppable)"(e, instance) {
     if(instance.data.editable){
-      $(e.target).closest(".test-case-list-group").droppable(instance.droppableOptions);
+      $(e.target).closest(".center-pole-list-group").droppable(instance.droppableOptions);
     }
   }
 });
@@ -171,7 +171,7 @@ Template.TestCaseList.rendered = function () {
   var instance = Template.instance();
 
   // setup the draggable config
-  instance.draggableSelector = ".test-case-list-selectable";
+  instance.draggableSelector = ".center-pole-list-selectable";
   instance.draggableOptions = {
     revert: "invalid",
     distance: 5,
@@ -188,7 +188,7 @@ Template.TestCaseList.rendered = function () {
   if(instance.data.connectToSortable){
     instance.draggableOptions.connectToSortable = instance.data.connectToSortable;
     instance.draggableOptions.helper = "clone";
-    //instance.draggableSelector = ".test-case-list-item";
+    //instance.draggableSelector = ".center-pole-list-item";
   }
 
   // make the list items draggable
@@ -198,11 +198,11 @@ Template.TestCaseList.rendered = function () {
     // setup the droppable config
     instance.droppableOptions = {
       greedy: true,
-      hoverClass: "test-case-list-drop-hover",
+      hoverClass: "center-pole-list-drop-hover",
       drop(event, ui) {
         var groupId = $(this).attr("data-group-id"),
           itemId = ui.draggable.attr("data-pk"),
-          itemIsGroup = ui.draggable.hasClass("test-case-list-group");
+          itemIsGroup = ui.draggable.hasClass("center-pole-list-group");
         console.log("Drop: ", itemId, "on", groupId);
         if (groupId && itemId) {
           if (itemIsGroup) {
@@ -235,18 +235,18 @@ Template.TestCaseList.rendered = function () {
     };
 
     // make the groups droppable
-    instance.$(".test-case-list-group").droppable(instance.droppableOptions);
+    instance.$(".center-pole-list-group").droppable(instance.droppableOptions);
 
     // Select the selected item if there is one defined
     var testCaseId = FlowRouter.getQueryParam("testCaseId");
     if(testCaseId){
       instance.autorun(function () {
-        var testCaseItem = instance.$(".test-case-list-item[data-pk='" + testCaseId + "']"),
+        var testCaseItem = instance.$(".center-pole-list-item[data-pk='" + testCaseId + "']"),
             elementId = instance.elementIdReactor.get();
 
         if(elementId){
           testCaseItem.addClass("selected");
-          testCaseItem.parentsUntil(".test-case-list", ".test-case-list-group-items.hide").each(function (i, el) {
+          testCaseItem.parentsUntil(".center-pole-list", ".center-pole-list-group-items.hide").each(function (i, el) {
             Blaze.getView(el).templateInstance().expanded.set(true);
           });
         }

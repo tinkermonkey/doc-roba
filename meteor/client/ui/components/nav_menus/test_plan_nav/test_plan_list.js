@@ -51,9 +51,9 @@ Template.TestPlanList.events({
       });
     }
   },
-  "click .test-case-list-item" (e, instance) {
-    var selectable = $(e.target).closest(".test-case-list-item");
-    instance.$(".test-case-list-item.selected").removeClass("selected");
+  "click .center-pole-list-item" (e, instance) {
+    var selectable = $(e.target).closest(".center-pole-list-item");
+    instance.$(".center-pole-list-item.selected").removeClass("selected");
     selectable.addClass("selected");
     FlowRouter.setQueryParams({ testPlanId: selectable.attr("data-pk") });
   }
@@ -80,7 +80,7 @@ Template.TestPlanList.onRendered(() => {
   var instance = Template.instance();
   
   // make all of the test case list elements draggable
-  instance.$(".test-case-list-item").draggable({
+  instance.$(".center-pole-list-item").draggable({
     revert           : "invalid",
     distance         : 5,
     helper           : "clone",
@@ -97,7 +97,7 @@ Template.TestPlanList.onRendered(() => {
   var testPlanId = FlowRouter.getQueryParam("testPlanId");
   if (testPlanId) {
     //console.log("Selected template: ", testPlanId);
-    var testRunItem = instance.$(".test-case-list-item[data-pk='" + testPlanId + "']");
+    var testRunItem = instance.$(".center-pole-list-item[data-pk='" + testPlanId + "']");
     testRunItem.addClass("selected");
   }
   

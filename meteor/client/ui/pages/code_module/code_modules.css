@@ -34,22 +34,3 @@
 .code-module-list-function-icon:before {
   content: "\192";
 }
-
-/**
- * Code module list styling
- */
-.test-case-list-group .btn {
-  display: none;
-}
-
-.test-case-list-group:hover .btn {
-  display: inherit;
-}
-
-.test-case-list-group .add-item-form {
-  margin-top: 3px;
-}
-
-.test-case-list-group .add-item-form .btn {
-  display: inherit;
-}

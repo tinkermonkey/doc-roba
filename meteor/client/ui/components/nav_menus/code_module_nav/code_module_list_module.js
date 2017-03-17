@@ -30,10 +30,10 @@ Template.CodeModuleListModule.events({
    * @param e
    * @param instance
    */
-  "click .test-case-list-group"(e, instance){
-    let item          = $(e.target).closest(".test-case-list-group"),
+  "click .center-pole-list-group"(e, instance){
+    let item          = $(e.target).closest(".center-pole-list-group"),
         expanded      = instance.expanded.get(),
-        childSelected = instance.$(".test-case-list-item.selected").length > 0;
+        childSelected = instance.$(".center-pole-list-item.selected").length > 0;
     instance.expanded.set(!expanded);
     if (childSelected) {
       item.toggleClass("selected");

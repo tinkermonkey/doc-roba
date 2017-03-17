@@ -99,7 +99,7 @@ Template.TestPlanItemList.onCreated(() => {
           }
         };
       }
-    } else if (ui.sender.hasClass("test-case-list-item")) {
+    } else if (ui.sender.hasClass("center-pole-list-item")) {
       let testCaseId = ui.sender.attr("data-staticId");
       if (testCaseId) {
         newItem = {
@@ -113,7 +113,7 @@ Template.TestPlanItemList.onCreated(() => {
           }
         };
       }
-    } else if (ui.sender.hasClass("test-case-list-group")) {
+    } else if (ui.sender.hasClass("center-pole-list-group")) {
       let testGroupId = ui.sender.attr("data-group-id");
       if (testGroupId) {
         newItem = {

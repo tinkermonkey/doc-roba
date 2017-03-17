@@ -1,9 +1,9 @@
 <template name="CodeModuleListModule">
-  <div class="test-case-list-selectable test-case-list-group no-select"
+  <div class="center-pole-list-selectable center-pole-list-group no-select"
        data-module-id="{{staticId}}"
        data-pk="{{_id}}">
     <span class="glyphicon glyphicon-tasks"></span>
-    <span class="test-case-list-title">{{name}}</span>
+    <span class="center-pole-list-title">{{name}}</span>
     {{#unless stubbed}}
       <button class="btn btn-xs btn-primary btn-add-function-form pull-right">
         <span class="glyphicon glyphicon-plus"></span>
@@ -24,7 +24,7 @@
       <span class="help-block duplicate-name hide">A function with that name already exists in this module</span>
     {{/unless}}
   </div>
-  <div class="test-case-list-group-items {{#unless isExpanded}}hide{{/unless}}" data-pk="{{_id}}" data-group-id="{{staticId}}">
+  <div class="center-pole-list-group-items {{#unless isExpanded}}hide{{/unless}}" data-pk="{{_id}}" data-group-id="{{staticId}}">
     {{#each functions}}
       {{> CodeModuleListFunction }}
     {{/each}}

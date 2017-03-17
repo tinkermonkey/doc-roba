@@ -1,8 +1,9 @@
 <template name="RobaAce">
-  <div class="ace-editor-container {{color}} {{#if fullHeight}}full-height{{/if}} {{cssClass}}"
-       style="{{#if width}}min-width: {{width}}px;{{/if}}">
+  <div class="ace-editor-container {{color}} {{#if fullHeight}}full-height{{/if}} {{cssClass}}">
     {{constant}}
-    <div id="{{getElementId}}" class="roba-ace editable {{cssClass}} {{#if fullHeight}}full-height{{/if}}" data-key="{{dataKey}}"></div>
+    <div id="{{getElementId}}" class="roba-ace editable {{cssClass}} {{#if fullHeight}}full-height{{/if}}"
+         style="{{#if minWidth}}min-width: {{minWidth}}px;{{/if}}{{#if minHeight}}min-height: {{minHeight}}px;{{/if}}"
+         data-key="{{dataKey}}"></div>
     {{constant}}
     <div class="roba-ace-toolbar {{cssClass}}">
       <div class="roba-ace-toolbar-btn">

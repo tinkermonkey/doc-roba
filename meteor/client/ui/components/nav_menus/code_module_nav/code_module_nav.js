@@ -3,6 +3,7 @@ import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { CodeModules } from '../../../../../imports/api/code_modules/code_modules.js';
 import './code_module_list.js';
+import '../center_pole_list/center_pole_list.css';
 
 /**
  * Template Helpers
