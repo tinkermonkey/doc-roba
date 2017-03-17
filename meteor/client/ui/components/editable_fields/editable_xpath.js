@@ -30,6 +30,7 @@ Template.EditableXpath.onRendered(() => {
     mode          : instance.data.mode || "popup",
     placement     : instance.data.placement || "auto",
     value         : instance.data.value,
+    minHeight     : instance.data.minHeight || 60,
     language      : "xquery",
     parentInstance: instance,
     highlight     : false,

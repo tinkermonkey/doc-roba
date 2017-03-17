@@ -16,7 +16,6 @@ import '../../roba_ace/roba_ace.js';
   var EditableAce = function (options) {
     this.init("editableAce", options, EditableAce.defaults);
     this.reactiveData = new ReactiveVar({});
-    this.minWidth     = 710;
   };
   
   $.fn.editableutils.inherit(EditableAce, $.fn.editabletypes.abstractinput);
@@ -30,12 +29,13 @@ import '../../roba_ace/roba_ace.js';
           data         = self.data || self.options.parentInstance.data,
           currentValue = self.reactiveData.get();
       
-      //console.log("EditableAce render data:", self.data, "parentInstance.data:", self.options.parentInstance.data, "reactiveData:", self.reactiveData.get());
+      //console.log("EditableAce render data:", data, "options:", self.options);
       
-      currentValue.width    = Math.max(self.options.parentInstance.$(".editable").width(), this.minWidth);
-      currentValue.minLines = data.minLines;
-      currentValue.maxLines = data.maxLines;
-      currentValue.mode     = self.options.language;
+      currentValue.minWidth  = Math.max(self.options.parentInstance.$(".editable").width(), self.options.minWidth);
+      currentValue.minHeight = self.options.minHeight;
+      currentValue.minLines  = self.options.minLines;
+      currentValue.maxLines  = self.options.maxLines;
+      currentValue.mode      = self.options.language;
       self.reactiveData.set(currentValue);
       
       Blaze.renderWithData(Template.RobaAce, function () {
@@ -45,7 +45,7 @@ import '../../roba_ace/roba_ace.js';
       }, self.$input.get(0));
       
       if (self.options.parentInstance) {
-        self.options.parentInstance.formView = Blaze.getView(this.$input.find(".roba-ace").get(0));
+        self.options.parentInstance.formView = Blaze.getView(self.$input.find(".roba-ace").get(0));
       }
     },
     
@@ -60,7 +60,6 @@ import '../../roba_ace/roba_ace.js';
       let currentValue = this.reactiveData.get();
       if (data && data.value && data.value != currentValue.value) {
         currentValue.value = data.value;
-        currentValue.width = Math.max(this.options.parentInstance.$(".editable").width(), this.minWidth);
         this.reactiveData.set(currentValue);
       }
     },
@@ -88,7 +87,12 @@ import '../../roba_ace/roba_ace.js';
      @default null
      **/
     parentInstance: null,
-    language      : null
+    data          : null,
+    language      : 'javascript',
+    minLines      : 10,
+    maxLines      : null,
+    minWidth      : 710,
+    minHeight     : 200
   });
   
   $.fn.editabletypes.editableAce = EditableAce;
