@@ -46,12 +46,3 @@ Meteor.publish("test_result_steps", function (projectId, testResultId) {
   }
   return [];
 });
-
-Meteor.publish("test_run_result", function (testResultId) {
-  console.debug("Publish: test_run_result:", testResultId);
-  // check that there is a project role for the current user
-  if(this.userId){
-    return TestResults.find(testResultId);
-  }
-  return [];
-});

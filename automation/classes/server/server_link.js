@@ -39,10 +39,14 @@ ddpLogger.setLevel("INFO");
 class ServerLink {
   /**
    * ServerLink
+   * @param projectId
    * @param config
    */
-  constructor (config) {
+  constructor (projectId, config) {
     logger.debug("Creating new ServerLink");
+    
+    // Store the projectId for requests
+    this.projectId = projectId;
     
     // Combine the config and defaults
     this.config           = _.defaults(config || {}, defaultConfig);
@@ -168,12 +172,20 @@ class ServerLink {
   };
   
   /**
+   * Load a TestResultRole manifect
+   */
+  loadTestRoleManifest (testResultRoleId) {
+    assert(testResultRoleId, "loadTestRoleManifest: testResultRoleId must not be null");
+    this.call("setTestSystemStatus", [ this.projectId, testResultRoleId ]);
+  };
+  
+  /**
    * Update the test system status
    */
   setTestSystemStatus (testSystemId, status) {
     assert(testSystemId, "setTestSystemStatus: testSystemId must not be null");
     assert(status !== undefined, "setTestSystemStatus: status must not be null");
-    this.call("setTestSystemStatus", [ testSystemId, status ]);
+    this.call("setTestSystemStatus", [ this.projectId, testSystemId, status ]);
   };
   
   /**
@@ -181,7 +193,7 @@ class ServerLink {
    */
   testRoleFailed (resultRoleId, data) {
     assert(resultRoleId, "testRoleFailed: resultRoleId must not be null");
-    this.call("testRoleFailed", [ resultRoleId, data ]);
+    this.call("testRoleFailed", [ this.projectId, resultRoleId, data ]);
   };
   
   /**
@@ -190,7 +202,7 @@ class ServerLink {
   setTestResultRoleStatus (resultRoleId, status) {
     assert(resultRoleId, "setTestResultRoleStatus: resultRoleId must not be null");
     assert(status !== undefined, "setTestResultRoleStatus: status must not be null");
-    this.call("setTestResultRoleStatus", [ resultRoleId, status ]);
+    this.call("setTestResultRoleStatus", [ this.projectId, resultRoleId, status ]);
   };
   
   /**
@@ -199,7 +211,7 @@ class ServerLink {
   setTestResultRoleResult (resultRoleId, code, resultData) {
     assert(resultRoleId, "setTestResultRoleResult: resultRoleId must not be null");
     assert(code !== undefined, "setTestResultRoleResult: code must not be null");
-    this.call("setTestResultRoleResult", [ resultRoleId, code, resultData ]);
+    this.call("setTestResultRoleResult", [ this.projectId, resultRoleId, code, resultData ]);
   };
   
   /**
@@ -208,7 +220,7 @@ class ServerLink {
   setTestResultStepStatus (stepResultId, status) {
     assert(stepResultId, "setTestResultStepStatus: stepResultId must not be null");
     assert(status !== undefined, "setTestResultStepStatus: status must not be null");
-    this.call("setTestResultStepStatus", [ stepResultId, status ]);
+    this.call("setTestResultStepStatus", [ this.projectId, stepResultId, status ]);
   };
   
   /**
@@ -217,7 +229,7 @@ class ServerLink {
   saveTestResultStepChecks (stepResultId, checks) {
     assert(stepResultId, "saveTestResultStepChecks: stepResultId must not be null");
     assert(checks, "saveTestResultStepChecks: status must not be null");
-    this.call("saveTestResultStepChecks", [ stepResultId, checks ]);
+    this.call("saveTestResultStepChecks", [ this.projectId, stepResultId, checks ]);
   };
   
   /**
@@ -226,7 +238,7 @@ class ServerLink {
   setTestResultStepResult (stepResultId, code, resultData) {
     assert(stepResultId, "setTestResultStepResult: stepResultId must not be null");
     assert(code !== undefined, "setTestResultStepResult: code must not be null");
-    this.call("setTestResultStepResult", [ stepResultId, code, resultData ]);
+    this.call("setTestResultStepResult", [ this.projectId, stepResultId, code, resultData ]);
   };
   
   /**
@@ -234,7 +246,7 @@ class ServerLink {
    */
   saveAdventureState (adventureId, state) {
     assert(adventureId, "saveAdventureState: adventureId must not be null");
-    this.call("saveAdventureState", [ adventureId, state ]);
+    this.call("saveAdventureState", [ this.projectId, adventureId, state ]);
   };
   
   /**
@@ -242,7 +254,7 @@ class ServerLink {
    */
   pauseAdventure (adventureId) {
     assert(adventureId, "pauseAdventure: adventureId must not be null");
-    this.call("pauseAdventure", [ adventureId ]);
+    this.call("pauseAdventure", [ this.projectId, adventureId ]);
   };
   
   /**
@@ -251,7 +263,7 @@ class ServerLink {
   setAdventureStatus (adventureId, status) {
     assert(adventureId, "setAdventureStatus: adventureId must not be null");
     assert(status !== undefined, "setAdventureStatus: status must not be null");
-    this.call("setAdventureStatus", [ adventureId, status ]);
+    this.call("setAdventureStatus", [ this.projectId, adventureId, status ]);
   };
   
   /**
@@ -260,7 +272,7 @@ class ServerLink {
   setAdventureLocation (adventureId, nodeId) {
     assert(adventureId, "setAdventureLocation: adventureId must not be null");
     assert(nodeId, "setAdventureLocation: nodeId must not be null");
-    this.call("setAdventureLocation", [ adventureId, nodeId ]);
+    this.call("setAdventureLocation", [ this.projectId, adventureId, nodeId ]);
   };
   
   /**
@@ -269,7 +281,7 @@ class ServerLink {
   setAdventureStepStatus (stepId, status) {
     assert(stepId, "setAdventureStepStatus: stepId must not be null");
     assert(status !== undefined, "setAdventureStepStatus: status must not be null");
-    this.call("setAdventureStepStatus", [ stepId, status ]);
+    this.call("setAdventureStepStatus", [ this.projectId, stepId, status ]);
   };
   
   /**
@@ -282,7 +294,7 @@ class ServerLink {
     assert(stepId, "saveAdventureStepResult: stepId must not be null");
     assert(type, "saveAdventureStepResult: type must not be null");
     assert(result, "saveAdventureStepResult: result must not be null");
-    this.call("saveAdventureStepResult", [ stepId, type, result ]);
+    this.call("saveAdventureStepResult", [ this.projectId, stepId, type, result ]);
   };
   
   /**
@@ -291,7 +303,7 @@ class ServerLink {
   setCommandStatus (commandId, status, result) {
     assert(commandId, "setCommandStatus: commandId must not be null");
     assert(status !== undefined, "setCommandStatus: status must not be null");
-    this.call("setCommandStatus", [ commandId, status, result ]);
+    this.call("setCommandStatus", [ this.projectId, commandId, status, result ]);
   };
   
   /**
@@ -303,8 +315,7 @@ class ServerLink {
     assert(imageFilePath, "saveImage: imageFilePath must not be null");
     assert(imageKey, "saveImage: imageKey must not be null");
     
-    // TODO: I BROKE CONTEXT AND HAVE TO GET IT ELSEWHERE!!!!
-    var ddp     = this,
+    let ddp     = this,
         context = this.context.get();
     context.key = imageKey;
     
@@ -312,7 +323,7 @@ class ServerLink {
     fs.exists(imageFilePath, function (exists) {
       logger.debug("Saving image: ", imageFilePath);
       if (exists) {
-        var filename = path.basename(imageFilePath),
+        let filename = path.basename(imageFilePath),
             putUrl   = [
               ddp.config.serverUrl,
               "cfs/files/screenshots/?chunk=0&filename=",
@@ -427,7 +438,7 @@ class ServerLink {
             return memo && match
           }, true)
         });
-        if(record){
+        if (record) {
           id = record._id;
         }
       }
@@ -577,17 +588,6 @@ class ServerLink {
     } else {
       console.error("ServerLink.recordList failed with unknown collection:", collectionName);
     }
-  };
-  
-  /**
-   * Load a static node record from the server
-   * @param staticId
-   * @param projectVersionId
-   */
-  loadNode (staticId, projectVersionId) {
-    assert(staticId, "loadNode: staticId must not be null");
-    assert(projectVersionId, "loadNode: projectVersionId must not be null");
-    return this.call("loadNode", [ staticId, projectVersionId ]);
   };
   
   /**

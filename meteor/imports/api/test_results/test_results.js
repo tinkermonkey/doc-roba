@@ -97,33 +97,73 @@ TestResults.allow(Auth.ruleSets.allow.ifAuthenticated);
  * Helpers
  */
 TestResults.helpers({
+  /**
+   * Get the TestResultRoles for this TestResult
+   * @return [TestResultRole]
+   */
   roleResults() {
     return TestResultRoles.find({ testResultId: this._id });
   },
+  /**
+   * Get the Project record for this TestResult
+   * @return Project
+   */
   project() {
     return Projects.findOne({ _id: this.projectId });
   },
+  /**
+   * Get the ProjectVersion record for this TestResult
+   * @return ProjectVersion
+   */
   projectVersion() {
     return ProjectVersions.findOne({ _id: this.projectVersionId });
   },
+  /**
+   * Get the TestCase record that this TestResult represents
+   * @return TestCase
+   */
   testCase() {
     return TestCases.findOne({ staticId: this.testCaseId, projectVersionId: this.projectVersionId });
   },
+  /**
+   * Get the TestServer record that this TestResult is being generated against
+   * @return TestServer
+   */
   server() {
     return TestServers.findOne({ staticId: this.serverId, projectVersionId: this.projectVersionId });
   },
+  /**
+   * Get the TestRun record that this TestResult belongs to
+   * @return TestRun
+   */
   testRun() {
     return TestRuns.findOne({ staticId: this.testRunId, projectVersionId: this.projectVersionId });
   },
+  /**
+   * Determine if this TestResult is currently staged
+   * @return {boolean}
+   */
   isStaged() {
-    return this.status = TestResultStatus.staged
+    return this.status == TestResultStatus.staged
   },
+  /**
+   * Determine if this TestResult is currently launched
+   * @return {boolean}
+   */
   isLaunching() {
-    return this.status = TestResultStatus.launched
+    return this.status == TestResultStatus.launched
   },
+  /**
+   * Determine if this TestResult is currently running
+   * @return {boolean}
+   */
   isRunning() {
-    return this.status = TestResultStatus.executing
+    return this.status == TestResultStatus.executing
   },
+  /**
+   * Determine if this TestResult has completed
+   * @return {boolean}
+   */
   isDone() {
     return _.contains([
       TestResultStatus.complete,

@@ -49,7 +49,7 @@ Template.AdventureConsole.events({
   },
   "click .btn-end-adventure" (e, instance) {
     let adventure = instance.context.adventure.get();
-    Meteor.call("abortAdventure", adventure._id, function (error, result) {
+    Meteor.call("abortAdventure", adventure.projectId, adventure._id, function (error, result) {
       if (error) {
         RobaDialog.error("End Adventure failed: " + error.message);
       }

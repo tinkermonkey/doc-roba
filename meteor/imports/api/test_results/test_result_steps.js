@@ -103,11 +103,16 @@ TestResultSteps.allow(Auth.ruleSets.allow.ifAuthenticated);
  * Helpers
  */
 TestResultSteps.helpers({
+  /**
+   * Get the TestCaseStep that this TestResultStep maps to
+   * @return TestCaseStep
+   */
   testCaseStep() {
     return TestCaseSteps.findOne({staticId: this.testCaseStepId, projectVersionId: this.projectVersionId});
   },
   /**
    * Find all of the log messages attributed to this step
+   * @return [LogMessage]
    */
   logMessages() {
     if(this.isFirst()){
@@ -123,12 +128,14 @@ TestResultSteps.helpers({
   },
   /**
    * Find the step context message pertaining to this step
+   * @return [LogMessage]
    */
   logContextMessage() {
     return LogMessages.findOne({ "sender": "context", "data.type": "step", "context.testResultStepId": this._id });
   },
   /**
    * Get all of the test-map relevant context messages in order
+   * @return [LogMessage]
    */
   testMapContexts() {
     return LogMessages.find({
@@ -145,20 +152,37 @@ TestResultSteps.helpers({
     })
   },
   /**
-   * Get all of the screenshots for this step
+   * Get all of the Screenshot records for this step
+   * @return [Screenshot]
    */
   screenshots() {
     return Screenshots.find({ testResultStepId: this._id }, {sort: {uploadedAt: -1}}).map(function (image, i) {image.index = i; return image});
   },
+  /**
+   * Determine if this is the first step
+   * @return {boolean}
+   */
   isFirst() {
     return this.order == 0;
   },
+  /**
+   * Determine if this is the first step
+   * @return {boolean}
+   */
   isLast() {
-    return TestResultSteps.find({testResultRoleId: this.testResultRoleId, order: {$gt: this.order}}).count()
+    return TestResultSteps.find({testResultRoleId: this.testResultRoleId, order: {$gt: this.order}}).count() == 0
   },
+  /**
+   * Get the next step for this result
+   * @return TestResultStep
+   */
   nextStep() {
     return TestResultSteps.findOne({testResultRoleId: this.testResultRoleId, order: this.order + 1})
   },
+  /**
+   * Get the previous step for this result
+   * @return TestResultStep
+   */
   previousStep() {
     return TestResultSteps.findOne({testResultRoleId: this.testResultRoleId, order: this.order - 1})
   }

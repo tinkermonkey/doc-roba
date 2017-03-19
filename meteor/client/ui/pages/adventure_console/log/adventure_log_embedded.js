@@ -10,7 +10,7 @@ import '../../../components/log_messages/log_message_data.js';
 Template.AdventureLogEmbedded.helpers({
   messages () {
     var adventure = this.adventure.get();
-
+    
     return LogMessages.find({
       "context.adventureId": adventure._id
     }, {
@@ -32,7 +32,7 @@ Template.AdventureLogEmbedded.onCreated(() => {
   let instance = Template.instance();
   
   instance.autorun(function () {
-    let data = Template.currentData(),
+    let data      = Template.currentData(),
         adventure = data.adventure.get();
     instance.subscribe("adventure_log", adventure.projectId, adventure._id);
   });

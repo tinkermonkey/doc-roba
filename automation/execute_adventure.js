@@ -1,3 +1,5 @@
+"use strict";
+
 var assert       = require('assert'),
     Future       = require('fibers/future'),
     Adventure    = require('./classes/adventure.js'),
@@ -6,6 +8,7 @@ var assert       = require('assert'),
     RobaContext  = require('./classes/roba_context.js'),
     commandArgs  = require('minimist')(process.argv.slice(2)),
     adventureId  = commandArgs.adventureId,
+    projectId    = commandArgs.projectId,
     authToken    = commandArgs.token,
     host         = commandArgs.host,
     ddpPort      = commandArgs.ddpPort,
@@ -13,6 +16,7 @@ var assert       = require('assert'),
     assistant, logger;
 
 assert(adventureId, 'adventureId must be specified');
+assert(projectId, 'projectId must be specified');
 assert(authToken, 'token must be specified');
 
 // Setup the logging
@@ -21,9 +25,9 @@ logger    = assistant.init();
 
 // A future is required for the DDP interactions we want synchronous
 Future.task(function () {
-  logger.info('Adventure ' + adventureId + ' launched');
-  var context   = new RobaContext({ adventureId: adventureId }),
-      ddpLink   = new ServerLink({
+  logger.info('Adventure ' + adventureId + ' launched for project ' + projectId);
+  let context   = new RobaContext({ adventureId: adventureId }),
+      ddpLink   = new ServerLink(projectId, {
         ddp    : {
           host: host,
           port: ddpPort
@@ -32,7 +36,7 @@ Future.task(function () {
           port: httpPort
         }
       }),
-      adventure = new Adventure(adventureId, ddpLink, context, assistant.path);
+      adventure = new Adventure(adventureId, projectId, ddpLink, context, assistant.path);
   
   // Create a ddp connection and connect to the server
   logger.info('Initiating DDP connection');

@@ -45,7 +45,7 @@ export class AdventureContext {
           projectVersionId = FlowRouter.getParam("projectVersionId"),
           adventureId      = FlowRouter.getParam("adventureId");
       
-      instance.subscribe("adventure", adventureId);
+      instance.subscribe("adventure", projectId, adventureId);
       instance.subscribe("adventure_state", projectId, adventureId);
       instance.subscribe("adventure_actions", projectId, adventureId);
       instance.subscribe("adventure_commands", projectId, adventureId);

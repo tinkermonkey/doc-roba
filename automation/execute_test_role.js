@@ -6,6 +6,7 @@ var assert       = require('assert'),
     RobaContext  = require('./classes/roba_context.js'),
     commandArgs  = require('minimist')(process.argv.slice(2)),
     adventureId  = commandArgs.adventureId,
+    projectId    = commandArgs.projectId,
     authToken    = commandArgs.token,
     host         = commandArgs.host,
     ddpPort      = commandArgs.ddpPort,
@@ -13,6 +14,7 @@ var assert       = require('assert'),
     assistant, logger;
 
 assert(adventureId, 'adventureId must be specified');
+assert(projectId, 'projectId must be specified');
 assert(authToken, 'token must be specified');
 
 // Setup the logging
@@ -23,7 +25,7 @@ logger    = assistant.init();
 Future.task(function () {
   logger.info('Adventure ' + adventureId + ' launched');
   var context   = new RobaContext({ adventureId: adventureId }),
-      ddpLink   = new ServerLink({
+      ddpLink   = new ServerLink(projectId, {
         ddp    : {
           host: host,
           port: ddpPort

@@ -19,13 +19,15 @@ class Adventure {
   /**
    * Adventure
    * @param adventureId String
+   * @param projectId String
    * @param serverLink ServerLink
    * @param context RobaContext
    * @param logPath The path the folder to save images in
    */
-  constructor (adventureId, serverLink, context, logPath) {
-    logger.debug('Creating adventure:', adventureId, logPath);
+  constructor (adventureId, projectId, serverLink, context, logPath) {
+    logger.debug('Creating adventure:', adventureId, projectId, logPath);
     this._id        = adventureId;
+    this.projectId  = projectId;
     this.serverLink = serverLink;
     this.context    = context;
     this.logPath    = logPath;
@@ -41,68 +43,68 @@ class Adventure {
    */
   init () {
     logger.debug('Adventure.init:', this._id);
-    var adventure = this;
+    let self = this;
     
     // Setup a listener to exit gracefully on sigint
     process.on("SIGINT", function () {
       logger.info("Exiting - SIGINT");
-      adventure.exit(0);
+      self.exit(0);
     });
     
     // Load the enums needed for an adventure
-    adventure.serverLink.enums = adventure.serverLink.call('loadAdventureEnums');
-    Adventure.setEnums(adventure.serverLink.enums);
+    self.serverLink.enums = self.serverLink.call('loadAdventureEnums');
+    Adventure.setEnums(self.serverLink.enums);
     
     // Load the adventure record
     logger.debug('Loading adventure record');
-    adventure.record = adventure.serverLink.liveRecord('adventure', [ adventure._id ], 'adventures');
-    logger.trace('Adventure loaded:', adventure.record);
+    self.record = self.serverLink.liveRecord('adventure', [ self.projectId, self._id ], 'adventures');
+    logger.trace('Adventure loaded:', self.record);
     
     // Update the context
-    adventure.context.update({
-      projectId       : adventure.record.projectId,
-      projectVersionId: adventure.record.projectVersionId,
-      testAgentId     : adventure.record.testAgentId,
-      serverId        : adventure.record.serverId
+    self.context.update({
+      projectId       : self.record.projectId,
+      projectVersionId: self.record.projectVersionId,
+      testAgentId     : self.record.testAgentId,
+      serverId        : self.record.serverId
     });
     
     // Update the status to launched
-    adventure.setStatus(AdventureStatus.launched);
+    self.setStatus(AdventureStatus.launched);
     
     // Enter a context milestone marking the launch of the adventure
-    adventure.context.milestone({ type: 'adventure', data: adventure.record });
+    self.context.milestone({ type: 'adventure', data: self.record });
     
     // Load the test system record
     logger.debug('Loading test system record');
-    adventure.testSystem = adventure.serverLink.liveRecord('adventure_test_system', [
-      adventure.record.projectId,
-      adventure.record.testSystemId
-    ], 'test_systems', { staticId: adventure.record.testSystemId });
-    logger.trace('Test system: ', adventure.testSystem);
+    self.testSystem = self.serverLink.liveRecord('adventure_test_system', [
+      self.record.projectId,
+      self.record.testSystemId
+    ], 'test_systems', { staticId: self.record.testSystemId });
+    logger.trace('Test system: ', self.testSystem);
     
     // Load the test agent record
     logger.debug('Loading test agent record');
-    adventure.testAgent = adventure.serverLink.liveRecord('adventure_test_agent', [
-      adventure.record.projectId,
-      adventure.record.testAgentId
-    ], 'test_agents', { staticId: adventure.record.testAgentId });
-    logger.trace('Test agent: ', adventure.testAgent);
+    self.testAgent = self.serverLink.liveRecord('adventure_test_agent', [
+      self.record.projectId,
+      self.record.testAgentId
+    ], 'test_agents', { staticId: self.record.testAgentId });
+    logger.trace('Test agent: ', self.testAgent);
     
     // Load the server record
     logger.debug('Loading test server record');
-    adventure.testServer = adventure.serverLink.liveRecord('adventure_server', [
-      adventure.record.projectId,
-      adventure.record.serverId
-    ], 'test_servers', { staticId: adventure.record.serverId });
-    logger.trace('Test server: ', adventure.testServer);
+    self.testServer = self.serverLink.liveRecord('adventure_server', [
+      self.record.projectId,
+      self.record.serverId
+    ], 'test_servers', { staticId: self.record.serverId });
+    logger.trace('Test server: ', self.testServer);
     
     // Create the adventure step objects
     logger.debug('Creating adventure steps');
-    adventure.stepRecords = adventure.serverLink.liveCollection('adventure_steps', [ adventure.record.projectId, adventure._id ]);
-    logger.trace("Adventure steps:", adventure.stepRecords);
-    if (adventure.stepRecords && _.keys(adventure.stepRecords).length) {
-      adventure.steps = _.values(adventure.stepRecords).map((function (stepRecord, i) {
-        var step = new AdventureStep(stepRecord, i, adventure);
+    self.stepRecords = self.serverLink.liveCollection('adventure_steps', [ self.record.projectId, self._id ]);
+    logger.trace("Adventure steps:", self.stepRecords);
+    if (self.stepRecords && _.keys(self.stepRecords).length) {
+      self.steps = _.values(self.stepRecords).map((function (stepRecord, i) {
+        let step = new AdventureStep(stepRecord, i, self);
         step.init();
         return step;
       }));
@@ -117,47 +119,47 @@ class Adventure {
    */
   connect () {
     logger.debug('Adventure.connect:', this._id);
-    var adventure = this,
-        config    = {
-          host               : adventure.testSystem.hostname,
-          port               : adventure.testSystem.port,
+    let self   = this,
+        config = {
+          host               : self.testSystem.hostname,
+          port               : self.testSystem.port,
           desiredCapabilities: {
-            browserName : adventure.testAgent.identifier,
+            browserName : self.testAgent.identifier,
             loggingPrefs: { browser: 'ALL', driver: 'WARNING', client: 'WARNING', server: 'WARNING' }
           },
           logLevel           : 'silent',
-          logPath            : adventure.logPath,
+          logPath            : self.logPath,
           end                : function (event) {
             logger.info('End event received from driver');
-            adventure.driverEnded = true;
-            if (!adventure.endIntentional) {
+            self.driverEnded = true;
+            if (!self.endIntentional) {
               logger.error('Driver end doesn`t look intentional:', event);
-              adventure.setStatus(AdventureStatus.failed);
+              self.setStatus(AdventureStatus.failed);
           
               // exit
-              adventure.exit(1);
+              self.exit(1);
             }
           }
         };
     
     // Setup the driver
     logger.info('Creating RobaDriver');
-    adventure.driver = new RobaDriver(config);
+    self.driver = new RobaDriver(config);
     
     // Set the timeouts for the driver
     logger.trace('Setting driver timeouts');
-    adventure.driver.timeouts('implicit', 100);
-    adventure.driver.timeouts('script', 5000);
-    adventure.driver.timeouts('page load', 10000); // don't rely on this, and we don't want it getting in the way
-    adventure.driver.timeoutsImplicitWait(100);
-    adventure.driver.timeoutsAsyncScript(20000); // don't rely on this, and we don't want it getting in the way
+    self.driver.timeouts('implicit', 100);
+    self.driver.timeouts('script', 5000);
+    self.driver.timeouts('page load', 10000); // don't rely on this, and we don't want it getting in the way
+    self.driver.timeoutsImplicitWait(100);
+    self.driver.timeoutsAsyncScript(20000); // don't rely on this, and we don't want it getting in the way
     
     // Set the viewport if it's specified
-    if (adventure.record.dataContext.viewport) {
-      logger.debug('Setting viewport:', adventure.record.dataContext.viewport);
+    if (self.record.dataContext.viewport) {
+      logger.debug('Setting viewport:', self.record.dataContext.viewport);
       try {
-        var viewport = adventure.record.dataContext.viewport;
-        adventure.driver.windowHandleSize({ width: viewport.width, height: viewport.height })
+        let viewport = self.record.dataContext.viewport;
+        self.driver.windowHandleSize({ width: viewport.width, height: viewport.height })
       } catch (e) {
         logger.error('Setting viewport failed:', e.toString(), e.stack);
       }
@@ -169,24 +171,24 @@ class Adventure {
    */
   executeSteps () {
     logger.debug('Adventure.executeSteps:', this._id);
-    var adventure  = this,
+    let self       = this,
         stepPassed = true;
     
     // Prepare to execute
-    adventure.context.backup();
-    adventure.driver.getClientLogs();
-    adventure.setStatus(AdventureStatus.routing);
+    self.context.backup();
+    self.driver.getClientLogs();
+    self.setStatus(AdventureStatus.routing);
     
-    adventure.steps.forEach(function (step) {
+    self.steps.forEach(function (step) {
       logger.info("Step pre-execution [", step.index, "]:", step.record, step.node.record, step.action && step.action.record);
     });
     
     // Execute each step
-    adventure.steps.forEach(function (step) {
+    self.steps.forEach(function (step) {
       // If the previous step passed, keep executing
-      if (stepPassed && !adventure.record.abort && !adventure.driverEnded) {
+      if (stepPassed && !self.record.abort && !self.driverEnded) {
         try {
-          adventure.checkForPause();
+          self.checkForPause();
           stepPassed = step.execute();
         } catch (e) {
           logger.error("Step execution failed:", step.record, e.toString(), e.stack);
@@ -205,28 +207,28 @@ class Adventure {
    */
   waitForCommands () {
     logger.debug('Adventure.waitForCommands:', this._id);
-    var adventure   = this,
+    let self        = this,
         index       = 0,
-        commandList = adventure.serverLink.liveCollection('adventure_commands', [ adventure.record.projectId, adventure._id ]),
+        commandList = self.serverLink.liveCollection('adventure_commands', [ self.record.projectId, self._id ]),
         command;
     
-    logger.trace('Adventure commands loaded: ', _.keys(adventure.commandList).length);
-    adventure.setStatus(AdventureStatus.awaitingCommand);
+    logger.trace('Adventure commands loaded: ', _.keys(self.commandList).length);
+    self.setStatus(AdventureStatus.awaitingCommand);
     
-    while (adventure.record.waitForCommands && !adventure.record.abort && !adventure.driverEnded) {
+    while (self.record.waitForCommands && !self.record.abort && !self.driverEnded) {
       // We have to do this to pick up the dynamic collection if it originally had zero commands
       if (!_.keys(commandList).length) {
-        commandList = adventure.serverLink.ddp.collections.adventure_commands;
+        commandList = self.serverLink.ddp.collections.adventure_commands;
       }
       
       // Check for a new command
       if (index < _.keys(commandList).length) {
         logger.debug("Adventure command found at index", index);
-        adventure.checkForPause();
-        adventure.setStatus(AdventureStatus.executingCommand);
+        self.checkForPause();
+        self.setStatus(AdventureStatus.executingCommand);
         
         // Create the command object
-        command = new AdventureCommand(commandList[ _.keys(commandList)[ index ] ], index, adventure);
+        command = new AdventureCommand(commandList[ _.keys(commandList)[ index ] ], index, self);
         
         // Execute the command
         try {
@@ -237,17 +239,17 @@ class Adventure {
         }
         
         // Update the state
-        adventure.updateState(true);
+        self.updateState(true);
         
         // Increment the counter
         index++;
         
         // Check so see if there were stacked up commands
         if (index >= _.keys(commandList).length) {
-          adventure.setStatus(AdventureStatus.awaitingCommand);
+          self.setStatus(AdventureStatus.awaitingCommand);
         }
       } else {
-        adventure.keepAlive();
+        self.keepAlive();
       }
     }
   }
@@ -257,14 +259,14 @@ class Adventure {
    */
   keepAlive () {
     logger.trace('Adventure.keepAlive');
-    var adventure = this;
+    let self = this;
     
     try {
       // Wait politely
-      adventure.driver.wait(keepAliveWait);
+      self.driver.wait(keepAliveWait);
       
       // Update the state
-      adventure.updateState();
+      self.updateState();
     } catch (e) {
       logger.error("Exception encountered during keep-alive: ", e.toString(), e.stack);
     }
@@ -286,30 +288,30 @@ class Adventure {
    */
   updateState (force) {
     logger.trace('Adventure.updateState:', force);
-    var adventure = this,
-        now       = Date.now(),
+    let self = this,
+        now  = Date.now(),
         state, currentUrl;
     
     // Check to see if we should send a keep-alive task to the driver
-    if (now - adventure.lastChecked > updatePeriod || force) {
+    if (now - self.lastChecked > updatePeriod || force) {
       logger.trace("Checking current url");
-      currentUrl = adventure.driver.checkUrl();
+      currentUrl = self.driver.checkUrl();
       
-      if ((currentUrl && currentUrl !== adventure.lastUrl) || (now - adventure.lastUpdated) > statePeriod || force) {
-        logger.debug("Updating adventure state:", currentUrl, adventure.lastUrl);
-        state = adventure.driver.getState();
-        adventure.serverLink.saveAdventureState(adventure._id, state);
+      if ((currentUrl && currentUrl !== self.lastUrl) || (now - self.lastUpdated) > statePeriod || force) {
+        logger.debug("Updating adventure state:", currentUrl, self.lastUrl);
+        state = self.driver.getState();
+        self.serverLink.saveAdventureState(self._id, state);
         
         // update the last url and the last update timestamp
-        adventure.lastUrl     = state.url;
-        adventure.lastUpdated = Date.now();
+        self.lastUrl     = state.url;
+        self.lastUpdated = Date.now();
       }
       
       // check the client logs
-      adventure.driver.getClientLogs();
+      self.driver.getClientLogs();
       
       // Note the time that url was checked
-      adventure.lastChecked = Date.now();
+      self.lastChecked = Date.now();
     }
     
   }
@@ -319,11 +321,11 @@ class Adventure {
    * @param status
    */
   setStatus (status) {
-    var adventure = this;
+    let self = this;
     assert(status != null, 'Adventure.setStatus status cannot be null');
     
     logger.debug('Adventure.setStatus:', status);
-    adventure.serverLink.call('setAdventureStatus', [ adventure._id, status ])
+    self.serverLink.setAdventureStatus(self._id, status );
   }
   
   /**
@@ -344,20 +346,20 @@ class Adventure {
    */
   exit (code) {
     logger.info("Adventure.exit:", code);
-    var adventure = this;
+    let self = this;
     
     // Shut down the driver
     try {
-      adventure.endIntentional = true;
+      self.endIntentional = true;
       logger.info("Ending web driver");
-      adventure.driver.end();
+      self.driver.end();
     } catch (e) {
     }
     
     // Close the ddp link
     try {
       logger.info("Closing DDP Link");
-      adventure.serverLink.disconnect();
+      self.serverLink.disconnect();
     } catch (e) {
     }
     

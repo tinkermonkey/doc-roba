@@ -225,7 +225,7 @@ Template.roba_launcher.events({
                   RobaDialog.error("Failed to create adventure state: " + error.message);
                 } else {
                   // Launch the Adventure
-                  Meteor.call("launchAdventure", adventureId, function (error) {
+                  Meteor.call("launchAdventure", adventureData.projectId, adventureId, function (error) {
                     if (error) {
                       console.error("Failed to launch adventure " + adventureId + ": " + error.message);
                       RobaDialog.error("Failed to launch adventure " + adventureId + ": " + error.message);

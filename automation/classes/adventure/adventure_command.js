@@ -24,18 +24,18 @@ class AdventureCommand {
    */
   execute () {
     logger.debug('Executing adventure command:', this.index, this.record._id);
-    var command   = this,
-        adventure = command.adventure,
-        executor  = new CodeExecutor(command.record.code),
+    var self      = this,
+        adventure = self.adventure,
+        executor  = new CodeExecutor(self.record.code),
         result;
-  
+    
     // Inject the helpers
     adventure.driver.injectHelpers();
     
     // Update the logging context
-    adventure.context.update({ adventureCommandId: command.record._id }); // each step handler should further update the context
-    adventure.context.milestone({ type: "command", data: command.record });
-  
+    adventure.context.update({ adventureCommandId: self.record._id }); // each step handler should further update the context
+    adventure.context.milestone({ type: "command", data: self.record });
+    
     // Setup the execution context
     executor.addVariable("driver", adventure.driver);
     
@@ -47,10 +47,10 @@ class AdventureCommand {
     
     // Save the command result
     logger.debug("Command executed:", result);
-    if(result.error){
-      command.setStatus(AdventureStepStatus.error, result.error)
+    if (result.error) {
+      self.setStatus(AdventureStepStatus.error, result.error)
     } else {
-      command.setStatus(AdventureStepStatus.complete, result.result)
+      self.setStatus(AdventureStepStatus.complete, result.result)
     }
   }
   
@@ -60,7 +60,7 @@ class AdventureCommand {
    * @param result
    */
   setStatus (status, result) {
-    this.adventure.serverLink.call('setCommandStatus', [ this.record._id, status, result ])
+    this.adventure.serverLink.setCommandStatus(this.record._id, status, result)
   }
   
   /**
