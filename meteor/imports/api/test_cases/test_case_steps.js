@@ -83,11 +83,19 @@ ChangeTracker.TrackChanges(TestCaseSteps, "test_case_steps");
  * Helpers
  */
 TestCaseSteps.helpers({
+  /**
+   * Get the first node that this step encounters
+   * @return Node
+   */
   firstNode() {
     if(this.data && (this.data.nodeId || this.data.sourceId)){
       return Nodes.findOne({staticId: this.data.nodeId || this.data.sourceId, projectVersionId: this.projectVersionId});
     }
   },
+  /**
+   * Get the action associated with this step
+   * @return Action
+   */
   action() {
     if(this.data && this.data.actionId){
       return Actions.findOne({staticId: this.data.actionId, projectVersionId: this.projectVersionId});

@@ -57,12 +57,24 @@ ChangeTracker.TrackChanges(PlatformConfigurations, "platform_configurations");
  * Helpers
  */
 PlatformConfigurations.helpers({
+  /**
+   * Get the list of viewports for this PlatformConfig
+   * @return [PlatformViewport]
+   */
   viewports(){
     return PlatformViewports.find({platformId: this._id}, {sort: {title: 1}});
   },
+  /**
+   * Get the default viewport for this PlatformConfig
+   * @return PlatformViewport
+   */
   defaultViewport(){
     return PlatformViewports.findOne({platformId: this._id, default: true});
   },
+  /**
+   * Get the list of operating systems for this PlatformConfig
+   * @return [PlatformOperatingSystem]
+   */
   operatingSystems(){
     return PlatformOperatingSystems.find({platformId: this._id}, {sort: {title: 1}});
   }
