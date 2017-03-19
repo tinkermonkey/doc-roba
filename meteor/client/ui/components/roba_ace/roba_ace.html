@@ -5,16 +5,18 @@
          style="{{#if minWidth}}min-width: {{minWidth}}px;{{/if}}{{#if minHeight}}min-height: {{minHeight}}px;{{/if}}"
          data-key="{{dataKey}}"></div>
     {{constant}}
-    <div class="roba-ace-toolbar {{cssClass}}">
-      <div class="roba-ace-toolbar-btn">
-        <span class="glyphicon glyphicon-chevron-left btn-fill-left"></span>
+    {{#if inXEditable.get}}
+      <div class="roba-ace-toolbar {{cssClass}}">
+        <div class="roba-ace-toolbar-btn">
+          <span class="glyphicon glyphicon-chevron-left btn-fill-left"></span>
+        </div>
+        <div class="roba-ace-toolbar-btn">
+          <span class="glyphicon glyphicon-chevron-right btn-fill-right"></span>
+        </div>
+        <div class="roba-ace-toolbar-btn">
+          <span class="glyphicon glyphicon-fullscreen btn-fullscreen"></span>
+        </div>
       </div>
-      <div class="roba-ace-toolbar-btn">
-        <span class="glyphicon glyphicon-chevron-right btn-fill-right"></span>
-      </div>
-      <div class="roba-ace-toolbar-btn">
-        <span class="glyphicon glyphicon-fullscreen btn-fullscreen"></span>
-      </div>
-    </div>
+    {{/if}}
   </div>
 </template>

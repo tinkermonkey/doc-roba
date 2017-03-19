@@ -34,20 +34,22 @@ Template.EditableCode.created = function () {
  * Template Rendered
  */
 Template.EditableCode.rendered = function () {
-  var instance = Template.instance();
+  let instance = Template.instance();
   
   instance.$(".editable").editable({
     type          : "editableAce",
     mode          : instance.data.mode || "popup",
     placement     : instance.data.placement || "auto",
     data          : instance.data,
+    language      : instance.data.language || "javascript",
+    autoHeight    : instance.data.autoHeight,
     parentInstance: instance,
     highlight     : false,
     onblur        : "ignore",
     display() {
     },
     success(response, newValue) {
-      var editedElement = this;
+      let editedElement = this;
       $(editedElement).trigger("edited", [ newValue ]);
       setTimeout(function () {
         $(editedElement).removeClass('editable-unsaved');
@@ -66,7 +68,7 @@ Template.EditableCode.rendered = function () {
   
   // Watch for data changes and re-render
   instance.autorun(function () {
-    var data = Template.currentData();
+    let data = Template.currentData();
     instance.$(".editable").editable("setValue", data);
     if (data.value) {
       instance.$('.code').html(Prism.highlight(data.value, Prism.languages.javascript));

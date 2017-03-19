@@ -82,6 +82,7 @@ Template.RobaAce.events({
  */
 Template.RobaAce.created = function () {
   let self = Template.instance();
+  self.inXEditable = new ReactiveVar(false);
   
   self.enterFullscreen = function (popover) {
     let instance = this;
@@ -118,10 +119,11 @@ Template.RobaAce.created = function () {
  * Template Rendered
  */
 Template.RobaAce.rendered = function () {
-  let self         = Template.instance();
-  self.inXEditable = $(self.firstNode).closest(".editableform").get(0) != null;
+  let self         = Template.instance(),
+      inXEditable  = $(self.firstNode).closest(".editableform").get(0) != null;
+  self.inXEditable.set(inXEditable);
   
-  if (self.inXEditable) {
+  if (inXEditable) {
     let popover = self.$(self.firstNode).closest(".popover-content");
     if (popover.hasClass("roba-ace-fullscreen")) {
       self.enterFullscreen(popover);
@@ -171,7 +173,7 @@ Template.RobaAce.rendered = function () {
     }, 100);
     
     // If this is part of an x_editable control, don't publish live events
-    if (!self.inXEditable) {
+    if (!inXEditable) {
       // Setup firing of edited events on a buffer
       editor.getSession().on('change', function (change, editor) {
         clearTimeout(self.updateTimeout);
@@ -179,6 +181,19 @@ Template.RobaAce.rendered = function () {
           $("#" + self.elementId).trigger("edited", [ editor.getValue() || "" ]);
         }, 1000);
       });
+    }
+    
+    // Check for auto-height
+    if (self.data.autoHeight) {
+      editor.getSession().on('change', function (change) {
+        let newHeight = editor.getSession().getScreenLength() * editor.renderer.lineHeight + editor.renderer.scrollBar.getWidth();
+        self.$('.roba-ace').css('height', newHeight + 'px');
+        editor.resize();
+      });
+  
+      let newHeight = editor.getSession().getScreenLength() * editor.renderer.lineHeight + editor.renderer.scrollBar.getWidth();
+      self.$('.roba-ace').css('height', newHeight + 'px');
+      editor.resize();
     }
     
     // resize the editor on expand/collapse

@@ -31,11 +31,12 @@ import '../../roba_ace/roba_ace.js';
       
       //console.log("EditableAce render data:", data, "options:", self.options);
       
-      currentValue.minWidth  = Math.max(self.options.parentInstance.$(".editable").width(), self.options.minWidth);
-      currentValue.minHeight = self.options.minHeight;
-      currentValue.minLines  = self.options.minLines;
-      currentValue.maxLines  = self.options.maxLines;
-      currentValue.mode      = self.options.language;
+      currentValue.minWidth   = Math.max(self.options.parentInstance.$(".editable").width(), self.options.minWidth);
+      currentValue.minHeight  = self.options.minHeight;
+      currentValue.minLines   = self.options.minLines;
+      currentValue.maxLines   = self.options.maxLines;
+      currentValue.mode       = self.options.language;
+      currentValue.autoHeight = self.options.autoHeight;
       self.reactiveData.set(currentValue);
       
       Blaze.renderWithData(Template.RobaAce, function () {
@@ -92,7 +93,8 @@ import '../../roba_ace/roba_ace.js';
     minLines      : 10,
     maxLines      : null,
     minWidth      : 710,
-    minHeight     : 200
+    minHeight     : 200,
+    autoHeight    : false
   });
   
   $.fn.editabletypes.editableAce = EditableAce;
