@@ -1,9 +1,6 @@
 import './version_activity.html';
-
-import {Template} from 'meteor/templating';
-
-import {RecordChanges} from '../../../../../imports/api/change_tracker/record_change.js';
-
+import { Template } from 'meteor/templating';
+import { RecordChanges } from '../../../../../imports/api/change_tracker/record_changes.js';
 import '../../../components/change_list/change_list.js';
 
 /**
@@ -27,19 +24,24 @@ Template.VersionActivity.events({});
  * Template Created
  */
 Template.VersionActivity.created = function () {
-
+  let instance = Template.instance();
+  
+  instance.autorun(() => {
+    let data = Template.currentData();
+    instance.subscribe('version_changes', data._id);
+  })
 };
 
 /**
  * Template Rendered
  */
 Template.VersionActivity.rendered = function () {
-
+  
 };
 
 /**
  * Template Destroyed
  */
 Template.VersionActivity.destroyed = function () {
-
+  
 };

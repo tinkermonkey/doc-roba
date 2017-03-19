@@ -30,7 +30,6 @@ Template.BaseLayout.created = function () {
       instance.subscribe("user_peers", user.projectList);
       instance.subscribe("projects", user.projectList);
       instance.subscribe("project_versions", user.projectList);
-      instance.subscribe("changes", user.projectList);
     }
   });
 };

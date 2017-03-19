@@ -2,7 +2,7 @@ import './project_activity.html';
 
 import {Template} from 'meteor/templating';
 
-import {RecordChanges} from '../../../../../imports/api/change_tracker/record_change.js';
+import {RecordChanges} from '../../../../../imports/api/change_tracker/record_changes.js';
 
 import '../../../components/change_list/change_list.js';
 

@@ -1,7 +1,7 @@
 import {Meteor} from 'meteor/meteor';
 import {_} from 'meteor/underscore';
 import {ChangeTypes} from './change_types.js';
-import {RecordChanges} from './record_change.js';
+import {RecordChanges} from './record_changes.js';
 
 /**
  * Define a list of fields which will automatically be pulled off of the changed record
