@@ -9,7 +9,7 @@
           {{> EditableTextField value=name dataKey="name" cssClass="inline"}}
         </small>
       </h1>
-      <h4>{{> EditableCode value=docs dataKey="docs" emptyText="No Documentation" language="markdown"}}</h4>
+      <h4>{{> EditableCode value=docs dataKey="docs" emptyText="No Documentation" language="markdown" mode="inline" autoHeight=true}}</h4>
   
       <div class="code-module-editor-container">
         {{#if codeModuleFunction}}

@@ -147,7 +147,7 @@ Template.CodeModuleListModule.events({
         });
       }
     } else {
-      console.log("Invalid:", itemName);
+      console.log("CodeModuleListModule btn-add-item value invalid:", itemName);
     }
   }
 });

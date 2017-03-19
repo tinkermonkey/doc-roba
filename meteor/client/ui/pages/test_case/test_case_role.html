@@ -2,7 +2,7 @@
   <h3>
     {{> EditableTextField value=title dataKey="title" emptyText="Enter Title" cssClass="inline"}}
   </h3>
-  <h4>{{> EditableTextArea value=description dataKey="description" emptyText="No Description"}}</h4>
+  <h4>{{> EditableCode value=description dataKey="description" emptyText="No Description" language="markdown" mode="inline" autoHeight=true}}</h4>
 
   <div class="test-role-steps">
     {{#each steps}}

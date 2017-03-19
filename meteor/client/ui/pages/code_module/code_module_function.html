@@ -4,7 +4,7 @@
       <h2>Function <small>{{> EditableTextField value=name dataKey="name" cssClass="inline"}}</small></h2>
     
       <div class="code-module-function-docs">
-        {{> EditableCode value=docs dataKey="docs" emptyText="No documentation" language="markdown"}}
+        {{> EditableCode value=docs dataKey="docs" emptyText="No documentation" language="markdown" mode="inline" autoHeight=true}}
       </div>
       
       <div class="code-module-function-params">
@@ -18,7 +18,7 @@
         <pre><code class="code editor-header javascript"></code></pre>
         {{constant}}
   
-        {{> EditableCode value=code dataKey="code" emptyText="No code"}}
+        {{> EditableCode value=code dataKey="code" emptyText="No code" mode="inline" autoHeight=true}}
   
         {{constant}}
         <pre><code class="code editor-footer javascript"></code></pre>
