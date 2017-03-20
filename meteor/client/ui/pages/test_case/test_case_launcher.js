@@ -90,7 +90,7 @@ Template.TestCaseLauncher.events({
           if(error){
             RobaDialog.error("prepareTestCaseRun failed: " + error.toString());
           } else if(testResultId) {
-            Meteor.call("launchTestResult", testResultId, function (error, result) {
+            Meteor.call("launchTestResult", instance.data.projectId, testResultId, function (error, result) {
               if(error){
                 RobaDialog.error("Launching test failed: " + error.toString());
               } else {
