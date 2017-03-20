@@ -1,6 +1,7 @@
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { Auth } from '../auth.js';
+import { DatastoreRows } from '../datastores/datastore_rows.js';
 import { TestResultCodes } from './test_result_codes.js';
 import { TestResultStatus } from './test_result_status.js';
 import { TestCaseRoles } from '../test_cases/test_case_roles.js';
@@ -138,6 +139,13 @@ TestResultRoles.helpers({
     return TestAgents.findOne({ staticId: this.testAgentId, projectVersionId: this.projectVersionId });
   },
   /**
+   * Get the credentials for this role
+   * @return DataStoreRow
+   */
+  account(){
+    return DatastoreRows.findOne({ staticId: this.accountId, projectVersionId: this.projectVersionId });
+  },
+  /**
    * Determine if this role is staged
    * @return {boolean}
    */
@@ -177,11 +185,8 @@ TestResultRoles.helpers({
     
     return {
       record         : self,
-      testResultSteps: self.steps().map((step) => {
-        // Get the testCaseStep record for this step
-        step.testCaseStep = step.testCaseStep();
-        return step;
-      }),
+      account        : self.account(),
+      testResultSteps: self.steps().fetch(),
       testSystem     : self.testSystem(),
       testAgent      : self.testAgent(),
       testServer     : testResult.server(),

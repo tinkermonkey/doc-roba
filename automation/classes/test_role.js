@@ -84,6 +84,7 @@ class TestRole {
         default:
           throw new Error(500, "Error", "Unknown TestCaseStepType: " + testResultStep.type)
       }
+      
       step.init();
       return step
     });
@@ -147,16 +148,37 @@ class TestRole {
    */
   execute () {
     logger.debug('TestRole.execute');
-  }
-  
-  /**
-   * Set the status of the test role
-   * @param status
-   */
-  setStatus (status) {
-    logger.debug('TestRole.setStatus:', status);
     let self = this;
-    self.serverLink.setTestResultRoleStatus(self._id, status)
+    
+    // Update the role status
+    self.serverLink.setTestResultRoleStatus(self._id, TestResultStatus.executing);
+    
+    // Backup the context so that it can be restored between steps
+    self.context.backup(); //backup the context so we can restore it after each step
+    self.driver.getClientLogs();
+    
+    // Go through each step and execute it
+    let pass = true;
+    for (let i = 0; i < self.steps.length; i++) {
+      if (!self.testResult.abort && !self.driverEnded && pass) {
+        self.context.restore();
+        logger.debug('TestRole.execute launching step', i);
+        pass = self.steps[ i ].execute();
+      } else {
+        logger.debug('TestRole.execute skipping step ', i, ', abort:', self.testResult.abort, 'driverEnded:', self.driverEnded, 'pass:', pass);
+        self.steps[ i ].skip();
+      }
+    }
+    
+    // Restore the context
+    self.context.restore();
+    logger.info("TestRole.execute: all steps executed");
+    
+    // Done
+    self.setStatus(TestResultStatus.complete);
+    if (pass) {
+      self.setResult(TestResultCodes.pass);
+    }
   }
   
   /**
@@ -171,7 +193,7 @@ class TestRole {
     manifest = self.serverLink.loadTestRoleManifest(self._id);
     logger.trace("TestRole manifest: ", manifest);
     
-    if(!manifest){
+    if (!manifest) {
       throw new Error("500", "Manifest Load Failed", "Failed to load role manifest " + self._id);
     }
     
@@ -181,7 +203,7 @@ class TestRole {
       logger.trace('Setting TestRole attribute from manifest:', key, manifest[ key ]);
       self[ key ] = manifest[ key ];
     });
-    self.context.milestone({ type: "test_result_role", data: self.record });
+    logger.trace("TestRole manifest loaded: ", self._id);
     
     // Update the context
     self.context.update({
@@ -201,8 +223,8 @@ class TestRole {
    * Load the TestResult record for this TestResultRole
    */
   loadTestResultRecord () {
-    let self        = this;
-    self.testResult = self.serverLink.liveRecord('test_run_result', [ self.projectId, self.record.testResultId ], 'TestResults');
+    logger.debug("Loading the TestRole TestResult record:", this.projectId, this.record.testResultId);
+    this.testResult = this.serverLink.liveRecord('test_run_result', [ this.projectId, this.record.testResultId ], 'TestResults');
   }
   
   /**
@@ -217,6 +239,25 @@ class TestRole {
     TestCaseStepTypes.load(self.serverLink, logger);
     TestResultCodes.load(self.serverLink, logger);
     TestResultStatus.load(self.serverLink, logger);
+  }
+  
+  /**
+   * Set the status of the test role
+   * @param status
+   */
+  setStatus (status) {
+    logger.debug('TestRole.setStatus:', status);
+    this.serverLink.setTestResultRoleStatus(this._id, status)
+  }
+  
+  /**
+   * Set the status of the test role
+   * @param resultCode
+   * @param result
+   */
+  setResult (resultCode, result) {
+    logger.debug('TestRole.setResult:', resultCode, result);
+    this.serverLink.setTestResultRoleResult(this._id, resultCode, result)
   }
   
   /**

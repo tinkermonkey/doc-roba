@@ -18,6 +18,57 @@ import { ProcessLauncher } from '../../process_launcher/process_launcher.js';
 
 Meteor.methods({
   /**
+   * Launch a test result run
+   */
+  launchTestResult(projectId, testResultId) {
+    console.info("launchTestResult: ", projectId, testResultId);
+    check(Meteor.userId(), String);
+    check(projectId, String);
+    check(testResultId, String);
+    
+    // Validate that the user has permission
+    if (Auth.hasProjectAccess(Meteor.userId(), projectId)) {
+      let testResult = TestResults.findOne({ projectId: projectId, _id: testResultId });
+      if (testResult) {
+        // do some quick cleanup in case this is a re-run
+        LogMessages.remove({ "context.testResultId": testResult._id });
+        Screenshots.remove({ testResultId: testResult._id });
+        
+        TestResults.update({ _id: testResult._id }, {
+          $set  : { status: TestResultStatus.launched, abort: false },
+          $unset: { resultCode: "", result: "" }
+        });
+        
+        TestResultRoles.update({ testResultId: testResult._id }, {
+          $set  : { status: TestResultStatus.staged },
+          $unset: { resultCode: "", result: "", pid: "" }
+        }, { multi: true });
+        
+        TestResultSteps.update({ testResultId: testResult._id }, {
+          $set  : { status: TestResultStatus.staged },
+          $unset: { resultCode: "", result: "", checks: "" }
+        }, { multi: true });
+        
+        // get the list of roles, create a launch token and fire away
+        TestResultRoles.find({ testResultId: testResult._id }).forEach(function (role) {
+          console.info("launchTestResult launching role: ", role._id);
+          let token   = Accounts.singleUseAuth.generate({ expires: { seconds: 30 } }),
+              command = [ ProcessLauncher.testRoleScript, "--roleId", role._id, "--projectId", testResult.projectId, "--token", token ].join(" "),
+              logFile = [ "test_result_role_", role._id, ".log" ].join(""),
+              proc    = ProcessLauncher.launchAutomation(command, logFile);
+          
+          TestResultRoles.update(role._id, { $set: { pid: proc.pid, status: TestResultStatus.launched } });
+          console.info("launchTestResult launched: ", role._id, " as ", proc.pid, " > ", logFile);
+        });
+      } else {
+        throw new Meteor.Error("404", "Not found", "No TestResult found for id [" + testResultId + "] and project [" + projectId + "]");
+      }
+    } else {
+      throw new Meteor.Error("403", "Not authorized", "No project access for user [" + Meteor.userId() + "] and project [" + projectId + "]");
+    }
+  },
+
+  /**
    * Load the context for a test role execution
    * @param projectId
    * @param testResultRoleId
@@ -129,8 +180,6 @@ Meteor.methods({
         // update the test result status with the highest ranking status
         if (testResult && testResult.status < status) {
           TestResults.update({ projectId: projectId, _id: testResultRole.testResultId }, { $set: { status: status } });
-        } else {
-          throw new Meteor.Error("404", "Not found", "No TestResult found for id [" + testResultRole.testResultId + "] and project [" + projectId + "]");
         }
       } else {
         throw new Meteor.Error("404", "Not found", "No TestResultRole found for id [" + testResultRoleId + "] and project [" + projectId + "]");
@@ -251,57 +300,6 @@ Meteor.methods({
       let updateCount = TestResultSteps.update({ projectId: projectId, _id: testResultStepId }, { $set: { checks: checks } });
       if (!updateCount) {
         throw new Meteor.Error("404", "Not found", "No TestResultStep found for id [" + testResultStepId + "] and project [" + projectId + "]");
-      }
-    } else {
-      throw new Meteor.Error("403", "Not authorized", "No project access for user [" + Meteor.userId() + "] and project [" + projectId + "]");
-    }
-  },
-  
-  /**
-   * Launch a test result run
-   */
-  launchTestResult(projectId, testResultId) {
-    console.info("launchTestResult: ", projectId, testResultId);
-    check(Meteor.userId(), String);
-    check(projectId, String);
-    check(testResultId, String);
-    
-    // Validate that the user has permission
-    if (Auth.hasProjectAccess(Meteor.userId(), projectId)) {
-      let testResult = TestResults.findOne({ projectId: projectId, _id: testResultId });
-      if (testResult) {
-        // do some quick cleanup in case this is a re-run
-        LogMessages.remove({ "context.testResultId": testResult._id });
-        Screenshots.remove({ testResultId: testResult._id });
-        
-        TestResults.update({ _id: testResult._id }, {
-          $set  : { status: TestResultStatus.launched, abort: false },
-          $unset: { resultCode: "", result: "" }
-        });
-        
-        TestResultRoles.update({ testResultId: testResult._id }, {
-          $set  : { status: TestResultStatus.staged },
-          $unset: { resultCode: "", result: "", pid: "" }
-        }, { multi: true });
-        
-        TestResultSteps.update({ testResultId: testResult._id }, {
-          $set  : { status: TestResultStatus.staged },
-          $unset: { resultCode: "", result: "", checks: "" }
-        }, { multi: true });
-        
-        // get the list of roles, create a launch token and fire away
-        TestResultRoles.find({ testResultId: testResult._id }).forEach(function (role) {
-          console.info("launchTestResult launching role: ", role._id);
-          let token   = Accounts.singleUseAuth.generate({ expires: { seconds: 30 } }),
-              command = [ ProcessLauncher.testRoleScript, "--roleId", role._id, "--projectId", testResult.projectId, "--token", token ].join(" "),
-              logFile = [ "test_result_role_", role._id, ".log" ].join(""),
-              proc    = ProcessLauncher.launchAutomation(command, logFile);
-          
-          TestResultRoles.update(role._id, { $set: { pid: proc.pid, status: TestResultStatus.launched } });
-          console.info("launchTestResult launched: ", role._id, " as ", proc.pid, " > ", logFile);
-        });
-      } else {
-        throw new Meteor.Error("404", "Not found", "No TestResult found for id [" + testResultId + "] and project [" + projectId + "]");
       }
     } else {
       throw new Meteor.Error("403", "Not authorized", "No project access for user [" + Meteor.userId() + "] and project [" + projectId + "]");

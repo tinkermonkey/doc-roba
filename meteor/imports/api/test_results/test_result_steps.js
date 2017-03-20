@@ -55,7 +55,7 @@ export const TestResultStep = new SimpleSchema({
     allowedValues: _.map(TestCaseStepTypes, function (d) { return d; }),
     denyUpdate: true
   },
-  // The data from the test step (not the context from the test case run)
+  // The data context copied from the test case step record (not the context from the test case run)
   data: {
     type: Object,
     blackbox: true,
