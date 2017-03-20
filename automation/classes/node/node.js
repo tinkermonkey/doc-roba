@@ -5,7 +5,7 @@ var log4js       = require('log4js'),
     CodeExecutor = require('../code_executor/code_executor.js'),
     ReadyChecker = require('./ready_checker.js'),
     ValidChecker = require('./valid_checker.js'),
-    NodeCheckTypes;
+    NodeCheckTypes = require('../enum/node_check_types.js');
 
 class Node {
   /**
@@ -134,15 +134,6 @@ class Node {
   addVariable (name, value, defaultValue) {
     this.readyExecutor.addVariable(name, value, defaultValue);
     this.validExecutor.addVariable(name, value, defaultValue);
-  }
-  
-  /**
-   * Grab any enums needed, pass them around
-   * @param enums
-   */
-  static setEnums (enums) {
-    logger.trace('Node.setEnums:', enums);
-    NodeCheckTypes = enums.NodeCheckTypes;
   }
 }
 

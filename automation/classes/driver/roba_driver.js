@@ -705,8 +705,4 @@ RobaDriver.prototype.buildUrl = function () {
   return pieces.join("/");
 };
 
-/**
- * Export the class
- * @type {Function}
- */
 module.exports = RobaDriver;

@@ -1,17 +1,19 @@
 "use strict";
 
-var _                = require('underscore'),
-    assert           = require('assert'),
-    log4js           = require('log4js'),
-    logger           = log4js.getLogger('adventure'),
-    RobaDriver       = require('./driver/roba_driver.js'),
-    AdventureStep    = require('./adventure/adventure_step.js'),
-    AdventureCommand = require('./adventure/adventure_command.js'),
-    keepAliveWait    = 30,
-    updatePeriod     = 2000,
-    statePeriod      = 10000,
-    pausePeriod      = 250,
-    AdventureStatus, AdventureStepStatus;
+var _                   = require('underscore'),
+    assert              = require('assert'),
+    log4js              = require('log4js'),
+    logger              = log4js.getLogger('adventure'),
+    RobaDriver          = require('./driver/roba_driver.js'),
+    AdventureStep       = require('./adventure/adventure_step.js'),
+    AdventureCommand    = require('./adventure/adventure_command.js'),
+    AdventureStatus     = require('./enum/adventure_status.js'),
+    AdventureStepStatus = require('./enum/adventure_step_status.js'),
+    NodeCheckTypes      = require('./enum/node_check_types.js'),
+    keepAliveWait       = 30,
+    updatePeriod        = 2000,
+    statePeriod         = 10000,
+    pausePeriod         = 250;
 
 logger.setLevel('DEBUG');
 
@@ -52,8 +54,7 @@ class Adventure {
     });
     
     // Load the enums needed for an adventure
-    self.serverLink.enums = self.serverLink.call('loadAdventureEnums');
-    Adventure.setEnums(self.serverLink.enums);
+    self.loadEnums();
     
     // Load the adventure record
     logger.debug('Loading adventure record');
@@ -325,19 +326,18 @@ class Adventure {
     assert(status != null, 'Adventure.setStatus status cannot be null');
     
     logger.debug('Adventure.setStatus:', status);
-    self.serverLink.setAdventureStatus(self._id, status );
+    self.serverLink.setAdventureStatus(self._id, status);
   }
   
   /**
-   * Grab any enums needed, pass them around
-   * @param enums
+   * Load the needed enums from the server
    */
-  static setEnums (enums) {
-    logger.trace('Adventure.setEnums:', enums);
-    AdventureStatus     = enums.AdventureStatus;
-    AdventureStepStatus = enums.AdventureStepStatus;
-    AdventureStep.setEnums(enums);
-    AdventureCommand.setEnums(enums);
+  loadEnums () {
+    logger.trace('Adventure.loadEnums');
+    let self = this;
+    AdventureStatus.load(self.serverLink, logger);
+    AdventureStepStatus.load(self.serverLink, logger);
+    NodeCheckTypes.load(self.serverLink, logger);
   }
   
   /**
@@ -370,9 +370,7 @@ class Adventure {
         process.exit(code);
       }, 2000);
     });
-    
   }
 }
-;
 
 module.exports = Adventure;

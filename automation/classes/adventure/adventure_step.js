@@ -1,10 +1,10 @@
 "use strict";
 
-var Action = require('../action/action.js'),
+let Action = require('../action/action.js'),
     Node   = require('../node/node.js'),
     log4js = require('log4js'),
     logger = log4js.getLogger('adventure'),
-    AdventureStepStatus;
+    AdventureStepStatus = require('../enum/adventure_step_status.js');
 
 class AdventureStep {
   /**
@@ -132,18 +132,6 @@ class AdventureStep {
    */
   saveResult (result) {
     this.adventure.serverLink.saveAdventureStepResult(this.record._id, result)
-  }
-  
-  /**
-   * Grab any enums needed, pass them around
-   * @param enums
-   */
-  static setEnums (enums) {
-    logger.trace('AdventureStep.setEnums:', enums);
-    AdventureStepStatus = enums.AdventureStepStatus;
-    
-    Action.setEnums(enums);
-    Node.setEnums(enums);
   }
 }
 

@@ -74,14 +74,6 @@ class Action {
   addVariable (name, value, defaultValue) {
     this.executor.addVariable(name, value, defaultValue);
   }
-  
-  /**
-   * Grab any enums needed, pass them around
-   * @param enums
-   */
-  static setEnums (enums) {
-    logger.trace('Action.setEnums:', enums);
-  }
 }
 
 module.exports = Action;
