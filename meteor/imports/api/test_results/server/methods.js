@@ -9,6 +9,7 @@ import { TestResults } from '../test_results.js';
 import { TestResultRoles } from '../test_result_roles.js';
 import { TestResultSteps } from '../test_result_steps.js';
 // Enums
+import { NodeCheckTypes } from '../../nodes/node_check_types.js';
 import { TestResultStatus } from '../test_result_status.js';
 import { TestResultCodes } from '../test_result_codes.js';
 import { TestCaseStepTypes } from '../../test_cases/test_case_step_types.js';
@@ -16,21 +17,6 @@ import { ScreenshotKeys } from '../../screenshots/screenshot_keys.js';
 import { ProcessLauncher } from '../../process_launcher/process_launcher.js';
 
 Meteor.methods({
-  /**
-   * Return the TestResultStatus enum to a client
-   * @returns Object
-   */
-  loadTestEnums() {
-    check(Meteor.userId(), String);
-    
-    return {
-      resultStatus  : TestResultStatus,
-      resultCodes   : TestResultCodes,
-      stepTypes     : TestCaseStepTypes,
-      screenshotKeys: ScreenshotKeys
-    };
-  },
-  
   /**
    * Load the context for a test role execution
    * @param projectId
@@ -49,7 +35,7 @@ Meteor.methods({
       if (testResultRole) {
         return testResultRole.manifest();
       } else {
-        throw new Meteor.error("404", "Not found", "No TestResultRole found for id [" + testResultRoleId + "] and project [" + projectId + "]");
+        throw new Meteor.Error("404", "Not found", "No TestResultRole found for id [" + testResultRoleId + "] and project [" + projectId + "]");
       }
     } else {
       throw new Meteor.Error("403", "Not authorized", "No project access for user [" + Meteor.userId() + "] and project [" + projectId + "]");
@@ -112,7 +98,7 @@ Meteor.methods({
           }
         }, { multi: true });
       } else {
-        throw new Meteor.error("404", "Not found", "No TestResultRole found for id [" + testResultRoleId + "] and project [" + projectId + "]");
+        throw new Meteor.Error("404", "Not found", "No TestResultRole found for id [" + testResultRoleId + "] and project [" + projectId + "]");
       }
     } else {
       throw new Meteor.Error("403", "Not authorized", "No project access for user [" + Meteor.userId() + "] and project [" + projectId + "]");
@@ -144,10 +130,10 @@ Meteor.methods({
         if (testResult && testResult.status < status) {
           TestResults.update({ projectId: projectId, _id: testResultRole.testResultId }, { $set: { status: status } });
         } else {
-          throw new Meteor.error("404", "Not found", "No TestResult found for id [" + testResultRole.testResultId + "] and project [" + projectId + "]");
+          throw new Meteor.Error("404", "Not found", "No TestResult found for id [" + testResultRole.testResultId + "] and project [" + projectId + "]");
         }
       } else {
-        throw new Meteor.error("404", "Not found", "No TestResultRole found for id [" + testResultRoleId + "] and project [" + projectId + "]");
+        throw new Meteor.Error("404", "Not found", "No TestResultRole found for id [" + testResultRoleId + "] and project [" + projectId + "]");
       }
     } else {
       throw new Meteor.Error("403", "Not authorized", "No project access for user [" + Meteor.userId() + "] and project [" + projectId + "]");
@@ -171,7 +157,7 @@ Meteor.methods({
     if (Auth.hasProjectAccess(Meteor.userId(), projectId)) {
       let updateCount = TestResultSteps.update({ projectId: projectId, _id: testResultStepId }, { $set: { status: status } });
       if (!updateCount) {
-        throw new Meteor.error("404", "Not found", "No TestResultStep found for id [" + testResultStepId + "] and project [" + projectId + "]");
+        throw new Meteor.Error("404", "Not found", "No TestResultStep found for id [" + testResultStepId + "] and project [" + projectId + "]");
       }
     } else {
       throw new Meteor.Error("403", "Not authorized", "No project access for user [" + Meteor.userId() + "] and project [" + projectId + "]");
@@ -211,7 +197,7 @@ Meteor.methods({
         }
         
       } else {
-        throw new Meteor.error("404", "Not found", "No TestResultStep found for id [" + testResultRoleId + "] and project [" + projectId + "]");
+        throw new Meteor.Error("404", "Not found", "No TestResultStep found for id [" + testResultRoleId + "] and project [" + projectId + "]");
       }
     } else {
       throw new Meteor.Error("403", "Not authorized", "No project access for user [" + Meteor.userId() + "] and project [" + projectId + "]");
@@ -241,7 +227,7 @@ Meteor.methods({
         }
       });
       if (!updateCount) {
-        throw new Meteor.error("404", "Not found", "No TestResultStep found for id [" + testResultStepId + "] and project [" + projectId + "]");
+        throw new Meteor.Error("404", "Not found", "No TestResultStep found for id [" + testResultStepId + "] and project [" + projectId + "]");
       }
     } else {
       throw new Meteor.Error("403", "Not authorized", "No project access for user [" + Meteor.userId() + "] and project [" + projectId + "]");
@@ -264,7 +250,7 @@ Meteor.methods({
     if (Auth.hasProjectAccess(Meteor.userId(), projectId)) {
       let updateCount = TestResultSteps.update({ projectId: projectId, _id: testResultStepId }, { $set: { checks: checks } });
       if (!updateCount) {
-        throw new Meteor.error("404", "Not found", "No TestResultStep found for id [" + testResultStepId + "] and project [" + projectId + "]");
+        throw new Meteor.Error("404", "Not found", "No TestResultStep found for id [" + testResultStepId + "] and project [" + projectId + "]");
       }
     } else {
       throw new Meteor.Error("403", "Not authorized", "No project access for user [" + Meteor.userId() + "] and project [" + projectId + "]");
@@ -307,7 +293,7 @@ Meteor.methods({
         TestResultRoles.find({ testResultId: testResult._id }).forEach(function (role) {
           console.info("launchTestResult launching role: ", role._id);
           let token   = Accounts.singleUseAuth.generate({ expires: { seconds: 30 } }),
-              command = [ ProcessLauncher.testRoleScript, "--roleId", role._id, "--projectId", adventure.projectId, "--token", token ].join(" "),
+              command = [ ProcessLauncher.testRoleScript, "--roleId", role._id, "--projectId", testResult.projectId, "--token", token ].join(" "),
               logFile = [ "test_result_role_", role._id, ".log" ].join(""),
               proc    = ProcessLauncher.launchAutomation(command, logFile);
           
@@ -315,7 +301,7 @@ Meteor.methods({
           console.info("launchTestResult launched: ", role._id, " as ", proc.pid, " > ", logFile);
         });
       } else {
-        throw new Meteor.error("404", "Not found", "No TestResult found for id [" + testResultId + "] and project [" + projectId + "]");
+        throw new Meteor.Error("404", "Not found", "No TestResult found for id [" + testResultId + "] and project [" + projectId + "]");
       }
     } else {
       throw new Meteor.Error("403", "Not authorized", "No project access for user [" + Meteor.userId() + "] and project [" + projectId + "]");

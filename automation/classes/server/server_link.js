@@ -176,7 +176,7 @@ class ServerLink {
    */
   loadTestRoleManifest (testResultRoleId) {
     assert(testResultRoleId, "loadTestRoleManifest: testResultRoleId must not be null");
-    this.call("setTestSystemStatus", [ this.projectId, testResultRoleId ]);
+    return this.call("loadTestRoleManifest", [ this.projectId, testResultRoleId ]);
   };
   
   /**
@@ -189,7 +189,7 @@ class ServerLink {
   };
   
   /**
-   * Signal a failure of a test role
+   * Signal a failure of a TestResultRole
    */
   testRoleFailed (resultRoleId, data) {
     assert(resultRoleId, "testRoleFailed: resultRoleId must not be null");
@@ -197,7 +197,7 @@ class ServerLink {
   };
   
   /**
-   * Set the status of a testResultRole
+   * Set the status of a TestResultRole
    */
   setTestResultRoleStatus (resultRoleId, status) {
     assert(resultRoleId, "setTestResultRoleStatus: resultRoleId must not be null");
@@ -206,7 +206,7 @@ class ServerLink {
   };
   
   /**
-   * Set the result code of a testResultRole
+   * Set the result code of a TestResultRole
    */
   setTestResultRoleResult (resultRoleId, code, resultData) {
     assert(resultRoleId, "setTestResultRoleResult: resultRoleId must not be null");
@@ -215,7 +215,7 @@ class ServerLink {
   };
   
   /**
-   * Set the status of a testResultStep
+   * Set the status of a TestResultStep
    */
   setTestResultStepStatus (stepResultId, status) {
     assert(stepResultId, "setTestResultStepStatus: stepResultId must not be null");
@@ -224,21 +224,31 @@ class ServerLink {
   };
   
   /**
-   * Set the status of a testResultStep
+   * Set the status of a TestResultStep
    */
   saveTestResultStepChecks (stepResultId, checks) {
     assert(stepResultId, "saveTestResultStepChecks: stepResultId must not be null");
-    assert(checks, "saveTestResultStepChecks: status must not be null");
+    assert(checks, "saveTestResultStepChecks: checks must not be null");
     this.call("saveTestResultStepChecks", [ this.projectId, stepResultId, checks ]);
   };
   
   /**
-   * Set the result code of a testResultStep
+   * Set the result code of a TestResultStep
    */
   setTestResultStepResult (stepResultId, code, resultData) {
     assert(stepResultId, "setTestResultStepResult: stepResultId must not be null");
     assert(code !== undefined, "setTestResultStepResult: code must not be null");
     this.call("setTestResultStepResult", [ this.projectId, stepResultId, code, resultData ]);
+  };
+  
+  /**
+   * Load a navigation route from one node to another
+   */
+  loadNavigationRoute (destinationId, sourceId, projectVersionId) {
+    assert(destinationId, "loadNavigationRoute: destinationId must not be null");
+    assert(sourceId, "loadNavigationRoute: sourceId must not be null");
+    assert(projectVersionId, "loadNavigationRoute: projectVersionId must not be null");
+    this.call("loadNavigationRoute", [ this.projectId, destinationId, sourceId, projectVersionId ]);
   };
   
   /**
@@ -290,11 +300,10 @@ class ServerLink {
    * @param type
    * @param result
    */
-  saveAdventureStepResult (stepId, type, result) {
+  saveAdventureStepResult (stepId, result) {
     assert(stepId, "saveAdventureStepResult: stepId must not be null");
-    assert(type, "saveAdventureStepResult: type must not be null");
     assert(result, "saveAdventureStepResult: result must not be null");
-    this.call("saveAdventureStepResult", [ this.projectId, stepId, type, result ]);
+    this.call("saveAdventureStepResult", [ this.projectId, stepId, result ]);
   };
   
   /**

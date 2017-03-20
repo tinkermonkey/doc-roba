@@ -15,7 +15,7 @@ Meteor.startup(() => {
  * Functionality for launching and kill child processes
  */
 export const ProcessLauncher = {
-  testRoleScript : "roba_test_role.js",
+  testRoleScript : "execute_test_role.js",
   adventureScript: "execute_adventure.js",
   
   /**
@@ -70,8 +70,9 @@ export const ProcessLauncher = {
     proc.on("exit", Meteor.bindEnvironment(exitListener || function (code) {
           console.debug("ProcessLauncher.launchAutomation Exit: " + proc.pid + ", " + code);
           try {
-            out.close();
-            err.close();
+            // TODO: These do not seem to work and may not be needed. Figure that out.
+            //out.close();
+            //err.close();
           } catch (e) {
             console.error("ProcessLauncher.launchAutomation: " + e.toString());
           }

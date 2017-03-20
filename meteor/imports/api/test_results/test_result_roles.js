@@ -171,29 +171,38 @@ TestResultRoles.helpers({
    * Create the test manifest for this role
    */
   manifest(){
-    let testReslt      = this.testResult(),
-        platformConfig = this.platformConfig();
+    let self           = this,
+        testResult     = self.testResult(),
+        platformConfig = self.platformConfig();
+    
     return {
-      role    : this,
-      steps   : this.steps().fetch(),
-      result  : testResult(),
-      system  : this.testSystem(),
-      agent   : this.testAgent(),
-      server  : testResult().server(),
-      config  : platformConfig,
-      viewport: platformConfig && platformConfig.defaultViewport()
+      record         : self,
+      testResultSteps: self.steps().map((step) => {
+        // Get the testCaseStep record for this step
+        step.testCaseStep = step.testCaseStep();
+        return step;
+      }),
+      testSystem     : self.testSystem(),
+      testAgent      : self.testAgent(),
+      testServer     : testResult.server(),
+      platformConfig : platformConfig,
+      viewport       : platformConfig && platformConfig.defaultViewport()
     };
   },
   /**
    * Get the platform configuration for this role
    */
   platformConfig(){
+    let config;
+    
     // Iterate through the steps until we find a node and get the platform from that
     this.steps().forEach((step) => {
       let node = step.testCaseStep().firstNode();
-      if (node) {
-        return node.platformConfig()
+      if (node && !config) {
+        config = node.platformConfig()
       }
     });
+    
+    return config
   }
 });
