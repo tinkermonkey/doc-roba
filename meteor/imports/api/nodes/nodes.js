@@ -544,18 +544,20 @@ Nodes.helpers({
     var node = this;
     node.checks = {};
     _.each(_.keys(NodeCheckTypes), (checkType) => {
+      /*
       console.log('Nodes.withChecks of type', checkType, ':', {
         parentId        : node.staticId,
         projectVersionId: node.projectVersionId,
         type            : NodeCheckTypes[checkType]
       });
+      */
       node.checks[checkType] = NodeChecks.find({
         parentId        : node.staticId,
         projectVersionId: node.projectVersionId,
         type            : NodeCheckTypes[checkType]
       }, { sort: { order: 1 } }).fetch();
     });
-    console.log('Nodes.withChecks:', node.staticId, node.title, node.checks);
+    //console.log('Nodes.withChecks:', node.staticId, node.title, node.checks);
     return node;
   }
 });
