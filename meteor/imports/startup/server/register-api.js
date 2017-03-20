@@ -22,6 +22,9 @@ import '../../api/datastores/server/methods.js'
 import '../../api/driver_commands/server/publications.js'
 import '../../api/driver_commands/server/methods.js'
 
+// Enum Master
+import '../../api/enum_master.js'
+
 // Log Messages
 import '../../api/log_messages/server/publications.js'
 import '../../api/log_messages/server/methods.js'
