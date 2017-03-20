@@ -139,7 +139,7 @@ Datastores.helpers({
     let renderedRows = [];
     this.rows().forEach((row) => {
       renderedRows.push({
-        value: row._id,
+        value: row.staticId,
         text: row.render()
       });
     });

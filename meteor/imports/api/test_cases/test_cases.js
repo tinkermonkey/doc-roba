@@ -122,7 +122,7 @@ TestCases.helpers({
         }
 
         // validate the role account
-        var account = DatastoreRows.findOne({_id: roleConfig.accountId});
+        var account = DatastoreRows.findOne({staticId: roleConfig.accountId, projectVersionId: testCase.projectVersionId});
         if(!account){
           throw new Meteor.Error("invalid-test-account", "Test config account not found " + roleConfig.accountId, [testCase, config, roleConfig]);
         }

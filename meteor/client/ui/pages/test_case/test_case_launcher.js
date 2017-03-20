@@ -26,7 +26,7 @@ Template.TestCaseLauncher.helpers({
         var account = userType.getAccount();
         if(account){
           config.roles[role.staticId] = config.roles[role.staticId] || {};
-          config.roles[role.staticId].accountId = account._id;
+          config.roles[role.staticId].accountId = account.staticId;
           Template.instance().config.set(config);
         }
       }
@@ -148,7 +148,7 @@ Template.TestCaseLauncher.rendered = function () {
   let instance = Template.instance();
   instance.autorun(function () {
     var config = instance.config.get();
-    //console.log("config: ", config);
+    console.log("config: ", config);
   });
 };
 
