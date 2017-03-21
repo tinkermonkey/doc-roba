@@ -1,9 +1,10 @@
 "use strict";
 
-let log4js            = require('log4js'),
-    logger            = log4js.getLogger('test_result_role'),
-    TestResultStatus  = require('../enum/test_result_status.js'),
-    TestResultCodes   = require('../enum/test_result_codes.js');
+let log4js           = require('log4js'),
+    logger           = log4js.getLogger('test_result_role'),
+    RobaError        = require("../roba_error.js"),
+    TestResultStatus = require('../enum/test_result_status.js'),
+    TestResultCodes  = require('../enum/test_result_codes.js');
 
 class TestRoleStep {
   /**
@@ -43,6 +44,8 @@ class TestRoleStep {
         context  = testRole.context,
         driver   = testRole.driver,
         pass;
+
+    logger.debug("TestRoleStep.execute dataContext:", self.testRole.dataContext);
     
     // Set the status to running
     self.setStatus(TestResultStatus.executing);
@@ -52,20 +55,21 @@ class TestRoleStep {
     context.milestone({ type: "step", data: self.record });
     logger.info("Executing TestRoleStep", self.index);
     driver.getClientLogs();
-  
+    
     // Do the actual step
     try {
       pass = self.doStep();
       driver.getClientLogs();
     } catch (e) {
-      logger.error('Error during test role step execution:', e);
+      let error = new RobaError(e);
+      logger.error('Error during test role step execution:', error);
       pass = false;
-      self.setStatus(TestResultStatus.complete);
-      self.setResult(TestResultCodes.fail, { error: e});
-      self.testRole.setResult(TestResultCodes.fail, { error: e });
+      self.setResult(TestResultCodes.fail, { error: error });
+      self.testRole.setResult(TestResultCodes.fail, { error: error });
     }
-    
+  
     // Done
+    self.setStatus(TestResultStatus.complete);
     return pass;
   }
   

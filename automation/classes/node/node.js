@@ -1,10 +1,10 @@
 'use strict';
 
-var log4js       = require('log4js'),
-    logger       = log4js.getLogger('adventure'),
-    CodeExecutor = require('../code_executor/code_executor.js'),
-    ReadyChecker = require('./ready_checker.js'),
-    ValidChecker = require('./valid_checker.js'),
+var log4js         = require('log4js'),
+    logger         = log4js.getLogger('node'),
+    CodeExecutor   = require('../code_executor/code_executor.js'),
+    ReadyChecker   = require('./ready_checker.js'),
+    ValidChecker   = require('./valid_checker.js'),
     NodeCheckTypes = require('../enum/node_check_types.js');
 
 class Node {
@@ -17,7 +17,7 @@ class Node {
    */
   constructor (nodeId, projectId, projectVersionId, serverLink) {
     logger.debug('Creating node:', nodeId);
-    this._id              = nodeId;
+    this.staticId         = nodeId;
     this.projectId        = projectId;
     this.projectVersionId = projectVersionId;
     this.serverLink       = serverLink;
@@ -28,13 +28,13 @@ class Node {
    * @return {Node}
    */
   init () {
-    logger.debug('Initializing node:', this._id);
+    logger.debug('Initializing node:', this.staticId);
     var node = this;
     
     // Load the node record
-    node.record = node.serverLink.liveRecord('node', [ node.projectId, node.projectVersionId, node._id ], 'nodes');
+    node.record = node.serverLink.liveRecord('node', [ node.projectId, node.projectVersionId, node.staticId ], 'nodes', { staticId: node.staticId });
     if (!node.record) {
-      throw new Error("Failed to load node " + node._id);
+      throw new Error("Failed to load node " + node.staticId);
     }
     logger.trace("Node record loaded:", node.record);
     
@@ -66,7 +66,7 @@ class Node {
    * @param dataContext
    */
   checkReady (driver, dataContext) {
-    logger.debug('Check if node is ready:', this._id, this.record.title);
+    logger.debug('Check if node is ready:', this.staticId, this.record.title);
     var node         = this,
         readyChecker = new ReadyChecker(driver),
         result       = {
@@ -99,7 +99,7 @@ class Node {
    * @param dataContext
    */
   validate (driver, dataContext) {
-    logger.debug('Validating node:', this._id, this.record.title);
+    logger.debug('Validating node:', this.staticId, this.record.title);
     var node         = this,
         validChecker = new ValidChecker(driver),
         result       = {

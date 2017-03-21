@@ -49,6 +49,9 @@ class TestRole {
       self.exit(0);
     });
     
+    // Store the log path on the record on the server
+    self.serverLink.addTestResultRoleLog(self._id, self.logPath);
+    
     // Load the enums needed for an testRole
     self.loadEnums();
     
@@ -191,7 +194,7 @@ class TestRole {
     
     // Load the manifest from the server
     manifest = self.serverLink.loadTestRoleManifest(self._id);
-    logger.trace("TestRole manifest: ", manifest);
+    logger.debug("TestRole manifest: ", manifest);
     
     if (!manifest) {
       throw new Error("500", "Manifest Load Failed", "Failed to load role manifest " + self._id);
@@ -224,7 +227,10 @@ class TestRole {
    */
   loadTestResultRecord () {
     logger.debug("Loading the TestRole TestResult record:", this.projectId, this.record.testResultId);
-    this.testResult = this.serverLink.liveRecord('test_run_result', [ this.projectId, this.record.testResultId ], 'TestResults');
+    this.testResult = this.serverLink.liveRecord('test_result', [ this.projectId, this.record.testResultId ], 'test_results');
+    if(!this.testResult){
+      throw new Error('TestRole.loadTestResultRecord got a null record');
+    }
   }
   
   /**

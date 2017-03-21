@@ -49,7 +49,7 @@ class TestRoleStepAction extends TestRoleStep {
   
     // Wait for the node to be ready
     logger.debug("TestRoleStepAction.doStep waiting for node to be ready");
-    self.node.addVariable('account', self.record.dataContext.account);
+    self.node.addVariable('account', self.testRole.account);
     result.ready = self.node.checkReady(driver, self.record.dataContext);
     driver.getClientLogs();
   

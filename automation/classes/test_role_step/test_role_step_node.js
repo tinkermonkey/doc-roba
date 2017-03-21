@@ -49,14 +49,14 @@ class TestRoleStepNode extends TestRoleStep {
     
     // Wait for the node to be ready
     logger.debug("TestRoleStepNode.doStep waiting for node to be ready");
-    self.node.addVariable('account', self.record.dataContext.account);
-    result.ready = self.node.checkReady(driver, self.record.dataContext);
+    self.node.addVariable('account', self.testRole.account);
+    result.ready = self.node.checkReady(driver, self.testRole.dataContext);
     driver.getClientLogs();
     
     // Check that the node is valid
     if(result.ready){
       logger.debug("TestRoleStepNode.doStep validating node");
-      result.valid = self.node.validate(driver, self.record.dataContext);
+      result.valid = self.node.validate(driver, self.testRole.dataContext);
       driver.getClientLogs();
     }
     
