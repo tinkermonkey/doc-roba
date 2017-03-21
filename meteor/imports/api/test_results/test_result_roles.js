@@ -92,6 +92,10 @@ export const TestResultRole  = new SimpleSchema({
     type    : Object,
     blackbox: true,
     optional: true
+  },
+  logFiles        : {
+    type    : [ String ],
+    optional: true
   }
 });
 export const TestResultRoles = new Mongo.Collection("test_result_roles");

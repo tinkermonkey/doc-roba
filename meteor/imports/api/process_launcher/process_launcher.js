@@ -53,14 +53,12 @@ export const ProcessLauncher = {
     console.info("ProcessLauncher.launchAutomation: " + command);
     
     // create a log file path
-    var logFilePath = path.join(this.launcherLogPath, logFileName),
+    let logFilePath = this.getFullLogPath(logFileName),
         out         = fs.openSync(logFilePath, "a"),
-        err         = fs.openSync(logFilePath, "a");
-    
-    // if the helper is not running, launch locally
-    var script = command.split(" ")[ 0 ],
-        args   = command.split(" ").slice(1),
-        proc   = childProcess.spawn("node", [ path.join(this.automationPath, script) ].concat(args), {
+        err         = fs.openSync(logFilePath, "a"),
+        script      = command.split(" ")[ 0 ],
+        args        = command.split(" ").slice(1),
+        proc        = childProcess.spawn("node", [ path.join(this.automationPath, script) ].concat(args), {
           stdio: [ 'ignore', out, err ]
         });
     
@@ -73,6 +71,8 @@ export const ProcessLauncher = {
             // TODO: These do not seem to work and may not be needed. Figure that out.
             //out.close();
             //err.close();
+            fs.close(out);
+            fs.close(err);
           } catch (e) {
             console.error("ProcessLauncher.launchAutomation: " + e.toString());
           }
@@ -91,14 +91,12 @@ export const ProcessLauncher = {
     console.info("ProcessLauncher.launchImageTask: " + command);
     
     // create a log file path
-    var logFilePath = path.join(this.launcherLogPath, logFileName),
+    let logFilePath = this.getFullLogPath(logFileName),
         out         = fs.openSync(logFilePath, "w"),
-        err         = fs.openSync(logFilePath, "a");
-    
-    // if the helper is not running, launch locally
-    var script = command.split(" ")[ 0 ],
-        args   = command.split(" ").slice(1),
-        proc   = childProcess.spawn("python", [ path.join(this.imageAnalysisPath, script) ].concat(args), {
+        err         = fs.openSync(logFilePath, "a"),
+        script      = command.split(" ")[ 0 ],
+        args        = command.split(" ").slice(1),
+        proc        = childProcess.spawn("python", [ path.join(this.imageAnalysisPath, script) ].concat(args), {
           stdio: [ 'ignore', out, err ]
         });
     
@@ -112,11 +110,61 @@ export const ProcessLauncher = {
       if (callback) {
         fs.close(out);
         fs.close(err);
-        var output = fs.readFileSync(logFilePath, { encoding: 'utf8' });
+        let output = fs.readFileSync(logFilePath, { encoding: 'utf8' });
         callback(output);
       }
     }));
     
     return proc;
+  },
+  
+  /**
+   * Get the full path to a launcher log file
+   * @param logFileName
+   */
+  getFullLogPath(logFileName){
+    return path.join(this.launcherLogPath, logFileName)
+  },
+  
+  /**
+   * Recursively remove files in the path provided
+   * @param dirPath
+   */
+  removeLogPath(dirPath){
+    console.info("ProcessLauncher.removeLogPath:", dirPath);
+    let self = this;
+    try {
+      // Validate that it's in an acceptable sub-path
+      if (path.isAbsolute(dirPath)) {
+        if(path.parse(dirPath).dir.match('^' + self.baseLogPath)){
+          if (fs.existsSync(dirPath)) {
+            // If it's a directory, remove all of the files and folders first
+            if (fs.lstatSync(dirPath).isDirectory()) {
+              fs.readdirSync(dirPath).forEach(function (entry) {
+                let subPath = path.join(dirPath, entry);
+                if (fs.lstatSync(subPath).isDirectory()) {
+                  self.removeLogPath(subPath);
+                } else {
+                  console.debug("ProcessLauncher.removeLogPath removing file:", subPath);
+                  fs.unlinkSync(subPath);
+                }
+              });
+              fs.rmdirSync(dirPath);
+            } else {
+              // If it's a file just remove it
+              fs.unlinkSync(dirPath);
+            }
+          } else {
+            console.error("ProcessLauncher.removeLogPath path does not exist:", dirPath);
+          }
+        } else {
+          console.error("ProcessLauncher.removeLogPath only accepts sub-paths of this path:", self.baseLogPath, dirPath, path.parse(dirPath).dir, path.parse(dirPath).dir.match('^' + self.baseLogPath));
+        }
+      } else {
+        console.error("ProcessLauncher.removeLogPath only accepts absolute paths:", dirPath);
+      }
+    } catch (e) {
+      console.error('ProcessLauncher.removeLogPath failed to remove path:', dirPath, e);
+    }
   }
 };

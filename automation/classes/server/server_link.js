@@ -215,6 +215,15 @@ class ServerLink {
   };
   
   /**
+   * Add a log file or folder which contains log files to the role
+   */
+  addTestResultRoleLog (resultRoleId, path) {
+    assert(resultRoleId, "addTestResultRoleLog: resultRoleId must not be null");
+    assert(path !== undefined, "addTestResultRoleLog: path must not be null");
+    this.call("addTestResultRoleLog", [ this.projectId, resultRoleId, path ]);
+  };
+  
+  /**
    * Set the status of a TestResultStep
    */
   setTestResultStepStatus (stepResultId, status) {
@@ -395,7 +404,7 @@ class ServerLink {
    * @param query A very simple "query" object whose key/value pairs will be used to find the intended record
    */
   liveRecord (subscription, params, collectionName, query) {
-    logger.debug("liveRecord:", {
+    logger.debug("ServerLink.liveRecord:", {
       subscription  : subscription,
       params        : params,
       collectionName: collectionName,
@@ -416,9 +425,10 @@ class ServerLink {
     // Make note of the subscriptions
     this.subscriptions.push({ name: subscription, params: params });
     
-    var future = new Future(), ddpClient = this.ddp;
+    var future = new Future(),
+        ddpClient = this.ddp;
     logger.trace("liveRecord creating subscription: ", subscription, params, collectionName);
-    this.ddp.subscribe(subscription, params, function () {
+    ddpClient.subscribe(subscription, params, function () {
       logger.trace("liveRecord subscribe returned: ", subscription, this);
       future.return();
     });
@@ -427,18 +437,21 @@ class ServerLink {
     // hook up some observers
     var id       = _.last(params),
         observer = this.observers[ subscription + "_" + id ] = ddpClient.observe(collectionName);
+    logger.info("liveRecord created observer:", observer.name, id);
     observer.added   = function (id) {
-      logger.trace("A record was added to a subscription where it was not expected:", observer.name, id, ddpClient.collections[ observer.name ][ id ]);
+      logger.trace("liveRecord record was added to a subscription:", observer.name, id, ddpClient.collections[ observer.name ][ id ]);
     };
     observer.changed = function (id, oldFields, clearedFields) {
       logger.trace("liveRecord updated: ", observer.name, id, ddpClient.collections[ observer.name ][ id ]);
     };
     observer.removed = function (id, oldValue) {
-      logger.error("A record was removed from a subscription where it was not expected to be:", observer.name, oldValue);
+      logger.error("liveRecord record was removed from a subscription:", observer.name, oldValue);
     };
-    
+  
+    logger.trace("liveRecord checking for observer record:", observer.name, ddpClient.collections[ observer.name ]);
     if (ddpClient.collections[ observer.name ]) {
       if (query) {
+        logger.trace("liveRecord fetching record with query:", query);
         // Find the first record whose attribute match the simple query object's attributes
         var record = _.find(_.values(ddpClient.collections[ observer.name ]), function (record) {
           return _.reduce(_.keys(query).map(function (key) {
@@ -460,7 +473,8 @@ class ServerLink {
       });
       return ddpClient.collections[ observer.name ][ id ];
     } else {
-      console.error("ServerLink.liveRecord failed with unknown collection:", observer.name);
+      logger.error('ServerLink.liveRecord known collections:', _.keys(ddpClient.collections));
+      throw new Error('ServerLink.liveRecord failed with unknown collection:' + observer.name);
     }
   };
   

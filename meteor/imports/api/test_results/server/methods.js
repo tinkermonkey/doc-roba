@@ -9,11 +9,8 @@ import { TestResults } from '../test_results.js';
 import { TestResultRoles } from '../test_result_roles.js';
 import { TestResultSteps } from '../test_result_steps.js';
 // Enums
-import { NodeCheckTypes } from '../../nodes/node_check_types.js';
 import { TestResultStatus } from '../test_result_status.js';
 import { TestResultCodes } from '../test_result_codes.js';
-import { TestCaseStepTypes } from '../../test_cases/test_case_step_types.js';
-import { ScreenshotKeys } from '../../screenshots/screenshot_keys.js';
 import { ProcessLauncher } from '../../process_launcher/process_launcher.js';
 
 Meteor.methods({
@@ -57,7 +54,10 @@ Meteor.methods({
               logFile = [ "test_result_role_", role._id, ".log" ].join(""),
               proc    = ProcessLauncher.launchAutomation(command, logFile);
           
-          TestResultRoles.update(role._id, { $set: { pid: proc.pid, status: TestResultStatus.launched } });
+          TestResultRoles.update(role._id, {
+            $set     : { pid: proc.pid, status: TestResultStatus.launched },
+            $addToSet: { logFiles: ProcessLauncher.getFullLogPath(logFile) }
+          });
           console.info("launchTestResult launched: ", role._id, " as ", proc.pid, " > ", logFile);
         });
       } else {
@@ -67,7 +67,7 @@ Meteor.methods({
       throw new Meteor.Error("403", "Not authorized", "No project access for user [" + Meteor.userId() + "] and project [" + projectId + "]");
     }
   },
-
+  
   /**
    * Load the context for a test role execution
    * @param projectId
@@ -254,6 +254,37 @@ Meteor.methods({
   },
   
   /**
+   * Add a log file or folder which contains log files to the role
+   * @param projectId
+   * @param testResultRoleId
+   * @param path
+   */
+  addTestResultRoleLog(projectId, testResultRoleId, path) {
+    console.debug("addTestResultRoleLog: ", projectId, testResultRoleId, path);
+    check(Meteor.userId(), String);
+    check(projectId, String);
+    check(testResultRoleId, String);
+    check(path, String);
+    
+    // Validate that the user has permission
+    if (Auth.hasProjectAccess(Meteor.userId(), projectId)) {
+      let updateCount = TestResultRoles.update({
+        projectId: projectId,
+        _id      : testResultRoleId
+      }, {
+        $addToSet: {
+          logFiles: path
+        }
+      });
+      if (!updateCount) {
+        throw new Meteor.Error("404", "Not found", "No TestResultRole found for id [" + testResultRoleId + "] and project [" + projectId + "]");
+      }
+    } else {
+      throw new Meteor.Error("403", "Not authorized", "No project access for user [" + Meteor.userId() + "] and project [" + projectId + "]");
+    }
+  },
+  
+  /**
    * Set the result code of a testResultStep record
    * @param projectId
    * @param testResultStepId
@@ -316,13 +347,22 @@ Meteor.methods({
     check(testResultId, String);
     
     // Load the record
-    var testResult = TestResults.findOne(testResultId);
+    let testResult  = TestResults.findOne(testResultId),
+        roleResults = testResult.roleResults().fetch();
     
     if (testResult) {
       LogMessages.remove({ "context.testResultId": testResult._id });
       Screenshots.remove({ testResultId: testResult._id });
       TestResultRoles.remove({ testResultId: testResult._id });
-      TestResults.remove({ _id: testResult._id })
+      TestResults.remove({ _id: testResult._id });
+      
+      // Delete the log files for the roles
+      roleResults.forEach((roleResult) => {
+        roleResult.logFiles.forEach((logFilePath) => {
+          // Remove the files or folders
+          ProcessLauncher.removeLogPath(logFilePath);
+        });
+      });
     } else {
       console.warn('deleteTestResult: test result not found for id', testResultId);
     }
