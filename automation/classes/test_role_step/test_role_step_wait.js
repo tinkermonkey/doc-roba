@@ -1,30 +1,25 @@
 "use strict";
 
-
-let Action       = require('../action/action.js'),
-    Node         = require('../node/node.js'),
-    log4js       = require('log4js'),
-    logger       = log4js.getLogger('test_result_role'),
+let logger       = require('../log_assistant.js').getLogger(),
     TestRoleStep = require('./test_role_step.js');
 
-class TestRoleStepWait extends  TestRoleStep {
+class TestRoleStepWait extends TestRoleStep {
   /**
    * Initialize the test step
    */
-  init(){
+  init () {
     logger.debug('TestRoleStepWait.init:', this.index, this.record._id);
     let self = this;
     
     // Call the parent constructor
     super.init();
     
-    
   }
   
   /**
    * Execute this step
    */
-  execute(){
+  execute () {
     logger.debug('TestRoleStepWait.execute:', this.index, this.record._id);
     let self = this;
     

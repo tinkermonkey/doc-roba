@@ -1,10 +1,10 @@
 "use strict";
 
-let Action       = require('../action/action.js'),
-    Node         = require('../node/node.js'),
-    log4js       = require('log4js'),
-    logger       = log4js.getLogger('test_result_role'),
-    TestRoleStep = require('./test_role_step.js');
+let _              = require('underscore'),
+    Node           = require('../node/node.js'),
+    logger         = require('../log_assistant.js').getLogger(),
+    TestRoleStep   = require('./test_role_step.js'),
+    ScreenshotKeys = require('../enum/screenshot_keys.js');
 
 class TestRoleStepNode extends TestRoleStep {
   /**
@@ -34,6 +34,10 @@ class TestRoleStepNode extends TestRoleStep {
           valid: false
         };
     
+    // Update the context
+    self.context.update({ nodeId: self.record.data.node.staticId });
+    self.context.milestone({ type: "node", data: self.record.data.node });
+    
     // If this is the first step then we need to bootstrap the browser to the url
     if (self.index == 0) {
       logger.debug("Step 0, navigating to starting point:", {
@@ -47,20 +51,33 @@ class TestRoleStepNode extends TestRoleStep {
     // Inject the helpers
     driver.injectHelpers();
     
+    // save a screenshot of the page
+    self.serverLink.saveImage(driver.getScreenshot(), ScreenshotKeys.loading);
+    
     // Wait for the node to be ready
-    logger.debug("TestRoleStepNode.doStep waiting for node to be ready");
-    self.node.addVariable('account', self.testRole.account);
-    result.ready = self.node.checkReady(driver, self.testRole.dataContext);
+    logger.debug("TestRoleStepNode.doStep waiting for node to be ready", self.dataContext);
+    _.keys(self.dataContext).forEach((key) => {
+      self.node.addVariable(key, self.dataContext[ key ]);
+    });
+    result.ready = self.node.checkReady(driver, self.dataContext);
     driver.getClientLogs();
     
+    // Screenshot of the page ready
+    if (result.ready) {
+      self.serverLink.saveImage(driver.getScreenshot(), ScreenshotKeys.afterLoad);
+    } else {
+      self.serverLink.saveImage(driver.getScreenshot(), ScreenshotKeys.error);
+    }
+    
     // Check that the node is valid
-    if(result.ready){
+    if (result.ready) {
       logger.debug("TestRoleStepNode.doStep validating node");
-      result.valid = self.node.validate(driver, self.testRole.dataContext);
+      result.valid = self.node.validate(driver, self.dataContext);
       driver.getClientLogs();
     }
     
     logger.debug("TestRoleStepNode.doStep complete:", result);
+    self.context.update({ pass: result.isReady && result.isValid });
     return result.ready && result.valid
   }
 }

@@ -1,10 +1,11 @@
 "use strict";
 
-let Action       = require('../action/action.js'),
-    Node         = require('../node/node.js'),
-    log4js       = require('log4js'),
-    logger       = log4js.getLogger('test_result_role'),
-    TestRoleStep = require('./test_role_step.js');
+let _              = require('underscore'),
+    Action         = require('../action/action.js'),
+    Node           = require('../node/node.js'),
+    logger         = require('../log_assistant.js').getLogger(),
+    TestRoleStep   = require('./test_role_step.js'),
+    ScreenshotKeys = require('../enum/screenshot_keys.js');
 
 class TestRoleStepAction extends TestRoleStep {
   /**
@@ -40,27 +41,40 @@ class TestRoleStepAction extends TestRoleStep {
     
     // Take the action
     logger.debug("TestRoleStepAction.doStep taking action");
-    self.action.addVariable('account', self.testRole.account);
-    self.action.execute(driver, self.record.dataContext);
-  
+    _.keys(self.dataContext).forEach((key) => {
+      self.action.addVariable(key, self.dataContext[ key ]);
+    });
+    self.action.execute(driver, self.dataContext);
+    self.serverLink.saveImage(driver.getScreenshot(), ScreenshotKeys.afterAction);
+    
     // Inject the helpers
     driver.wait(1000);
     driver.injectHelpers();
-  
+    
     // Wait for the node to be ready
     logger.debug("TestRoleStepAction.doStep waiting for node to be ready");
-    self.node.addVariable('account', self.testRole.account);
-    result.ready = self.node.checkReady(driver, self.record.dataContext);
+    _.keys(self.dataContext).forEach((key) => {
+      self.node.addVariable(key, self.dataContext[ key ]);
+    });
+    result.ready = self.node.checkReady(driver, self.dataContext);
     driver.getClientLogs();
-  
+    
+    // Screenshot of the page ready
+    if (result.ready) {
+      self.serverLink.saveImage(driver.getScreenshot(), ScreenshotKeys.afterLoad);
+    } else {
+      self.serverLink.saveImage(driver.getScreenshot(), ScreenshotKeys.error);
+    }
+    
     // Check that the node is valid
-    if(result.ready){
+    if (result.ready) {
       logger.debug("TestRoleStepAction.doStep validating node");
-      result.valid = self.node.validate(driver, self.record.dataContext);
+      result.valid = self.node.validate(driver, self.dataContext);
       driver.getClientLogs();
     }
-  
+    
     logger.debug("TestRoleStepAction.doStep complete:", result);
+    self.context.update({ pass: result.isReady && result.isValid });
     return result.ready && result.valid
   }
 }

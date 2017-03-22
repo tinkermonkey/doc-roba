@@ -1,7 +1,7 @@
 "use strict";
 
-let log4js           = require('log4js'),
-    logger           = log4js.getLogger('test_result_role'),
+let _                = require("underscore"),
+    logger           = require('../log_assistant.js').getLogger(),
     RobaError        = require("../roba_error.js"),
     TestResultStatus = require('../enum/test_result_status.js'),
     TestResultCodes  = require('../enum/test_result_codes.js');
@@ -15,9 +15,12 @@ class TestRoleStep {
    */
   constructor (record, index, testRole) {
     logger.debug('Creating TestRoleStep:', index, record._id);
-    this.index    = index;
-    this.record   = record;
-    this.testRole = testRole;
+    this.index       = index;
+    this.record      = record;
+    this.testRole    = testRole;
+    this.dataContext = {};
+    this.context     = testRole.context;
+    this.serverLink  = testRole.serverLink;
   }
   
   /**
@@ -27,8 +30,11 @@ class TestRoleStep {
     logger.debug('TestRoleStep.init:', this.index, this.record._id);
     let self = this;
     
-    logger.debug('TestRoleStep.init step data:', this.record.data);
-    logger.debug('TestRoleStep.init step data context:', this.record.dataContext);
+    logger.debug('TestRoleStep.init step data:', self.record.data);
+    
+    // Combine all of the context data into a single glom
+    _.defaults(self.dataContext, self.data, self.testRole.record.dataContext, self.record.dataContext);
+    logger.debug('TestRoleStep.init step data context:', self.dataContext);
     
     // Set the status to queued
     self.setStatus(TestResultStatus.queued);
@@ -40,19 +46,18 @@ class TestRoleStep {
   execute () {
     logger.debug('TestRoleStep.execute:', this.index, this.record._id);
     let self     = this,
-        testRole = this.testRole,
-        context  = testRole.context,
+        testRole = self.testRole,
         driver   = testRole.driver,
         pass;
-
-    logger.debug("TestRoleStep.execute dataContext:", self.testRole.dataContext);
+    
+    logger.debug("TestRoleStep.execute dataContext:", self.dataContext);
     
     // Set the status to running
     self.setStatus(TestResultStatus.executing);
     
     // Restore the context from a previous step
-    context.update({ testRoleStepId: self.record._id });
-    context.milestone({ type: "step", data: self.record });
+    self.context.update({ testResultStepId: self.record._id });
+    self.context.milestone({ type: "step", data: self.record });
     logger.info("Executing TestRoleStep", self.index);
     driver.getClientLogs();
     
@@ -67,9 +72,12 @@ class TestRoleStep {
       self.setResult(TestResultCodes.fail, { error: error });
       self.testRole.setResult(TestResultCodes.fail, { error: error });
     }
-  
+    
     // Done
     self.setStatus(TestResultStatus.complete);
+    if (pass) {
+      self.setResult(TestResultCodes.pass);
+    }
     return pass;
   }
   
@@ -95,7 +103,7 @@ class TestRoleStep {
    */
   setStatus (status) {
     logger.debug('TestRoleStep.setStatus:', this.index, this.record._id, status);
-    this.testRole.serverLink.setTestResultStepStatus(this.record._id, status)
+    this.serverLink.setTestResultStepStatus(this.record._id, status)
   }
   
   /**
@@ -105,7 +113,7 @@ class TestRoleStep {
    */
   setResult (resultCode, result) {
     logger.debug('TestRoleStep.setResult:', this.index, this.record._id, resultCode, result);
-    this.testRole.serverLink.setTestResultStepResult(this.record._id, resultCode, result)
+    this.serverLink.setTestResultStepResult(this.record._id, resultCode, result)
   }
 }
 
