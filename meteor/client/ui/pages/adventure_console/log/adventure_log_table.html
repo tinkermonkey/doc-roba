@@ -1,7 +1,7 @@
 <template name="AdventureLogTable">
   <table class="adventure-log-table">
     <thead>
-      <tr>
+      <tr class="adventure-log-page-header">
         <th><div>{{> EditableFilterTime dataKey="time"}}</div></th>
         <th><div>{{> EditableFilterOption dataKey="level"  label="Level"  messages=unfilteredMessages}}</div></th>
         <th><div>{{> EditableFilterOption dataKey="sender" label="Source" messages=unfilteredMessages}}</div></th>

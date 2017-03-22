@@ -1,12 +1,28 @@
 <template name="TestResultStepLog">
   <table class="adventure-log-table">
+    <thead>
+    <tr>
+      <th class="align-right">
+        <div>{{> EditableFilterTime dataKey="time"}}</div>
+      </th>
+      <th>
+        <div>{{> EditableFilterOption dataKey="level"  label="Level"  messages=logMessages}}</div>
+      </th>
+      <th>
+        <div>{{> EditableFilterOption dataKey="sender" label="Source" messages=logMessages}}</div>
+      </th>
+      <th style="width: 80%;">
+        <div>Message</div>
+      </th>
+    </tr>
+    </thead>
     <tbody>
-    {{#each logMessages}}
+    {{#each messages}}
       <tr>
         <td class="adventure-log-time">{{renderLogTime time}}</td>
         <td class="adventure-log-level log-level-{{level}}">{{level}}</td>
-        <td class="adventure-log-sender  no-wrap">{{sender}}</td>
-        <td>
+        <td class="adventure-log-sender no-wrap">{{sender}}</td>
+        <td class="adventure-log-message">
           <div style="max-width: {{maxLogWidth}}px;">
             {{#with data}}
               {{> Template.dynamic template=LogMessageData}}

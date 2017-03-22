@@ -24,11 +24,16 @@
  */
 .adventure-log-table th {
   height: 40px;
+  padding: 3px;
 }
 
-.adventure-log-table th > div {
+.adventure-log-table tr.adventure-log-page-header th {
+  padding: 0;
+}
+
+.adventure-log-table tr.adventure-log-page-header th > div {
   position: fixed;
-  top: 0px;
+  top: 0;
   padding: 5px;
   padding-top: 10px;
   border-bottom: 1px solid #dddddd;
@@ -141,6 +146,7 @@
   cursor: pointer;
   display: inline-block;
   vertical-align: top;
+  margin-bottom: 1px;
 }
 
 .log-data-object-expander:hover {

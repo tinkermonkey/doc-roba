@@ -31,15 +31,15 @@ Template.EditableFilterOption.onRendered(() => {
   let instance = Template.instance();
   
   instance.autorun(function () {
-    var data         = Template.currentData(),
+    let data         = Template.currentData(),
         currentValue = instance.value.get(),
         options      = _.map(_.uniq(data.messages.map((message) => {
           return message[ data.dataKey ]
-        })), (option) => {
+        })).sort(), (option) => {
           return { value: option, text: option };
         });
     
-    console.log("EditableFilterOption:", options);
+    //console.log("EditableFilterOption:", options);
     if (!instance.editable) {
       instance.editable = instance.$('.editable').editable({
         mode     : data.mode || "popup",
@@ -50,7 +50,7 @@ Template.EditableFilterOption.onRendered(() => {
         display () {
         },
         success (response, newValue) {
-          var editedElement = this;
+          let editedElement = this;
           $(editedElement).trigger("edited", [ newValue ]);
           setTimeout(function () {
             $(editedElement).removeClass('editable-unsaved');

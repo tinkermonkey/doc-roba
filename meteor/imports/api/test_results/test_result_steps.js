@@ -1,95 +1,100 @@
-import {Mongo} from 'meteor/mongo';
-import {SimpleSchema} from 'meteor/aldeed:simple-schema';
-import {Auth} from '../auth.js';
-import {TestCaseStepTypes} from '../test_cases/test_case_step_types.js';
-import {TestResultCodes} from './test_result_codes.js';
-import {TestResultStatus} from './test_result_status.js';
-
-import {TestCaseSteps} from '../test_cases/test_case_steps.js';
-import {LogMessages} from '../log_messages/log_messages.js';
-import {Screenshots} from '../screenshots/screenshots.js';
+import { Mongo } from 'meteor/mongo';
+import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { Auth } from '../auth.js';
+import { TestCaseStepTypes } from '../test_cases/test_case_step_types.js';
+import { TestResultCodes } from './test_result_codes.js';
+import { TestResultStatus } from './test_result_status.js';
+import { TestCaseSteps } from '../test_cases/test_case_steps.js';
+import { LogMessages } from '../log_messages/log_messages.js';
+import { Screenshots } from '../screenshots/screenshots.js';
 
 /**
  * Test step result - the result for a single user
  */
-export const TestResultStep = new SimpleSchema({
+export const TestResultStep  = new SimpleSchema({
   // Link to the project to which this test belongs
-  projectId: {
-    type: String,
+  projectId       : {
+    type      : String,
     denyUpdate: true
   },
   // Link to the project version to which this test belongs
   projectVersionId: {
-    type: String,
+    type      : String,
     denyUpdate: true
   },
   // Link to the test run
-  testRunId: {
-    type: String,
+  testRunId       : {
+    type      : String,
     denyUpdate: true,
-    optional: true
+    optional  : true
   },
   // Link to the test result
-  testResultId: {
-    type: String,
+  testResultId    : {
+    type      : String,
     denyUpdate: true
   },
   // Link to the test role result
   testResultRoleId: {
-    type: String,
+    type      : String,
     denyUpdate: true
   },
   // Link to the test case step via the staticId
-  testCaseStepId: {
-    type: String,
+  testCaseStepId  : {
+    type      : String,
     denyUpdate: true
   },
   // The order to run this
-  order: {
-    type: Number,
+  order           : {
+    type      : Number,
     denyUpdate: true
   },
   // The type of test case step
-  type: {
-    type: Number,
-    allowedValues: _.map(TestCaseStepTypes, function (d) { return d; }),
-    denyUpdate: true
+  type            : {
+    type         : Number,
+    allowedValues: _.map(TestCaseStepTypes, function (d) {
+      return d;
+    }),
+    denyUpdate   : true
   },
   // The data context copied from the test case step record (not the context from the test case run)
-  data: {
-    type: Object,
-    blackbox: true,
+  data            : {
+    type      : Object,
+    blackbox  : true,
     denyUpdate: true,
-    optional: true
+    optional  : true
   },
   // The data context for this step
-  dataContext: {
-    type: Object,
-    blackbox: true,
+  dataContext     : {
+    type      : Object,
+    blackbox  : true,
     denyUpdate: true,
-    optional: true
+    optional  : true
   },
   // The status
-  status: {
-    type: Number,
-    allowedValues: _.map(TestResultStatus, function (d) { return d; }),
-    defaultValue: TestResultStatus.staged
+  status          : {
+    type         : Number,
+    allowedValues: _.map(TestResultStatus, function (d) {
+      return d;
+    }),
+    defaultValue : TestResultStatus.staged
   },
   // Various checks done during the course of the step
-  checks: {
-    type: [Object],
+  checks          : {
+    type    : [ Object ],
     blackbox: true,
     optional: true
   },
   // The result code
-  resultCode: {
-    type: Number,
-    allowedValues: _.map(TestResultCodes, function (d) { return d; }),
-    optional: true
+  resultCode      : {
+    type         : Number,
+    allowedValues: _.map(TestResultCodes, function (d) {
+      return d;
+    }),
+    optional     : true
   },
   // The result detail
-  result: {
-    type: Object,
+  result          : {
+    type    : Object,
     blackbox: true,
     optional: true
   }
@@ -108,22 +113,28 @@ TestResultSteps.helpers({
    * @return TestCaseStep
    */
   testCaseStep() {
-    return TestCaseSteps.findOne({staticId: this.testCaseStepId, projectVersionId: this.projectVersionId});
+    return TestCaseSteps.findOne({ staticId: this.testCaseStepId, projectVersionId: this.projectVersionId });
   },
   /**
    * Find all of the log messages attributed to this step
    * @return [LogMessage]
    */
   logMessages() {
-    if(this.isFirst()){
-      return LogMessages.find({
+    return LogMessages.find(this.logMessageQuery(), { sort: { time: 1 } });
+  },
+  /**
+   * Get the correct query to find the log messages for this step
+   */
+  logMessageQuery(){
+    if (this.isFirst()) {
+      return {
         $or: [
           { "context.testResultStepId": this._id },
           { "context.testResultRoleId": this.testResultRoleId, "context.testResultStepId": { $exists: false } }
         ]
-      }, {sort: {time: 1}});
+      };
     } else {
-      return LogMessages.find({ "context.testResultStepId": this._id }, {sort: {time: 1}});
+      return { "context.testResultStepId": this._id };
     }
   },
   /**
@@ -139,14 +150,14 @@ TestResultSteps.helpers({
    */
   testMapContexts() {
     return LogMessages.find({
-      "sender": "context",
-      "data.type": {$in: ["node", "action"]},
+      "sender"                  : "context",
+      "data.type"               : { $in: [ "node", "action" ] },
       "context.testResultStepId": this._id
-    }, {sort: {time: 1}}).map(function (message, i) {
+    }, { sort: { time: 1 } }).map(function (message, i) {
       // refactor the data for quick access
-      if(message.data && message.data.length){
-        message.type = message.data[0].type;
-        message.data = message.data[0].data;
+      if (message.data && message.data.length) {
+        message.type = message.data[ 0 ].type;
+        message.data = message.data[ 0 ].data;
       }
       return message
     })
@@ -156,7 +167,10 @@ TestResultSteps.helpers({
    * @return [Screenshot]
    */
   screenshots() {
-    return Screenshots.find({ testResultStepId: this._id }, {sort: {uploadedAt: -1}}).map(function (image, i) {image.index = i; return image});
+    return Screenshots.find({ testResultStepId: this._id }, { sort: { uploadedAt: -1 } }).map(function (image, i) {
+      image.index = i;
+      return image
+    });
   },
   /**
    * Determine if this is the first step
@@ -170,20 +184,20 @@ TestResultSteps.helpers({
    * @return {boolean}
    */
   isLast() {
-    return TestResultSteps.find({testResultRoleId: this.testResultRoleId, order: {$gt: this.order}}).count() == 0
+    return TestResultSteps.find({ testResultRoleId: this.testResultRoleId, order: { $gt: this.order } }).count() == 0
   },
   /**
    * Get the next step for this result
    * @return TestResultStep
    */
   nextStep() {
-    return TestResultSteps.findOne({testResultRoleId: this.testResultRoleId, order: this.order + 1})
+    return TestResultSteps.findOne({ testResultRoleId: this.testResultRoleId, order: this.order + 1 })
   },
   /**
    * Get the previous step for this result
    * @return TestResultStep
    */
   previousStep() {
-    return TestResultSteps.findOne({testResultRoleId: this.testResultRoleId, order: this.order - 1})
+    return TestResultSteps.findOne({ testResultRoleId: this.testResultRoleId, order: this.order - 1 })
   }
 });
