@@ -2,8 +2,8 @@
 
 let _                    = require('underscore'),
     assert               = require('assert'),
-    log4js               = require('log4js'),
-    logger               = log4js.getLogger('test_result_role'),
+    LogAssistant         = require('./log_assistant.js'),
+    logger               = LogAssistant.getLogger(),
     RobaDriver           = require('./driver/roba_driver.js'),
     TestRoleNodeStep     = require('./test_role_step/test_role_step_node.js'),
     TestRoleActionStep   = require('./test_role_step/test_role_step_action.js'),
@@ -16,8 +16,6 @@ let _                    = require('underscore'),
     TestResultStatus     = require('./enum/test_result_status.js'),
     TestResultCodes      = require('./enum/test_result_codes.js');
 
-logger.setLevel('DEBUG');
-
 class TestRole {
   /**
    * TestRole
@@ -25,7 +23,7 @@ class TestRole {
    * @param projectId String
    * @param serverLink ServerLink
    * @param context RobaContext
-   * @param logPath The path the folder to save images in
+   * @param logPath The log assistant for this role
    */
   constructor (roleId, projectId, serverLink, context, logPath) {
     logger.debug('Creating TestRole:', roleId, projectId, logPath);
@@ -228,7 +226,7 @@ class TestRole {
   loadTestResultRecord () {
     logger.debug("Loading the TestRole TestResult record:", this.projectId, this.record.testResultId);
     this.testResult = this.serverLink.liveRecord('test_result', [ this.projectId, this.record.testResultId ], 'test_results');
-    if(!this.testResult){
+    if (!this.testResult) {
       throw new Error('TestRole.loadTestResultRecord got a null record');
     }
   }
@@ -269,10 +267,25 @@ class TestRole {
   /**
    * Exit the adventure
    * @param code
+   * @param error
    */
-  exit (code) {
+  exit (code, error) {
     logger.info("TestRole.exit:", code);
     let self = this;
+    
+    // If the code is not 0, record that it failed
+    if(code){
+      try {
+        self.setStatus(TestResultStatus.complete);
+        if(error){
+          self.setResult(TestResultCodes.fail, { error: error });
+        } else {
+          self.setResult(TestResultCodes.fail);
+        }
+      } catch (e) {
+        logger.error('TestRole.exit failed to update TestRoleStatus for result code:', code, e);
+      }
+    }
     
     // Shut down the driver
     try {
@@ -289,13 +302,8 @@ class TestRole {
     } catch (e) {
     }
     
-    // Shut down the logger
-    log4js.shutdown(function () {
-      setTimeout(function () {
-        console.log("Calling process.exit");
-        process.exit(code);
-      }, 2000);
-    });
+    // Shut down the logger and exit
+    LogAssistant.shutdown(code);
   }
 }
 
