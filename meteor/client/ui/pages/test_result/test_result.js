@@ -13,9 +13,19 @@ import './test_result_role.js';
  * Template Helpers
  */
 Template.TestResult.helpers({
+  /**
+   * Get the TestResult record
+   * @return TestResult
+   */
   testResult() {
-    return Template.instance().testResult.get()
+    let testResultId = FlowRouter.getParam("testResultId");
+    if (testResultId) {
+      return TestResults.findOne(testResultId);
+    }
   },
+  /**
+   * Use a reactive variable to avoid repeated lookups in the TestCases collection
+   */
   testCase() {
     return Template.instance().testCase.get()
   },
@@ -34,19 +44,19 @@ Template.TestResult.events({});
  */
 Template.TestResult.onCreated(() => {
   let instance        = Template.instance();
-  instance.testResult = new ReactiveVar();
+  instance.testCaseId = new ReactiveVar();
   instance.testCase   = new ReactiveVar();
   
   // Load the test result record
   instance.autorun(function () {
-    var projectId        = FlowRouter.getParam("projectId"),
+    let projectId        = FlowRouter.getParam("projectId"),
         projectVersionId = FlowRouter.getParam("projectVersionId"),
         testResultId     = FlowRouter.getParam("testResultId");
     
     instance.subscribe("test_result", projectId, testResultId, function () {
-      var testResult = TestResults.findOne(testResultId);
+      let testResult = TestResults.findOne(testResultId);
       if (testResult) {
-        instance.testResult.set(testResult);
+        instance.testCaseId.set(testResult.testCaseId);
         instance.subscribe("test_case", projectId, projectVersionId, testResult.testCaseId);
         instance.subscribe("test_case_roles", projectId, projectVersionId, testResult.testCaseId);
         instance.subscribe("test_case_steps", projectId, projectVersionId, testResult.testCaseId);
@@ -61,14 +71,15 @@ Template.TestResult.onCreated(() => {
     instance.subscribe("test_result_log", projectId, testResultId);
   });
   
+  // Load the TestCase record if the TestCaseId changes
   instance.autorun(function () {
-    if (instance.subscriptionsReady()) {
-      var testResult = instance.testResult.get();
-      var testCase   = TestCases.findOne({
-        staticId        : testResult.testCaseId,
-        projectVersionId: testResult.projectVersionId
-      });
-      instance.testCase.set(testCase);
+    let testCaseId       = instance.testCaseId.get(),
+        projectVersionId = FlowRouter.getParam("projectVersionId");
+    if (testCaseId && projectVersionId) {
+      instance.testCase.set(TestCases.findOne({
+        staticId        : testCaseId,
+        projectVersionId: projectVersionId
+      }));
     }
   });
 });
