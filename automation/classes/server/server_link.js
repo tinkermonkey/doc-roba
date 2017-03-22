@@ -14,6 +14,7 @@ var Future        = require("fibers/future"),
     assert        = require("assert"),
     fs            = require("fs"),
     path          = require("path"),
+    RobaError     = require("../roba_error.js"),
     logger        = log4js.getLogger("server-link"),
     ddpLogger     = log4js.getLogger("ddp"),
     heartbeatTime = 15000, // ms between heartbeats
@@ -41,16 +42,24 @@ class ServerLink {
    * ServerLink
    * @param projectId
    * @param config
+   * @param context RobaContext for the parent script
    */
-  constructor (projectId, config) {
+  constructor (projectId, config, context) {
     logger.debug("Creating new ServerLink");
     
     // Store the projectId for requests
     this.projectId = projectId;
     
     // Combine the config and defaults
-    this.config           = _.defaults(config || {}, defaultConfig);
+    this.config = config || {};
+    _.defaults(this.config, defaultConfig);
     this.config.serverUrl = this.config.http.transport + this.config.ddp.host + ":" + this.config.ddp.port + "/";
+    //logger.debug("ServerLink passed config:", config);
+    //logger.debug("ServerLink passed default config:", defaultConfig);
+    logger.debug("ServerLink combined config:", this.config);
+    
+    // Set the context for saving screenshots
+    this.context = context;
     
     // Create the ddp link
     this.ddp = new DDPClient(this.config.ddp);
@@ -94,6 +103,9 @@ class ServerLink {
       if (!connectFuture.resolved) {
         // if there is an authToken, try to use it
         if (authToken) {
+          // strip any quotes out of the auth token
+          authToken = authToken.replace(/['"]/g, '');
+          
           // try to authenticate
           console.log("Loggin in: ", authToken);
           link.ddp.call("login", [ { token: authToken } ], function (error, result) {
@@ -352,9 +364,10 @@ class ServerLink {
         logger.debug("Saving image to url", putUrl);
         try {
           fs.createReadStream(imageFilePath)
-              .pipe(request.put(putUrl, function (error, response, body) {
-                if (error) {
-                  logger.error("Saving image error: ", error);
+              .pipe(request.put(putUrl, function (e, response, body) {
+                if (e) {
+                  let error = new RobaError(e);
+                  logger.error("Request to save image returned an error: ", error);
                 } else {
                   if (response.statusCode == 200) {
                     try {
@@ -379,8 +392,9 @@ class ServerLink {
                   
                 }
               }));
-        } catch (error) {
-          logger.error("saveImage failed: ", error.toString());
+        } catch (e) {
+          let error = new RobaError(e);
+          logger.error("saveImage failed: ", error);
         }
       } else {
         logger.error("saveImage failed, file not found: ", imageFilePath);
@@ -425,7 +439,7 @@ class ServerLink {
     // Make note of the subscriptions
     this.subscriptions.push({ name: subscription, params: params });
     
-    var future = new Future(),
+    var future    = new Future(),
         ddpClient = this.ddp;
     logger.trace("liveRecord creating subscription: ", subscription, params, collectionName);
     ddpClient.subscribe(subscription, params, function () {
@@ -447,7 +461,7 @@ class ServerLink {
     observer.removed = function (id, oldValue) {
       logger.error("liveRecord record was removed from a subscription:", observer.name, oldValue);
     };
-  
+    
     logger.trace("liveRecord checking for observer record:", observer.name, ddpClient.collections[ observer.name ]);
     if (ddpClient.collections[ observer.name ]) {
       if (query) {
