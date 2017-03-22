@@ -354,6 +354,7 @@ class Adventure {
       logger.info("Ending web driver");
       self.driver.end();
     } catch (e) {
+      logger.error('Error ending driver:', e.toString(), e.stack);
     }
     
     // Close the ddp link
@@ -361,15 +362,11 @@ class Adventure {
       logger.info("Closing DDP Link");
       self.serverLink.disconnect();
     } catch (e) {
+      logger.error('Error disconnected serverLink:', e.toString(), e.stack);
     }
-    
-    // Shut down the logger
-    log4js.shutdown(function () {
-      setTimeout(function () {
-        console.log("Calling process.exit");
-        process.exit(code);
-      }, 2000);
-    });
+  
+    // Shut down the logger and exit
+    LogAssistant.shutdown(code);
   }
 }
 

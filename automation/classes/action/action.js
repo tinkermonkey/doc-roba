@@ -1,7 +1,6 @@
 'use strict';
 
-var log4js       = require('log4js'),
-    logger       = log4js.getLogger('action'),
+let logger       = require('../log_assistant.js').getLogger(),
     CodeExecutor = require('../code_executor/code_executor.js');
 
 class Action {
@@ -9,6 +8,7 @@ class Action {
    * Action
    * @param actionId
    * @param projectId
+   * @param projectVersionId
    * @param serverLink
    */
   constructor (actionId, projectId, projectVersionId, serverLink) {
@@ -25,7 +25,7 @@ class Action {
    */
   init () {
     logger.debug('Initializing action:', this.staticId);
-    var action = this;
+    let action = this;
     
     // Load the action record
     action.record = action.serverLink.liveRecord('action', [ action.projectId, action.projectVersionId, action.staticId ], 'actions', { staticId: action.staticId });
@@ -46,7 +46,7 @@ class Action {
    */
   execute (driver, dataContext) {
     logger.debug('Executing action:', this.staticId, this.record.title);
-    var action = this;
+    let action = this;
     
     // Add the core variables
     action.executor.addVariable('driver', driver);

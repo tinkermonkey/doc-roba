@@ -1,7 +1,6 @@
 'use strict';
 
-var log4js         = require('log4js'),
-    logger         = log4js.getLogger('node'),
+let logger         = require('../log_assistant.js').getLogger(),
     CodeExecutor   = require('../code_executor/code_executor.js'),
     ReadyChecker   = require('./ready_checker.js'),
     ValidChecker   = require('./valid_checker.js'),
@@ -29,7 +28,7 @@ class Node {
    */
   init () {
     logger.debug('Initializing node:', this.staticId);
-    var node = this;
+    let node = this;
     
     // Load the node record
     node.record = node.serverLink.liveRecord('node', [ node.projectId, node.projectVersionId, node.staticId ], 'nodes', { staticId: node.staticId });
@@ -67,7 +66,7 @@ class Node {
    */
   checkReady (driver, dataContext) {
     logger.debug('Check if node is ready:', this.staticId, this.record.title);
-    var node         = this,
+    let node         = this,
         readyChecker = new ReadyChecker(driver),
         result       = {
           pass : true,
@@ -100,7 +99,7 @@ class Node {
    */
   validate (driver, dataContext) {
     logger.debug('Validating node:', this.staticId, this.record.title);
-    var node         = this,
+    let node         = this,
         validChecker = new ValidChecker(driver),
         result       = {
           pass : true,

@@ -2,8 +2,7 @@
 
 let Action       = require('../action/action.js'),
     Node         = require('../node/node.js'),
-    log4js       = require('log4js'),
-    logger       = log4js.getLogger('test_result_role'),
+    logger       = require('../log_assistant.js').getLogger(),
     TestRoleStep = require('./test_role_step.js');
 
 class TestRoleStepNavigate extends TestRoleStep {

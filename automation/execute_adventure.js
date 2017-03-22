@@ -2,10 +2,11 @@
 
 var assert       = require('assert'),
     Future       = require('fibers/future'),
+    LogAssistant = require('./classes/log_assistant.js').type('adventure'),
     Adventure    = require('./classes/adventure.js'),
     ServerLink   = require('./classes/server/server_link'),
-    LogAssistant = require('./classes/log_assistant.js'),
     RobaContext  = require('./classes/roba_context.js'),
+    RobaError    = require("./classes/roba_error.js"),
     commandArgs  = require('minimist')(process.argv.slice(2)),
     adventureId  = commandArgs.adventureId,
     projectId    = commandArgs.projectId,
@@ -13,15 +14,14 @@ var assert       = require('assert'),
     host         = commandArgs.host,
     ddpPort      = commandArgs.ddpPort,
     httpPort     = commandArgs.httpPort,
-    assistant, logger;
+    logger;
 
 assert(adventureId, 'adventureId must be specified');
 assert(projectId, 'projectId must be specified');
 assert(authToken, 'token must be specified');
 
 // Setup the logging
-assistant = new LogAssistant('adventure', adventureId, 'DEBUG');
-logger    = assistant.init();
+logger = LogAssistant.init(adventureId, 'DEBUG');
 
 // A future is required for the DDP interactions we want synchronous
 Future.task(function () {
@@ -36,21 +36,22 @@ Future.task(function () {
           port: httpPort
         }
       }),
-      adventure = new Adventure(adventureId, projectId, ddpLink, context, assistant.path);
+      adventure = new Adventure(adventureId, projectId, ddpLink, context, LogAssistant.path);
   
   // Create a ddp connection and connect to the server
   logger.info('Initiating DDP connection');
   ddpLink.connect(authToken);
   
   // Have the log assistant wire up a DDP appender to get data to the server quickly
-  assistant.addDDP(ddpLink, context);
+  LogAssistant.addDDP(ddpLink, context);
   
   // Initialize the adventure object
   try {
     adventure.init();
   } catch (e) {
-    logger.error("Failed to initialize adventure:", e.toString(), e.stack);
-    adventure.exit(1);
+    let error = new RobaError(e);
+    logger.error("Failed to initialize adventure:", error);
+    adventure.exit(1, error);
     return;
   }
   
@@ -58,8 +59,9 @@ Future.task(function () {
   try {
     adventure.connect();
   } catch (e) {
-    logger.error("Failed to connect for adventure:", e.toString(), e.stack);
-    adventure.exit(1);
+    let error = new RobaError(e);
+    logger.error("Failed to connect for adventure:", error);
+    adventure.exit(1, error);
     return;
   }
   
@@ -67,8 +69,9 @@ Future.task(function () {
   try {
     adventure.executeSteps();
   } catch (e) {
-    logger.error("Failed to execute adventure steps:", e.toString(), e.stack);
-    adventure.exit(1);
+    let error = new RobaError(e);
+    logger.error("Failed to execute adventure steps:", error);
+    adventure.exit(1, error);
     return;
   }
   
@@ -76,8 +79,9 @@ Future.task(function () {
   try {
     adventure.waitForCommands();
   } catch (e) {
-    logger.error("Failure adventure command loop:", e.toString(), e.stack);
-    adventure.exit(1);
+    let error = new RobaError(e);
+    logger.error("Failure in adventure command loop:", error);
+    adventure.exit(1, error);
     return;
   }
   
