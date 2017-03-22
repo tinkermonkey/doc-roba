@@ -50,9 +50,15 @@ Meteor.methods({
         TestResultRoles.find({ testResultId: testResult._id }).forEach(function (role) {
           console.info("launchTestResult launching role: ", role._id);
           let token   = Accounts.singleUseAuth.generate({ expires: { seconds: 30 } }),
-              command = [ ProcessLauncher.testRoleScript, "--roleId", role._id, "--projectId", testResult.projectId, "--token", token ].join(" "),
+              command = [ ProcessLauncher.testRoleScript, "--roleId", role._id, "--projectId", testResult.projectId, "--token", '"' + token + '"' ].join(" "),
               logFile = [ "test_result_role_", role._id, ".log" ].join(""),
-              proc    = ProcessLauncher.launchAutomation(command, logFile);
+              proc    = ProcessLauncher.launchAutomation(command, logFile, (exitCode) => {
+                console.info("launchTestResult test role complete: " + proc.pid + ", " + exitCode);
+                if(exitCode){
+                  Meteor.call('setTestResultRoleStatus', projectId, role._id, TestResultStatus.complete);
+                  Meteor.call('setTestResultRoleResult', projectId, role._id, TestResultCodes.fail);
+                }
+              });
           
           TestResultRoles.update(role._id, {
             $set     : { pid: proc.pid, status: TestResultStatus.launched },
@@ -178,7 +184,9 @@ Meteor.methods({
         TestResultRoles.update({ projectId: projectId, _id: testResultRole._id }, { $set: { status: status } });
         
         // update the test result status with the highest ranking status
-        if (testResult && testResult.status < status) {
+        console.debug('setTestResultRoleStatus checking testResult status:', status, testResult.status);
+        if (testResult && status > testResult.status) {
+          console.debug('setTestResultRoleStatus updating testResult status:', status);
           TestResults.update({ projectId: projectId, _id: testResultRole.testResultId }, { $set: { status: status } });
         }
       } else {

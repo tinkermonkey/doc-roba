@@ -64,18 +64,18 @@ export const ProcessLauncher = {
     
     console.debug("ProcessLauncher.launchAutomation Launched: " + proc.pid, this.automationPath, command);
     
-    // Catch the exit
-    proc.on("exit", Meteor.bindEnvironment(exitListener || function (code) {
+    // Catch the exit to shut down the output capture
+    proc.on("exit", Meteor.bindEnvironment(function (code) {
           console.debug("ProcessLauncher.launchAutomation Exit: " + proc.pid + ", " + code);
           try {
-            // TODO: These do not seem to work and may not be needed. Figure that out.
-            //out.close();
-            //err.close();
             fs.close(out);
             fs.close(err);
           } catch (e) {
-            console.error("ProcessLauncher.launchAutomation: " + e.toString());
+            console.error("ProcessLauncher.launchAutomation encountered an error on exit: " + e.toString());
           }
+      
+          // Call the exit listener if there is one
+          exitListener && exitListener(code)
         }));
     
     return proc;
@@ -136,7 +136,7 @@ export const ProcessLauncher = {
     try {
       // Validate that it's in an acceptable sub-path
       if (path.isAbsolute(dirPath)) {
-        if(path.parse(dirPath).dir.match('^' + self.baseLogPath)){
+        if (path.parse(dirPath).dir.match('^' + self.baseLogPath)) {
           if (fs.existsSync(dirPath)) {
             // If it's a directory, remove all of the files and folders first
             if (fs.lstatSync(dirPath).isDirectory()) {
@@ -158,7 +158,8 @@ export const ProcessLauncher = {
             console.error("ProcessLauncher.removeLogPath path does not exist:", dirPath);
           }
         } else {
-          console.error("ProcessLauncher.removeLogPath only accepts sub-paths of this path:", self.baseLogPath, dirPath, path.parse(dirPath).dir, path.parse(dirPath).dir.match('^' + self.baseLogPath));
+          console.error("ProcessLauncher.removeLogPath only accepts sub-paths of this path:", self.baseLogPath, dirPath, path.parse(dirPath).dir, path.parse(dirPath)
+              .dir.match('^' + self.baseLogPath));
         }
       } else {
         console.error("ProcessLauncher.removeLogPath only accepts absolute paths:", dirPath);
