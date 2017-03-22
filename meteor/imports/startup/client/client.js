@@ -211,7 +211,7 @@ Template.registerHelper("renderValueByType", function (value){
  * Render a lookup value
  */
 Template.registerHelper("renderLookup", function (lookupName, key, style) {
-  if(lookupName && key != null){
+  if(lookupName && key !== undefined){
     var lookup = eval(lookupName);
     if(lookup){
       var name = lookup[key];
@@ -228,7 +228,7 @@ Template.registerHelper("renderLookup", function (lookupName, key, style) {
       console.error("renderLookup failed: lookup not found " + lookupName);
     }
   } else {
-    console.error("renderLookup failed: insufficient data [" + lookupName + "," + key + "]");
+    //console.error("renderLookup failed: insufficient data [" + lookupName + "," + key + "]");
   }
 });
 

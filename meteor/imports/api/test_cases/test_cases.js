@@ -88,10 +88,10 @@ TestCases.helpers({
    */
   validateRunConfig(config) {
     check(config, TestCaseRun);
-    var testCase = this;
+    let testCase = this;
 
     // validate that the server exists and is active
-    var server = TestServers.findOne({staticId: config.serverId, projectVersionId: testCase.projectVersionId});
+    let server = TestServers.findOne({staticId: config.serverId, projectVersionId: testCase.projectVersionId});
     if(!server){
       throw new Meteor.Error("invalid-server", "Test config server not found " + config.serverId, [testCase, config]);
     } else if(!server.active === true){
@@ -99,16 +99,16 @@ TestCases.helpers({
     }
 
     // validate that the role config is complete and all systems and agents are active
-    var roles = this.roles();
+    let roles = this.roles();
 
     // There needs to be config for each role
     roles.forEach(function (role) {
       if(config && config.roles[role.staticId]){
-        var roleConfig = config.roles[role.staticId];
+        let roleConfig = config.roles[role.staticId];
         check(roleConfig, TestCaseRunRole);
 
         // validate the role test system
-        var testSystem = TestSystems.findOne({staticId: roleConfig.testSystemId, projectVersionId: testCase.projectVersionId});
+        let testSystem = TestSystems.findOne({staticId: roleConfig.testSystemId, projectVersionId: testCase.projectVersionId});
         if(!testSystem){
           throw new Meteor.Error("invalid-test-system", "Test config test system not found " + roleConfig.testSystemId, [testCase, config, roleConfig]);
         } else if(!testSystem.active === true){
@@ -116,13 +116,13 @@ TestCases.helpers({
         }
 
         // validate the role test agent
-        var testAgents = TestAgents.findOne({staticId: roleConfig.testAgentId, projectVersionId: testCase.projectVersionId});
+        let testAgents = TestAgents.findOne({staticId: roleConfig.testAgentId, projectVersionId: testCase.projectVersionId});
         if(!testAgents){
           throw new Meteor.Error("invalid-test-agent", "Test config test agent not found " + roleConfig.testAgentId, [testCase, config, roleConfig]);
         }
 
         // validate the role account
-        var account = DatastoreRows.findOne({staticId: roleConfig.accountId, projectVersionId: testCase.projectVersionId});
+        let account = DatastoreRows.findOne({staticId: roleConfig.accountId, projectVersionId: testCase.projectVersionId});
         if(!account){
           throw new Meteor.Error("invalid-test-account", "Test config account not found " + roleConfig.accountId, [testCase, config, roleConfig]);
         }
@@ -140,11 +140,11 @@ TestCases.helpers({
    */
   prepareTestResult(config) {
     check(config, Object);
-    var testCase = this;
+    let testCase = this;
 
     if(testCase.validateRunConfig(config)){
       // prepare the records starting with the test result
-      var testResultId = TestResults.insert({
+      let testResultId = TestResults.insert({
         projectId: testCase.projectId,
         projectVersionId: testCase.projectVersionId,
         testCaseId: testCase.staticId,
@@ -155,13 +155,13 @@ TestCases.helpers({
 
       // create records for each of the test roles
       testCase.roles().forEach(function (role) {
-        var roleConfig = config.roles[role.staticId];
+        let roleConfig = config.roles[role.staticId];
 
         // snapshot the account to use for the test
         roleConfig.dataContext = roleConfig.dataContext || {};
-        roleConfig.dataContext.account = DatastoreRows.findOne({_id: roleConfig.accountId});
+        roleConfig.dataContext.account = DatastoreRows.findOne({staticId: roleConfig.accountId});
 
-        var testRoleResultId = TestResultRoles.insert({
+        let testRoleResultId = TestResultRoles.insert({
           projectId: testCase.projectId,
           projectVersionId: testCase.projectVersionId,
           testRunId: config.testRunId,
@@ -175,7 +175,7 @@ TestCases.helpers({
 
         // create records for each step
         role.steps().forEach(function (step) {
-          var data = step.data;
+          let data = step.data;
 
           // snapshot the important data for the test step
           data.action = step.action();
