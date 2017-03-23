@@ -41,7 +41,9 @@ Template.TestResultStepLog.onCreated(() => {
   let instance         = Template.instance();
   instance.startTime   = Date.now();
   instance.maxLogWidth = new ReactiveVar(parseInt(window.innerWidth / 3));
-  instance.filter      = new ReactiveVar({});
+  instance.filter      = new ReactiveVar({
+    level: ['DEBUG', 'INFO', 'WARN', 'ERROR']
+  });
   
   // setup the messages data
   instance.messages = function () {
