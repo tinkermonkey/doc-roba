@@ -26,7 +26,9 @@
         {{else}}
           <div class="flex">
             <div>Result: </div>
-            {{> TestResultLogDataObject result}}
+            {{#with result}}
+              {{> Template.dynamic template=LogMessageData}}
+            {{/with}}
           </div>
         {{/with}}
       {{/if}}
