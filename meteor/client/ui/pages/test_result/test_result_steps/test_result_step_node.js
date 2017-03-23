@@ -1,4 +1,4 @@
-import './test_step_result_node.html';
+import './test_result_step_node.html';
 import { Template } from 'meteor/templating';
 import { LogMessages } from '../../../../../imports/api/log_messages/log_messages.js';
 import '../common_panels/test_step_result_node_milestone.js';

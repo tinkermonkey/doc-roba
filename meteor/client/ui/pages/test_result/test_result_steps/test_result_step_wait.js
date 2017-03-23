@@ -1,4 +1,4 @@
-import './test_step_result_wait.html';
+import './test_result_step_wait.html';
 import { Template } from 'meteor/templating';
 
 /**

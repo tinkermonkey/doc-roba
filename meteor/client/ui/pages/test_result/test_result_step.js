@@ -7,11 +7,11 @@ import { Util } from '../../../../imports/api/util.js';
 import '../../components/fullscreen_viewer/fullscreen_viewer.js';
 import './test_result_step_map.js';
 import './test_result_step_log.js';
-import './test_step_results/test_step_result_node.js';
-import './test_step_results/test_step_result_action.js';
-import './test_step_results/test_step_result_navigate.js';
-import './test_step_results/test_step_result_wait.js';
-import './test_step_results/test_step_result_custom.js';
+import './test_result_steps/test_result_step_node.js';
+import './test_result_steps/test_result_step_action.js';
+import './test_result_steps/test_result_step_navigate.js';
+import './test_result_steps/test_result_step_wait.js';
+import './test_result_steps/test_result_step_custom.js';
 
 // TODO: This sucks, create a better way to define the pitch
 var screenshotPitch = 23;

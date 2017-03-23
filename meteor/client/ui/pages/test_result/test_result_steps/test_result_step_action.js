@@ -1,4 +1,4 @@
-import './test_step_result_action.html';
+import './test_result_step_action.html';
 import { Template } from 'meteor/templating';
 import '../common_panels/test_step_result_node_milestone.js';
 

@@ -59,7 +59,7 @@
 }
 
 .test-result-step-check-col {
-  flex: 1 0 auto;
+  flex: 1 1 auto;
 }
 
 .test-result-step-log-col {
@@ -133,8 +133,23 @@
 .test-result-check-table {
   width: 100%;
 }
+.test-result-check-table tr:hover td {
+  background-color: #0A7BFF;
+  cursor: pointer;
+  color: #ffffff;
+}
 .test-result-check-table td {
-  padding-right: 2px;
+  padding: 3px;
+}
+
+.test-result-check-table td:first-child {
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+.test-result-check-table td:last-child {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
 }
 
 .test-result-check-command  {
@@ -142,6 +157,9 @@
   display: inline-block;*/
   word-break: break-all;
   overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break-wrap: all;
+  white-space: pre-wrap;
   overflow: hidden;
   vertical-align: top;
 }
