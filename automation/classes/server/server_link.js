@@ -34,7 +34,7 @@ var Future        = require("fibers/future"),
       }
     };
 
-logger.setLevel("DEBUG");
+logger.setLevel("TRACE");
 ddpLogger.setLevel("INFO");
 
 class ServerLink {

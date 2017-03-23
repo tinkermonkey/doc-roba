@@ -62,21 +62,23 @@ class TestRoleStep {
     driver.getClientLogs();
     
     // Do the actual step
+    let error;
     try {
       pass = self.doStep();
       driver.getClientLogs();
     } catch (e) {
-      let error = new RobaError(e);
+      error = new RobaError(e);
       logger.error('Error during test role step execution:', error);
       pass = false;
-      self.setResult(TestResultCodes.fail, { error: error });
-      self.testRole.setResult(TestResultCodes.fail, { error: error });
     }
     
     // Done
     self.setStatus(TestResultStatus.complete);
     if (pass) {
       self.setResult(TestResultCodes.pass);
+    } else {
+      self.setResult(TestResultCodes.fail, { error: error });
+      self.testRole.setResult(TestResultCodes.fail, { error: error });
     }
     return pass;
   }

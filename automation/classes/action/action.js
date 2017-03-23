@@ -62,7 +62,7 @@ class Action {
     // Execute the code
     action.executor.execute();
     
-    logger.debug("Action complete");
+    logger.debug("Action executed");
   }
   
   /**

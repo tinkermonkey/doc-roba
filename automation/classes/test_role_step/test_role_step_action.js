@@ -39,6 +39,10 @@ class TestRoleStepAction extends TestRoleStep {
           valid: false
         };
     
+    // Set the context
+    self.context.update({ actionId: self.action.record.staticId });
+    self.context.milestone({ type: "action", data: { action: self.action.record, context: self.dataContext } });
+    
     // Take the action
     logger.debug("TestRoleStepAction.doStep taking action");
     _.keys(self.dataContext).forEach((key) => {
@@ -60,22 +64,29 @@ class TestRoleStepAction extends TestRoleStep {
     driver.getClientLogs();
     
     // Screenshot of the page ready
-    if (result.ready) {
+    if (result.ready.pass) {
       self.serverLink.saveImage(driver.getScreenshot(), ScreenshotKeys.afterLoad);
     } else {
       self.serverLink.saveImage(driver.getScreenshot(), ScreenshotKeys.error);
     }
     
     // Check that the node is valid
-    if (result.ready) {
+    if (result.ready.pass) {
       logger.debug("TestRoleStepAction.doStep validating node");
       result.valid = self.node.validate(driver, self.dataContext);
       driver.getClientLogs();
     }
-    
-    logger.debug("TestRoleStepAction.doStep complete:", result);
-    self.context.update({ pass: result.isReady && result.isValid });
-    return result.ready && result.valid
+  
+    // Store the ready checks
+    self.serverLink.saveTestResultStepChecks(self.record._id, [{
+      node: self.node.record,
+      ready: result.ready.checks,
+      validation: result.valid.checks
+    }]);
+  
+    logger.debug("TestRoleStepAction.doStep complete:", result.ready.pass === true && result.valid.pass === true, result);
+    self.context.update({ pass: result.ready.pass === true && result.valid.pass === true });
+    return result.ready.pass === true && result.valid.pass === true
   }
 }
 

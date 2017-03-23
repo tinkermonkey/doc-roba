@@ -28,7 +28,9 @@ class Node {
    */
   init () {
     logger.debug('Initializing node:', this.staticId);
-    let node = this;
+    let node = this,
+        readyCode,
+        validCode;
     
     // Load the node record
     node.record = node.serverLink.liveRecord('node', [ node.projectId, node.projectVersionId, node.staticId ], 'nodes', { staticId: node.staticId });
@@ -38,23 +40,43 @@ class Node {
     logger.trace("Node record loaded:", node.record);
     
     // Load all of the checks for this node
+    logger.debug('Loading node ready checks:', node.staticId);
     node.readyChecks = node.serverLink.recordList('node_checks', [
       node.projectId,
       node.projectVersionId,
       node.record.staticId,
       NodeCheckTypes.ready
-    ], 'node_checks', { type: NodeCheckTypes.ready });
-    
+    ], 'node_checks', { parentId: node.record.staticId, type: NodeCheckTypes.ready });
+  
+    logger.debug('Loading node valid checks:', node.staticId);
     node.validChecks = node.serverLink.recordList('node_checks', [
       node.projectId,
       node.projectVersionId,
       node.record.staticId,
       NodeCheckTypes.valid
-    ], 'node_checks', { type: NodeCheckTypes.valid });
+    ], 'node_checks', { parentId: node.record.staticId, type: NodeCheckTypes.valid });
+    
+    // Bundle up the readyCode with the quick checks
+    readyCode = node.record.readyCode || '';
+    readyCode += readyCode.length ? "\n" : '';
+    logger.debug('Node ready code:', readyCode);
+    node.readyChecks.forEach((check) => {
+      logger.debug('Adding ready check to node readyCode:', check);
+      readyCode += 'ready.' + check.checkFn + '("' + check.selector.replace(/"/g, '\\"') + '")' + ";\n";
+    });
+    
+    // Bundle up the validationCode with the quick checks
+    validCode = node.record.validationCode || '';
+    validCode += validCode.length ? "\n" : '';
+    logger.debug('Node valid code:', validCode);
+    node.validChecks.forEach((check) => {
+      logger.debug('Adding ready valid to node validCode:', check);
+      validCode += 'valid.' + check.checkFn + '("' + check.selector.replace(/"/g, '\\"') + '")' + ";\n";
+    });
     
     // Create the code executors for ready and valid checks
-    node.readyExecutor = new CodeExecutor(node.record.readyCode);
-    node.validExecutor = new CodeExecutor(node.record.validationCode);
+    node.readyExecutor = new CodeExecutor(readyCode);
+    node.validExecutor = new CodeExecutor(validCode);
     
     return this;
   }
@@ -89,6 +111,9 @@ class Node {
       result.error = e;
     }
     
+    // Grab the actual checks performed during the ready check
+    result.checks = readyChecker.checks || [];
+    
     return result
   }
   
@@ -111,6 +136,7 @@ class Node {
     node.validExecutor.addVariable('valid', validChecker);
     node.validExecutor.addVariable('dataContext', dataContext);
     
+    // Execute the valid checks for this node
     try {
       node.validExecutor.execute();
       result.pass = validChecker.check();
@@ -120,6 +146,9 @@ class Node {
       result.pass  = false;
       result.error = e;
     }
+  
+    // Grab the actual checks performed during the ready check
+    result.checks = validChecker.checks || [];
     
     return result
   }
