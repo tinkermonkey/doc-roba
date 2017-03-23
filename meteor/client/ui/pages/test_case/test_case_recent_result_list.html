@@ -33,7 +33,11 @@
                 <div>{{renderLookup "TestResultStatusLookup" status}}</div>
               </td>
               <td>
-                <div>{{renderLookup "TestResultCodesLookup" resultCode}}</div>
+                <div>
+                  <h4>
+                    <span class="label label-{{labelClass}}">{{renderLookup "TestResultCodesLookup" resultCode}}</span>
+                  </h4>
+                </div>
               </td>
             </tr>
           {{/each}}
