@@ -11,6 +11,16 @@
   padding: 3px;
 }
 
+.sortable-table-row td:first-child {
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+.sortable-table-row td:last-child {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
 /* Divider Row */
 .sortable-table-divider .divider {
   margin-top: 5px;
