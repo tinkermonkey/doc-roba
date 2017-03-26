@@ -80,16 +80,22 @@ TestCaseRoles.helpers({
   step(order) {
     return TestCaseSteps.findOne({testCaseRoleId: this.staticId, projectVersionId: this.projectVersionId, order: order});
   },
+  firstNode(){
+    let firstStepWithNode = TestCaseSteps.findOne({testCaseRoleId: this.staticId, projectVersionId: this.projectVersionId, 'data.nodeId': {$exists: true}});
+    if(firstStepWithNode){
+      return firstStepWithNode.firstNode();
+    }
+  },
   platform() {
-    var firstStep = this.step(0);
-    if(firstStep && firstStep.firstNode()){
-      return firstStep.firstNode().platform();
+    let firstNode = this.firstNode();
+    if(firstNode){
+      return firstNode.platform();
     }
   },
   userType() {
-    var firstStep = TestCaseSteps.findOne({testCaseRoleId: this.staticId, projectVersionId: this.projectVersionId, order: 0});
-    if(firstStep && firstStep.firstNode()){
-      return firstStep.firstNode().userType();
+    let firstNode = this.firstNode();
+    if(firstNode){
+      return firstNode.userType();
     }
   }
 });

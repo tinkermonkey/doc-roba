@@ -154,7 +154,7 @@ TestCases.helpers({
       });
 
       // create records for each of the test roles
-      testCase.roles().forEach(function (role) {
+      testCase.roles().forEach((role) => {
         let roleConfig = config.roles[role.staticId];
 
         // snapshot the account to use for the test
@@ -174,12 +174,16 @@ TestCases.helpers({
         });
 
         // create records for each step
-        role.steps().forEach(function (step) {
+        role.steps().forEach((step) => {
           let data = step.data;
 
           // snapshot the important data for the test step
           data.action = step.action();
-          data.node = step.firstNode().withChecks();
+          
+          let node = step.firstNode();
+          if(node){
+            data.node = node.withChecks();
+          }
 
           TestResultSteps.insert({
             projectId: testCase.projectId,
