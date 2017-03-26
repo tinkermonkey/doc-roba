@@ -1,11 +1,12 @@
 "use strict";
 
-let _              = require('underscore'),
-    Action         = require('../action/action.js'),
-    Node           = require('../node/node.js'),
-    logger         = require('../log_assistant.js').getLogger(),
-    TestRoleStep   = require('./test_role_step.js'),
-    ScreenshotKeys = require('../enum/screenshot_keys.js');
+let _                = require('underscore'),
+    Action           = require('../action/action.js'),
+    Node             = require('../node/node.js'),
+    logger           = require('../log_assistant.js').getLogger(),
+    TestRoleStep     = require('./test_role_step.js'),
+    TestRoleStepNode = require('./test_role_step_node.js'),
+    ScreenshotKeys   = require('../enum/screenshot_keys.js');
 
 class TestRoleStepAction extends TestRoleStep {
   /**
@@ -32,61 +33,62 @@ class TestRoleStepAction extends TestRoleStep {
    */
   doStep () {
     logger.debug('TestRoleStepAction.doStep:', this.index, this.record._id);
-    let self   = this,
-        driver = self.testRole.driver,
-        result = {
-          ready: false,
-          valid: false
-        };
+    let self = this,
+        result, pass;
+    
+    // Do the work
+    result = TestRoleStepAction.doActionStep(self, self.action, self.node);
+    
+    // Store the ready checks
+    self.serverLink.saveTestResultStepChecks(self.record._id, [ {
+      node      : self.node.record,
+      ready     : result.ready.checks,
+      validation: result.valid.checks
+    } ]);
+    
+    pass = result.ready.pass === true && result.valid.pass === true;
+    logger.debug("TestRoleStepAction.doStep complete: ready=", result.ready.pass === true, 'valid=', result.valid.pass === true, 'result=', result);
+    self.context.update({ pass: pass });
+  
+    if(!pass){
+      throw new Error('Action failed to reach destination');
+    }
+  }
+  
+  /**
+   * Static method so that logic can be shared with navigate steps
+   * @param {TestRoleStep} step
+   * @param {Action} action The action object
+   * @param {Node} node The destination node object
+   * @param {boolean} skipNodeValidation Whether the node validation should be skipped (for navigation steps)
+   */
+  static doActionStep (step, action, node, skipNodeValidation) {
+    logger.debug('TestRoleStepAction.doActionStep:', step.index, action.record._id, node.record._id);
+    let driver = step.testRole.driver,
+        result;
     
     // Set the context
-    self.context.update({ actionId: self.action.record.staticId });
-    self.context.milestone({ type: "action", data: { action: self.action.record, context: self.dataContext } });
+    step.context.update({ actionId: action.record.staticId });
+    step.context.milestone({ type: "action", data: { action: action.record, context: step.dataContext } });
     
     // Take the action
-    logger.debug("TestRoleStepAction.doStep taking action");
-    _.keys(self.dataContext).forEach((key) => {
-      self.action.addVariable(key, self.dataContext[ key ]);
+    logger.debug("TestRoleStepAction.doActionStep taking action");
+    _.keys(step.dataContext).forEach((key) => {
+      action.addVariable(key, step.dataContext[ key ]);
     });
-    self.action.execute(driver, self.dataContext);
-    self.serverLink.saveImage(driver.getScreenshot(), ScreenshotKeys.afterAction);
-    
-    // Inject the helpers
-    driver.wait(1000);
-    driver.injectHelpers();
-    
-    // Wait for the node to be ready
-    logger.debug("TestRoleStepAction.doStep waiting for node to be ready");
-    _.keys(self.dataContext).forEach((key) => {
-      self.node.addVariable(key, self.dataContext[ key ]);
-    });
-    result.ready = self.node.checkReady(driver, self.dataContext);
+    action.execute(driver, step.dataContext);
     driver.getClientLogs();
+    step.serverLink.saveImage(driver.getScreenshot(), ScreenshotKeys.afterAction);
     
-    // Screenshot of the page ready
-    if (result.ready.pass) {
-      self.serverLink.saveImage(driver.getScreenshot(), ScreenshotKeys.afterLoad);
-    } else {
-      self.serverLink.saveImage(driver.getScreenshot(), ScreenshotKeys.error);
+    // Wait a little bit
+    driver.wait(2000);
+    
+    // Validate the destination node
+    if(!skipNodeValidation){
+      result = TestRoleStepNode.doNodeStep(step, node);
     }
     
-    // Check that the node is valid
-    if (result.ready.pass) {
-      logger.debug("TestRoleStepAction.doStep validating node");
-      result.valid = self.node.validate(driver, self.dataContext);
-      driver.getClientLogs();
-    }
-  
-    // Store the ready checks
-    self.serverLink.saveTestResultStepChecks(self.record._id, [{
-      node: self.node.record,
-      ready: result.ready.checks,
-      validation: result.valid.checks
-    }]);
-  
-    logger.debug("TestRoleStepAction.doStep complete:", result.ready.pass === true && result.valid.pass === true, result);
-    self.context.update({ pass: result.ready.pass === true && result.valid.pass === true });
-    return result.ready.pass === true && result.valid.pass === true
+    return result;
   }
 }
 
