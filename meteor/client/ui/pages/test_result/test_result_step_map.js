@@ -1,28 +1,37 @@
 import './test_result_step_map.html';
 import { Template } from 'meteor/templating';
-import { DocTreeConfig } from '../../lib/doc_tree/doc_tree_config.js';
-import '../../components/svg_snippets/action_snippet.js';
-import '../../components/svg_snippets/node_snippet.js';
+import { TestCaseStepTypes } from '../../../../imports/api/test_cases/test_case_step_types.js';
+import '../../components/svg_snippets/vertical_route_snippet.js';
 
 /**
  * Template Helpers
  */
 Template.TestResultStepMap.helpers({
-  height() {
-    var height = DocTreeConfig.nodes.height;
-    if (this.data && this.type && this.type == "action") {
-      height = DocTreeConfig.nodes.yMargin;
-    }
-    return height * (this.scale || 1) + DocTreeConfig.standalone.margin * 2
+  getMapSteps(){
+    let steps = [];
+    
+    // Convert the contexts from the log into the format expected by the VerticalRouteSnippet
+    this.testMapContexts().forEach((context) => {
+      switch (context.type) {
+        case "node":
+          steps.push({
+            node: context.data
+          });
+          break;
+        case "action":
+          steps.push({
+            action: context.data.action
+          });
+          break;
+        default:
+          console.error('getMapSteps encountered an unknow context type:', context.type, context);
+      }
+    });
+    
+    return steps
   },
-  xMargin() {
-    return DocTreeConfig.standalone.margin * 2
-  },
-  yMargin() {
-    return DocTreeConfig.standalone.margin
-  },
-  isAction() {
-    return this.type == "action"
+  hideLastNode(){
+    return this.type === TestCaseStepTypes.navigate
   }
 });
 

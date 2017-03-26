@@ -4,9 +4,9 @@ import { Nodes } from '../../../../../imports/api/nodes/nodes.js';
 import { TestCaseSteps } from '../../../../../imports/api/test_cases/test_case_steps.js';
 import { TestCaseStepTypes } from '../../../../../imports/api/test_cases/test_case_step_types.js';
 import { RobaRouter } from '../../../../../imports/api/roba_router/roba_router.js';
-import '../../../components/routes/route_map.js';
+import '../../../components/svg_snippets/vertical_route_snippet.js';
 
-var debug = true;
+let debug = true;
 
 /**
  * Template Helpers
@@ -19,7 +19,7 @@ Template.TestCaseStepNavigate.helpers({
     return Template.instance().destinationNode.get()
   },
   complete() {
-    var instance = Template.instance();
+    let instance = Template.instance();
     return instance.nodeId.get() && instance.destinationNode.get()
   },
   route() {
@@ -40,9 +40,10 @@ Template.TestCaseStepNavigate.created = function () {
   instance.nodeId          = new ReactiveVar();
   instance.destinationNode = new ReactiveVar();
   instance.route           = new ReactiveVar();
+  instance.lastSave        = 0;
   
   instance.autorun(function () {
-    var data            = Template.currentData(),
+    let data            = Template.currentData(),
         sourceStep      = TestCaseSteps.findOne({
           testCaseRoleId: data.testCaseRoleId,
           order         : { $lt: data.order },
@@ -52,7 +53,7 @@ Template.TestCaseStepNavigate.created = function () {
           testCaseRoleId: data.testCaseRoleId,
           order         : { $gt: data.order }
         }, { sort: { order: 1 } }),
-        sourceNode, destinationNode;
+        sourceNodeId, destinationNodeId, testRoute;
     console.log('TestCaseStepNavigate computing route:', data);
     
     // clear the error
@@ -60,8 +61,8 @@ Template.TestCaseStepNavigate.created = function () {
     
     // Figure out the destination first because this is required
     if (destinationStep && destinationStep.data && destinationStep.data.nodeId) {
-      destinationNode = destinationStep.data.nodeId;
-      instance.destinationNode.set(destinationNode);
+      destinationNodeId = destinationStep.data.nodeId;
+      instance.destinationNode.set(destinationNodeId);
     } else {
       instance.destinationNode.set();
       data.error.set("This step requires a node to navigate to");
@@ -70,20 +71,21 @@ Template.TestCaseStepNavigate.created = function () {
     // If the source isn't known, try to infer it
     if (sourceStep && sourceStep.data && sourceStep.data.nodeId) {
       instance.nodeId.set(sourceStep.data.nodeId);
-      sourceNode = sourceStep.data.nodeId
-    } else if (destinationNode) {
+      sourceNodeId = sourceStep.data.nodeId
+    } else if (destinationNodeId) {
       // Try to identify a starting point
       try {
-        var testRoute = RobaRouter.routeFromStart(destinationNode);
-        if (testRoute.feasible && testRoute.route[ 0 ] && testRoute.route[ 0 ].node) {
-          sourceNode = testRoute.route[ 0 ].node.staticId
-          instance.nodeId.set(sourceNode);
+        testRoute = RobaRouter.routeFromStart(destinationNodeId);
+        if (testRoute.feasible && testRoute.steps[ 0 ] && testRoute.steps[ 0 ].node) {
+          //sourceNodeId = testRoute.steps[ 0 ].node.staticId;
+          instance.nodeId.set(sourceNodeId);
         } else {
           instance.nodeId.set();
           data.error.set("Could not auto-route to the destination, please add a node step before this one");
         }
       } catch (e) {
         instance.nodeId.set();
+        console.error('TestCaseStepNavigate error computing test route:', e);
         data.error.set("This step requires a node from which to navigate");
       }
     } else {
@@ -91,42 +93,53 @@ Template.TestCaseStepNavigate.created = function () {
     }
     
     // Create the route
-    if (sourceNode && destinationNode) {
+    if ((sourceNodeId && destinationNodeId) || (testRoute && testRoute.feasible && destinationNodeId)) {
       // save the data if it changed
-      var save = true;
-      if (data.data && data.data.sourceId && data.data.destinationId) {
-        save = !(data.data.sourceId == sourceNode && data.data.destinationId == destinationNode);
-        debug && console.log("TestCaseStepNavigate data points: ", data.data.sourceId, sourceNode, data.data.destinationId, destinationNode, data.data.sourceId == sourceNode && data.data.destinationId == destinationNode);
+      let save = true;
+      if (data.data && data.data.destinationId) {
+        save = !(data.data.sourceId == sourceNodeId && data.data.destinationId == destinationNodeId);
+        debug && console.log("TestCaseStepNavigate data points:", data.data.sourceId, sourceNodeId, data.data.destinationId, destinationNodeId, data.data.sourceId == sourceNodeId && data.data.destinationId == destinationNodeId);
       }
       
       if (save) {
-        var stepData           = data.data || {};
-        stepData.sourceId      = sourceNode;
-        stepData.destinationId = destinationNode;
-  
-        console.log("TestCaseStepNavigate saving step data: ", stepData, data.data);
-        TestCaseSteps.update(data._id, { $set: { data: stepData } }, function (error) {
-          if (error) {
-            RobaDialog.error("Failed to update navigation step: " + error.message);
-          }
-        });
+        let stepData = {
+          sourceId     : sourceNodeId,
+          destinationId: destinationNodeId
+        };
+        
+        console.log("TestCaseStepNavigate saving step data:", stepData, data.data);
+        if (stepData && Date.now() - instance.lastSave > 5000) {
+          instance.lastSave = Date.now();
+          TestCaseSteps.update(data._id, { $set: { data: stepData } }, function (error) {
+            if (error) {
+              RobaDialog.error("Failed to update navigation step: " + error.message);
+            }
+          });
+        }
       }
       
-      var sourceNodeRecord      = Nodes.findOne({ projectVersionId: data.projectVersionId, staticId: sourceNode }),
-          destinationNodeRecord = Nodes.findOne({ projectVersionId: data.projectVersionId, staticId: destinationNode });
-      if (sourceNodeRecord && destinationNodeRecord) {
-        // ready to create the route
-        try {
-          var route = RobaRouter.nodeToNode(sourceNodeRecord, destinationNodeRecord);
-          instance.route.set(route);
-        } catch (e) {
-          console.error("RobaRouter error:", e);
-          data.error.set("There was no route found for this step");
-        }
+      if (testRoute) {
+        console.log("TestCaseStepNavigate using test route:", testRoute);
+        instance.route.set(testRoute);
       } else {
-        instance.route.set();
-        data.error.set("One of the nodes for this step could not be found");
+        console.log("TestCaseStepNavigate creating new route:", sourceNodeId, destinationNodeId);
+        let sourceNodeRecord      = Nodes.findOne({ projectVersionId: data.projectVersionId, staticId: sourceNodeId }),
+            destinationNodeRecord = Nodes.findOne({ projectVersionId: data.projectVersionId, staticId: destinationNodeId });
+        if (sourceNodeRecord && destinationNodeRecord) {
+          // ready to create the route
+          try {
+            let route = RobaRouter.nodeToNode(sourceNodeRecord, destinationNodeRecord);
+            instance.route.set(route);
+          } catch (e) {
+            console.error("RobaRouter error:", e);
+            data.error.set("There was no route found for this step");
+          }
+        } else {
+          instance.route.set();
+          data.error.set("One of the nodes for this step could not be found");
+        }
       }
+      
     } else {
       instance.route.set();
     }

@@ -16,7 +16,7 @@ Template.ActionSnippet.helpers({
   },
   labelY () {
     let height = Template.instance().labelBackHeight.get();
-    return DocTreeConfig.nodes.yMargin / 2 - (height / 2) * 1.5;
+    return DocTreeConfig.nodes.yMargin / 2 - (height / 2) * 1.5 + 2;
   },
   labelBackY () {
     let height = Template.instance().labelBackHeight.get();
@@ -65,7 +65,7 @@ Template.ActionSnippet.onRendered(() => {
         width = dummyTextEl.getComputedTextLength(),
         bbox = dummyTextEl.getBBox();
     if(width){
-      self.labelBackWidth.set(width + DocTreeConfig.nodes.borderWidth * 2);
+      self.labelBackWidth.set(width + DocTreeConfig.nodes.borderWidth * 4);
     }
     if(bbox && bbox.height){
       self.labelBackHeight.set(bbox.height);

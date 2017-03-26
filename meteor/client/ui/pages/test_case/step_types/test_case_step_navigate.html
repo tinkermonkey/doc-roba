@@ -1,10 +1,7 @@
 <template name="TestCaseStepNavigate">
-  {{#if complete}}
+  {{#if route}}
     <div class="flex-vertical">
-      {{#unless order}}
-        {{> StandaloneNodeSnippet staticId=source projectVersionId=projectVersionId}}
-      {{/unless}}
-      {{> RouteMap route=route projectVersionId=projectVersionId }}
+      {{> VerticalRouteSnippet steps=route.steps projectVersionId=projectVersionId hideDestination=true}}
     </div>
   {{/if}}
 </template>

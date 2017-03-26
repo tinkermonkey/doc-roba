@@ -1,16 +1,16 @@
 <template name="VerticalRouteSnippet">
-  <svg class="action-snippet auto-transition" width="{{width}}" height="{{height}}">
-    <g transform="translate({{xMargin}}, {{yMargin}}) scale({{getScale}})">
+  <svg class="action-snippet auto-transition" width="{{width}}" height="{{height getSteps}}">
+    <g transform="translate({{xMargin}}, {{yMargin}}) scale({{getScale}})" class="snippet-container">
       {{#each getSteps }}
-        <g transform="translate(0,{{startY}})">
-          {{#if nodeId}}
+        <g transform="translate(0,{{startY}})" class="snippet-step-action" data-step-index="{{@index}}">
+          {{#if action}}
             <g>
-              {{> NodeSnippet getNode nodeId ../projectVersionId}}
+              {{> ActionSnippet action}}
             </g>
           {{/if}}
-          {{#if actionId}}
-            <g transform="translate(0,{{actionY}})">
-              {{> ActionSnippet getAction actionId ../projectVersionId}}
+          {{#if node}}
+            <g transform="translate(0,{{nodeY}})" class="snippet-step-node" data-step-index="{{@index}}">
+              {{> NodeSnippet node}}
             </g>
           {{/if}}
         </g>

@@ -1,15 +1,5 @@
 <template name="TestResultStepMap">
   <div class="test-result-step-map">
-    {{#each testMapContexts }}
-      <svg class="action-snippet auto-transition" width="100%" height="{{height}}">
-        <g transform="translate({{xMargin}}, {{yMargin}})">
-          {{#if isAction}}
-            {{> ActionSnippet data.action}}
-          {{else}}
-            {{> NodeSnippet data}}
-          {{/if}}
-        </g>
-      </svg>
-    {{/each}}
+    {{> VerticalRouteSnippet steps=getMapSteps projectVersionId=projectVersionId hideDestination=hideLastNode}}
   </div>
 </template>
