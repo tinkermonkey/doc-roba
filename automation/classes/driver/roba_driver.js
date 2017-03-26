@@ -60,7 +60,7 @@ var Future              = require("fibers/future"),
     },
     skipLoggingCommands = [ "screenshot", "saveScreenshot" ];
 
-logger.setLevel("INFO");
+logger.setLevel("DEBUG");
 browserLogger.setLevel("TRACE");
 clientLogger.setLevel("TRACE");
 driverLogger.setLevel("TRACE");
@@ -103,7 +103,9 @@ var RobaDriver = function (config) {
               args        = _.map(_.keys(commandArgs), function (i) {
                 return commandArgs[ "" + i ];
               });
-          logger.trace("Wrapper: ", command, ":", args && args.map((a) => { return a && a.toString()}));
+          logger.trace("Wrapper: ", command, ":", args && args.map((a) => {
+                return a && a.toString()
+              }));
           return this.command(command, args);
         }.bind(fDriver);
       } else {
@@ -122,7 +124,7 @@ var RobaDriver = function (config) {
     }
   }.bind(fDriver));
   
-  logger.info("Init complete");
+  logger.info("RobaDriver init complete");
 };
 
 /**
@@ -145,7 +147,10 @@ RobaDriver.prototype.command = function (command, args) {
     if (error) {
       logger.error("Error executing command:", {
         command: command,
-        args   : args && args.map((a) => { return a && a.toString()}),
+        // Trim the callback function from the args
+        args   : args && args.slice(0, -1).map((a) => {
+          return a && a.toString()
+        }),
         error  : error
       });
       future.return([ error ]);
@@ -153,7 +158,14 @@ RobaDriver.prototype.command = function (command, args) {
     } else {
       // skip logging for some commands (screenshots, etc)
       if (!_.contains(skipLoggingCommands, command)) {
-        logger.debug({ command: command, args: args && args.map((a) => { return a && a.toString()}), result: result });
+        logger.debug({
+          command: command,
+          // Trim the callback function from the args
+          args   : args && args.slice(0, -1).map((a) => {
+            return a && a.toString()
+          }),
+          result : result
+        });
       } else {
         logger.trace("Command returned");
       }
@@ -273,11 +285,11 @@ RobaDriver.prototype.getState = function () {
   
   // get the page size
   state.size = {
-    width: this.execute(function () {
-      return document.getElementsByTagName('body')[0].scrollWidth;
+    width : this.execute(function () {
+      return document.getElementsByTagName('body')[ 0 ].scrollWidth;
     }),
     height: this.execute(function () {
-      return document.getElementsByTagName('body')[0].scrollHeight;
+      return document.getElementsByTagName('body')[ 0 ].scrollHeight;
     })
   };
   
@@ -384,14 +396,14 @@ RobaDriver.prototype.injectHelpers = function () {
       
       try {
         roba_driver = {};
-  
+        
         // observe the mouse position
         roba_driver.mouse = { x: 0, y: 0 };
         document.addEventListener('mousemove', function (e) {
           roba_driver.mouse.x = e.clientX || e.pageX;
           roba_driver.mouse.y = e.clientY || e.pageY
         }, false);
-  
+        
         // create a function for grabbing basic element information
         roba_driver.element_info = function (el, getText, getHtml) {
           try {
@@ -402,48 +414,48 @@ RobaDriver.prototype.injectHelpers = function () {
               bounds    : el.getBoundingClientRect(),
               selectors : roba_driver.getSelectors(el)
             };
-      
+            
             // grab the attributes
             for (var i = 0; i < el.attributes.length; i++) {
               info.attributes.push({ name: el.attributes[ i ].name, value: el.attributes[ i ].value });
             }
-      
+            
             info.bounds.scrollY = window.pageYOffset;
             info.bounds.scrollX = window.pageXOffset;
-      
+            
             if (getText) {
               info.text = el.textContent;
             }
             if (getHtml) {
               info.html = el.outerHTML;
             }
-      
+            
             // targeted
             switch (el.tagName.toLowerCase()) {
               case "a":
                 info.href = el.getAttribute("href");
                 break;
             }
-      
+            
             // get the parent information
             if (el.parentNode) {
               info.parent     = roba_driver.element_info(el.parentNode, false, false);
               info.childIndex = Array.prototype.indexOf.call(el.parentNode.children, el);
             }
-      
+            
             return info;
           } catch (e) {
             console.error("roba_driver.element_info failed: ", e.toString(), e.stack);
           }
         };
-  
+        
         // get a list of elements from an xpath
         roba_driver.getElementsByXPath = function (xpath, base) {
           var iterator = document.evaluate(xpath, base || document, null, XPathResult.UNORDERED_NODE_ITERATOR_TYPE, null);
           try {
             var elements = [],
                 thisNode = iterator.iterateNext();
-      
+            
             while (thisNode) {
               elements.push(thisNode);
               thisNode = iterator.iterateNext();
@@ -453,13 +465,13 @@ RobaDriver.prototype.injectHelpers = function () {
           }
           return elements;
         };
-  
+        
         // validate an xpath selector
         roba_driver.checkXpathSelector = function (selector, el) {
-          if(selector && el) {
+          if (selector && el) {
             try {
               var matchList = roba_driver.getElementsByXPath(selector, document);
-        
+              
               if (matchList.length == 1) {
                 return selector;
               } else if (matchList.length > 1) {
@@ -477,13 +489,13 @@ RobaDriver.prototype.injectHelpers = function () {
             }
           }
         };
-  
+        
         // get a list of validated selectors for an element
         roba_driver.getSelectors = function (el) {
           if (el) {
             try {
               var selectors = [], testSelector;
-        
+              
               // get the alternate selectors, starting with the id selector
               var id = el.getAttribute("id");
               if (id) {
@@ -493,7 +505,7 @@ RobaDriver.prototype.injectHelpers = function () {
                   selectors.push(result);
                 }
               }
-        
+              
               // Check by class
               var cssClass = el.getAttribute("class");
               if (cssClass) {
@@ -501,14 +513,14 @@ RobaDriver.prototype.injectHelpers = function () {
                     classSelector = classList.map(function (className) {
                       return "contains(@class, \"" + className.trim() + "\")"
                     }).join(" and ");
-          
+                
                 testSelector = "//" + el.tagName + "[" + classSelector + "]";
                 var result   = roba_driver.checkXpathSelector(testSelector, el);
                 if (result) {
                   selectors.push(result);
                 }
               }
-        
+              
               // Check by href
               var href = el.getAttribute("href");
               if (href) {
@@ -518,7 +530,7 @@ RobaDriver.prototype.injectHelpers = function () {
                   selectors.push(result);
                 }
               }
-        
+              
               // Check by text
               var wordCount = el.textContent.split(/\s/).length;
               if (el.textContent.length && wordCount < 10) {
@@ -528,7 +540,7 @@ RobaDriver.prototype.injectHelpers = function () {
                   selectors.push(result);
                 }
               }
-        
+              
               // return a list of selector objects for formatting
               return selectors.map(function (selector) {
                 return {
@@ -542,7 +554,7 @@ RobaDriver.prototype.injectHelpers = function () {
             }
           }
         };
-  
+        
         return "roba_driver initialized";
       } catch (e) {
         console.error("roba_driver definition failed: ", e.toString(), e.stack);
