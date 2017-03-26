@@ -1,9 +1,6 @@
 import './editable_user_account.html';
-
-import {Template} from 'meteor/templating';
-import {ReactiveVar} from 'meteor/reactive-var';
-
-import {DSUtil} from '../../../../imports/api/datastores/ds_util.js'
+import { Template } from 'meteor/templating';
+import { ReactiveVar } from 'meteor/reactive-var';
 
 /**
  * Template Helpers
@@ -11,11 +8,13 @@ import {DSUtil} from '../../../../imports/api/datastores/ds_util.js'
 Template.EditableUserAccount.helpers({
   renderValue(){
     let options = Template.instance().options.get(),
-        data = this;
-    console.log("renderValue:", options, data.value);
-    if(options && data.value){
-      let row = _.find(options, (option) => { return option.value == data.value});
-      if(row && row.text){
+        data    = this;
+    
+    if (options && data.value) {
+      let row = _.find(options, (option) => {
+        return option.value == data.value
+      });
+      if (row && row.text) {
         return row.text;
       }
     }
@@ -26,20 +25,18 @@ Template.EditableUserAccount.helpers({
 /**
  * Template Event Handlers
  */
-Template.EditableUserAccount.events({
-  
-});
+Template.EditableUserAccount.events({});
 
 /**
  * Template Created
  */
 Template.EditableUserAccount.created = function () {
-  let instance = Template.instance();
+  let instance     = Template.instance();
   instance.options = new ReactiveVar([]);
   
   instance.autorun(() => {
     let data = Template.currentData();
-    if(data.userType && data.userType.dataStore){
+    if (data.userType && data.userType.dataStore) {
       instance.options.set(data.userType.dataStore().getRenderedRows());
     }
   });
@@ -50,20 +47,21 @@ Template.EditableUserAccount.created = function () {
  */
 Template.EditableUserAccount.rendered = function () {
   let instance = Template.instance();
-
+  
   instance.autorun(function () {
-    let data = Template.currentData(),
+    let data    = Template.currentData(),
         options = instance.options.get();
-    if(data.userType && data.userType._id && options){
+    if (data.userType && data.userType._id && options) {
       instance.$('.editable-user-account-selector').editable({
-        mode: instance.data.mode || "inline",
-        type: "select",
-        source: options,
+        mode     : instance.data.mode || "inline",
+        type     : "select",
+        source   : options,
         highlight: false,
-        display() {},
+        display() {
+        },
         success(response, newValue) {
-          var editedElement = this;
-          $(editedElement).trigger("edited", [newValue]);
+          let editedElement = this;
+          $(editedElement).trigger("edited", [ newValue ]);
           setTimeout(function () {
             $(editedElement).removeClass('editable-unsaved');
           }, 10);
@@ -79,5 +77,5 @@ Template.EditableUserAccount.rendered = function () {
  * Template Destroyed
  */
 Template.EditableUserAccount.destroyed = function () {
-
+  
 };
