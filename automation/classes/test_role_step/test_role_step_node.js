@@ -28,53 +28,10 @@ class TestRoleStepNode extends TestRoleStep {
   doStep () {
     logger.debug('TestRoleStepNode.doStep:', this.index, this.record._id);
     let self   = this,
-        driver = self.testRole.driver,
-        result = {
-          ready: {},
-          valid: {}
-        };
+        result, pass;
     
-    // Update the context
-    self.context.update({ nodeId: self.record.data.node.staticId });
-    self.context.milestone({ type: "node", data: self.record.data.node });
-    
-    // If this is the first step then we need to bootstrap the browser to the url
-    if (self.index == 0) {
-      logger.debug("Step 0, navigating to starting point:", {
-        serverUrl: self.testRole.testServer && self.testRole.testServer.url,
-        nodeUrl  : self.node.record && self.node.record.url
-      });
-      driver.url(driver.buildUrl(self.testRole.testServer.url, self.node.record.url));
-      driver.wait(1000);
-    }
-    
-    // Inject the helpers
-    driver.injectHelpers();
-    
-    // save a screenshot of the page
-    self.serverLink.saveImage(driver.getScreenshot(), ScreenshotKeys.loading);
-    
-    // Wait for the node to be ready
-    logger.debug("TestRoleStepNode.doStep waiting for node to be ready", self.dataContext);
-    _.keys(self.dataContext).forEach((key) => {
-      self.node.addVariable(key, self.dataContext[ key ]);
-    });
-    result.ready = self.node.checkReady(driver, self.dataContext);
-    driver.getClientLogs();
-    
-    // Screenshot of the page ready
-    if (result.ready.pass) {
-      self.serverLink.saveImage(driver.getScreenshot(), ScreenshotKeys.afterLoad);
-    } else {
-      self.serverLink.saveImage(driver.getScreenshot(), ScreenshotKeys.error);
-    }
-    
-    // Check that the node is valid
-    if (result.ready.pass) {
-      logger.debug("TestRoleStepNode.doStep validating node");
-      result.valid = self.node.validate(driver, self.dataContext);
-      driver.getClientLogs();
-    }
+    // Validate the node
+    result = TestRoleStepNode.doNodeStep(self, self.node);
     
     // Store the ready checks
     self.serverLink.saveTestResultStepChecks(self.record._id, [{
@@ -82,10 +39,75 @@ class TestRoleStepNode extends TestRoleStep {
       ready: result.ready.checks,
       validation: result.valid.checks
     }]);
-    
-    logger.debug("TestRoleStepNode.doStep complete:", result.ready.pass === true && result.valid.pass === true, result);
-    self.context.update({ pass: result.ready.pass === true && result.valid.pass === true });
-    return result.ready.pass === true && result.valid.pass === true
+  
+    pass = result.ready.pass === true && result.valid.pass === true;
+    logger.debug("TestRoleStepAction.doStep complete: ready=", result.ready.pass === true, 'valid=', result.valid.pass === true, 'result=', result);
+    self.context.update({ pass: pass });
+  
+    if(!pass){
+      if(result.ready.error){
+        throw result.ready.error
+      } else if(result.valid.error){
+        throw result.valid.error
+      } else {
+        throw new Error('Action failed to reach destination');
+      }
+    }
+  }
+  
+  /**
+   * Static method so that logic can be shared with navigate steps
+   * @param {TestRoleStep} step
+   * @param {Node} node The node object
+   */
+  static doNodeStep(step, node){
+    logger.debug('TestRoleStepNode.doNodeStep:', step.index, node.record._id);
+    let driver = step.testRole.driver,
+        result = {
+          ready: {},
+          valid: {}
+        };
+  
+    // Update the context
+    step.context.update({ nodeId: node.record.staticId });
+    step.context.milestone({ type: "node", data: node.record });
+  
+    // If this is the first step then we need to bootstrap the browser to the url
+    if (step.index === 0 && !step.navigated) {
+      logger.debug("Step 0, navigating to starting point:", {
+        serverUrl: step.testRole.testServer && step.testRole.testServer.url,
+        nodeUrl  : node.record.url
+      });
+      driver.url(driver.buildUrl(step.testRole.testServer.url, node.record.url));
+      step.navigated = true;
+    }
+  
+    // save a screenshot of the page
+    step.serverLink.saveImage(driver.getScreenshot(), ScreenshotKeys.loading);
+  
+    // Wait for the node to be ready
+    logger.debug("TestRoleStepNode.doStep waiting for node to be ready", step.dataContext);
+    _.keys(step.dataContext).forEach((key) => {
+      node.addVariable(key, step.dataContext[ key ]);
+    });
+    result.ready = node.checkReady(driver, step.dataContext);
+    driver.getClientLogs();
+  
+    // Screenshot of the page ready
+    if (result.ready.pass) {
+      step.serverLink.saveImage(driver.getScreenshot(), ScreenshotKeys.afterLoad);
+    } else {
+      step.serverLink.saveImage(driver.getScreenshot(), ScreenshotKeys.error);
+    }
+  
+    // Check that the node is valid
+    if (result.ready.pass) {
+      logger.debug("TestRoleStepNode.doStep validating node");
+      result.valid = node.validate(driver, step.dataContext);
+      driver.getClientLogs();
+    }
+  
+    return result;
   }
 }
 
