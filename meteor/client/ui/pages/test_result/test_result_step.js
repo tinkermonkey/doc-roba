@@ -14,7 +14,7 @@ import './test_result_steps/test_result_step_wait.js';
 import './test_result_steps/test_result_step_custom.js';
 
 // TODO: This sucks, create a better way to define the pitch
-var screenshotPitch = 23;
+const screenshotPitch = 23;
 
 /**
  * Template Helpers
@@ -23,15 +23,15 @@ Template.TestResultStep.helpers({
   logRendered() {
     return Template.instance().logRendered.get();
   },
-  getScreenshotTop(screenshot, list) {
-    return (list.length - screenshot.index - 1) * screenshotPitch;
+  getScreenshotTop(index) {
+    return index * screenshotPitch;
   },
   getStepClass() {
-    var cssClass    = 'test-result-step-container ',
+    let cssClass    = 'test-result-step-container ',
         detailClass = '';
-    if (this.resultCode != null && this.resultCode == TestResultCodes.pass) {
+    if (this.resultCode !== undefined && this.resultCode === TestResultCodes.pass) {
       detailClass = Util.testStepContainerClass(this.type)
-    } else if(this.status == TestResultStatus.executing){
+    } else if(this.status === TestResultStatus.executing){
       detailClass = "";
     } else {
       switch (this.resultCode) {
@@ -50,11 +50,17 @@ Template.TestResultStep.helpers({
     }
     return cssClass + detailClass;
   },
-  hasRun(){
-    return this.resultCode != undefined;
+  hasMap(){
+    return this.type === TestCaseStepTypes.node || this.type === TestCaseStepTypes.action || this.type === TestCaseStepTypes.navigate
+  },
+  hasBegun(){
+    return this.status >= TestResultStatus.executing;
   },
   isRunning(){
-    return this.status == TestResultStatus.executing;
+    return this.status === TestResultStatus.executing;
+  },
+  wasRun(){
+    return this.resultCode !== undefined;
   },
   getStatusKey(){
     return TestResultStatusLookup[this.status]
@@ -86,13 +92,13 @@ Template.TestResultStep.events({
    * @param instance
    */
   "click .test-result-log-reveal"(e, instance) {
-    var reveal = $(e.target).closest(".test-result-log-reveal"),
+    let reveal = $(e.target).closest(".test-result-log-reveal"),
         detail = instance.$(".test-result-step-log");
     
     if (detail.is(":visible")) {
       detail.hide();
     } else {
-      var logRendered = instance.logRendered.get();
+      let logRendered = instance.logRendered.get();
       if (!logRendered) {
         instance.logRendered.set(true);
       }
@@ -109,7 +115,7 @@ Template.TestResultStep.events({
    * @param instance
    */
   "load .test-result-screenshot-thumb"(e, instance) {
-    var maxHeight   = 0,
+    let maxHeight   = 0,
         maxWidth    = 0,
         totalHeight = 0,
         width, height;
@@ -139,7 +145,7 @@ Template.TestResultStep.events({
    * @param instance
    */
   "click .test-result-screenshot-thumb-container"(e, instance) {
-    var screenshot     = this,
+    let screenshot     = this,
         testResultStep = instance.data;
     
     console.log("Screenshot click: ", screenshot, testResultStep);

@@ -41,6 +41,7 @@
 
 .test-result-role-error {
   margin-bottom: 10px;
+  max-width: 90%;
 }
 
 /**
@@ -59,7 +60,8 @@
 }
 
 .test-result-step-check-col {
-  flex: 1 1 auto;
+  flex: 1 1 250px;
+  min-width: 300px;
 }
 
 .test-result-step-log-col {

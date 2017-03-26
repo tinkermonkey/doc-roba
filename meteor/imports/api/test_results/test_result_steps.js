@@ -167,24 +167,21 @@ TestResultSteps.helpers({
    * @return [Screenshot]
    */
   screenshots() {
-    return Screenshots.find({ testResultStepId: this._id }, { sort: { uploadedAt: -1 } }).map(function (image, i) {
-      image.index = i;
-      return image
-    });
+    return Screenshots.find({ testResultStepId: this._id }, { sort: { uploadedAt: 1 } });
   },
   /**
    * Determine if this is the first step
    * @return {boolean}
    */
   isFirst() {
-    return this.order == 0;
+    return this.order === 0;
   },
   /**
    * Determine if this is the first step
    * @return {boolean}
    */
   isLast() {
-    return TestResultSteps.find({ testResultRoleId: this.testResultRoleId, order: { $gt: this.order } }).count() == 0
+    return TestResultSteps.find({ testResultRoleId: this.testResultRoleId, order: { $gt: this.order } }).count() === 0
   },
   /**
    * Get the next step for this result

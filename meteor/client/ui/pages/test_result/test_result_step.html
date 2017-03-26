@@ -1,36 +1,49 @@
 <template name="TestResultStep">
   {{#RobaRoundContainer brace=true title=testStepType cssClass=getStepClass icon=testStepTypeIcon dataPk=_id }}
     <div class="flex-vertical">
-      {{#if hasRun}}
-        <div class="flex">
-          <div class="test-result-step-map-col">
-            {{> TestResultStepMap }}
-          </div>
-          <div class="test-result-step-screenshot-col">
-            <div class="test-result-screenshot-thumb-list">
-              <div style="position: absolute;">
-                {{#each screenshots}}
-                  {{#if isImage store='thumbs'}}
-                    <div class="test-result-screenshot-thumb-container"
-                         style="top: {{getScreenshotTop this ../screenshots}}px;">
-                      <img src="{{url store='thumbs'}}" class="test-result-screenshot-thumb">
-                      <div class="test-result-screenshot-thumb-title">{{renderCamelCaseAsWords key}}</div>
-                    </div>
-                  {{/if}}
-                {{/each}}
+      {{#if hasBegun}}
+        {{#if hasMap}}
+          <div class="flex">
+            <div class="test-result-step-map-col">
+              {{> TestResultStepMap }}
+            </div>
+            <div class="test-result-step-screenshot-col">
+              <div class="test-result-screenshot-thumb-list">
+                <div style="position: absolute;">
+                  {{#each screenshots}}
+                    {{#if isImage store='thumbs'}}
+                      <div class="test-result-screenshot-thumb-container"
+                           style="top: {{getScreenshotTop @index}}px;">
+                        <div class="test-result-screenshot-thumb-title">{{renderCamelCaseAsWords key}}</div>
+                        <img src="{{url store='thumbs'}}" class="test-result-screenshot-thumb">
+                      </div>
+                    {{/if}}
+                  {{/each}}
+                </div>
               </div>
             </div>
+            <div class="test-result-step-check-col">
+              {{> Template.dynamic template=getStepTemplate }}
+            </div>
           </div>
-          <div class="test-result-step-check-col">
-            {{> Template.dynamic template=getStepTemplate }}
-          </div>
-        </div>
-      {{else}}
-          {{#if isRunning}}
-            {{> RobaSpinner}}
-          {{else}}
-            <h3>Status: <small>{{renderCamelCaseAsWords getStatusKey}}</small></h3>
+        {{else}}
+          {{#if wasRun}}
+            <div class="flex">
+              <div class="test-result-step-check-col">
+                {{> Template.dynamic template=getStepTemplate }}
+              </div>
+            </div>
           {{/if}}
+        {{/if}}
+        {{#if isRunning}}
+          <div class="flex">
+            {{> RobaSpinner }}
+          </div>
+        {{/if}}
+      {{else}}
+        <h3>Status:
+          <small>{{renderCamelCaseAsWords getStatusKey}}</small>
+        </h3>
       {{/if}}
       
       <div class="flex">
