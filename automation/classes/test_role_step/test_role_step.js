@@ -64,7 +64,8 @@ class TestRoleStep {
     // Do the actual step
     let error;
     try {
-      pass = self.doStep();
+      self.doStep();
+      pass = true;
       driver.getClientLogs();
     } catch (e) {
       error = new RobaError(e);
@@ -73,6 +74,7 @@ class TestRoleStep {
     }
     
     // Done
+    logger.info('TestRoleStep.execute complete: pass=', pass, ', error=', error);
     self.setStatus(TestResultStatus.complete);
     if (pass) {
       self.setResult(TestResultCodes.pass);
