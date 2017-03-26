@@ -10,12 +10,12 @@ export default class RobaContext {
    */
   constructor (config) {
     try {
-      var route = config.route.export();
+      let route = config.route.getManifest();
   
       console.log("RobaContext Route: ", route);
   
       // Initialize the data context
-      var defaultDataContext = {};
+      let defaultDataContext = {};
       _.each(route.steps, function (step) {
         defaultDataContext["step" + step.stepNum] = {};
       });

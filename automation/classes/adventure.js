@@ -3,7 +3,8 @@
 var _                   = require('underscore'),
     assert              = require('assert'),
     log4js              = require('log4js'),
-    logger              = log4js.getLogger('adventure'),
+    LogAssistant         = require('./log_assistant.js'),
+    logger               = LogAssistant.getLogger(),
     RobaDriver          = require('./driver/roba_driver.js'),
     AdventureStep       = require('./adventure/adventure_step.js'),
     AdventureCommand    = require('./adventure/adventure_command.js'),
@@ -100,19 +101,11 @@ class Adventure {
     logger.trace('Test server: ', self.testServer);
     
     // Create the adventure step objects
-    logger.debug('Creating adventure steps');
-    self.stepRecords = self.serverLink.liveCollection('adventure_steps', [ self.record.projectId, self._id ]);
-    logger.trace("Adventure steps:", self.stepRecords);
-    if (self.stepRecords && _.keys(self.stepRecords).length) {
-      self.steps = _.values(self.stepRecords).map((function (stepRecord, i) {
-        let step = new AdventureStep(stepRecord, i, self);
-        step.init();
-        return step;
-      }));
-    } else {
-      logger.fatal("Fatal error: no steps found for adventure");
-      throw new Error("Adventure contains no steps");
-    }
+    self.steps = self.record.route.steps.map((routeStep, i) => {
+      let step = new AdventureStep(routeStep, i, self);
+      step.init();
+      return step;
+    });
   }
   
   /**

@@ -14,7 +14,7 @@ class AdventureStep {
    * @param adventure Parent adventure object
    */
   constructor (record, index, adventure) {
-    logger.debug('Creating adventure step:', index, record._id);
+    logger.debug('Creating adventure step:', index, record.stepId);
     this.index     = index;
     this.record    = record;
     this.adventure = adventure;
@@ -25,7 +25,7 @@ class AdventureStep {
    * @return {AdventureStep}
    */
   init () {
-    logger.debug('Initializing step:', this.index, this.record._id);
+    logger.debug('Initializing step:', this.index, this.record.stepId);
     let self            = this,
         adventureRecord = self.adventure.record;
     
@@ -49,7 +49,7 @@ class AdventureStep {
    * Execute this step
    */
   execute () {
-    logger.debug('Executing step:', this.index, this.record._id);
+    logger.debug('Executing step:', this.index, this.record.stepId);
     let self      = this,
         adventure = this.adventure,
         context   = adventure.context,
@@ -64,7 +64,7 @@ class AdventureStep {
     
     // Restore the context from a previous step
     context.restore();
-    context.update({ adventureStepId: self.record._id });
+    context.update({ adventureStepId: self.record.stepId });
     context.milestone({ type: "step", data: self.record });
     logger.info("Executing route step", self.index);
     
@@ -76,6 +76,11 @@ class AdventureStep {
       });
       driver.url(driver.buildUrl(adventure.testServer.url, self.node.record.url));
       driver.wait(1000);
+    } else if(self.action) {
+      logger.debug("Taking step [", self.index, "] action");
+      self.action.addVariable('account', adventure.record.dataContext.account);
+      self.action.execute(adventure.driver, adventure.record.dataContext[ 'step' + self.index ]);
+      adventure.updateState(true);
     }
     
     // Inject the helpers
@@ -91,14 +96,6 @@ class AdventureStep {
     adventure.updateState(true);
     result.valid = self.node.validate(adventure.driver, adventure.record.dataContext[ 'step' + self.index ]);
     
-    // Take the action if there is one
-    if (result.ready.pass && result.valid.pass && self.action) {
-      logger.debug("Taking step [", self.index, "] action");
-      self.action.addVariable('account', adventure.record.dataContext.account);
-      self.action.execute(adventure.driver, adventure.record.dataContext[ 'step' + self.index ]);
-      adventure.updateState(true);
-    }
-    
     // Set the status and store the result
     self.setStatus(result.ready.pass && result.valid.pass ? AdventureStepStatus.complete : AdventureStepStatus.error, result);
     self.saveResult(result);
@@ -112,7 +109,7 @@ class AdventureStep {
    * Skip this step
    */
   skip () {
-    logger.debug('Skipping step:', this.index, this.record._id);
+    logger.debug('Skipping step:', this.index, this.record.stepId);
     
     // Set the status to skipped
     this.setStatus(AdventureStepStatus.skipped);
@@ -123,7 +120,7 @@ class AdventureStep {
    * @param status
    */
   setStatus (status) {
-    this.adventure.serverLink.setAdventureStepStatus(this.record._id, status)
+    this.adventure.serverLink.setAdventureStepStatus(this.record.stepId, status)
   }
   
   /**
@@ -131,7 +128,7 @@ class AdventureStep {
    * @param result
    */
   saveResult (result) {
-    this.adventure.serverLink.saveAdventureStepResult(this.record._id, result)
+    this.adventure.serverLink.saveAdventureStepResult(this.record.stepId, result)
   }
 }
 

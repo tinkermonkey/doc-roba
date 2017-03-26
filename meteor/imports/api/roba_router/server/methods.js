@@ -13,21 +13,20 @@ Meteor.methods({
   loadNavigationRoute(destinationId, sourceId, projectVersionId) {
     check(Meteor.userId(), String);
     check(destinationId, String);
-    check(sourceId, String);
     check(projectVersionId, String);
     
     // grab the nodes
-    var destination = Nodes.findOne({staticId: destinationId, projectVersionId: projectVersionId}).withChecks(),
+    let destination = Nodes.findOne({staticId: destinationId, projectVersionId: projectVersionId}),
         source, route;
     
     if(sourceId){
-      source = Nodes.findOne({staticId: sourceId, projectVersionId: projectVersionId}).withChecks();
+      source = Nodes.findOne({staticId: sourceId, projectVersionId: projectVersionId});
     }
     
     // fetch the route
     try{
-      route = source ? RobaRouter.nodeToNode(source, destination) : RobaRouter.routeFromStart();
-      return route.export();
+      route = source ? RobaRouter.nodeToNode(source, destination) : RobaRouter.routeFromStart(destination);
+      return route.getManifest();
     } catch (error) {
       console.error("loadNavigationRoute failed: " + error.message);
     }
