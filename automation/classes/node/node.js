@@ -4,6 +4,7 @@ let logger         = require('../log_assistant.js').getLogger(),
     CodeExecutor   = require('../code_executor/code_executor.js'),
     ReadyChecker   = require('./ready_checker.js'),
     ValidChecker   = require('./valid_checker.js'),
+    RobaError      = require("../roba_error.js"),
     NodeCheckTypes = require('../enum/node_check_types.js');
 
 class Node {
@@ -47,7 +48,7 @@ class Node {
       node.record.staticId,
       NodeCheckTypes.ready
     ], 'node_checks', { parentId: node.record.staticId, type: NodeCheckTypes.ready });
-  
+    
     logger.debug('Loading node valid checks:', node.staticId);
     node.validChecks = node.serverLink.recordList('node_checks', [
       node.projectId,
@@ -91,8 +92,7 @@ class Node {
     let node         = this,
         readyChecker = new ReadyChecker(driver),
         result       = {
-          pass : true,
-          error: null
+          pass: true
         };
     
     // Add context variable
@@ -104,11 +104,11 @@ class Node {
     try {
       node.readyExecutor.execute();
       result.pass = readyChecker.check();
-      logger.debug("Ready code result: ", result);
+      logger.debug("Node ready code result: ", result);
     } catch (e) {
-      logger.error("Ready code failed: ", e.toString(), e.stack);
+      logger.error("Node ready code failed: ", e.toString(), e.stack);
       result.pass  = false;
-      result.error = e;
+      result.error = new RobaError(e);
     }
     
     // Grab the actual checks performed during the ready check
@@ -127,8 +127,7 @@ class Node {
     let node         = this,
         validChecker = new ValidChecker(driver),
         result       = {
-          pass : true,
-          error: null
+          pass: true
         };
     
     // Add context variable
@@ -140,13 +139,13 @@ class Node {
     try {
       node.validExecutor.execute();
       result.pass = validChecker.check();
-      logger.debug("Valid code result: ", result);
+      logger.debug("Node validation code result: ", result);
     } catch (e) {
-      logger.error("Valid code failed: ", e.toString(), e.stack);
+      logger.error("Node validation code failed: ", e.toString(), e.stack);
       result.pass  = false;
-      result.error = e;
+      result.error = new RobaError(e);
     }
-  
+    
     // Grab the actual checks performed during the ready check
     result.checks = validChecker.checks || [];
     
