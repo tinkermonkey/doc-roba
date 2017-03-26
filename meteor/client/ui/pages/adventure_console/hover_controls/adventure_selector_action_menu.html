@@ -1,7 +1,7 @@
 <template name="AdventureSelectorActionMenu">
   <ul class="dropdown-menu adventure-selector-action-menu" data-selector="{{btoa getSelector}}" data-node-id="{{node._id}}">
     <li class="dropdown-submenu command-type" data-command-type="ready">
-      <a href="#">Ready</a>
+      <a>Ready</a>
       <ul class="dropdown-menu">
         {{#each readyCheckFns}}
           <li><a data-command="{{fn}}">{{label}}</a></li>
@@ -9,7 +9,7 @@
       </ul>
     </li>
     <li class="dropdown-submenu command-type" data-command-type="valid">
-      <a href="#">Valid</a>
+      <a>Valid</a>
       <ul class="dropdown-menu">
         {{#each validCheckFns}}
           <li><a data-command="{{fn}}">{{label}}</a></li>
@@ -18,7 +18,7 @@
     </li>
     {{#if node}}
       <li class="dropdown-submenu" data-command-type="action">
-        <a href="#">Action</a>
+        <a>Action</a>
         <ul class="dropdown-menu">
           <li class="dropdown-submenu" data-command="leftClick">
             <a>Left Click</a>
