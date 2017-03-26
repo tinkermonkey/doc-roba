@@ -1,31 +1,40 @@
 "use strict";
 
-let logger       = require('../log_assistant.js').getLogger(),
-    TestRoleStep = require('./test_role_step.js');
+let _            = require('underscore'),
+    logger       = require('../log_assistant.js').getLogger(),
+    CodeExecutor = require('../code_executor/code_executor.js'),
+    TestRoleStep = require('./test_role_step.js'),
+    RobaError    = require('../roba_error.js');
 
 class TestRoleStepCustom extends TestRoleStep {
   /**
-   * Initialize the test step
+   * Run the code provided
    */
-  init () {
-    logger.debug('TestRoleStepCustom.init:', this.index, this.record._id);
-    let self = this;
+  doStep () {
+    logger.debug('TestRoleStepCustom.doStep:', this.index, this.record._id);
+    let self         = this,
+        driver       = self.testRole.driver,
+        codeExecutor = new CodeExecutor(self.record.data.code),
+        result;
     
-    // Call the parent constructor
-    super.init();
+    // Add the context variables to the code executor
+    logger.debug("TestRoleStepCustom.doStep adding context variables", self.dataContext);
+    codeExecutor.addVariable('driver', driver);
+    _.keys(self.dataContext).forEach((key) => {
+      codeExecutor.addVariable(key, self.dataContext[ key ]);
+    });
     
-  }
-  
-  /**
-   * Execute this step
-   */
-  execute () {
-    logger.debug('TestRoleStepCustom.execute:', this.index, this.record._id);
-    let self = this;
+    // Execute the code
+    logger.debug("TestRoleStepCustom.doStep executing code:", self.record.data.code);
+    result = codeExecutor.execute();
+    driver.getClientLogs();
+    logger.debug("TestRoleStepCustom.doStep result:", result);
     
-    // Call the parent method
-    super.execute();
-    
+    // The code should throw an exception if there is a problem
+    if (result.error) {
+      throw new RobaError(result.error);
+    }
+    return true;
   }
 }
 
