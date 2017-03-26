@@ -1,13 +1,10 @@
 import './test_case_role.html';
-
-import {Meteor} from 'meteor/meteor';
-import {Template} from 'meteor/templating';
-import {RobaDialog} from 'meteor/austinsand:roba-dialog';
-
-import {TestCaseRoles} from '../../../../imports/api/test_cases/test_case_roles.js';
-import {TestCaseSteps} from '../../../../imports/api/test_cases/test_case_steps.js';
-import {TestCaseStepTypes} from '../../../../imports/api/test_cases/test_case_step_types.js';
-
+import { Meteor } from 'meteor/meteor';
+import { Template } from 'meteor/templating';
+import { RobaDialog } from 'meteor/austinsand:roba-dialog';
+import { TestCaseRoles } from '../../../../imports/api/test_cases/test_case_roles.js';
+import { TestCaseSteps } from '../../../../imports/api/test_cases/test_case_steps.js';
+import { TestCaseStepTypes } from '../../../../imports/api/test_cases/test_case_step_types.js';
 import './test_case_step.js';
 
 /**
@@ -25,20 +22,20 @@ Template.TestCaseRole.helpers({
 Template.TestCaseRole.events({
   "edited .editable"(e, instance, newValue) {
     e.stopImmediatePropagation();
-    var dataKey = $(e.target).attr("data-key"),
-      update = {$set: {}},
-      testCaseRoleId = instance.data._id;
-
-    if(dataKey){
-      if(dataKey == "title-description"){
-        update["$set"].title = newValue.title;
-        update["$set"].description = newValue.description;
+    let dataKey        = $(e.target).attr("data-key"),
+        update         = { $set: {} },
+        testCaseRoleId = instance.data._id;
+    
+    if (dataKey) {
+      if (dataKey === "title-description") {
+        update[ "$set" ].title       = newValue.title;
+        update[ "$set" ].description = newValue.description;
       } else {
-        update["$set"][dataKey] = newValue;
+        update[ "$set" ][ dataKey ] = newValue;
       }
-
+      
       TestCaseRoles.update(testCaseRoleId, update, function (error) {
-        if(error){
+        if (error) {
           console.error("Failed to update test case role value: " + error.message);
           console.log(update);
           RobaDialog.error("Failed to update test case role value: " + error.message);
@@ -50,41 +47,41 @@ Template.TestCaseRole.events({
     }
   },
   "click .btn-add-step"(e, instance) {
-    var testCaseRole = this,
-      order = TestCaseSteps.find({testCaseRoleId: testCaseRole.staticId }).count(),
-      type = $(e.target).closest("button").attr("data-type");
-
-    if(type && testCaseRole){
+    let testCaseRole = this,
+        order        = TestCaseSteps.find({ testCaseRoleId: testCaseRole.staticId }).count(),
+        type         = $(e.target).closest("button").attr("data-type");
+    
+    if (type && testCaseRole) {
       TestCaseSteps.insert({
-        projectId: testCaseRole.projectId,
+        projectId       : testCaseRole.projectId,
         projectVersionId: testCaseRole.projectVersionId,
-        testCaseId: testCaseRole.testCaseId,
-        testCaseRoleId: testCaseRole.staticId,
-        type: type,
-        order: order
+        testCaseId      : testCaseRole.testCaseId,
+        testCaseRoleId  : testCaseRole.staticId,
+        type            : type,
+        order           : order
       });
     } else {
       console.error("Could not add step: ", type, testCaseRole, order);
     }
   },
   "click .btn-delete-role"(e, instance) {
-    var testCaseRole = this;
-
+    let testCaseRole = this;
+    
     RobaDialog.show({
-      title: "Delete Role?",
-      text: "Are you sure you want to delete this Test Case Role?",
-      width: 400,
+      title  : "Delete Role?",
+      text   : "Are you sure you want to delete this Test Case Role?",
+      width  : 400,
       buttons: [
-        {text: "Cancel"},
-        {text: "Delete"}
+        { text: "Cancel" },
+        { text: "Delete" }
       ],
       callback(btn) {
         //console.log("Dialog button pressed: ", btn);
-        if(btn == "Delete"){
+        if (btn === "Delete") {
           // Call the delete function, needs to happen server side
           Meteor.call("deleteTestCaseRole", testCaseRole, function (error, result) {
             RobaDialog.hide();
-            if(error) {
+            if (error) {
               console.error("Failed to delete role: " + error.message);
               RobaDialog.error("Failed to delete role: " + error.message);
             } else {
@@ -99,7 +96,7 @@ Template.TestCaseRole.events({
   },
   "mousedown .test-case-step-title"(e, instance) {
     // because the page height is defined by this list, we need to pin it to prevent unwanted scrolling
-    instance.$(".test-role-step_types").height(instance.$(".test-role-step_types").outerHeight());
+    instance.$(".test-role-steps").height(instance.$(".test-role-steps").outerHeight());
   }
 });
 
@@ -115,25 +112,28 @@ Template.TestCaseRole.created = function () {
  */
 Template.TestCaseRole.rendered = function () {
   let instance = Template.instance();
-
+  
   // make the step_types sortable
   instance.$(".test-role-steps").sortable({
-    axis: "y",
-    distance: 5,
-    handle: ".roba-round-container-title",
-    placeholder: "test-case-step-placeholder",
+    axis                : "y",
+    distance            : 5,
+    handle              : ".roba-round-container-title",
+    placeholder         : "test-case-step-placeholder",
     forcePlaceholderSize: true,
     update(event, ui) {
+      console.log('TestCaseRole order update');
+      
       // restore the flexible height of the list
-      instance.$(".test-role-step_types").height("auto");
-      instance.$(".test-case-step").each(function (newOrder, el) {
-        var step = $(el),
-          stepId = step.attr("data-pk"),
-          oldOrder = step.attr("data-order");
-
-        if(oldOrder !== newOrder){
-          TestCaseSteps.update(stepId, {$set: {order: newOrder}}, function (error, result) {
-            if(error){
+      instance.$(".test-role-steps").height("auto");
+      instance.$(".roba-round-container").each((newOrder, el) => {
+        let step     = $(el),
+            stepId   = step.attr("data-pk"),
+            oldOrder = step.attr("data-order");
+        
+        console.log('TestCaseRole step re-order:', stepId, oldOrder, newOrder);
+        if (oldOrder !== newOrder) {
+          TestCaseSteps.update(stepId, { $set: { order: newOrder } }, function (error, result) {
+            if (error) {
               console.error("Failed to update step order: " + error.message);
               RobaDialog.error("Failed to update step order: " + error.message);
             }
@@ -142,30 +142,14 @@ Template.TestCaseRole.rendered = function () {
       });
     }
   }).disableSelection();
-
+  
   // Listen for changes and refresh the sortable
-  TestCaseSteps.find({testCaseRoleId: instance.data.staticId}).observeChanges({
+  TestCaseSteps.find({ testCaseRoleId: instance.data.staticId }).observeChanges({
     added() {
-      instance.$(".test-role-step_types").sortable("refresh");
+      console.log('Added a step, refreshing sortable');
+      instance.$(".test-role-steps").sortable("refresh");
     }
   });
-
-  // Animate the addition of role step_types
-  /*
-  instance.find(".test-role-step_types")._uihooks = {
-    insertElement(node, next) {
-      $(node)
-        .hide()
-        .insertBefore(next)
-        .fadeIn();
-    },
-    removeElement(node) {
-      $(node).fadeOut(function() {
-        $(node).remove();
-      });
-    }
-  }
-  */
 };
 
 /**
