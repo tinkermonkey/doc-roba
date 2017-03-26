@@ -4,7 +4,7 @@ import { Template } from 'meteor/templating';
 import { Blaze } from 'meteor/blaze';
 import '../../../../../node_modules/prismjs/themes/prism.css';
 import './x_editable_ace.js';
-var Prism = require('prismjs');
+let Prism = require('prismjs');
 
 /**
  * Template Helpers

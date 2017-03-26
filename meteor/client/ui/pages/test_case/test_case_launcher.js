@@ -18,12 +18,12 @@ import '../../components/editable_fields/editable_test_system_selector.js';
  */
 Template.TestCaseLauncher.helpers({
   accountId() {
-    var config = Template.instance().config.get(),
+    let config = Template.instance().config.get(),
       role = this;
     if(!(config.roles[role.staticId] && config.roles[role.staticId].accountId)){
-      var userType = role.userType();
+      let userType = role.userType();
       if(userType){
-        var account = userType.getAccount();
+        let account = userType.getAccount();
         if(account){
           config.roles[role.staticId] = config.roles[role.staticId] || {};
           config.roles[role.staticId].accountId = account.staticId;
@@ -36,16 +36,16 @@ Template.TestCaseLauncher.helpers({
     }
   },
   serverId() {
-    var config = Template.instance().config.get();
+    let config = Template.instance().config.get();
     if(config){
       return config.serverId;
     }
   },
   testSystemId() {
-    var config = Template.instance().config.get(),
+    let config = Template.instance().config.get(),
       role = this;
     if(!(config.roles[role.staticId] && config.roles[role.staticId].testSystemId)){
-      var testSystem = TestSystems.findOne({ projectVersionId: role.projectVersionId, active: true });
+      let testSystem = TestSystems.findOne({ projectVersionId: role.projectVersionId, active: true });
       if(testSystem){
         config.roles[role.staticId] = config.roles[role.staticId] || {};
         config.roles[role.staticId].testSystemId = testSystem.staticId;
@@ -57,10 +57,10 @@ Template.TestCaseLauncher.helpers({
     }
   },
   testAgentId() {
-    var config = Template.instance().config.get(),
+    let config = Template.instance().config.get(),
       role = this;
     if(!(config.roles[role.staticId] && config.roles[role.staticId].testAgentId && config.roles[role.staticId].testSystemId)){
-      var testSystem = TestSystems.findOne({ projectVersionId: role.projectVersionId, staticId: config.roles[role.staticId].testSystemId});
+      let testSystem = TestSystems.findOne({ projectVersionId: role.projectVersionId, staticId: config.roles[role.staticId].testSystemId});
       if(testSystem && testSystem.testAgents && testSystem.testAgents.length){
         config.roles[role.staticId] = config.roles[role.staticId] || {};
         config.roles[role.staticId].testAgentId = testSystem.testAgents[0];
@@ -128,7 +128,7 @@ Template.TestCaseLauncher.created = function () {
     instance.subscribe("datastores", instance.data.projectId, instance.data.projectVersionId);
 
     if(instance.subscriptionsReady()){
-      var server = TestServers.findOne({projectVersionId: instance.data.projectVersionId, active: true});
+      let server = TestServers.findOne({projectVersionId: instance.data.projectVersionId, active: true});
       if(server){
         instance.config.set({
           serverId: server.staticId,
@@ -147,8 +147,8 @@ Template.TestCaseLauncher.created = function () {
 Template.TestCaseLauncher.rendered = function () {
   let instance = Template.instance();
   instance.autorun(function () {
-    var config = instance.config.get();
-    console.log("config: ", config);
+    let config = instance.config.get();
+    console.log("TestCaseLauncher config: ", config);
   });
 };
 

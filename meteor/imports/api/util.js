@@ -48,7 +48,7 @@ export const Util = {
    * @param url
    */
   urlParams(url) {
-    var query  = Util.urlQuery(url),
+    let query  = Util.urlQuery(url),
         params = [], paramPieces;
     
     if (query) {
@@ -68,7 +68,7 @@ export const Util = {
    * @returns {string} The assembled url built from whatever was passed
    */
   buildUrl() {
-    var pieces = [], parts;
+    let pieces = [], parts;
     _.each(arguments, function (argv) {
       if (_.isArray(argv)) {
         _.each(argv, function (subargv) {
@@ -170,9 +170,9 @@ export const Util = {
    */
   getHighlightedElementSelector(element) {
     // check to see if it has an id
-    var idAttr;
+    let idAttr;
     _.each(element.attributes, function (attr) {
-      if (!idAttr && attr.name == "id") {
+      if (!idAttr && attr.name === "id") {
         idAttr = attr;
       }
     });
@@ -181,9 +181,9 @@ export const Util = {
     }
     
     // check to see if this is a link with an href
-    var hrefAttr;
+    let hrefAttr;
     _.each(element.attributes, function (attr) {
-      if (!hrefAttr && attr.name == "href") {
+      if (!hrefAttr && attr.name === "href") {
         hrefAttr = attr;
       }
     });
@@ -194,9 +194,9 @@ export const Util = {
     }
     
     // check to see if it has at least one class to use
-    var classAttr;
+    let classAttr;
     _.each(element.attributes, function (attr) {
-      if (!classAttr && attr.name == "class") {
+      if (!classAttr && attr.name === "class") {
         classAttr = attr;
       }
     });
@@ -205,7 +205,7 @@ export const Util = {
     }
     
     // use the big hammer and specify the full path
-    var xPath = Util.getHighlightedElementLineageXPath(element);
+    let xPath = Util.getHighlightedElementLineageXPath(element);
     if (element.text && element.text.length) {
       xPath += "[contains(text(), '" + element.text + "')]";
     } else {
@@ -236,7 +236,7 @@ export const Util = {
    */
   escapeDoubleQuotes(str) {
     if (str && str.length) {
-      var escapedFix = new RegExp("\/\"", "g"),
+      let escapedFix = new RegExp("\/\"", "g"),
           quoteFix   = new RegExp("\"", "g");
       return str.replace(escapedFix, "\\\\\"").replace(quoteFix, "\\\"");
     }
@@ -247,15 +247,15 @@ export const Util = {
    * TODO: this data is now denormalized, this should be eliminated
    */
   getNodePlatformUserType(node) {
-    var platform, userType,
+    let platform, userType,
         level = 0;
     
     // follow the structure up to the determine the platform and user type
     while (node.type !== NodeTypes.root && level++ < 1000) {
       console.log("getNodePlatformUserType Checking node: ", node.title, NodeTypesLookup[ node.type ]);
-      if (node.type == NodeTypes.platform) {
+      if (node.type === NodeTypes.platform) {
         platform = node._id;
-      } else if (node.type == NodeTypes.userType) {
+      } else if (node.type === NodeTypes.userType) {
         userType = node._id;
       }
       node = Nodes.findOne({ staticId: node.parentId, projectVersionId: node.projectVersionId });
@@ -272,11 +272,13 @@ export const Util = {
    * Find a piece of data at an unknown parent depth
    */
   findParentData(key) {
-    for (var i = 0; i < 20; i++) {
+    for (let i = 0; i < 20; i++) {
       try {
-        var data = Template.parentData(i);
+        const data = Template.parentData(i);
         if (data && data.hasOwnProperty(key)) {
-          console.log("findParentData", "[" + key + "] found at depth", i);
+          if(i > 5) {
+            console.warn("findParentData", "[" + key + "] found at depth", i);
+          }
           //console.log("findParentData", "[" + key + "] found at depth", i, ":", data[key]);
           return data[ key ];
         }
@@ -302,13 +304,13 @@ export const Util = {
    * Get a full measure of an elements scoll top and left
    */
   getAbsoluteScroll(rawEl) {
-    var el                 = $(rawEl),
+    let el                 = $(rawEl),
         fixedPositionFound = false,
         scroll             = { top: 0, left: 0 };
     while (el && !fixedPositionFound) {
       scroll.top += el.scrollTop();
       scroll.left += el.scrollLeft();
-      if (el.css("position") && el.css("position").toLowerCase() == "fixed") {
+      if (el.css("position") && el.css("position").toLowerCase() === "fixed") {
         //console.log("fixedPositionFound: ", el);
         fixedPositionFound = true;
         scroll             = {
@@ -326,7 +328,7 @@ export const Util = {
    * Get the screen bounds of an element
    */
   getScreenBounds(rawEl) {
-    var el     = $(rawEl),
+    let el     = $(rawEl),
         offset = el.offset(),
         scroll = Util.getAbsoluteScroll(rawEl),
         bounds = {
@@ -352,11 +354,11 @@ export const Util = {
    * @param error
    */
   testStepContainerClass(type, error) {
-    var cssClass = "";
+    let cssClass = "";
     if (error) {
       cssClass = "roba-round-container-error";
     } else {
-      if (type != null) {
+      if (type !== undefined) {
         switch (type) {
           case TestCaseStepTypes.node:
             cssClass = "roba-round-container-blue";
@@ -385,7 +387,7 @@ export const Util = {
    * @param type
    */
   testStepTypeIcon(type) {
-    if (type != null) {
+    if (type !== undefined) {
       switch (type) {
         case TestCaseStepTypes.node:
           return "glyphicon-unchecked";
@@ -409,7 +411,7 @@ export const Util = {
    */
   wrapSvgText(text, width) {
     text.each(function () {
-      var text       = d3.select(this),
+      let text       = d3.select(this),
           words      = text.text().split(/\s+/).reverse(),
           word,
           line       = [],
@@ -453,10 +455,10 @@ export const Util = {
    * @return {Array}
    */
   getHighlightHierarchy(el, depth){
-    var parents = [];
+    let parents = [];
     depth       = depth || 0;
     if (el.parent && depth < 500) {
-      var ancestors = Util.getHighlightHierarchy(el.parent, depth + 1);
+      let ancestors = Util.getHighlightHierarchy(el.parent, depth + 1);
       _.each(ancestors, (a) => {
         parents.push(a);
       });
@@ -473,7 +475,7 @@ export const Util = {
   iconList(){
     if (!this.loadedIcons.length) {
       this.loadedIcons = _.flatten(_.filter(document.head.childNodes, (node) => {
-        return node.nodeName.toLowerCase() == "style"
+        return node.nodeName.toLowerCase() === "style"
       }).map((style) => {
         return _.filter(style.sheet.cssRules, (rule) => {
           return rule.selectorText && rule.selectorText.match(/^\.icon-/i)

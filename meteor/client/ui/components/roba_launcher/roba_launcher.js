@@ -118,6 +118,7 @@ Template.roba_launcher.helpers({
         robaContext.dataContext.set(dataContext);
       }
     }
+    
     return {
       valueField: "_id",
       value     : dataContext.viewport,
