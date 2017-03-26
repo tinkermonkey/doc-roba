@@ -172,7 +172,7 @@ class TestRole {
     }
     
     // Restore the context
-    self.context.restore();
+    //self.context.restore();
     logger.info("TestRole.execute: all steps executed");
     
     // Done
