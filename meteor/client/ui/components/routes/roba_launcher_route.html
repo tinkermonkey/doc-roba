@@ -2,17 +2,10 @@
   <table class="full-width">
     <tbody>
     {{#each steps}}
-      <tr>
-        <td class="align-center">
-          {{> StandaloneNodeSnippet node }}
-        </td>
-        <td>
-        </td>
-      </tr>
       {{#if action}}
         <tr>
           <td class="align-center">
-            {{action.title}}
+            {{> VerticalRouteSnippet action=action node=node projectVersionId=projectVersionId }}
           </td>
           <td>
             {{#if action.variables.length}}
@@ -37,6 +30,14 @@
                 </tbody>
               </table>
             {{/if}}
+          </td>
+        </tr>
+      {{else}}
+        <tr>
+          <td class="align-center">
+            {{> StandaloneNodeSnippet node }}
+          </td>
+          <td>
           </td>
         </tr>
       {{/if}}

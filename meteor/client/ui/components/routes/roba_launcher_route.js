@@ -1,20 +1,21 @@
-import "./roba_launcher_route.html";
-import "./route.css";
-import { Template } from "meteor/templating";
-import "../svg_snippets/standalone_node_snippet.js";
+import './roba_launcher_route.html';
+import './route.css';
+import { Template } from 'meteor/templating';
+import { DocTreeConfig } from '../../lib/doc_tree/doc_tree_config.js';
+import '../svg_snippets/standalone_node_snippet.js';
 
 /**
  * Template Helpers
  */
 Template.RobaLauncherRoute.helpers({
   getVarDataKey () {
-    var variable = this,
+    let variable = this,
         step     = Template.parentData(1);
     
     return "step" + step.stepNum + "." + variable.name
   },
   getVarValue () {
-    var variable    = this,
+    let variable    = this,
         step        = Template.parentData(1),
         dataContext = Template.parentData(3).dataContext.get();
     
