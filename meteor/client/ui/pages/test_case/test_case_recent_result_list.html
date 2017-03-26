@@ -3,50 +3,77 @@
     {{#if results.count}}
       <table class="sortable-table">
         <thead>
-          <tr>
-            <th><div>Date</div></th>
-            <th><div>Server</div></th>
-            <th><div>Agents</div></th>
-            <th><div>Status</div></th>
-            <th><div>Result</div></th>
-          </tr>
+        <tr>
+          <th></th>
+          <th>
+            <div>Created</div>
+          </th>
+          <th>
+            <div>Server</div>
+          </th>
+          <th>
+            <div>Agents</div>
+          </th>
+          <th>
+            <div>Status</div>
+          </th>
+          <th colspan="=2">
+            <div>Result</div>
+          </th>
+          <th></th>
+        </tr>
         </thead>
         <tbody>
-          {{#each results}}
-            <tr class="sortable-table-row test-result-row">
-              <td>
-                <div>{{dateFormat dateCreated}}</div>
-              </td>
-              <td>
-                <div>{{renderServerNameFromStaticId serverId projectVersionId}}</div>
-              </td>
-              <td>
-                {{#each roleResults}}
-                  <div class="inline-block">
+        {{#each results}}
+          <tr class="sortable-table-row test-result-row">
+            <td></td>
+            <td>
+              <div>{{dateFormat dateCreated "MMM Do, YYYY h:mm.ss a"}}</div>
+            </td>
+            <td>
+              <div>{{renderServerNameFromStaticId serverId projectVersionId}}</div>
+            </td>
+            <td>
+              {{#each roleResults}}
+                <div class="inline-block">
+                  {{#if ../multipleRoles}}
                     <i>{{role.title}}</i>:
-                    <div>{{testSystem.title}}</div>
-                    <div>{{testAgent.title}}</div>
-                  </div>
-                {{/each}}
-              </td>
-              <td>
-                <div>{{renderLookup "TestResultStatusLookup" status}}</div>
-              </td>
-              <td>
-                <div>
-                  <h4>
-                    <span class="label label-{{labelClass}}">{{renderLookup "TestResultCodesLookup" resultCode}}</span>
-                  </h4>
+                  {{/if}}
+                  <div>{{testAgent.title}} on {{testSystem.title}}</div>
                 </div>
-              </td>
-            </tr>
-          {{/each}}
+              {{/each}}
+            </td>
+            <td>
+              <div>{{renderLookup "TestResultStatusLookup" status}}</div>
+            </td>
+            <td>
+              <div>
+                <h4>
+                  <span class="label label-{{labelClass}}">{{renderLookup "TestResultCodesLookup" resultCode}}</span>
+                </h4>
+              </div>
+            </td>
+            <td>
+              {{#with result.error}}
+                {{#if message}}
+                  <div class="force-wrap">{{{message}}}</div>
+                {{else}}
+                  {{#if stack}}
+                    <div class="test-result-role-error" style="max-height: 4em; overflow: hidden;">{{{stack}}}</div>
+                  {{/if}}
+                {{/if}}
+              {{else}}
+              {{/with}}
+            </td>
+            <td class="btn-delete"><span class="glyphicon glyphicon-remove"></span></td>
+          </tr>
+        {{/each}}
         </tbody>
       </table>
     {{else}}
       <div>This test case has not been run</div>
     {{/if}}
-
+    
     {{#if hasMoreResults}}
       <div class="load-more">
         <button class="btn btn-primary btn-load-more">

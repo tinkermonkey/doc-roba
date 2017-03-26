@@ -12,13 +12,13 @@ Template.TestCaseRecentResultList.helpers({
     return Template.instance().results();
   },
   hasMoreResults() {
-    var limit = Template.instance().limit.get();
+    const limit = Template.instance().limit.get();
     if (limit > 0) {
       return Template.instance().results().count() >= Template.instance().limit.get();
     }
   },
   labelClass(){
-    let result = this,
+    let result     = this,
         labelClass = 'default';
     switch (result.resultCode) {
       case TestResultCodes.pass:
@@ -32,6 +32,9 @@ Template.TestCaseRecentResultList.helpers({
         break;
     }
     return labelClass
+  },
+  multipleRoles(){
+    return this.roleResults().count() > 1
   }
 });
 
@@ -40,13 +43,40 @@ Template.TestCaseRecentResultList.helpers({
  */
 Template.TestCaseRecentResultList.events({
   "click .test-result-row"(e, instance) {
-    var testResult = this;
+    const testResult = this;
     FlowRouter.go("TestResult", {
       projectId       : testResult.projectId,
       projectVersionId: testResult.projectVersionId,
       testResultId    : testResult._id
     });
-  }
+  },
+  "click .sortable-table-row .btn-delete"(e, instance) {
+    e.stopImmediatePropagation();
+    const result = this;
+    
+    RobaDialog.show({
+      title  : "Delete Test Result?",
+      text   : "Are you sure that you want to delete the test result from " + moment(result.dateCreated).format("MMM Do, YYYY h:mm.ss a") + "?",
+      width  : 400,
+      buttons: [
+        { text: "Cancel" },
+        { text: "Delete" }
+      ],
+      callback(btn) {
+        //console.log("Dialog button pressed: ", btn);
+        if (btn.match(/delete/i)) {
+          Meteor.call('deleteTestResult', result._id, (error, response) => {
+            RobaDialog.hide();
+            if (error) {
+              RobaDialog.error("Delete failed: " + error.message);
+            }
+          });
+        } else {
+          RobaDialog.hide();
+        }
+      }
+    });
+  },
 });
 
 /**
@@ -80,17 +110,17 @@ Template.TestCaseRecentResultList.created = function () {
   // React to limit changes
   instance.autorun(function () {
     // grab the limit
-    var limit = instance.limit.get();
+    const limit = instance.limit.get();
     //console.log("Loading [", limit, "] results for ", instance.data.staticId);
     
     // Update the subscription
-    var subscription = instance.subscribe("test_case_results", instance.data.projectId, instance.data.staticId, limit);
+    const subscription = instance.subscribe("test_case_results", instance.data.projectId, instance.data.staticId, limit);
     
     if (subscription.ready()) {
       if (limit > 0) {
         instance.loaded.set(limit);
       } else {
-        var count = TestResults.find({ testCaseId: instance.data.staticId, projectVersionId: instance.data.projectVersionId }).count();
+        const count = TestResults.find({ testCaseId: instance.data.staticId, projectVersionId: instance.data.projectVersionId }).count();
         //console.log("Limit:", limit, "Count:", count);
         instance.loaded.set(count);
       }
