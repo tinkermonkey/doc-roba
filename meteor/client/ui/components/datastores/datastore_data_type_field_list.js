@@ -1,5 +1,6 @@
 import './datastore_data_type_field_list.html';
 import { Template } from 'meteor/templating';
+import { EditableTextField } from 'meteor/austinsand:editable-text-field';
 import { RobaDialog } from 'meteor/austinsand:roba-dialog';
 import { Util } from '../../../../imports/api/util.js';
 import { DatastoreDataTypes } from '../../../../imports/api/datastores/datastore_data_types.js';
@@ -110,7 +111,46 @@ Template.DatastoreDataTypeFieldList.onCreated(() => {
  * Template Rendered
  */
 Template.DatastoreDataTypeFieldList.onRendered(() => {
+  let instance = Template.instance();
   
+  // Server list is sortable (manually)
+  instance.$(".sortable-table")
+      .sortable({
+        items               : "> .sortable-table-row",
+        handle              : ".drag-handle",
+        helper(e, ui) {
+          // fix the width
+          ui.children().each(function () {
+            $(this).width($(this).width());
+          });
+          return ui;
+        },
+        axis                : "y",
+        forcePlaceholderSize: true,
+        update(event, ui) {
+          instance.$(".data-store-field").each((i, el) => {
+            let row   = $(el),
+                order = row.attr("data-sort-order");
+            if (order !== i) {
+              let fieldId = row.attr("data-pk");
+              console.log("Updating order: ", i, fieldId);
+              DatastoreDataTypeFields.update(fieldId, { $set: { order: i } }, function (error, response) {
+                if (error) {
+                  RobaDialog.error("DatastoreDataTypeFields order update failed: " + error.message);
+                }
+              });
+            }
+          });
+        }
+      })
+      .disableSelection();
+  
+  // Make sure items added to the list are sortable
+  instance.autorun(function () {
+    let data   = Template.currentData(),
+        fields = DatastoreDataTypeFields.find({ parentId: data.staticId, projectVersionId: data.projectVersionId });
+    instance.$(".sortable-table").sortable("refresh");
+  });
 });
 
 /**

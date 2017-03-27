@@ -1,0 +1,9 @@
+<template name="VersionDataType">
+  <div class="version-data-type" data-pk="{{_id}}">
+    Fields describing {{> EditableTextField value=title dataKey="title" cssClass="inline"}}:
+    {{> DatastoreDataTypeFieldList }}
+    <p>
+      <a class="btn-delete-custom-type">Delete this custom type</a>
+    </p>
+  </div>
+</template>

@@ -15,11 +15,7 @@
     {{#RobaTabGroup name="custom-field-tabs" navClass="nav-tabs"}}
       {{#each dataTypes}}
         {{#RobaTab name=getTabName title=title}}
-          Fields describing <span class="data-store-name-editable" data-pk="{{_id}}">{{title}}</span>:
-          {{> DatastoreDataTypeFieldList }}
-          <p>
-            <a class="btn-delete-custom-type" data-store-id="{{_id}}">Delete this custom type</a>
-          </p>
+          {{> VersionDataType }}
         {{/RobaTab}}
       {{/each}}
     {{/RobaTabGroup}}
