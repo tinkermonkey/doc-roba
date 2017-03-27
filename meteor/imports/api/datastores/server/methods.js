@@ -47,5 +47,32 @@ Meteor.methods({
         }
       });
     }
+  },
+  /**
+   * Get a rendered datastore row
+   * Useful for when you don't want to setup a complex subscription chain
+   * @param projectId
+   * @param projectVersionId
+   * @param rowStaticId
+   */
+  getRenderedDatastoreRow(projectId, projectVersionId, rowStaticId){
+    console.debug("getRenderedDatastoreRow: ", projectId, projectVersionId, rowStaticId);
+    check(Meteor.userId(), String);
+    check(projectId, String);
+    check(projectVersionId, String);
+    check(rowStaticId, String);
+  
+    // Validate that the user has permission
+    if (Auth.hasProjectAccess(Meteor.userId(), projectId)) {
+      let row = DatastoreRows.findOne({projectVersionId: projectVersionId, staticId: rowStaticId});
+      if(row){
+        console.log("getRenderedDatastoreRow:", row.render());
+        return row.render();
+      } else {
+        throw new Meteor.Error("404", "Not found", "No DatastoreRow found for staticId [" + rowStaticId + "] and projectVersionId [" + projectVersionId + "]");
+      }
+    } else {
+      throw new Meteor.Error("403", "Not authorized", "No project access for user [" + Meteor.userId() + "] and project [" + projectId + "]");
+    }
   }
 });

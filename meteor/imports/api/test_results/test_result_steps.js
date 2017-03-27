@@ -4,6 +4,7 @@ import { Auth } from '../auth.js';
 import { TestCaseStepTypes } from '../test_cases/test_case_step_types.js';
 import { TestResultCodes } from './test_result_codes.js';
 import { TestResultStatus } from './test_result_status.js';
+import { TestResults } from './test_results.js';
 import { TestCaseSteps } from '../test_cases/test_case_steps.js';
 import { LogMessages } from '../log_messages/log_messages.js';
 import { Screenshots } from '../screenshots/screenshots.js';
@@ -108,6 +109,13 @@ TestResultSteps.allow(Auth.ruleSets.allow.ifAuthenticated);
  * Helpers
  */
 TestResultSteps.helpers({
+  /**
+   * Get the TestResult that this step belongs to
+   * @return {TestResult}
+   */
+  testResult(){
+    return TestResults.findOne({_id: this.testResultId});
+  },
   /**
    * Get the TestCaseStep that this TestResultStep maps to
    * @return TestCaseStep

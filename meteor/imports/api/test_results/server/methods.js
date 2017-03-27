@@ -8,6 +8,7 @@ import { Screenshots } from '../../screenshots/screenshots.js';
 import { TestResults } from '../test_results.js';
 import { TestResultRoles } from '../test_result_roles.js';
 import { TestResultSteps } from '../test_result_steps.js';
+import { TestResultStepWaits } from '../test_result_step_waits.js';
 // Enums
 import { TestResultStatus } from '../test_result_status.js';
 import { TestResultCodes } from '../test_result_codes.js';
@@ -54,7 +55,7 @@ Meteor.methods({
               logFile = [ "test_result_role_", role._id, ".log" ].join(""),
               proc    = ProcessLauncher.launchAutomation(command, logFile, (exitCode) => {
                 console.info("launchTestResult test role complete: " + proc.pid + ", " + exitCode);
-                if(exitCode){
+                if (exitCode) {
                   Meteor.call('setTestResultRoleStatus', projectId, role._id, TestResultStatus.complete);
                   Meteor.call('setTestResultRoleResult', projectId, role._id, TestResultCodes.fail);
                 }
@@ -339,6 +340,48 @@ Meteor.methods({
       let updateCount = TestResultSteps.update({ projectId: projectId, _id: testResultStepId }, { $set: { checks: checks } });
       if (!updateCount) {
         throw new Meteor.Error("404", "Not found", "No TestResultStep found for id [" + testResultStepId + "] and project [" + projectId + "]");
+      }
+    } else {
+      throw new Meteor.Error("403", "Not authorized", "No project access for user [" + Meteor.userId() + "] and project [" + projectId + "]");
+    }
+  },
+  
+  /**
+   * Check in a role as present for a wait step in a test
+   * @param projectId
+   * @param testResultId
+   * @param waitId
+   * @param testResultRoleId
+   */
+  checkInForWaitStep(projectId, testResultId, waitId, testResultRoleId){
+    console.debug("checkInForWaitStep: ", projectId, testResultId, waitId, testResultRoleId);
+    check(Meteor.userId(), String);
+    check(projectId, String);
+    check(testResultId, String);
+    check(waitId, String);
+    check(testResultRoleId, String);
+    
+    // Validate that the user has permission
+    if (Auth.hasProjectAccess(Meteor.userId(), projectId)) {
+      let update         = { $set: {}, $addToSet: {} },
+          waitRecord     = TestResultStepWaits.findOne({ projectId: projectId, testResultId: testResultId, waitId: waitId }),
+          checkedInRoles = waitRecord.checkedInRoleIds || [];
+      
+      // Check this role in
+      update.$addToSet.checkedInRoleIds = testResultRoleId;
+      update.$addToSet.checkedInTimes   = { testResultRoleId: testResultRoleId, time: Date.now() };
+      
+      // Check to see if this is the last person
+      checkedInRoles.push(testResultRoleId);
+      update.$set.everyoneArrived = waitRecord.awaitingRoleIds.reduce((arrived, roleId) => {
+        return arrived && _.contains(checkedInRoles, roleId)
+      }, true);
+      
+      // Check in this role
+      console.debug('Updating wait step:', update);
+      let updateCount = TestResultStepWaits.update(waitRecord._id, update);
+      if (!updateCount) {
+        throw new Meteor.Error("404", "Not found", "No TestResultStepWaits found for waitId [" + waitId + "] and testResult [" + testResultId + "]");
       }
     } else {
       throw new Meteor.Error("403", "Not authorized", "No project access for user [" + Meteor.userId() + "] and project [" + projectId + "]");

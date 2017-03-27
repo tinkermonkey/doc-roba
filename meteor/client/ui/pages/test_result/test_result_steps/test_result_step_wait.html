@@ -1,3 +1,23 @@
 <template name="TestResultStepWait">
-  test_result_step_wait
+  {{#with waitRecord}}
+    {{#with checkedInTime ..}}
+      <h3>
+        Checked in {{checkedInOrder ..}} at: {{dateFormat this.time 'h:mm:ss.SSS a'}}
+        {{#if getRoleDelta ..}}
+          <small>({{getRoleDelta ..}} ms later)</small>
+        {{/if}}
+      </h3>
+    {{else}}
+      <h3>Never checked in</h3>
+    {{/with}}
+    {{#each otherCheckedInTimes ..}}
+      <div>
+        {{checkedInOrder ..}}) {{getRoleName this.testResultRoleId}} ({{getRoleAccountName this.testResultRoleId}}):
+        {{dateFormat this.time 'h:mm:ss.SSS a'}}
+        {{#if getRoleDelta ..}}
+          ({{getRoleDelta ..}} ms later)
+        {{/if}}
+      </div>
+    {{/each}}
+  {{/with}}
 </template>

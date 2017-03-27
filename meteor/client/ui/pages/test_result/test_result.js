@@ -69,6 +69,7 @@ Template.TestResult.onCreated(() => {
     instance.subscribe("test_result_steps", projectId, testResultId);
     instance.subscribe("test_result_screenshots", projectId, testResultId);
     instance.subscribe("test_result_log", projectId, testResultId);
+    instance.subscribe("test_result_step_waits", projectId, testResultId);
   });
   
   // Load the TestCase record if the TestCaseId changes

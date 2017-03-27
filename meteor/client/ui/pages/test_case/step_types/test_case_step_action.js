@@ -1,12 +1,9 @@
 import './test_case_step_action.html';
-
-import {Template} from 'meteor/templating';
-
-import {Actions} from '../../../../../imports/api/actions/actions.js';
-import {Nodes} from '../../../../../imports/api/nodes/nodes.js';
-import {TestCaseSteps} from '../../../../../imports/api/test_cases/test_case_steps.js';
-import {TestCaseStepTypes} from '../../../../../imports/api/test_cases/test_case_step_types.js';
-
+import { Template } from 'meteor/templating';
+import { Actions } from '../../../../../imports/api/actions/actions.js';
+import { Nodes } from '../../../../../imports/api/nodes/nodes.js';
+import { TestCaseSteps } from '../../../../../imports/api/test_cases/test_case_steps.js';
+import { TestCaseStepTypes } from '../../../../../imports/api/test_cases/test_case_step_types.js';
 import '../../../components/editable_fields/action_route_selector/editable_action_route_selector.js';
 
 /**
@@ -39,7 +36,7 @@ Template.TestCaseStepAction.created = function () {
       sourceStep = TestCaseSteps.findOne({
         testCaseRoleId: data.testCaseRoleId,
         order: {$lt: data.order},
-        type: {$in: [TestCaseStepTypes.node, TestCaseStepTypes.action]}
+        type: {$in: [ TestCaseStepTypes.node, TestCaseStepTypes.action]}
       }, {sort: {order: -1}}),
       stepData = data.data;
 
