@@ -61,19 +61,23 @@ class Node {
     readyCode = node.record.readyCode || '';
     readyCode += readyCode.length ? "\n" : '';
     logger.debug('Node ready code:', readyCode);
-    node.readyChecks.forEach((check) => {
-      logger.debug('Adding ready check to node readyCode:', check);
-      readyCode += 'ready.' + check.checkFn + '("' + check.selector.replace(/"/g, '\\"') + '")' + ";\n";
-    });
+    if(node.readyChecks){
+      node.readyChecks.forEach((check) => {
+        logger.debug('Adding ready check to node readyCode:', check);
+        readyCode += 'ready.' + check.checkFn + '("' + check.selector.replace(/"/g, '\\"') + '")' + ";\n";
+      });
+    }
     
     // Bundle up the validationCode with the quick checks
     validCode = node.record.validationCode || '';
     validCode += validCode.length ? "\n" : '';
     logger.debug('Node valid code:', validCode);
-    node.validChecks.forEach((check) => {
-      logger.debug('Adding ready valid to node validCode:', check);
-      validCode += 'valid.' + check.checkFn + '("' + check.selector.replace(/"/g, '\\"') + '")' + ";\n";
-    });
+    if(node.validChecks){
+      node.validChecks.forEach((check) => {
+        logger.debug('Adding ready valid to node validCode:', check);
+        validCode += 'valid.' + check.checkFn + '("' + check.selector.replace(/"/g, '\\"') + '")' + ";\n";
+      });
+    }
     
     // Create the code executors for ready and valid checks
     node.readyExecutor = new CodeExecutor(readyCode);
