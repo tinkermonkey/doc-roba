@@ -3,7 +3,7 @@
     {{#if ready}}
       {{setTitle "Test Result: " testCase.title}}
       {{setNavTitle "Test Result: " testCase.title}}
-
+      
       {{#with testResult}}
         <h1>
           Test Result
@@ -20,15 +20,15 @@
           {{#unless isDone}}currently{{/unless}} {{renderLookup "TestResultStatusLookup" status}}
           {{#if abort}}(aborted){{/if}}
         </h4>
-
+        
         <h2>Test Log</h2>
-
-        <div class="no-wrap flex">
-          {{#each roleResults}}
+        
+        {{#each roleResults}}
+          <div class="no-wrap flex">
             {{> TestResultRole }}
-          {{/each}}
-        </div>
-
+          </div>
+        {{/each}}
+        
         <h2>Test Analysis</h2>
       {{/with}}
     {{else}}
