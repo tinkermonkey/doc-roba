@@ -27,12 +27,7 @@ Template.TestCaseRole.events({
         testCaseRoleId = instance.data._id;
     
     if (dataKey) {
-      if (dataKey === "title-description") {
-        update[ "$set" ].title       = newValue.title;
-        update[ "$set" ].description = newValue.description;
-      } else {
-        update[ "$set" ][ dataKey ] = newValue;
-      }
+      update[ "$set" ][ dataKey ] = newValue;
       
       TestCaseRoles.update(testCaseRoleId, update, function (error) {
         if (error) {

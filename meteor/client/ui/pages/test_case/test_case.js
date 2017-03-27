@@ -26,12 +26,7 @@ Template.TestCase.events({
         testCaseId = instance.data._id;
     
     if (dataKey) {
-      if (dataKey == "title-description") {
-        update[ "$set" ].title       = newValue.title;
-        update[ "$set" ].description = newValue.description;
-      } else {
-        update[ "$set" ][ dataKey ] = newValue;
-      }
+      update[ "$set" ][ dataKey ] = newValue;
       
       TestCases.update(testCaseId, update, function (error) {
         if (error) {

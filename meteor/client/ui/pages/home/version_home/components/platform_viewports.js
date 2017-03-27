@@ -29,24 +29,23 @@ Template.PlatformViewports.events({
   "click .btn-delete"(e, instance){
     let viewportId = $(e.target).closest(".sortable-table-row").attr("data-pk");
     RobaDialog.ask("Delete Viewport?", "Are you sure that you want to delete this viewport record from this platform?", () => {
-          PlatformViewports.remove(viewportId, function (error, response) {
-            RobaDialog.hide();
-            if (error) {
-              RobaDialog.error("Delete failed: " + error.message);
-            }
-          });
+      PlatformViewports.remove(viewportId, function (error, response) {
+        RobaDialog.hide();
+        if (error) {
+          RobaDialog.error("Delete failed: " + error.message);
         }
-    );
+      });
+    });
   },
   "click .btn-add-viewport"(e, instance){
     let platformId = $(e.target).closest(".btn-add-viewport").attr("data-pk");
-    if(platformId){
+    if (platformId) {
       let platformConfig = PlatformConfigurations.findOne(platformId);
       PlatformViewports.insert({
-        projectId: platformConfig.projectId,
+        projectId       : platformConfig.projectId,
         projectVersionId: platformConfig.projectVersionId,
-        platformId: platformId,
-        title: 'New Viewport'
+        platformId      : platformId,
+        title           : 'New Viewport'
       }, function (error, response) {
         if (error) {
           RobaDialog.error("Adding viewport failed: " + error.message);
