@@ -7,12 +7,6 @@ import { ProjectVersions } from "../../../../imports/api/projects/project_versio
 import { NodeTypes } from "../../../../imports/api/nodes/node_types.js";
 import TreeLayout from "../../components/tree_layout/tree_layout.js";
 
-// Collections
-
-// Enums
-
-// Content
-
 /**
  * Basic helpers for the tree display
  */

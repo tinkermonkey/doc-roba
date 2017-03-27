@@ -1269,7 +1269,7 @@ export default class TreeLayout {
           });
           //console.log("Popover final bounds: ", bounds, corner);
           popoverConfig.top  = corner.y;
-          popoverConfig.left = corner.x;
+          popoverConfig.left = corner.x + 20;
           
           // Show the popover
           RobaPopover.show(popoverConfig);
@@ -1284,7 +1284,7 @@ export default class TreeLayout {
       
       //console.log("Popover final bounds: ", bounds, corner);
       popoverConfig.top  = corner.y;
-      popoverConfig.left = corner.x;
+      popoverConfig.left = corner.x + 20;
       
       // Show the popover
       RobaPopover.show(popoverConfig);
