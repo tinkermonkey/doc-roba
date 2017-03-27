@@ -16,7 +16,7 @@ class TestRoleStepAction extends TestRoleStep {
     logger.debug('TestRoleStepAction.init:', this.index, this.record._id);
     let self = this;
     
-    // Call the parent constructor
+    // Call the parent initializer
     super.init();
     
     // Load the node for this step

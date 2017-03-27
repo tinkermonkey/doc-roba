@@ -161,7 +161,7 @@ class ServerLink {
    * Call a method on the ddp server
    */
   call (method, args) {
-    var future = new Future();
+    let future = new Future();
     
     assert(method, "call: method must not be null");
     if (args) {
@@ -176,7 +176,7 @@ class ServerLink {
       future.return(result);
     });
     
-    var result = future.wait();
+    let result = future.wait();
     if (result) {
       logger.trace("Call result: ", result);
     }
@@ -273,6 +273,16 @@ class ServerLink {
   };
   
   /**
+   * Check in as present for a wait step
+   */
+  checkInForWaitStep (testResultId, waitId, roleId) {
+    assert(testResultId, "checkInForWaitStep: testResultId must not be null");
+    assert(waitId, "checkInForWaitStep: waitId must not be null");
+    assert(roleId, "checkInForWaitStep: roleId must not be null");
+    this.call("checkInForWaitStep", [ this.projectId, testResultId, waitId, roleId ]);
+  }
+  
+  /**
    * Save the current state of an Adventure
    */
   saveAdventureState (adventureId, state) {
@@ -318,7 +328,6 @@ class ServerLink {
   /**
    * Save the result of a step validation or readyCheck
    * @param stepId
-   * @param type
    * @param result
    */
   saveAdventureStepResult (stepId, result) {
@@ -451,7 +460,7 @@ class ServerLink {
     // hook up some observers
     var id       = _.last(params),
         observer = this.observers[ subscription + "_" + id ] = ddpClient.observe(collectionName);
-    logger.info("liveRecord created observer:", observer.name, id);
+    logger.trace("liveRecord created observer:", observer.name, id);
     observer.added   = function (id) {
       logger.trace("liveRecord record was added to a subscription:", observer.name, id, ddpClient.collections[ observer.name ][ id ]);
     };

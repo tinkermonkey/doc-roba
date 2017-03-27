@@ -140,6 +140,7 @@ class TestRole {
         logger.error('Setting viewport failed:', e.toString(), e.stack);
       }
     } else {
+      logger.debug('No viewport specified, using default:', { width: 1600, height: 900 });
       driver.windowHandleSize({ width: 1600, height: 900 })
     }
   }
