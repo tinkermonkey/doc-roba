@@ -11,7 +11,7 @@ console.debug = console.log;
 /**
  * Enable debug for the moment
  */
-FS.debug = true;
+//FS.debug = true;
 
 // TODO: Make this dynamic or a setting
 if (Meteor.isServer) {
