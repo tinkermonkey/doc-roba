@@ -35,6 +35,9 @@
   min-height: 75px;
   display: flex;
   justify-content: center;
+  
+  transition: transform 0.4s, opacity 0.4s, height 0.4s, width 0.4s;
+  -webkit-transition: -webkit-transform 0.4s, opacity 0.4s, height 0.4s, width 0.4s;
 }
 
 .test-case-step-placeholder {

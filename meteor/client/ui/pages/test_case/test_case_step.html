@@ -1,6 +1,6 @@
 <template name="TestCaseStep">
   {{#RobaRoundContainer title=testStepType cssClass=getStepClass icon=testStepTypeIcon removable=true dataPk=_id dataOrder=order}}
-    <div class="test-case-step-body auto-transition {{#if error}}hide{{/if}}">
+    <div class="test-case-step-body {{#if error}}hide{{/if}}">
       {{#with stepContext}}
         {{> Template.dynamic template=getStepTemplate }}
       {{/with}}

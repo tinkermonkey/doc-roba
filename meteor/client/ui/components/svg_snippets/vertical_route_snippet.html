@@ -1,5 +1,5 @@
 <template name="VerticalRouteSnippet">
-  <svg class="action-snippet auto-transition" width="{{width}}" height="{{height getSteps}}">
+  <svg class="action-snippet" width="{{width}}" height="{{height getSteps}}">
     <g transform="translate({{xMargin}}, {{yMargin}}) scale({{getScale}})" class="snippet-container">
       {{#each getSteps }}
         <g transform="translate(0,{{startY}})" class="snippet-step-action" data-step-index="{{@index}}">
