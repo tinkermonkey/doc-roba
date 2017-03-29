@@ -1,4 +1,10 @@
-**Current Status:** Not quite ready to use, proof-of-concept that is 80% complete
+**Current Status:** Approaching Alpha 1
+
+* Basic Funcationality is working
+	* DocTree - Node/Action display
+	* Adventure Console - Live selenium investigation
+	* Test Cases - All step types
+* [Overview Presentation] (https://docs.google.com/presentation/d/1thF2RjWQ2wC5umrKsTntdUJIgc3L8v2WPOdCoJR5J8c/edit?usp=sharing)
 
 # DocRoba
 **DocRoba** is a Selenium IDE whose goal is to provide a beautiful and easy to use interface for managing and analaysing test data. The key features are:
