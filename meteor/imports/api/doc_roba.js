@@ -1,6 +1,6 @@
 var fs = require('fs');
 
 export const DocRoba = {
-  rootPath: fs.realpathSync(process.env.PWD)
+  basePath: fs.realpathSync(process.env.PWD)
 };
-console.log("DocRoba.rootPath:", DocRoba.rootPath);
+console.log("DocRoba.basePath:", DocRoba.basePath);

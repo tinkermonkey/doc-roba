@@ -28,7 +28,8 @@ export const TestPlanItem = new SimpleSchema({
   // Link to the template
   testPlanId: {
     type: String,
-    denyUpdate: true
+    denyUpdate: true,
+    optional: true
   },
   // Link to the parent structure (template, stage) by staticId
   parentId: {

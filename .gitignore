@@ -2,7 +2,8 @@ _Store
 .DS_Store
 .idea
 .logs
-/files
+/filestore
 /logs
 automation/node_modules
 meteor/node_modules
+meteor/package-lock.json

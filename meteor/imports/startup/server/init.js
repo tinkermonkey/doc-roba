@@ -3,7 +3,7 @@ import { FS } from 'meteor/cfs:base-package';
 let fs   = require('fs'),
     path = require('path');
 
-console.log("DocRoba initializing...");
+console.log("Initializing Logging...");
 
 // get better server side logging
 console.debug = console.log;
@@ -13,10 +13,22 @@ console.debug = console.log;
  */
 //FS.debug = true;
 
-// TODO: Make this dynamic or a setting
 if (Meteor.isServer) {
-  FS.basePath = fs.realpathSync(path.join(process.env.PWD, "..", "files")) + path.sep;
-  console.log('FS.basePath:', FS.basePath);
-}
+  console.log("Initializing CFS...");
 
-console.log("...complete");
+  // confirm that the filestore directory exists
+  if(!fs.existsSync(path.join(process.env.PWD, "..", "filestore"))){
+    try {
+      console.log("Creating filestore directory:", path.join(process.env.PWD, "..", "filestore"));
+      fs.mkdirSync(path.join(process.env.PWD, "..", "filestore"));
+    } catch (e) {
+      console.error("Initializing CFS failed, unable to create filestore directory:", e);
+      throw e
+    }
+  }
+
+  FS.basePath = fs.realpathSync(path.join(process.env.PWD, "..", "filestore")) + path.sep;
+  console.log('FS.basePath:', FS.basePath);
+
+  console.log("CFS Initialized");
+}

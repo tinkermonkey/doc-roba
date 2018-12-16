@@ -1,6 +1,7 @@
 import {Meteor} from 'meteor/meteor';
 import {Template} from 'meteor/templating';
 import {Session} from 'meteor/session';
+import {Random} from 'meteor/random';
 import {FlowRouter} from 'meteor/kadira:flow-router';
 import {moment} from 'meteor/momentjs:moment';
 import {numeral} from 'meteor/numeral:numeral';
@@ -443,7 +444,7 @@ Template.registerHelper("renderTestSystemNameFromStaticId", function (staticId, 
 Template.registerHelper("getElementId", function () {
   var instance = Template.instance();
   if(!instance.elementId){
-    instance.elementId = "Element_" + Meteor.uuid();
+    instance.elementId = "Element_" + Random.id();
     if(instance.elementIdReactor){
       instance.elementIdReactor.set(instance.elementId);
     }

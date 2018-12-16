@@ -1,16 +1,7 @@
 import { FS } from 'meteor/cfs:base-package';
 import { Auth } from '../auth.js';
 
-let rootPath = '/Users/austinsand/workspace/doc-roba/files/';
-
-if (Meteor.isServer) {
-  /*
-  let fs   = require('fs'),
-      path = require('path'),
-      rootPath = fs.realpathSync(path.join(process.env.PWD, "..", "files")) + path.sep;
-  console.log('Screenshots collection init:', rootPath, rootPath + "screenshot_thumbs");
-  */
-}
+let basePath = FS.basePath;
 
 /**
  * Screen shots from testing and adventures
@@ -18,7 +9,7 @@ if (Meteor.isServer) {
 export const Screenshots = new FS.Collection("screenshots", {
   stores: [
     new FS.Store.FileSystem("thumbs", {
-      path: rootPath + "screenshot_thumbs", transformWrite: function (fileObj, readStream, writeStream) {
+      path: basePath + "/screenshot_thumbs", transformWrite: function (fileObj, readStream, writeStream) {
         console.log('FS.createThumb:', fileObj.name());
         // Transform the image into a 200x200px thumbnail
         
@@ -49,7 +40,7 @@ export const Screenshots = new FS.Collection("screenshots", {
         */
       }
     }),
-    new FS.Store.FileSystem("screenshots", { path: rootPath + "screenshots" })
+    new FS.Store.FileSystem("screenshots", { path: basePath + "screenshots" })
   ]
 });
 Screenshots.deny({

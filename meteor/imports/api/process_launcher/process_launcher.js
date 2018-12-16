@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { DocRoba } from '../doc_roba.js';
-var fs           = require('fs'),
+let fs           = require('fs'),
     path         = require('path'),
     childProcess = require("child_process");
 
@@ -22,10 +22,10 @@ export const ProcessLauncher = {
    * Initialize the Process Launcher
    */
   init() {
-    this.baseLogPath       = path.join(DocRoba.rootPath, Meteor.settings.paths.automation_logs);
-    this.launcherLogPath   = path.join(DocRoba.rootPath, Meteor.settings.paths.automation_logs, "launcher");
-    this.automationPath    = path.join(DocRoba.rootPath, Meteor.settings.paths.automation);
-    this.imageAnalysisPath = path.join(DocRoba.rootPath, Meteor.settings.paths.image_analysis);
+    this.baseLogPath       = path.join(DocRoba.basePath, Meteor.settings.paths.automation_logs);
+    this.launcherLogPath   = path.join(DocRoba.basePath, Meteor.settings.paths.automation_logs, "launcher");
+    this.automationPath    = path.join(DocRoba.basePath, Meteor.settings.paths.automation);
+    this.imageAnalysisPath = path.join(DocRoba.basePath, Meteor.settings.paths.image_analysis);
     
     console.info("ProcessLauncher.init logPath: " + this.baseLogPath);
     console.info("ProcessLauncher.init automationPath: " + this.automationPath);

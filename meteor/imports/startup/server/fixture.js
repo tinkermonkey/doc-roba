@@ -1,43 +1,42 @@
 import {Meteor} from 'meteor/meteor';
 import {DocRoba} from '../../api/doc_roba.js';
+// Full collections
+import {Actions} from '../../api/actions/actions.js';
+import {CodeModules} from '../../api/code_modules/code_modules.js';
+import {CodeModuleFunctions} from '../../api/code_modules/code_module_functions.js';
+import {CodeModuleFunctionParams} from '../../api/code_modules/code_module_function_params.js';
+import {Datastores} from '../../api/datastores/datastores.js';
+import {DatastoreDataTypes} from '../../api/datastores/datastore_data_types.js';
+import {DatastoreDataTypeFields} from '../../api/datastores/datastore_data_type_fields.js';
+import {DatastoreFields} from '../../api/datastores/datastore_fields.js';
+import {DatastoreRows} from '../../api/datastores/datastore_rows.js';
+import {DriverCommands} from '../../api/driver_commands/driver_commands.js';
+import {Nodes} from '../../api/nodes/nodes.js';
+import {Projects} from '../../api/projects/projects.js';
+import {ProjectVersions} from '../../api/projects/project_versions.js';
+import {ReferenceDocs} from '../../api/reference_docs/reference_docs.js';
+import {Screenshots} from '../../api/screenshots/screenshots.js';
+import {TestServers} from '../../api/test_servers/test_servers.js';
+import {TestAgents} from '../../api/test_agents/test_agents.js';
+import {TestCases} from '../../api/test_cases/test_cases.js';
+import {TestCaseRoles} from '../../api/test_cases/test_case_roles.js';
+import {TestCaseSteps} from '../../api/test_cases/test_case_steps.js';
+import {TestGroups} from '../../api/test_cases/test_groups.js';
+import {TestResults} from '../../api/test_results/test_results.js';
+import {TestResultRoles} from '../../api/test_results/test_result_roles.js';
+import {TestResultSteps} from '../../api/test_results/test_result_steps.js';
+import {TestRuns} from '../../api/test_runs/test_runs.js';
+import {TestRunStages} from '../../api/test_runs/test_run_stages.js';
+import {TestPlans} from '../../api/test_plans/test_plans.js';
+import {TestPlanItems} from '../../api/test_plans/test_plan_items.js';
+import {TestSystems} from '../../api/test_systems/test_systems.js';
+import {Users} from '../../api/users/users.js';
+// Partial collection export
+import {LogMessages} from '../../api/log_messages/log_messages.js';
+
 var AdmZip = require('adm-zip'),
     fs = require('fs'),
     path = require('path');
-
-// Full collections
-import {Actions}                  from '../../api/actions/actions.js';
-import {CodeModules}              from '../../api/code_modules/code_modules.js';
-import {CodeModuleFunctions}      from '../../api/code_modules/code_module_functions.js';
-import {CodeModuleFunctionParams} from '../../api/code_modules/code_module_function_params.js';
-import {Datastores}               from '../../api/datastores/datastores.js';
-import {DatastoreDataTypes}       from '../../api/datastores/datastore_data_types.js';
-import {DatastoreDataTypeFields}  from '../../api/datastores/datastore_data_type_fields.js';
-import {DatastoreFields}          from '../../api/datastores/datastore_fields.js';
-import {DatastoreRows}            from '../../api/datastores/datastore_rows.js';
-import {DriverCommands}           from '../../api/driver_commands/driver_commands.js';
-import {Nodes}                    from '../../api/nodes/nodes.js';
-import {Projects}                 from '../../api/projects/projects.js';
-import {ProjectVersions}          from '../../api/projects/project_versions.js';
-import {ReferenceDocs}            from '../../api/reference_docs/reference_docs.js';
-import {Screenshots}              from '../../api/screenshots/screenshots.js';
-import {TestServers}              from '../../api/test_servers/test_servers.js';
-import {TestAgents}               from '../../api/test_agents/test_agents.js';
-import {TestCases}                from '../../api/test_cases/test_cases.js';
-import {TestCaseRoles}            from '../../api/test_cases/test_case_roles.js';
-import {TestCaseSteps}            from '../../api/test_cases/test_case_steps.js';
-import {TestGroups}               from '../../api/test_cases/test_groups.js';
-import {TestResults}              from '../../api/test_results/test_results.js';
-import {TestResultRoles}          from '../../api/test_results/test_result_roles.js';
-import {TestResultSteps}          from '../../api/test_results/test_result_steps.js';
-import {TestRuns}                 from '../../api/test_runs/test_runs.js';
-import {TestRunStages}            from '../../api/test_runs/test_run_stages.js';
-import {TestPlans}                from '../../api/test_plans/test_plans.js';
-import {TestPlanItems}            from '../../api/test_plans/test_plan_items.js';
-import {TestSystems}              from '../../api/test_systems/test_systems.js';
-import {Users}                    from '../../api/users/users.js';
-
-// Partial collection export
-import {LogMessages}            from '../../api/log_messages/log_messages.js';
 
 /**
  * On startup, check to see if the fixture data should be loaded
@@ -115,7 +114,7 @@ var collectionList = {
       exportData() {
         console.info("FixtureDataHandler.exportData");
         var handler = this,
-            dataDir = path.join(DocRoba.rootPath, handler.dataPath);
+            dataDir = path.join(DocRoba.basePath, handler.dataPath);
         
         console.debug("FixtureDataHandler.exportData data folder: " + dataDir);
         
@@ -194,7 +193,7 @@ var collectionList = {
       importData() {
         console.info("FixtureDataHandler.importData");
         var handler = this,
-            dataDir = path.join(DocRoba.rootPath, handler.dataPath);
+            dataDir = path.join(DocRoba.basePath, handler.dataPath);
         
         console.debug("FixtureDataHandler.importData data folder: " + dataDir);
         
@@ -262,7 +261,11 @@ var collectionList = {
           data.forEach((record) => {
             // Use the direct method to circumvent the collection hooks
             if(collectionList[collectionName] && collectionList[collectionName].direct){
-              collectionList[collectionName].direct.insert(record);
+                try {
+                    collectionList[collectionName].direct.insert(record);
+                } catch (e) {
+                    console.error("FixtureDataHandler.importRecords failed:", collectionName, record, e);
+                }
             } else {
               // CollectionFS doesn't have hooks and I have to figure out how to encode the file data
               //collectionList[collectionName].insert(record);
